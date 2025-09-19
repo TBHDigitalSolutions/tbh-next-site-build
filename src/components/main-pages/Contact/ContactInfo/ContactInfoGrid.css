@@ -1,0 +1,93 @@
+/* ============================================
+   📍 Contact Info Grid (TBH Unified Theme)
+   - 4 equal columns on desktop
+   - Cards stretch to identical heights
+============================================ */
+
+.contact-info-grid {
+    width: 100%;
+    padding-block: var(--section-pad-block);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+}
+
+/* Header */
+.contact-info-header {
+    text-align: center;
+    width: min(calc(100% - 2 * var(--container-pad-inline)), var(--container-max));
+    margin: 0 auto var(--spacing-lg);
+    padding-inline: var(--container-pad-inline);
+}
+
+.contact-section-title {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-h2);
+    font-weight: 700;
+    color: var(--text-accent);
+    margin: 0;
+}
+
+/* Divider under title */
+.contact-info-divider-under-title {
+    width: 80%;
+    height: 3px;
+    margin: var(--spacing-sm) auto var(--spacing-lg);
+    border-radius: var(--radius-sm);
+    background: var(--gradient-divider,
+            linear-gradient(90deg, transparent, var(--border-accent, var(--brand-blue)), transparent));
+}
+
+/* ===== Grid ===== */
+.contact-info-container {
+    width: min(calc(100% - 2 * var(--container-pad-inline)), var(--container-max));
+    margin-inline: auto;
+    padding-inline: var(--container-pad-inline);
+
+    display: grid;
+    gap: var(--spacing-xl);
+    /* Mobile-first: 1 col, then 2, then 4 equal columns */
+    grid-template-columns: 1fr;
+    align-items: stretch;
+    /* Make every grid item take the row height */
+    grid-auto-rows: 1fr;
+    /* Ensure rows create equal-height tracks */
+}
+
+/* Each grid item wrapper */
+.contact-info-item {
+    height: 100%;
+    /* Let wrapper fill the grid track */
+    min-width: 0;
+    /* Prevent overflow from long content */
+}
+
+/* Force card to fill the wrapper (equal heights) */
+.contact-info-item>.contact-info-card {
+    height: 100%;
+    width: 100%;
+    min-width: 0;
+    /* Defensive: allow text to wrap inside */
+}
+
+/* Tablet: 2 columns */
+@media (min-width: 640px) {
+    .contact-info-container {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: var(--spacing-lg);
+    }
+}
+
+/* Desktop: exactly 4 equal columns */
+@media (min-width: 1024px) {
+    .contact-info-container {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: var(--spacing-xl);
+    }
+}
+
+/* Small tweaks */
+@media (max-width: 768px) {
+    .contact-info-divider-under-title {
+        width: 90%;
+    }
+}

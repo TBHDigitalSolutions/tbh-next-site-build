@@ -1,0 +1,102 @@
+/* =============================================
+   🔐 Login (Header Control) — Production
+   Chip trigger + compact modal (footer-consistent)
+============================================= */
+
+/* Trigger button (chip style, matches ThemeToggle/Header controls) */
+.header-login {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: clamp(36px, 3vw, 42px);
+    height: clamp(36px, 3vw, 42px);
+    border-radius: var(--radius-lg);
+    background: transparent;
+    border: 1px solid transparent;
+    color: var(--text-primary);
+    cursor: pointer;
+    padding: 0;
+    transition: transform var(--transition-standard),
+        color var(--transition-standard),
+        background-color var(--transition-standard),
+        border-color var(--transition-standard);
+}
+
+.header-login:hover {
+    transform: translateY(-1px);
+    background-color: rgba(14, 175, 251, 0.08);
+    border-color: var(--border-subtle);
+}
+
+/* ===== Modal ===== */
+.login-modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, .65);
+    backdrop-filter: blur(4px);
+    z-index: var(--z-index-modal);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-modal {
+    background: var(--bg-elevated);
+    color: var(--text-primary);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    text-align: center;
+    width: min(420px, 92vw);
+    padding: clamp(16px, 3vw, 24px);
+}
+
+.login-title {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-h4);
+    margin: 0 0 var(--spacing-xs) 0;
+}
+
+.login-subtext {
+    font-size: var(--font-size-small);
+    color: var(--text-secondary);
+    margin: 0 0 var(--spacing-md) 0;
+}
+
+.login-actions {
+    display: flex;
+    justify-content: center;
+}
+
+.login-close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 96px;
+    height: 36px;
+    padding: 0 var(--spacing-md);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-subtle);
+    background: var(--accent-primary);
+    color: var(--text-inverse);
+    font-family: var(--font-heading);
+    cursor: pointer;
+    transition: background-color var(--transition-standard),
+        box-shadow var(--transition-standard),
+        transform var(--transition-standard);
+}
+
+.login-close:hover {
+    background: var(--accent-hover);
+    box-shadow: var(--shadow-sm);
+    transform: translateY(-1px);
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+
+    .header-login,
+    .login-close {
+        transition: none;
+    }
+}

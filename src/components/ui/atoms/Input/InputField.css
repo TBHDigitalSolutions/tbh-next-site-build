@@ -1,0 +1,68 @@
+/* ============================
+   ✅ Input Field Styles
+============================ */
+
+.input-field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+    width: 100%;
+}
+
+/* ✅ Label */
+.input-label {
+    font-family: var(--font-body);
+    font-size: var(--font-size-small);
+    font-weight: bold;
+    color: var(--color-dark-charcoal);
+}
+
+.dark .input-label {
+    color: var(--color-off-white);
+}
+
+/* ✅ Required Asterisk */
+.input-required {
+    color: var(--color-danger);
+    font-weight: bold;
+}
+
+/* ✅ Input & Textarea */
+.input-element {
+    width: 100%;
+    padding: var(--spacing-sm);
+    border: 2px solid var(--color-dark-charcoal);
+    border-radius: var(--radius-md);
+    font-size: var(--font-size-body);
+    background: var(--background-light);
+    color: var(--color-soft-black);
+    transition: border 0.3s ease-in-out, background 0.3s ease-in-out;
+}
+
+.input-element:focus {
+    border-color: var(--color-accent);
+    outline: none;
+}
+
+/* ✅ Error State */
+.input-error {
+    border-color: var(--color-danger);
+}
+
+.input-error-message {
+    font-size: var(--font-size-small);
+    color: var(--color-danger);
+    font-weight: bold;
+    margin-top: var(--spacing-xs);
+}
+
+/* ✅ Dark Mode */
+.dark .input-element {
+    background: var(--background-dark);
+    color: var(--color-off-white);
+    border-color: var(--color-light-grey);
+}
+
+.dark .input-element:focus {
+    border-color: var(--color-accent);
+}

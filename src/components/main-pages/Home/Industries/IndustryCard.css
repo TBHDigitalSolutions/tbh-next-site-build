@@ -1,0 +1,257 @@
+/* ============================================
+   🏷️ TBH Industry Card (unified-theme tokens)
+   - Surface bg + subtle border
+   - Lift on hover, accessible focus ring
+   - Expandable description wrapper
+============================================ */
+
+.industry-card {
+    position: relative;
+    background: var(--bg-surface);
+    color: var(--text-primary);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-xl);
+    padding: var(--spacing-lg);
+    text-align: center;
+    box-shadow: var(--shadow-xs);
+    transition:
+        transform var(--transition-fast),
+        box-shadow var(--transition-fast),
+        border-color var(--transition-fast),
+        background-color var(--transition-fast),
+        color var(--transition-fast);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: clamp(16rem, 14rem + 2vw, 18rem);
+    max-height: clamp(16rem, 14rem + 2vw, 18rem);
+    overflow: hidden;
+    isolation: isolate;
+}
+
+/* Expanded state controls vertical real estate */
+.industry-card.expanded {
+    min-height: clamp(28rem, 26rem + 3vw, 32rem);
+    max-height: clamp(28rem, 26rem + 3vw, 32rem);
+    padding-bottom: var(--spacing-lg);
+}
+
+/* Hover: lift + accent border (no color inversion) */
+.industry-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--border-accent, var(--brand-blue));
+}
+
+/* Keyboard focus ring */
+.industry-card:focus-visible {
+    outline: 2px solid var(--accent-primary, var(--brand-blue));
+    outline-offset: 2px;
+    box-shadow: var(--shadow-md);
+}
+
+/* --------------------------------------------
+   Structure
+-------------------------------------------- */
+.industry-card-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    width: 100%;
+    align-items: center;
+    flex-grow: 1;
+}
+
+/* --------------------------------------------
+   Icon (brand circle)
+-------------------------------------------- */
+.industry-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    inline-size: clamp(2.75rem, 2.2rem + 1vw, 3.25rem);
+    block-size: clamp(2.75rem, 2.2rem + 1vw, 3.25rem);
+    background: var(--accent-primary, var(--brand-blue));
+    color: var(--text-inverse);
+    border-radius: var(--radius-full);
+    font-size: clamp(1.25rem, 1.05rem + 0.5vw, 1.75rem);
+    margin-bottom: var(--spacing-md);
+    transition: background-color var(--transition-fast), transform var(--transition-fast);
+}
+
+.industry-card:hover .industry-icon {
+    background: var(--accent-hover);
+    transform: scale(1.06) rotate(4deg);
+}
+
+/* --------------------------------------------
+   Title
+-------------------------------------------- */
+.industry-title {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-h4);
+    font-weight: 600;
+    color: var(--text-accent);
+    text-align: center;
+    margin: 0 0 var(--spacing-xs);
+    line-height: var(--line-height-heading);
+    transition: color var(--transition-fast);
+}
+
+.industry-card:hover .industry-title {
+    color: var(--text-primary);
+}
+
+/* --------------------------------------------
+   Description (collapsible)
+-------------------------------------------- */
+.industry-description-wrapper {
+    width: 100%;
+    overflow: hidden;
+    opacity: 0;
+    max-height: 0;
+    margin-bottom: var(--spacing-md);
+    flex-grow: 1;
+    display: flex;
+    align-items: flex-start;
+    transition:
+        max-height var(--transition-slow),
+        opacity var(--transition-slow);
+}
+
+.industry-description-wrapper.expanded {
+    max-height: 40rem;
+    opacity: 1;
+}
+
+.industry-description {
+    font-family: var(--font-body);
+    font-size: var(--font-size-body);
+    color: var(--text-secondary);
+    line-height: var(--line-height-body);
+    padding: var(--spacing-sm) 0;
+    text-align: left;
+    margin: 0;
+    transition: color var(--transition-fast);
+}
+
+.industry-card:hover .industry-description {
+    color: var(--text-primary);
+}
+
+/* --------------------------------------------
+   Button (secondary style)
+-------------------------------------------- */
+.industry-button {
+    width: 100%;
+    margin-top: auto;
+    /* pin to bottom */
+    font-family: var(--font-heading);
+    font-size: var(--font-size-small);
+    font-weight: 600;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--radius-md);
+    background: var(--bg-surface);
+    color: var(--brand-blue);
+    border: 1px solid var(--brand-blue);
+    cursor: pointer;
+    transition:
+        background-color var(--transition-fast),
+        color var(--transition-fast),
+        border-color var(--transition-fast),
+        transform var(--transition-fast);
+}
+
+.industry-button:hover {
+    background: color-mix(in oklab, var(--brand-blue) 8%, transparent);
+    color: var(--accent-hover);
+    border-color: var(--accent-hover);
+    transform: translateY(-1px);
+}
+
+.industry-button:focus-visible {
+    outline: 2px solid var(--accent-primary, var(--brand-blue));
+    outline-offset: 2px;
+}
+
+/* Slight emphasis when card is hovered */
+.industry-card:hover .industry-button {
+    border-color: var(--accent-hover);
+}
+
+/* --------------------------------------------
+   Responsive
+-------------------------------------------- */
+@media (max-width: 1024px) {
+    .industry-card {
+        padding: var(--spacing-lg);
+        min-height: clamp(15rem, 14rem + 1vw, 16.5rem);
+        max-height: clamp(15rem, 14rem + 1vw, 16.5rem);
+    }
+
+    .industry-card.expanded {
+        min-height: clamp(26rem, 24rem + 2vw, 30rem);
+        max-height: clamp(26rem, 24rem + 2vw, 30rem);
+    }
+
+    .industry-button {
+        font-size: var(--font-size-caption);
+    }
+}
+
+@media (max-width: 768px) {
+    .industry-card {
+        padding: var(--spacing-md);
+        min-height: 15rem;
+        max-height: 15rem;
+    }
+
+    .industry-card.expanded {
+        min-height: 24rem;
+        max-height: 24rem;
+    }
+
+    .industry-icon {
+        margin-bottom: var(--spacing-sm);
+    }
+
+    .industry-title {
+        margin-bottom: var(--spacing-xs);
+    }
+
+    .industry-description {
+        font-size: var(--font-size-small);
+    }
+
+    .industry-button {
+        font-size: var(--font-size-caption);
+        padding: var(--spacing-xs) var(--spacing-sm);
+    }
+}
+
+@media (max-width: 480px) {
+    .industry-card {
+        padding: var(--spacing-md);
+    }
+
+    .industry-description {
+        font-size: var(--font-size-small);
+        line-height: 1.5;
+    }
+}
+
+/* --------------------------------------------
+   Reduced Motion
+-------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+
+    .industry-card,
+    .industry-icon,
+    .industry-title,
+    .industry-description,
+    .industry-button,
+    .industry-description-wrapper {
+        transition: none !important;
+    }
+}

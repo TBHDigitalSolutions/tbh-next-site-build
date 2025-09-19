@@ -1,0 +1,219 @@
+/* ============================
+   🌟 Marketing CTA Wrapper (Main Card)
+============================ */
+.marketing-cta-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: var(--spacing-md);
+    padding: var(--spacing-lg);
+    box-shadow: var(--shadow-md);
+    background: var(--color-variant-1);
+    color: var(--color-soft-black);
+    max-width: 100%;
+    transition: var(--transition-default);
+    border-radius: 0;
+}
+
+/* ✅ Dark Mode Support */
+.dark .marketing-cta-wrapper {
+    background: var(--color-dark-charcoal);
+    color: var(--color-off-white);
+    box-shadow: var(--shadow-dark);
+}
+
+/* ============================
+   🌟 Title Wrapper (Controls Width)
+============================ */
+.marketing-title-wrapper {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-sm);
+    width: fit-content;
+    max-width: 100%;
+}
+
+.marketing-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-sm);
+    font-family: var(--font-heading);
+    font-size: var(--font-size-h3);
+    color: var(--color-dark-charcoal);
+    margin-top: var(--spacing-md);
+}
+
+.dark .marketing-title {
+    color: var(--color-off-white);
+}
+
+/* ============================
+   🌟 Section Divider Matching Title
+============================ */
+.marketing-title-divider {
+    width: 100%;
+    max-width: 100%;
+}
+
+/* ============================
+   🌟 Label Items (Single Row)
+============================ */
+.marketing-label-items {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-sm);
+    font-family: var(--font-body);
+    font-size: var(--font-size-body);
+    color: var(--color-dark-charcoal);
+    margin-top: var(--spacing-md);
+}
+
+/* ✅ Dark Mode for Label Items */
+.dark .marketing-label-items {
+    color: var(--color-light-grey);
+}
+
+/* ✅ Label Icon */
+.marketing-label-icon {
+    color: var(--color-accent);
+    font-size: var(--icon-size-sm);
+    margin-right: var(--spacing-xs);
+}
+
+/* ✅ Divider (| between label items) */
+.divider {
+    color: var(--color-dark-charcoal);
+    margin: auto var(--spacing-xs);
+}
+
+.dark .divider {
+    color: var(--color-light-grey);
+}
+
+/* ============================
+   🌟 Label (Heading)
+============================ */
+.marketing-label {
+    font-size: var(--font-size-h3);
+    font-weight: bold;
+    color: var(--color-soft-black);
+    margin-top: var(--spacing-xs);
+    font-family: var(--font-heading);
+}
+
+/* ✅ Dark Mode for Label */
+.dark .marketing-label {
+    color: var(--color-off-white);
+}
+
+/* ============================
+   🌟 Description
+============================ */
+.marketing-description {
+    font-family: var(--font-body);
+    font-size: var(--font-size-body);
+    max-width: 700px;
+    text-align: center;
+    margin: 0 auto;
+    padding: 0 var(--spacing-sm);
+    line-height: 1.6;
+    opacity: 0.85;
+    color: var(--color-dark-charcoal);
+}
+
+/* ✅ Dark Mode for Description */
+.dark .marketing-description {
+    color: var(--color-light-grey);
+}
+
+/* ============================
+   🌟 CTA List (Highlights)
+============================ */
+.marketing-cta-list {
+    margin-top: var(--spacing-md);
+    list-style: none;
+    padding: 0;
+    font-family: var(--font-body);
+    font-size: var(--font-size-body);
+    color: var(--color-dark-charcoal);
+}
+
+/* ✅ CTA Item */
+.marketing-cta-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    justify-content: center;
+    margin: var(--spacing-xs) 0;
+}
+
+/* ✅ Dark Mode for CTA Item */
+.dark .marketing-cta-item {
+    color: var(--color-light-grey);
+}
+
+/* ✅ CTA Icon */
+.marketing-cta-icon {
+    color: var(--color-accent);
+    font-size: var(--icon-size-md);
+}
+
+/* ============================
+   🌟 CTA Button Wrapper
+============================ */
+.marketing-cta {
+    margin-top: var(--spacing-md);
+}
+
+/* ============================
+   🌟 Responsive Adjustments
+============================ */
+
+/* ✅ Tablet */
+@media (max-width: 768px) {
+    .marketing-cta-wrapper {
+        padding: var(--spacing-md);
+    }
+
+    .marketing-title {
+        font-size: var(--font-size-h3);
+    }
+}
+
+/* ✅ Mobile */
+@media (max-width: 740px) {
+    .marketing-cta-wrapper {
+        padding: var(--spacing-md);
+    }
+
+    .marketing-title {
+        font-size: var(--font-size-h3);
+    }
+
+    /* 🔹 Hide divider on small screens */
+    .divider {
+        display: none;
+    }
+}
+
+/* ✅ Mobile */
+@media (max-width: 480px) {
+    .marketing-cta-wrapper {
+        padding: var(--spacing-md);
+    }
+
+    .marketing-title {
+        font-size: var(--font-size-h4);
+    }
+
+    /* 🔹 Hide divider on small screens */
+    .divider {
+        display: none;
+    }
+}

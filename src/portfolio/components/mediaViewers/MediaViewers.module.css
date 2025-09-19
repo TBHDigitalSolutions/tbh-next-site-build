@@ -1,0 +1,509 @@
+/* ============================
+   🎬 TBH Digital Solutions - Media Viewers
+   Aligned with Brand Guide & Root Variables
+============================ */
+
+/* ============================
+   🖼️ Shared Base Styles
+============================ */
+
+.imageViewer,
+.videoViewer,
+.interactiveViewer,
+.pdfViewer {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-height: 400px;
+    background: var(--bg-primary);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ============================
+   ⏳ Loading States
+============================ */
+
+.loadingSpinner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-md);
+    color: var(--text-secondary);
+    padding: var(--spacing-xl);
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid var(--border-subtle);
+    border-top: 3px solid var(--accent-primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.loadingText {
+    font-family: var(--font-body);
+    font-size: var(--font-size-small);
+    color: var(--text-secondary);
+    margin: 0;
+    text-align: center;
+}
+
+/* ============================
+   ❌ Error States
+============================ */
+
+.errorState {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-md);
+    text-align: center;
+    padding: var(--spacing-xl);
+    color: var(--text-secondary);
+}
+
+.errorState h3 {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-h4);
+    color: var(--text-accent);
+    margin: 0;
+}
+
+.errorState p {
+    font-family: var(--font-body);
+    font-size: var(--font-size-body);
+    color: var(--text-secondary);
+    margin: 0;
+    max-width: 40ch;
+}
+
+.errorActions {
+    display: flex;
+    gap: var(--spacing-sm);
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: var(--spacing-sm);
+}
+
+/* ============================
+   🖼️ Image Viewer
+============================ */
+
+.imageViewer {
+    background: var(--bg-surface);
+}
+
+.image {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    opacity: 0;
+    transition: opacity var(--transition-standard);
+}
+
+.image.loaded {
+    opacity: 1;
+}
+
+/* ============================
+   🎥 Video Viewer
+============================ */
+
+.videoViewer {
+    background: var(--bg-primary);
+}
+
+.videoContainer {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.video {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    opacity: 0;
+    transition: opacity var(--transition-standard);
+    border-radius: var(--radius-sm);
+}
+
+.video.loaded {
+    opacity: 1;
+}
+
+.playOverlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80px;
+    height: 80px;
+    background: rgba(14, 175, 251, 0.9);
+    border: none;
+    border-radius: 50%;
+    color: var(--text-inverse);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition-fast);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
+
+.playOverlay:hover {
+    background: var(--accent-hover);
+    transform: translate(-50%, -50%) scale(1.1);
+}
+
+.playOverlay:focus {
+    outline: 2px solid var(--accent-primary);
+    outline-offset: 4px;
+}
+
+.playIcon {
+    width: 32px;
+    height: 32px;
+    margin-left: 4px;
+    /* Visual centering for play triangle */
+}
+
+/* ============================
+   🖥️ Interactive Viewer
+============================ */
+
+.interactiveViewer {
+    min-height: 600px;
+    background: var(--bg-surface);
+}
+
+.iframe {
+    width: 100%;
+    height: 100%;
+    min-height: 600px;
+    border: none;
+    border-radius: var(--radius-sm);
+    opacity: 0;
+    transition: opacity var(--transition-standard);
+}
+
+.iframe.loaded {
+    opacity: 1;
+}
+
+.iframeOverlay {
+    position: absolute;
+    top: var(--spacing-sm);
+    right: var(--spacing-sm);
+    z-index: 10;
+}
+
+.overlayContent {
+    display: flex;
+    gap: var(--spacing-xs);
+}
+
+.openExternalButton {
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    background: rgba(6, 5, 18, 0.8);
+    border: 1px solid var(--border-subtle);
+}
+
+.openExternalButton:hover {
+    background: rgba(14, 175, 251, 0.9);
+    border-color: var(--accent-primary);
+}
+
+.externalIcon {
+    width: 16px;
+    height: 16px;
+}
+
+/* ============================
+   📄 PDF Viewer
+============================ */
+
+.pdfViewer {
+    min-height: 700px;
+    flex-direction: column;
+    background: var(--bg-surface);
+}
+
+.pdfFrame {
+    width: 100%;
+    height: 100%;
+    min-height: 600px;
+    border: none;
+    border-radius: var(--radius-sm);
+    opacity: 0;
+    transition: opacity var(--transition-standard);
+    flex: 1;
+}
+
+.pdfFrame.loaded {
+    opacity: 1;
+}
+
+.pdfActions {
+    display: flex;
+    gap: var(--spacing-sm);
+    justify-content: center;
+    align-items: center;
+    padding: var(--spacing-md);
+    background: var(--bg-elevated);
+    border-top: 1px solid var(--border-subtle);
+    flex-shrink: 0;
+}
+
+.downloadButton,
+.downloadIcon {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+}
+
+.downloadIcon {
+    width: 16px;
+    height: 16px;
+}
+
+/* ============================
+   📱 Responsive Design
+============================ */
+
+/* Tablet */
+@media (max-width: 1024px) {
+
+    .imageViewer,
+    .videoViewer,
+    .interactiveViewer,
+    .pdfViewer {
+        min-height: 350px;
+    }
+
+    .interactiveViewer {
+        min-height: 500px;
+    }
+
+    .iframe {
+        min-height: 500px;
+    }
+
+    .pdfViewer {
+        min-height: 600px;
+    }
+
+    .pdfFrame {
+        min-height: 500px;
+    }
+
+    .playOverlay {
+        width: 60px;
+        height: 60px;
+    }
+
+    .playIcon {
+        width: 24px;
+        height: 24px;
+    }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+
+    .imageViewer,
+    .videoViewer,
+    .interactiveViewer,
+    .pdfViewer {
+        min-height: 300px;
+    }
+
+    .interactiveViewer {
+        min-height: 400px;
+    }
+
+    .iframe {
+        min-height: 400px;
+    }
+
+    .pdfViewer {
+        min-height: 500px;
+    }
+
+    .pdfFrame {
+        min-height: 400px;
+    }
+
+    .errorState {
+        padding: var(--spacing-lg);
+    }
+
+    .errorActions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .pdfActions {
+        flex-direction: column;
+        gap: var(--spacing-sm);
+    }
+
+    .pdfActions button {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .iframeOverlay {
+        position: static;
+        padding: var(--spacing-sm);
+        background: var(--bg-elevated);
+        border-top: 1px solid var(--border-subtle);
+    }
+
+    .overlayContent {
+        justify-content: center;
+    }
+
+    .openExternalButton {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* Small Mobile */
+@media (max-width: 480px) {
+
+    .imageViewer,
+    .videoViewer,
+    .interactiveViewer,
+    .pdfViewer {
+        min-height: 250px;
+    }
+
+    .interactiveViewer {
+        min-height: 350px;
+    }
+
+    .iframe {
+        min-height: 350px;
+    }
+
+    .pdfViewer {
+        min-height: 400px;
+    }
+
+    .pdfFrame {
+        min-height: 300px;
+    }
+
+    .loadingSpinner {
+        padding: var(--spacing-md);
+    }
+
+    .errorState {
+        padding: var(--spacing-md);
+    }
+
+    .playOverlay {
+        width: 50px;
+        height: 50px;
+    }
+
+    .playIcon {
+        width: 20px;
+        height: 20px;
+    }
+}
+
+/* ============================
+   ♿ Accessibility & Focus States
+============================ */
+
+.playOverlay:focus-visible,
+.openExternalButton:focus-visible,
+.downloadButton:focus-visible {
+    outline: 2px solid var(--accent-primary);
+    outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .spinner {
+        border-top-color: var(--text-accent);
+    }
+
+    .playOverlay {
+        background: var(--accent-primary);
+        border: 2px solid var(--text-primary);
+    }
+
+    .errorState,
+    .loadingSpinner {
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius-sm);
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    .spinner {
+        animation: none;
+        border-top-color: var(--accent-primary);
+    }
+
+    .image,
+    .video,
+    .iframe,
+    .pdfFrame {
+        transition: none;
+    }
+
+    .playOverlay:hover {
+        transform: translate(-50%, -50%);
+    }
+}
+
+/* ============================
+   🎨 Loading State Variants
+============================ */
+
+.loadingSpinner[aria-label*="image"] .spinner {
+    border-top-color: #4ECDC4;
+}
+
+.loadingSpinner[aria-label*="video"] .spinner {
+    border-top-color: #FF6B6B;
+}
+
+.loadingSpinner[aria-label*="interactive"] .spinner {
+    border-top-color: var(--accent-primary);
+}
+
+.loadingSpinner[aria-label*="PDF"] .spinner {
+    border-top-color: #96CEB4;
+}

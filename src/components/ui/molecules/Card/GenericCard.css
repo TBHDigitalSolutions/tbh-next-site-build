@@ -1,0 +1,180 @@
+/* ============================================
+   🎨 Generic Card (TBH Unified Theme)
+   Variants supported by TSX: team | testimonial | corevalue | default
+============================================ */
+
+.generic-card {
+    background: var(--bg-surface);
+    color: var(--text-primary);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-xs);
+    padding: var(--spacing-xl);
+    width: clamp(260px, 100%, 360px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+
+    transition:
+        transform var(--transition-fast),
+        box-shadow var(--transition-fast),
+        border-color var(--transition-fast),
+        background-color var(--transition-fast),
+        color var(--transition-fast);
+}
+
+.generic-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--border-accent, var(--brand-blue));
+}
+
+/* ---------- Shared Elements ---------- */
+.generic-card-image {
+    inline-size: 8rem;
+    block-size: 8rem;
+    border-radius: var(--radius-full);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border-subtle);
+    margin-bottom: var(--spacing-md);
+}
+
+.generic-card-title {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-h4);
+    font-weight: 700;
+    color: var(--text-accent);
+    margin: 0 0 var(--spacing-xs);
+    line-height: var(--line-height-heading);
+}
+
+.generic-card-position,
+.generic-card-subtitle {
+    font-family: var(--font-body);
+    font-size: var(--font-size-small);
+    color: var(--text-secondary);
+    margin: 0 0 var(--spacing-sm);
+}
+
+.generic-card-description,
+.generic-card-details {
+    font-family: var(--font-body);
+    font-size: var(--font-size-body);
+    color: var(--text-secondary);
+    line-height: var(--line-height-body);
+    margin: 0 0 var(--spacing-md);
+    text-align: left;
+}
+
+/* Buttons / Links (fallbacks if shared .btn not used) */
+.generic-card-btn,
+.generic-card-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-heading);
+    font-size: var(--font-size-small);
+    font-weight: 700;
+    padding: var(--spacing-xs) var(--spacing-lg);
+    border-radius: var(--radius-md);
+    border: 0;
+    text-decoration: none;
+    cursor: pointer;
+    background: var(--accent-primary, var(--brand-blue));
+    color: var(--text-inverse);
+    box-shadow: var(--shadow-sm);
+    transition: background-color var(--transition-fast), transform var(--transition-fast);
+}
+
+.generic-card-btn:hover,
+.generic-card-link:hover {
+    background: var(--accent-hover);
+    transform: translateY(-1px);
+}
+
+.generic-card-btn:focus-visible,
+.generic-card-link:focus-visible {
+    outline: 2px solid var(--accent-primary, var(--brand-blue));
+    outline-offset: 2px;
+}
+
+/* Date */
+.generic-card-date {
+    font-size: var(--font-size-caption);
+    color: var(--text-tertiary, rgba(255, 255, 255, .6));
+    margin-top: var(--spacing-xs);
+}
+
+/* ---------- Testimonial Variant ---------- */
+.testimonialcard-image-wrapper {
+    inline-size: 6rem;
+    block-size: 6rem;
+    border-radius: var(--radius-full);
+    overflow: hidden;
+    margin: 0 auto var(--spacing-sm);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border-subtle);
+}
+
+.testimonialcard-image {
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+    border-radius: var(--radius-full);
+}
+
+.testimonialcard-text {
+    font-family: var(--font-body);
+    font-size: var(--font-size-body);
+    font-style: italic;
+    color: var(--text-secondary);
+    line-height: var(--line-height-body);
+    margin: 0 0 var(--spacing-sm);
+    text-align: left;
+}
+
+.testimonialcard-rating {
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing-2xs, 0.25rem);
+    margin-bottom: var(--spacing-xs);
+}
+
+.testimonialcard-star {
+    color: var(--accent-primary, var(--brand-blue));
+    font-size: var(--font-size-large);
+}
+
+.testimonialcard-name {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: var(--font-size-h5);
+    color: var(--text-accent);
+    margin: var(--spacing-xs) 0;
+}
+
+.testimonialcard-details,
+.testimonialcard-date {
+    font-family: var(--font-body);
+    font-size: var(--font-size-small);
+    color: var(--text-secondary);
+    margin: 0;
+    text-align: center;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 768px) {
+    .generic-card {
+        padding: var(--spacing-lg);
+    }
+
+    .generic-card-title {
+        font-size: var(--font-size-h5);
+    }
+
+    .testimonialcard-text {
+        font-size: var(--font-size-small);
+    }
+}

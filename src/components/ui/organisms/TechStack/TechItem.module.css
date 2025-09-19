@@ -1,0 +1,98 @@
+/* =========================================================================
+   TBH — TechItem (production, unified theme)
+   Replaces legacy vars (accent-primary, border-strong) with canonical tokens
+============================================================================ */
+
+.card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-xl);
+    padding: var(--spacing-lg, 20px);
+    box-shadow: var(--shadow-xs);
+    transition:
+        transform var(--transition-fast, 150ms),
+        box-shadow var(--transition-fast, 150ms),
+        border-color var(--transition-fast, 150ms),
+        background-color var(--transition-fast, 150ms);
+    height: 100%;
+    /* enables equal-height grids */
+    display: flex;
+    flex-direction: column;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--border-primary, var(--brand-blue));
+}
+
+.card:focus-within {
+    outline: 2px solid var(--brand-blue);
+    outline-offset: 2px;
+}
+
+.featured {
+    outline: 2px solid var(--border-primary, var(--brand-blue));
+    outline-offset: 2px;
+}
+
+.logo {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+    margin-bottom: var(--spacing-xs, 8px);
+}
+
+.title {
+    margin: 0 0 var(--spacing-2xs, 6px) 0;
+    font-family: var(--font-heading);
+    font-size: var(--font-size-h4);
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: var(--line-height-heading);
+}
+
+.meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-2xs, 6px);
+    margin-top: var(--spacing-xs, 8px);
+}
+
+.badge {
+    padding: 2px 8px;
+    border-radius: var(--radius-md);
+    background: var(--bg-surface);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-subtle);
+    font-size: var(--font-size-small);
+    line-height: 1.2;
+}
+
+.link {
+    margin-top: var(--spacing-sm, 12px);
+    display: inline-block;
+    color: var(--brand-blue);
+    font-weight: 700;
+    text-decoration: none;
+    transition: color var(--transition-fast, 150ms), transform var(--transition-fast, 150ms);
+}
+
+.link:hover {
+    color: var(--brand-hover, #5AC8FA);
+    text-decoration: underline;
+    transform: translateY(-1px);
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+
+    .card,
+    .link {
+        transition: none !important;
+    }
+
+    .card:hover {
+        transform: none !important;
+    }
+}

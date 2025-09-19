@@ -1,0 +1,72 @@
+/* ============================
+   ✅ SaaS Services Section
+============================ */
+
+.saas-services-section {
+    width: 100%;
+    transition: background 0.3s ease-in-out;
+}
+
+/* ✅ Container */
+.saas-container {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ============================
+   ✅ Grid Layout for Services
+============================ */
+.saas-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--spacing-lg);
+}
+
+/* ============================
+   ✅ Dark Mode Adjustments
+============================ */
+
+.dark .saas-title {
+    color: var(--color-off-white);
+}
+
+.dark .saas-subtitle {
+    color: var(--color-dark-charcoal);
+}
+
+/* ============================
+   ✅ Responsive Design
+============================ */
+
+@media (max-width: 1024px) {
+    .saas-services-section {
+        padding: var(--spacing-md);
+    }
+
+    .saas-grid {
+        gap: var(--spacing-md);
+    }
+}
+
+@media (max-width: 768px) {
+    .saas-title {
+        font-size: var(--font-size-h3);
+    }
+
+    .saas-subtitle {
+        font-size: var(--font-size-body-sm);
+    }
+}
+
+@media (max-width: 480px) {
+    .saas-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .saas-title {
+        font-size: var(--font-size-h4);
+    }
+}

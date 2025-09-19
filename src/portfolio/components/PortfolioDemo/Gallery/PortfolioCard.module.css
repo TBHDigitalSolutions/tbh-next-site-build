@@ -1,0 +1,240 @@
+/* src/components/sections/Web-Dev/PortfolioDemo/Gallery/PortfolioCard.module.css
+   ---------------------------------------------------------------------------
+   • Tokens are scoped to the local .card root (no bare :root in CSS Modules).
+   • Uses CSS `aspect-ratio`; --pc-aspect can be overridden inline.
+   • Subtle hover hint; line clamping; dark-mode via :global selectors.
+   --------------------------------------------------------------------------- */
+
+/* Component-scoped design tokens (previously on :root) */
+.card {
+    /* Spacing & radius */
+    --pc-space-xs: var(--spacing-xs, 6px);
+    --pc-space-sm: var(--spacing-sm, 10px);
+    --pc-space-md: var(--spacing-md, 16px);
+    --pc-space-lg: var(--spacing-lg, 24px);
+
+    --pc-radius-sm: var(--radius-sm, 8px);
+    --pc-radius-md: var(--radius-md, 12px);
+
+    /* Colors & typography */
+    --pc-text: var(--text-color, hsl(222 22% 12%));
+    --pc-text-muted: var(--text-muted, hsl(222 12% 40%));
+    --pc-border: var(--border-color, hsl(220 14% 90%));
+    --pc-surface: var(--surface, #fff);
+    --pc-surface-2: var(--surface-2, hsl(0 0% 98%));
+    --pc-accent: var(--brand, hsl(210 90% 50%));
+
+    /* Media */
+    --pc-aspect: 16 / 9;
+    /* overridable from props via inline style */
+    --pc-media-bg: var(--media-bg, hsl(220 14% 96%));
+    --pc-media-overlay: linear-gradient(to top,
+            hsl(0 0% 0% / 0.45) 0%,
+            hsl(0 0% 0% / 0.1) 60%,
+            transparent 100%);
+
+    /* Chips */
+    --pc-chip-bg: var(--chip-bg, hsl(210 16% 96%));
+    --pc-chip-text: var(--chip-text, hsl(221 16% 24%));
+
+    display: grid;
+    grid-template-rows: auto 1fr;
+    gap: var(--pc-space-sm);
+    background: var(--pc-surface);
+    color: var(--pc-text);
+    min-height: 100%;
+}
+
+/* Media */
+.media {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: var(--pc-aspect);
+    background: var(--pc-media-bg);
+    border-bottom: 1px solid var(--pc-border);
+    isolation: isolate;
+    /* keep overlays localized */
+}
+
+.image {
+    object-fit: cover;
+}
+
+/* Placeholder when image missing */
+.placeholder {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    place-items: center;
+    background:
+        radial-gradient(150% 120% at 50% 10%, hsl(210 90% 96%), transparent 70%),
+        var(--pc-media-bg);
+    color: var(--pc-text-muted);
+    font-weight: 700;
+    font-size: clamp(1.25rem, 1rem + 1.2vw, 2rem);
+}
+
+.placeholderLabel {
+    opacity: 0.7;
+}
+
+/* Subtle “view demo” hint overlay (non-interactive) */
+.viewHint {
+    position: absolute;
+    inset: auto var(--pc-space-sm) var(--pc-space-sm) auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: hsl(0 0% 0% / 0.58);
+    color: white;
+    font-size: 0.85rem;
+    line-height: 1;
+    opacity: 0;
+    transform: translateY(2px);
+    transition: opacity .18s ease, transform .18s ease;
+    pointer-events: none;
+}
+
+.viewIcon {
+    opacity: 0.85;
+}
+
+.viewText {
+    line-height: 1;
+}
+
+/* Reveal hint when hovering the media (works even if parent does the main hover) */
+.media:hover .viewHint,
+.media:focus-within .viewHint {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Add a gentle bottom gradient so titles stay readable on bright images */
+.media::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: var(--pc-media-overlay);
+    opacity: 0.75;
+}
+
+/* Content */
+.content {
+    display: grid;
+    gap: var(--pc-space-sm);
+    padding: 0 var(--pc-space-sm) var(--pc-space-sm);
+}
+
+.header {
+    display: grid;
+    gap: 6px;
+}
+
+.title {
+    font-size: clamp(1.05rem, 1rem + 0.35vw, 1.25rem);
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    margin: 0;
+}
+
+.metaRow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px var(--pc-space-sm);
+    align-items: center;
+}
+
+.pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: var(--pc-chip-bg);
+    color: var(--pc-chip-text);
+    font-size: 0.8rem;
+    border: 1px solid var(--pc-border);
+    white-space: nowrap;
+}
+
+.meta {
+    color: var(--pc-text-muted);
+    font-size: 0.9rem;
+    white-space: nowrap;
+}
+
+.description {
+    color: var(--pc-text-muted);
+    font-size: 0.95rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* Footer: technology chips */
+.footer {
+    margin-top: 2px;
+}
+
+.techList {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.techChip,
+.techChipMore {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 8px;
+    border-radius: 999px;
+    background: var(--pc-surface-2);
+    border: 1px solid var(--pc-border);
+    color: var(--pc-text);
+    font-size: 0.8rem;
+    line-height: 1.1;
+}
+
+.techChipMore {
+    color: var(--pc-text-muted);
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    .viewHint {
+        transition: none;
+    }
+}
+
+/* Dark mode (explicit theme class on the root) */
+:global(.dark) .card {
+    --pc-text: var(--text-color, hsl(220 15% 92%));
+    --pc-text-muted: var(--text-muted, hsl(220 10% 70%));
+    --pc-border: var(--border-color, hsl(220 12% 22%));
+    --pc-surface: var(--surface, hsl(222 22% 10%));
+    --pc-surface-2: var(--surface-2, hsl(222 16% 14%));
+    --pc-media-bg: hsl(222 16% 14%);
+    --pc-chip-bg: hsl(222 16% 18%);
+    --pc-chip-text: hsl(0 0% 95%);
+}
+
+/* Dark mode (automatic when no explicit theme class is set) */
+@media (prefers-color-scheme: dark) {
+    :global(:root:not(.light, .dark)) .card {
+        --pc-text: var(--text-color, hsl(220 15% 92%));
+        --pc-text-muted: var(--text-muted, hsl(220 10% 70%));
+        --pc-border: var(--border-color, hsl(220 12% 22%));
+        --pc-surface: var(--surface, hsl(222 22% 10%));
+        --pc-surface-2: var(--surface-2, hsl(222 16% 14%));
+        --pc-media-bg: hsl(222 16% 14%);
+        --pc-chip-bg: hsl(222 16% 18%);
+        --pc-chip-text: hsl(0 0% 95%);
+    }
+}

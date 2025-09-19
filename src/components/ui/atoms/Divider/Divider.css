@@ -1,0 +1,36 @@
+/* ============================
+   📏 Reusable Section Divider
+============================ */
+.section-divider {
+    width: 100%;
+    height: 4px;
+    margin: 0;
+    border-radius: var(--radius-sm);
+    background: linear-gradient(to right, transparent, var(--brand-blue), transparent);
+    transition: background var(--transition-default);
+}
+
+/* ✅ Light Theme */
+.light .section-divider {
+    background: linear-gradient(to right, transparent, var(--brand-blue), transparent);
+}
+
+/* ✅ Dark Theme */
+.dark .section-divider {
+    background: linear-gradient(to right, transparent, var(--charcoal-navy), transparent);
+}
+
+/* ============================
+   📱 Responsive Width (Optional)
+============================ */
+@media (max-width: 768px) {
+    .section-divider {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .section-divider {
+        width: 90%;
+    }
+} 

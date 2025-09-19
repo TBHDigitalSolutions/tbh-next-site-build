@@ -1,0 +1,117 @@
+/* ============================
+   🌟 CoreValues Component Styles
+============================ */
+
+.corevalues-container {
+    position: relative;
+    max-width: var(--container-width);
+    margin: 0 auto;
+    padding: var(--spacing-lg);
+    box-shadow: var(--shadow-light);
+    background: var(--background-dark);
+    border-bottom: 3px solid #0EAFFB;
+    transition: var(--transition-default);
+}
+
+.dark .corevalues-container {
+    background: var(--background-dark);
+    box-shadow: var(--shadow-dark);
+    border-bottom: 3px solid #0EAFFB;
+}
+
+/* 🌟 Floating Design Element */
+.corevalues-accent {
+    position: absolute;
+    top: -15px;
+    left: -15px;
+    width: 48px;
+    height: 48px;
+    background: var(--color-accent);
+    opacity: 0.2;
+    border-radius: 50%;
+    filter: blur(16px);
+}
+
+/* 🏆 Heading */
+.corevalues-heading {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-h2);
+    font-weight: bold;
+    color: var(--color-off-white);
+    text-align: center;
+}
+
+/* 🔹 Divider */
+.corevalues-divider {
+    width: 22%;
+    height: 3px;
+    background: var(--color-accent);
+    margin: var(--spacing-sm) auto;
+    border-radius: var(--radius-pill);
+}
+
+/* 📌 Core Values Grid */
+.corevalues-grid {
+    display: grid;
+    width: 100%;
+    gap: var(--spacing-lg);
+    grid-template-columns: repeat(1, 1fr);
+    /* Default: 1 column */
+}
+
+@media (min-width: 640px) {
+    .corevalues-grid {
+        grid-template-columns: repeat(2, 1fr);
+        /* Small screens: 2 columns */
+    }
+}
+
+@media (min-width: 1024px) {
+    .corevalues-grid {
+        grid-template-columns: repeat(3, 1fr);
+        /* Medium+ screens: Max 3 columns */
+    }
+}
+
+@media (min-width: 1440px) {
+    .corevalues-grid {
+        grid-template-columns: repeat(3, 1fr);
+        /* Even on very large screens, max is 3 columns */
+    }
+}
+
+/* 📌 Core Values Card */
+.corevalues-card {
+    background: var(--background-gradient-light);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-md);
+    box-shadow: var(--shadow);
+    text-align: center;
+    transition: var(--transition-default);
+}
+
+.corevalues-card:hover {
+    box-shadow: var(--glow-accent);
+    transform: var(--scale-sm);
+}
+
+.dark .corevalues-card {
+    background: var(--background-gradient-dark);
+    box-shadow: var(--shadow-dark);
+}
+
+/* 📌 Core Values Title */
+.corevalues-title {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-h3);
+    font-weight: bold;
+    color: var(--color-accent);
+    margin-bottom: var(--spacing-xs);
+}
+
+/* 📌 Core Values Description */
+.corevalues-description {
+    font-size: var(--font-size-body);
+    color: var(--primary-text);
+    text-align: left;
+}

@@ -1,0 +1,81 @@
+/* ============================================
+   🗺️ Location Map (TBH Unified Theme)
+============================================ */
+
+.locationmap-section {
+    width: 100%;
+    padding-block: var(--section-pad-block);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+}
+
+.locationmap-container {
+    width: min(calc(100% - 2 * var(--container-pad-inline)), var(--container-max));
+    margin-inline: auto;
+    padding-inline: var(--container-pad-inline);
+}
+
+/* Heading + decorative divider */
+.locationmap-title {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-h2);
+    font-weight: 700;
+    color: var(--text-accent);
+    text-align: center;
+    margin: 0;
+    padding-bottom: var(--spacing-xs);
+    border-bottom: 2px solid var(--border-accent, var(--brand-blue));
+    width: fit-content;
+    margin-inline: auto;
+}
+
+.locationmap-divider {
+    width: 80%;
+    height: 3px;
+    margin: var(--spacing-sm) auto var(--spacing-lg);
+    border-radius: var(--radius-sm);
+    background: linear-gradient(90deg,
+            transparent,
+            var(--border-accent, var(--brand-blue)),
+            transparent);
+    filter: drop-shadow(0 3px 6px color-mix(in oklab, var(--brand-blue) 25%, transparent));
+}
+
+/* Map frame (card) */
+.locationmap-frame {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+
+    /* Give the inner map a predictable height */
+    height: min(70vh, 560px);
+}
+
+/* GoogleMap container inherits 100% from MAP_CONTAINER_STYLE */
+.locationmap-frame>div,
+.locationmap-frame canvas {
+    border-radius: 0;
+    /* radius handled by frame */
+}
+
+/* Fallback image (no API key) */
+.locationmap-fallback {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border: 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .locationmap-divider {
+        width: 92%;
+    }
+
+    .locationmap-frame {
+        height: 360px;
+    }
+}

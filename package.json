@@ -1,0 +1,149 @@
+{
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build", 
+    "start": "next start",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint . --ext .ts,.tsx",
+    "format": "prettier --write .",
+
+    "validate:taxonomy": "tsx scripts/taxonomy/validate-taxonomy.ts",
+    "taxonomy:export-slugs": "tsx scripts/taxonomy/export-slugs.ts",
+    "taxonomy:export-slugs:minimal": "tsx scripts/taxonomy/export-slugs.ts --format=minimal",
+    
+    "validate:middleware": "tsx scripts/routing/validate-middleware.ts",
+    "validate:middleware:loops": "tsx scripts/routing/validate-middleware.ts --check-loops",
+    "validate:middleware:redirects": "tsx scripts/routing/validate-middleware.ts --test-redirects",
+    "validate:middleware:full": "tsx scripts/routing/validate-middleware.ts --test-redirects --check-loops",
+    
+    "validate:services-pages": "tsx scripts/services/validate-services-pages.ts",
+    "validate:services-pages:l2": "tsx scripts/services/validate-services-pages.ts --check-l2",
+    "validate:services-pages:strict": "tsx scripts/services/validate-services-pages.ts --require-index --check-l2",
+    "scaffold:service-page": "tsx scripts/services/scaffold-service-page.ts",
+    "scaffold:service-page:minimal": "tsx scripts/services/scaffold-service-page.ts --template=minimal",
+    "scaffold:service-page:dry": "tsx scripts/services/scaffold-service-page.ts --dry-run",
+    "lint:services:seo": "tsx scripts/services/lint-services-seo.ts",
+
+    "validate:packages": "tsx scripts/packages/validate-packages.ts",
+    "check:packages:featured": "tsx scripts/packages/check-featured-refs.ts",
+    
+    "validate:portfolio": "tsx scripts/portfolio/validate-portfolio.ts",
+    "validate:portfolio:quick": "tsx scripts/portfolio/validate-portfolio.ts --quick",
+    "validate:portfolio:verbose": "tsx scripts/portfolio/validate-portfolio.ts --verbose",
+    "validate:portfolio:json": "tsx scripts/portfolio/validate-portfolio.ts --json",
+
+    "health:portfolio": "tsx scripts/portfolio/check-portfolio-health.ts",
+    "health:portfolio:ping": "tsx scripts/portfolio/check-portfolio-health.ts --ping",
+    "health:portfolio:json": "tsx scripts/portfolio/check-portfolio-health.ts --json",
+
+    "stats:portfolio": "tsx scripts/portfolio/portfolio-stats.ts",
+    "stats:portfolio:verbose": "tsx scripts/portfolio/portfolio-stats.ts --verbose",
+    "stats:portfolio:json": "tsx scripts/portfolio/portfolio-stats.ts --json",
+    "stats:portfolio:category": "tsx scripts/portfolio/portfolio-stats.ts --category=",
+
+    "fix:portfolio": "tsx scripts/portfolio/fix-portfolio-data.ts",
+    "fix:portfolio:dry": "tsx scripts/portfolio/fix-portfolio-data.ts --dry-run",
+    "fix:portfolio:verbose": "tsx scripts/portfolio/fix-portfolio-data.ts --verbose",
+    "fix:portfolio:json": "tsx scripts/portfolio/fix-portfolio-data.ts --json",
+
+    "migrate:portfolio": "tsx scripts/portfolio/migrate-portfolio.ts",
+    "migrate:portfolio:dry": "tsx scripts/portfolio/migrate-portfolio.ts --dry-run",
+    "migrate:portfolio:verbose": "tsx scripts/portfolio/migrate-portfolio.ts --verbose",
+    "migrate:portfolio:json": "tsx scripts/portfolio/migrate-portfolio.ts --json",
+
+    "mirror:public": "node tools/mirror-public.js --readme",
+    "mirror:public:dry": "node tools/mirror-public.js --readme --dry-run --verbose",
+    "mirror:public:prune": "node tools/mirror-public.js --readme --prune",
+    "mirror:public:prune:dry": "node tools/mirror-public.js --readme --prune --dry-run --verbose",
+    "check:public": "node tools/check-public.js --readme",
+    "fix:public": "npm run mirror:public && npm run check:public",
+    "verify:public": "npm run mirror:public:prune:dry && node tools/check-public.js --readme",
+
+    "data:quick-check": "npm run validate:packages && npm run check:packages:featured && npm run validate:portfolio:quick && npm run health:portfolio:ping && npm run validate:taxonomy && npm run validate:services-pages",
+    
+    "data:ci": "npm run verify:public && npm run validate:packages && npm run check:packages:featured && npm run validate:portfolio:quick && npm run health:portfolio:ping && npm run validate:taxonomy && npm run validate:services-pages",
+    
+    "data:foundation": "npm run taxonomy:export-slugs && npm run validate:middleware:full && npm run data:quick-check",
+    
+    "portfolio:full-check": "npm run validate:portfolio && npm run health:portfolio && npm run stats:portfolio",
+    "portfolio:quick-check": "npm run validate:portfolio:quick && npm run health:portfolio:ping",
+    "portfolio:deep-analysis": "npm run validate:portfolio:verbose && npm run stats:portfolio:verbose && npm run health:portfolio",
+    "portfolio:maintenance": "npm run fix:portfolio:dry && npm run validate:portfolio && npm run health:portfolio",
+    
+    "dev:validate": "npm run data:quick-check",
+    "build:validate": "npm run validate:portfolio:quick",
+    "precommit:data": "npm run data:quick-check",
+    "precommit:portfolio": "npm run validate:portfolio:quick && npm run health:portfolio:ping",
+    "prebuild:validate": "npm run data:foundation",
+    "test:portfolio": "npm run portfolio:quick-check"
+  },
+  "dependencies": {
+    "@hookform/resolvers": "^5.2.1",
+    "aos": "^2.3.4",
+    "axios": "^1.8.3",
+    "clsx": "^2.1.1",
+    "framer-motion": "^12.5.0",
+    "keen-slider": "^6.8.6",
+    "lucide-react": "^0.483.0",
+    "minisearch": "^7.1.2",
+    "next": "^15.2.3",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "react-hook-form": "^7.54.2",
+    "react-icons": "^5.5.0",
+    "react-toastify": "^11.0.5",
+    "zod": "^4.1.5"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.1.12",
+    "@types/node": "24.3.0",
+    "@types/react": "^19.1.0",
+    "@types/react-dom": "^19.1.0",
+    "autoprefixer": "^10.4.21",
+    "eslint": "^9.0.0",
+    "eslint-config-next": "^15.2.3",
+    "postcss": "^8.5.3",
+    "prettier": "^3.5.2",
+    "tailwindcss": "^4.0.17",
+    "tsx": "^4.19.1",
+    "typescript": "^5.6.3"
+  },
+  "engines": {
+    "node": ">=18.18.0"
+  },
+  "_portfolio_script_usage": {
+    "validation": {
+      "basic": "npm run validate:portfolio",
+      "quick_ci": "npm run validate:portfolio:quick", 
+      "detailed": "npm run validate:portfolio:verbose",
+      "machine_readable": "npm run validate:portfolio:json"
+    },
+    "health_monitoring": {
+      "full_check": "npm run health:portfolio",
+      "ping_status": "npm run health:portfolio:ping",
+      "json_output": "npm run health:portfolio:json"
+    },
+    "statistics": {
+      "overview": "npm run stats:portfolio",
+      "detailed": "npm run stats:portfolio:verbose", 
+      "specific_category": "npm run stats:portfolio:category=web-development",
+      "json_export": "npm run stats:portfolio:json"
+    },
+    "maintenance": {
+      "preview_fixes": "npm run fix:portfolio:dry",
+      "apply_fixes": "npm run fix:portfolio",
+      "verbose_fixing": "npm run fix:portfolio:verbose"
+    },
+    "migration": {
+      "preview_migration": "npm run migrate:portfolio:dry",
+      "run_migration": "npm run migrate:portfolio",
+      "detailed_migration": "npm run migrate:portfolio:verbose"
+    },
+    "combined_workflows": {
+      "full_validation": "npm run portfolio:full-check",
+      "quick_status": "npm run portfolio:quick-check", 
+      "deep_analysis": "npm run portfolio:deep-analysis",
+      "maintenance_cycle": "npm run portfolio:maintenance"
+    }
+  }
+}

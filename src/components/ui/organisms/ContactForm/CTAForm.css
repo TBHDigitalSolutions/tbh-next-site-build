@@ -1,0 +1,313 @@
+/* ============================
+   📩 TBH Digital Solutions - CTA Form Styles
+   Aligned with Brand Guide & Root Variables
+============================ */
+
+/* ✅ Main CTA Form Container */
+.cta-form {
+    width: 100%;
+    max-width: clamp(320px, 50vw, 600px);
+    background-color: var(--bg-elevated);
+    color: var(--text-primary);
+    padding: clamp(var(--spacing-lg), 4vw, var(--spacing-xl));
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-subtle);
+    box-shadow: var(--shadow-md);
+    transition: var(--transition-standard);
+    overflow: hidden;
+    font-family: var(--font-body);
+}
+
+.cta-form:hover {
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-2px);
+}
+
+/* ✅ Form Layout Wrapper */
+.cta-form-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(var(--spacing-md), 2.5vw, var(--spacing-lg));
+}
+
+/* ============================
+   🖊️ TBH Input Fields
+============================ */
+
+.cta-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(var(--spacing-xs), 1vw, var(--spacing-sm));
+}
+
+/* ✅ TBH Labels */
+.cta-form-label {
+    font-family: var(--font-heading);
+    font-size: clamp(var(--font-size-small), 1.3vw, var(--font-size-body));
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: clamp(var(--spacing-xs), 0.5vw, var(--spacing-sm));
+}
+
+/* ✅ TBH Input Fields */
+.cta-form-input,
+.cta-form-select,
+.cta-form-textarea {
+    width: calc(100% - 24px);
+    padding: clamp(var(--spacing-sm), 1.2vw, var(--spacing-md));
+    border: var(--form-input-border);
+    border-radius: var(--form-input-radius);
+    background-color: var(--bg-input);
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    font-size: clamp(var(--font-size-small), 1.2vw, var(--font-size-body));
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+/* ✅ TBH Focus States */
+.cta-form-input:focus,
+.cta-form-select:focus,
+.cta-form-textarea:focus {
+    outline: 2px solid var(--accent-primary);
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 0 3px rgba(14, 175, 251, 0.1);
+}
+
+/* ✅ TBH Error States */
+.cta-form-input-error {
+    border-color: var(--color-danger);
+    box-shadow: 0 0 0 3px rgba(215, 38, 61, 0.1);
+}
+
+.cta-form-error {
+    font-family: var(--font-body);
+    font-size: clamp(var(--font-size-caption), 1vw, var(--font-size-small));
+    color: var(--color-danger);
+    margin-top: var(--spacing-xs);
+}
+
+/* ✅ Textarea Specific */
+.cta-form-textarea {
+    min-height: 120px;
+    resize: vertical;
+    line-height: var(--line-height-body);
+}
+
+/* ============================
+   🔤 TBH Submit Button
+============================ */
+
+.cta-form-button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: clamp(var(--spacing-md), 2.5vw, var(--spacing-lg));
+}
+
+.cta-form-button {
+    font-family: var(--font-heading);
+    font-size: clamp(var(--font-size-body), 1.5vw, var(--font-size-h4));
+    font-weight: 700;
+    padding: clamp(var(--spacing-sm), 1vw, var(--spacing-md));
+    width: 100%;
+    color: var(--text-primary);
+    background-color: var(--accent-primary);
+    border: none;
+    border-radius: var(--btn-border-radius);
+    cursor: pointer;
+    box-shadow: var(--shadow-sm);
+    transition: var(--btn-transition);
+}
+
+.cta-form-button:hover {
+    background-color: var(--text-primary);
+    color: var(--text-inverse);
+    transform: var(--btn-hover-lift);
+    box-shadow: var(--shadow-md);
+}
+
+.cta-form-button:focus {
+    outline: 2px solid var(--accent-primary);
+    outline-offset: 2px;
+}
+
+.cta-form-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* ============================
+   📱 TBH Responsive Design
+============================ */
+
+/* Large Desktop */
+@media (min-width: 1200px) {
+    .cta-form {
+        max-width: 650px;
+        padding: var(--spacing-xxl);
+    }
+}
+
+/* Tablet Adjustments */
+@media (max-width: 1024px) {
+    .cta-form {
+        max-width: 80vw;
+        padding: clamp(var(--spacing-md), 4vw, var(--spacing-lg));
+    }
+
+    .cta-form-wrapper {
+        gap: var(--spacing-md);
+    }
+}
+
+/* Mobile Adjustments */
+@media (max-width: 768px) {
+    .cta-form {
+        max-width: 90vw;
+        padding: clamp(var(--spacing-sm), 3vw, var(--spacing-md));
+    }
+
+    .cta-form-label {
+        font-size: clamp(var(--font-size-caption), 3vw, var(--font-size-small));
+    }
+
+    .cta-form-input,
+    .cta-form-select,
+    .cta-form-textarea {
+        padding: var(--spacing-sm);
+        font-size: var(--font-size-small);
+    }
+
+    .cta-form-button {
+        font-size: clamp(var(--font-size-small), 3vw, var(--font-size-body));
+        padding: var(--spacing-sm) var(--spacing-md);
+    }
+
+    .cta-form-textarea {
+        min-height: 100px;
+    }
+}
+
+/* Small Mobile Adjustments */
+@media (max-width: 480px) {
+    .cta-form {
+        max-width: 95vw;
+        padding: var(--spacing-md);
+    }
+
+    .cta-form-wrapper {
+        gap: var(--spacing-sm);
+    }
+}
+
+/* ============================
+   🌙 Dark/Light Mode Specific
+============================ */
+
+/* Dark Mode Specific */
+[data-theme="dark"] .cta-form {
+    background-color: var(--bg-elevated);
+    border-color: var(--border-subtle);
+}
+
+[data-theme="dark"] .cta-form-label {
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .cta-form-input,
+[data-theme="dark"] .cta-form-select,
+[data-theme="dark"] .cta-form-textarea {
+    background-color: var(--bg-input);
+    color: var(--text-primary);
+    border-color: var(--border-input);
+}
+
+/* Light Mode Specific */
+[data-theme="light"] .cta-form {
+    background-color: var(--bg-elevated);
+    border-color: var(--border-subtle);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .cta-form:hover {
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+[data-theme="light"] .cta-form-input,
+[data-theme="light"] .cta-form-select,
+[data-theme="light"] .cta-form-textarea {
+    background-color: var(--bg-input);
+    color: var(--text-primary);
+    border-color: var(--border-input);
+}
+
+/* ============================
+   ✨ TBH Animation Effects
+============================ */
+
+@keyframes ctaFormSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.cta-form {
+    animation: ctaFormSlideIn var(--transition-standard) ease-out;
+}
+
+.cta-form-group {
+    animation: ctaFormSlideIn var(--transition-standard) ease-out;
+}
+
+/* ============================
+   🎯 TBH Success & Loading States
+============================ */
+.cta-form-success {
+    background-color: rgba(40, 167, 69, 0.1);
+    border-color: var(--color-success);
+    color: var(--color-success);
+    text-align: center;
+    padding: var(--spacing-xl);
+    border-radius: var(--radius-lg);
+    font-family: var(--font-heading);
+    font-weight: 600;
+}
+
+.cta-form-loading {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+.cta-form-loading .cta-form-button {
+    background-color: var(--text-secondary);
+    cursor: wait;
+}
+
+/* ============================
+   🎨 TBH Form Variants
+============================ */
+
+/* Compact variant for smaller spaces */
+.cta-form-compact {
+    max-width: 400px;
+    padding: var(--spacing-md);
+}
+
+.cta-form-compact .cta-form-wrapper {
+    gap: var(--spacing-sm);
+}
+
+/* Wide variant for full-width sections */
+.cta-form-wide {
+    max-width: 800px;
+}
+
+.cta-form-wide .cta-form-wrapper {
+    gap: var(--spacing-lg);
+}

@@ -1,0 +1,196 @@
+/* ============================================
+   📊 Stats Highlight — TBH Unified Theme
+   Matches: StatsHighlight.tsx
+   - Unified section/container
+   - Card recipe + hover lift
+   - Animated grid reveal
+   - Accessible hover/focus description
+============================================ */
+
+/* Section band */
+.stats-highlight {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    padding-block: var(--section-pad-block);
+    transition: background-color var(--transition-standard), color var(--transition-standard);
+}
+
+/* Max-width container */
+.stats-highlight-container {
+    width: min(calc(100% - 2 * var(--container-pad-inline)), var(--container-max));
+    margin-inline: auto;
+    padding-inline: var(--container-pad-inline);
+    text-align: center;
+    box-sizing: border-box;
+}
+
+/* Grid */
+.stats-highlight-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: var(--spacing-xl);
+    margin-top: var(--spacing-md);
+
+    /* entrance animation */
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity var(--transition-standard), transform var(--transition-standard);
+}
+
+.stats-highlight-grid.animate {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Card */
+.stats-highlight-item {
+    background: var(--bg-surface);
+    color: var(--text-primary);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-xs);
+    padding: var(--spacing-xl);
+
+    display: grid;
+    grid-template-rows: auto auto auto auto 1fr;
+    /* icon, value, label, divider, desc */
+    align-items: start;
+    justify-items: center;
+    gap: var(--spacing-sm);
+
+    transition:
+        transform var(--transition-fast),
+        box-shadow var(--transition-fast),
+        border-color var(--transition-fast),
+        background-color var(--transition-fast),
+        color var(--transition-fast);
+
+    /* item reveal */
+    animation: fadeInUp 0.8s ease-out both;
+}
+
+.stats-highlight-item:hover,
+.stats-highlight-item:focus-within {
+    transform: translateY(-3px);
+    border-color: var(--border-accent, var(--brand-blue));
+    box-shadow: var(--shadow-md);
+}
+
+/* Icon chip */
+.stats-highlight-icon-wrapper {
+    inline-size: clamp(3.5rem, 3rem + 1vw, 4.5rem);
+    block-size: clamp(3.5rem, 3rem + 1vw, 4.5rem);
+    border-radius: var(--radius-full);
+    display: grid;
+    place-items: center;
+    background: color-mix(in oklab, var(--brand-blue) 20%, transparent);
+    color: var(--text-inverse);
+    box-shadow: var(--shadow-sm);
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.stats-highlight-item:hover .stats-highlight-icon-wrapper {
+    transform: scale(1.06);
+    box-shadow: var(--shadow-md);
+}
+
+.stats-highlight-icon {
+    font-size: clamp(1.75rem, 1.4rem + 1vw, 2.25rem);
+    line-height: 1;
+}
+
+/* Value */
+.stats-highlight-value {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-h1);
+    font-weight: 800;
+    line-height: var(--line-height-tight);
+    color: var(--text-accent);
+    margin: 0;
+}
+
+/* Label */
+.stats-highlight-label {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-small);
+    font-weight: 700;
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+/* Divider under label */
+.stats-highlight-divider {
+    width: 100%;
+    height: 2px;
+    border-radius: var(--radius-full);
+    background: linear-gradient(90deg, transparent, var(--border-accent, var(--brand-blue)), transparent);
+    transition: opacity var(--transition-fast), transform var(--transition-fast), background-color var(--transition-fast);
+}
+
+.stats-highlight-item:hover .stats-highlight-divider {
+    opacity: 0.35;
+    transform: scaleX(0.35);
+}
+
+/* Description: hidden by default, reveal on hover/focus */
+.stats-highlight-description {
+    width: 100%;
+    max-width: 70ch;
+    text-align: left;
+
+    font-family: var(--font-body);
+    font-size: var(--font-size-body);
+    line-height: var(--line-height-body);
+    color: var(--text-secondary);
+
+    margin: 0;
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: opacity var(--transition-fast), max-height var(--transition-fast);
+}
+
+.stats-highlight-item:hover .stats-highlight-description,
+.stats-highlight-item:focus-within .stats-highlight-description {
+    opacity: 1;
+    max-height: 20rem;
+    /* enough to show multi-line text */
+}
+
+/* Responsive tweaks */
+@media (max-width: 768px) {
+    .stats-highlight-grid {
+        gap: var(--spacing-lg);
+    }
+
+    .stats-highlight-description {
+        /* also reveal on focus for touch users */
+        transition: opacity var(--transition-fast), max-height var(--transition-fast);
+    }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+
+    .stats-highlight-grid,
+    .stats-highlight-item,
+    .stats-highlight-icon-wrapper,
+    .stats-highlight-divider,
+    .stats-highlight-description {
+        transition: none !important;
+        animation: none !important;
+    }
+}
+
+/* Keyframes */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

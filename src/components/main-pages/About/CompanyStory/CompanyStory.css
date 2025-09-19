@@ -1,0 +1,96 @@
+/* ============================
+   🌟 Company Story (Unified)
+============================ */
+
+.companystory-container {
+    width: 100%;
+    display: grid;
+    gap: var(--spacing-xl);
+    align-items: center;
+    padding-block: var(--section-pad-block);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+}
+
+@media (min-width: 768px) {
+    .companystory-container {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+/* Left (video) */
+.companystory-left {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.companystory-video {
+    width: 100%;
+    max-width: 720px;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border-subtle);
+}
+
+/* Right (content) */
+.companystory-right {
+    text-align: left;
+    max-width: 720px;
+    margin-inline: auto;
+}
+
+.companystory-heading {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-h2);
+    font-weight: 700;
+    color: var(--text-accent);
+    margin: 0;
+}
+
+.companystory-divider {
+    width: 30%;
+    height: 3px;
+    background: var(--accent-primary, var(--brand-blue));
+    margin: var(--spacing-sm) 0 var(--spacing-md);
+    border-radius: var(--radius-full);
+}
+
+.companystory-description {
+    font-family: var(--font-body);
+    font-size: var(--font-size-body);
+    color: var(--text-secondary);
+    line-height: var(--line-height-body);
+    margin: 0;
+}
+
+.companystory-highlight {
+    font-weight: 700;
+    color: var(--text-accent);
+}
+
+/* CTA */
+.companystory-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-sm) var(--spacing-lg);
+    font-family: var(--font-heading);
+    font-size: var(--font-size-small);
+    font-weight: 700;
+    border-radius: var(--radius-md);
+    background: var(--accent-primary, var(--brand-blue));
+    color: var(--text-inverse);
+    text-decoration: none;
+    border: 0;
+    box-shadow: var(--shadow-sm);
+    margin-top: var(--spacing-md);
+    transition:
+        background-color var(--transition-fast),
+        transform var(--transition-fast);
+}
+
+.companystory-btn:hover {
+    background: var(--accent-hover);
+    transform: translateY(-1px);
+}

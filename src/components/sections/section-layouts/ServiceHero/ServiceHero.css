@@ -1,0 +1,370 @@
+/* ============================
+   🎯 ServiceHero — Wrapper‑friendly & Button‑safe
+   - Lets HeroWrapper control height
+   - Uses Button.css for core button tokens/variants
+   - Only adds non‑conflicting hero-local tweaks
+============================ */
+
+/* ============================
+   Base (no min-height here)
+============================ */
+.service-hero {
+    position: relative;
+    width: 100%;
+    overflow: clip;
+    /* prevent stray media scrollbars */
+}
+
+/* Balance the top/bottom spacing through HeroWrapper’s inner container.
+   This keeps distance above the title ~= below the CTA. */
+.service-hero .hero-content-container {
+    padding-block: clamp(32px, 6vh, 72px);
+}
+
+/* If you also want spacing on the page Container, keep this */
+.service-hero .container {
+    padding-block: var(--section-padding-vertical, 40px);
+}
+
+/* Subtle vignette (overlay already handled by HeroWrapper) */
+.service-hero::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 2;
+    background: linear-gradient(to bottom,
+            color-mix(in oklab, var(--deep-navy, #060512) 10%, transparent) 0%,
+            transparent 35%,
+            transparent 65%,
+            color-mix(in oklab, var(--deep-navy, #060512) 10%, transparent) 100%);
+}
+
+.service-hero.hero-bg-video::after {
+    background: linear-gradient(to bottom,
+            color-mix(in oklab, var(--deep-navy, #060512) 14%, transparent) 0%,
+            transparent 35%,
+            transparent 65%,
+            color-mix(in oklab, var(--deep-navy, #060512) 14%, transparent) 100%);
+}
+
+/* ============================
+   Content layout
+============================ */
+.service-hero .service-hero-content {
+    position: relative;
+    z-index: 3;
+    /* above media & vignette */
+    min-height: 0;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    /* vertical centering within padded area */
+    text-align: center;
+
+    gap: var(--spacing-md, 1rem);
+    max-width: 100%;
+}
+
+/* ============================
+   Typography
+============================ */
+.service-hero-title {
+    font-family: var(--font-heading, "Aldrich", sans-serif);
+    font-size: clamp(2.25rem, 5vw, 3.5rem);
+    font-weight: 600;
+    line-height: var(--line-height-heading, 1.2);
+    color: var(--text-inverse, var(--off-white, #f4f6f7));
+    margin: 0;
+    margin-inline: auto;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+    text-align: center;
+}
+
+.service-hero-subtitle {
+    font-family: var(--font-body, "Newsreader", serif);
+    font-size: clamp(1.0625rem, 2.5vw, 1.375rem);
+    font-weight: 400;
+    line-height: var(--line-height-body, 1.6);
+    color: var(--text-inverse, var(--light-grey, #c9ced1));
+    margin: 0;
+    margin-inline: auto;
+    max-width: 60ch;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+    text-align: center;
+}
+
+.service-hero-title+.service-hero-subtitle {
+    margin-top: var(--spacing-xs, 0.5rem);
+}
+
+/* ============================
+   CTA Row
+============================ */
+.service-hero-actions {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-top: var(--spacing-md, 1rem);
+}
+
+/* =========================================================
+   Button integration (non‑conflicting with Button.css)
+   - Button.css controls size/variant/colors (e.g., .btn.primary.lg)
+   - Here we add only hero-local polish & layout
+========================================================= */
+
+/* Target either the extra class you pass OR the base .btn from Button.css */
+.service-hero .btn,
+.service-hero-button {
+    /* Visual lift on media; keep tokens from Button.css */
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(2px);
+    transition: transform var(--transition-standard, 0.3s ease),
+        box-shadow var(--transition-standard, 0.3s ease);
+    /* Don’t touch padding, font, border, bg, or color here */
+    min-width: 200px;
+    /* layout nicety for desktop */
+}
+
+/* Hover polish (keeps Button.css background/tokens) */
+.service-hero .btn:hover,
+.service-hero-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(14, 175, 251, 0.4);
+}
+
+/* When the hero sits on video or busy imagery, ensure a bit more “pop” */
+.service-hero.hero-bg-video .btn,
+.service-hero.hero-bg-video .service-hero-button {
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(4px);
+}
+
+/* If you want a quick per‑hero color tweak, you can optionally set
+   brand tokens here—Button.css already consumes these:
+   .service-hero { 
+     --accent-primary: #0EAFFB;
+     --accent-primary-hover: #19b8ff;
+     --text-on-accent: #ffffff;
+   }
+*/
+
+/* ============================
+   Desktop refinements
+============================ */
+@media (min-width: 1024px) {
+    .service-hero-actions {
+        margin-top: var(--spacing-lg, 1.5rem);
+    }
+
+    .service-hero-title {
+        font-size: clamp(2.75rem, 3vw, 3.25rem);
+    }
+
+    .service-hero-subtitle {
+        font-size: clamp(1.1875rem, 1.5vw, 1.375rem);
+        max-width: 75ch;
+    }
+}
+
+/* ============================
+   Tablet
+============================ */
+@media (max-width: 1024px) {
+    .service-hero-title {
+        font-size: clamp(2rem, 4vw, 3rem);
+    }
+
+    .service-hero-subtitle {
+        font-size: clamp(1rem, 2vw, 1.25rem);
+        max-width: 55ch;
+    }
+
+    .service-hero .btn,
+    .service-hero-button {
+        min-width: 180px;
+    }
+}
+
+/* ============================
+   Mobile
+============================ */
+@media (max-width: 768px) {
+    .service-hero .service-hero-content {
+        gap: var(--spacing-md, 1rem);
+        padding: var(--spacing-md, 1rem);
+    }
+
+    .service-hero-title {
+        font-size: clamp(1.75rem, 6vw, 2.5rem);
+    }
+
+    .service-hero-subtitle {
+        font-size: 1rem;
+        max-width: 90%;
+    }
+
+    .service-hero-actions {
+        width: 100%;
+        padding: 0 var(--spacing-sm, 0.75rem);
+    }
+
+    .service-hero .btn,
+    .service-hero-button {
+        width: 100%;
+        max-width: 300px;
+        min-width: auto;
+    }
+}
+
+@media (max-width: 480px) {
+    .service-hero-title {
+        font-size: clamp(1.5rem, 8vw, 2rem);
+    }
+
+    .service-hero-subtitle {
+        font-size: 0.95rem;
+    }
+
+    .service-hero .service-hero-content {
+        gap: var(--spacing-sm, 0.75rem);
+        padding: var(--spacing-sm, 0.75rem);
+    }
+
+    .service-hero .btn,
+    .service-hero-button {
+        max-width: 280px;
+    }
+}
+
+/* ============================
+   Video background text polish
+============================ */
+.service-hero.hero-bg-video .service-hero-title {
+    text-shadow: 0 3px 12px rgba(0, 0, 0, 0.8);
+    color: #fff;
+}
+
+.service-hero.hero-bg-video .service-hero-subtitle {
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
+    color: rgba(255, 255, 255, 0.95);
+}
+
+/* ============================
+   Theme
+============================ */
+:root[data-theme="light"] .service-hero-title,
+.light .service-hero-title {
+    color: var(--text-primary, #060512);
+    text-shadow: 0 2px 8px rgba(255, 255, 255, 0.8);
+}
+
+:root[data-theme="light"] .service-hero-subtitle,
+.light .service-hero-subtitle {
+    color: var(--text-secondary, #6c757d);
+    text-shadow: 0 1px 4px rgba(255, 255, 255, 0.6);
+}
+
+:root[data-theme="dark"] .service-hero-title,
+.dark .service-hero-title {
+    color: var(--text-inverse, var(--off-white, #f4f6f7));
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+}
+
+:root[data-theme="dark"] .service-hero-subtitle,
+.dark .service-hero-subtitle {
+    color: var(--text-inverse, var(--light-grey, #c9ced1));
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* ============================
+   A11y & Motion
+============================ */
+@media (prefers-reduced-motion: reduce) {
+
+    .service-hero .btn,
+    .service-hero-button {
+        transition: none;
+    }
+
+    .service-hero .btn:hover,
+    .service-hero-button:hover {
+        transform: none;
+    }
+}
+
+@media (prefers-contrast: high) {
+
+    .service-hero-title,
+    .service-hero-subtitle {
+        text-shadow: none;
+        background: rgba(0, 0, 0, 0.85);
+        padding: var(--spacing-xs, 0.5rem);
+        border-radius: var(--radius-sm, 0.25rem);
+    }
+
+    .service-hero .btn,
+    .service-hero-button {
+        border: 3px solid currentColor;
+        /* visible focus edge on any variant */
+        backdrop-filter: none;
+    }
+}
+
+/* ============================
+   Print
+============================ */
+@media print {
+    .service-hero .service-hero-content {
+        color: #000 !important;
+        text-shadow: none !important;
+        background: #fff;
+        padding: 1rem;
+    }
+
+    .service-hero-title,
+    .service-hero-subtitle {
+        color: #000 !important;
+        text-shadow: none !important;
+    }
+
+    .service-hero-actions {
+        display: none;
+    }
+}
+
+/* ============================
+   Focus ring (keeps Button.css behavior)
+============================ */
+.service-hero .btn:focus,
+.service-hero-button:focus {
+    outline: 3px solid var(--accent-primary, #0EAFFB);
+    outline-offset: 3px;
+}
+
+.service-hero .btn:focus:not(:focus-visible),
+.service-hero-button:focus:not(:focus-visible) {
+    outline: none;
+}
+
+/* ============================
+   Perf hints
+============================ */
+.service-hero .service-hero-content {
+    will-change: opacity, transform;
+}
+
+.service-hero .btn,
+.service-hero-button {
+    will-change: transform, box-shadow;
+}
+
+.service-hero.hero-animated.animate-complete .service-hero-content,
+.service-hero.hero-animated.animate-complete .btn,
+.service-hero.hero-animated.animate-complete .service-hero-button {
+    will-change: auto;
+}

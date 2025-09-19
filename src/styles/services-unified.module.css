@@ -1,0 +1,614 @@
+/* ==========================================================================
+   TBH — Services Unified Module CSS (Production Ready)
+   - Single source of truth for all 6 service pages
+   - Tokenized (colors, spacing, radii, shadows, motion) from unified-theme.css
+   - Consolidates all page-specific module files into one unified system
+   - Includes legacy aliases for zero-downtime migration
+   ========================================================================== */
+
+/* ============================
+   Page Shell & Base Structure
+
+
+.servicePage,
+.marketingAutomationPage,
+.webDevelopmentPage,
+.seoServicesPage {
+    min-height: 100vh;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+}
+
+/* ============================
+   Section Rhythm & Backgrounds
+============================ */
+
+.section {
+    padding: var(--spacing-xl) 0;
+    background: var(--bg-primary);
+}
+
+.section--gradient,
+.gradientSection {
+    /* Deep navy gradient band */
+    background: var(--gradient-section);
+}
+
+.section--alt,
+.section--surface,
+.elevatedSection {
+    /* Subtle surface band for alternating sections */
+    background: var(--bg-surface);
+    border-top: 1px solid var(--border-subtle);
+    border-bottom: 1px solid var(--border-subtle);
+}
+
+.section--process-strong {
+    /* Stronger gradient for process/workflow sections */
+    background: linear-gradient(135deg, var(--bg-primary), var(--bg-secondary));
+}
+
+.section--alt-gradient {
+    /* Subtle blended band for process sections */
+    background: linear-gradient(135deg,
+            color-mix(in oklab, var(--bg-surface) 96%, transparent),
+            color-mix(in oklab, var(--bg-primary) 92%, transparent));
+}
+
+/* Dark theme support */
+[data-theme="dark"] .section--alt-gradient {
+    background: linear-gradient(135deg,
+            color-mix(in oklab, var(--bg-elevated) 94%, transparent),
+            color-mix(in oklab, var(--bg-primary) 88%, transparent));
+}
+
+[data-theme="dark"] .section--process-strong {
+    background: linear-gradient(135deg, var(--charcoal-navy, #121624), var(--deep-navy, #0E1730));
+}
+
+/* ============================
+   Section Headers (Unified Pattern)
+============================ */
+
+.centeredHeader,
+.centered-header,
+.sectionHeader {
+    text-align: center;
+    max-width: 960px;
+    margin: 0 auto var(--spacing-xl);
+}
+
+.sectionTitle,
+.section-title {
+    margin: 0 0 var(--spacing-sm);
+    font-family: var(--font-heading);
+    font-weight: 800;
+    line-height: var(--line-height-heading);
+    color: var(--text-accent);
+    font-size: var(--font-size-h2);
+}
+
+.sectionSubtitle,
+.section-subtitle {
+    margin: 0 0 var(--spacing-md);
+    color: var(--text-secondary);
+    font-size: var(--font-size-lg);
+    line-height: var(--line-height-relaxed);
+}
+
+.sectionMinorTitle {
+    margin: 0 0 var(--spacing-sm);
+    font-family: var(--font-heading);
+    font-weight: 600;
+    color: var(--text-accent);
+    font-size: var(--font-size-lg);
+}
+
+/* ============================
+   Grid Systems (Responsive)
+============================ */
+
+.grid {
+    display: grid;
+    gap: var(--spacing-lg);
+}
+
+.grid.cols-auto,
+.gridCols-auto {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.gridCols2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.gridCols3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+/* Service-specific grids */
+.automationServicesGrid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--spacing-lg);
+}
+
+.caseStudiesGrid {
+    display: grid;
+    gap: var(--spacing-lg);
+}
+
+@media (min-width: 900px) {
+    .caseStudiesGrid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+/* Grid equalizer for perfect card heights */
+.grid.equalize>*,
+.equalize>* {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Responsive breakpoints */
+@media (max-width: 1024px) {
+
+    .automationServicesGrid,
+    .gridCols2,
+    .gridCols3 {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 899px) {
+    .caseStudiesGrid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ============================
+   Unified Card Recipe
+   (The Single Source of Truth)
+============================ */
+
+.card,
+/* Legacy aliases for zero-downtime migration */
+.offerCard,
+.serviceCard,
+.automationServiceCard,
+.integratorItem,
+.caseStudyCard,
+.pricingTier,
+.portfolioItem,
+.statCard,
+.resultCard {
+    position: relative;
+    background: var(--bg-surface);
+    color: var(--text-primary);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-xs);
+    padding: var(--spacing-lg);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    overflow: hidden;
+    width: 100%;
+    min-height: 0;
+    transition:
+        transform var(--transition-standard),
+        box-shadow var(--transition-standard),
+        border-color var(--transition-standard),
+        background-color var(--transition-standard),
+        color var(--transition-standard);
+}
+
+/* Unified hover effects */
+.card:hover,
+.offerCard:hover,
+.serviceCard:hover,
+.automationServiceCard:hover,
+.integratorItem:hover,
+.caseStudyCard:hover,
+.pricingTier:hover,
+.portfolioItem:hover,
+.statCard:hover,
+.resultCard:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--border-accent, var(--brand-blue));
+}
+
+/* Animated accent bar (top sweep) */
+.card::before,
+.offerCard::before,
+.serviceCard::before,
+.automationServiceCard::before,
+.integratorItem::before,
+.caseStudyCard::before,
+.pricingTier::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg,
+            var(--brand-blue),
+            color-mix(in oklab, var(--brand-blue) 80%, white));
+    transition: left var(--transition-standard);
+}
+
+.card:hover::before,
+.offerCard:hover::before,
+.serviceCard:hover::before,
+.automationServiceCard:hover::before,
+.integratorItem:hover::before,
+.caseStudyCard:hover::before,
+.pricingTier:hover::before {
+    left: 0;
+}
+
+/* ============================
+   Card Content Elements
+============================ */
+
+.card__title,
+.cardTitle,
+.caseStudyTitle {
+    margin: 0 0 var(--spacing-xs);
+    font-family: var(--font-heading);
+    font-weight: 700;
+    color: var(--text-accent);
+    line-height: var(--line-height-heading);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: var(--font-size-h4);
+}
+
+.card__body,
+.caseStudyDescription {
+    margin: 0 0 var(--spacing-sm);
+    color: var(--text-secondary);
+    line-height: var(--line-height-body);
+    flex: 1;
+}
+
+/* Icon badges for service cards */
+.iconBadge,
+.icon-badge {
+    width: 56px;
+    height: 56px;
+    border-radius: var(--radius-md);
+    display: grid;
+    place-items: center;
+    background: linear-gradient(135deg, var(--brand-blue), var(--accent-hover));
+    color: var(--deep-navy, #0E1730);
+    flex: 0 0 auto;
+    transition: transform var(--transition-standard);
+}
+
+.card:hover .iconBadge,
+.card:hover .icon-badge,
+.offerCard:hover .iconBadge,
+.automationServiceCard:hover .icon-badge {
+    transform: scale(1.06) rotate(3deg);
+}
+
+/* ============================
+   Media & Portfolio Elements
+============================ */
+
+.media,
+.portfolioVideo,
+.caseStudyMedia {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-md) var(--radius-md) 0 0;
+    position: relative;
+    overflow: hidden;
+    margin: calc(-1 * var(--spacing-lg)) calc(-1 * var(--spacing-lg)) var(--spacing-md);
+}
+
+.resultTag,
+.result-badge {
+    position: absolute;
+    left: var(--spacing-md);
+    bottom: var(--spacing-md);
+    display: inline-block;
+    background: var(--brand-blue);
+    color: #fff;
+    padding: 0.25rem 0.75rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.8rem;
+    font-weight: 600;
+    white-space: nowrap;
+    box-shadow: var(--shadow-xs);
+}
+
+/* ============================
+   Logo Strips & Certifications
+============================ */
+
+.logoGrid,
+.certificationGrid,
+.integratorGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: var(--spacing-lg);
+    margin-top: var(--spacing-xl);
+}
+
+.logoItem,
+.certificationItem {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    transition: all var(--transition-standard);
+}
+
+.logoImage,
+.certificationLogo,
+.integratorLogo {
+    height: 48px;
+    width: auto;
+    object-fit: contain;
+    margin-bottom: var(--spacing-sm);
+    filter: grayscale(100%);
+    transition: filter var(--transition-standard), opacity var(--transition-standard);
+    opacity: 0.9;
+}
+
+.logoItem:hover .logoImage,
+.certificationItem:hover .certificationLogo,
+.integratorItem:hover .integratorLogo {
+    filter: grayscale(0%);
+    opacity: 1;
+}
+
+.logoLabel,
+.certificationLabel,
+.integratorLabel {
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: var(--text-secondary);
+    font-family: var(--font-heading);
+}
+
+.certificationsSection {
+    margin-top: var(--spacing-xl);
+}
+
+/* ============================
+   Stats & Results
+============================ */
+
+.statsGrid,
+.resultsGrid {
+    display: grid;
+    gap: var(--spacing-lg);
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+/* ============================
+   Process & Workflow Elements
+============================ */
+
+.processSection,
+.workflowDiagram,
+.seoWorkflow {
+    margin-top: var(--spacing-xl);
+}
+
+/* ============================
+   Utility Classes & Tags
+============================ */
+
+.industryTag,
+.industry-tag {
+    display: inline-block;
+    margin-bottom: var(--spacing-sm);
+    padding: 0.25rem 0.5rem;
+    border-radius: var(--radius-sm);
+    background: color-mix(in oklab, var(--brand-blue) 12%, transparent);
+    color: var(--text-primary);
+    border: 1px solid color-mix(in oklab, var(--brand-blue) 28%, transparent);
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.metricslist,
+.metrics-list {
+    margin: 0 0 var(--spacing-sm);
+    padding-left: 1.2rem;
+    color: var(--text-secondary);
+}
+
+.metricslist li,
+.metrics-list li {
+    margin-block: 0.2rem;
+}
+
+.channelsList {
+    margin-top: var(--spacing-sm);
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+}
+
+.caseStudyLink,
+.case-study-link {
+    margin-top: auto;
+    font-weight: 600;
+    color: var(--brand-blue);
+    text-decoration: none;
+    font-size: var(--font-size-sm);
+    transition: color var(--transition-fast);
+}
+
+.caseStudyLink:hover,
+.case-study-link:hover {
+    text-decoration: underline;
+    color: var(--accent-hover);
+}
+
+/* ============================
+   Trust Elements
+============================ */
+
+.trustLogos {
+    margin-top: var(--spacing-lg);
+}
+
+/* ============================
+   Responsive Design
+============================ */
+
+@media (max-width: 1024px) {
+
+    .centeredHeader,
+    .centered-header,
+    .sectionHeader {
+        max-width: 860px;
+    }
+
+    .automationServicesGrid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+
+    .centeredHeader,
+    .centered-header,
+    .sectionHeader {
+        max-width: 680px;
+        margin-bottom: var(--spacing-lg);
+    }
+
+    .card,
+    .automationServiceCard,
+    .caseStudyCard {
+        padding: var(--spacing-md);
+    }
+
+    .sectionTitle,
+    .section-title {
+        font-size: var(--font-size-h3);
+    }
+
+    .logoGrid,
+    .certificationGrid,
+    .integratorGrid {
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: var(--spacing-md);
+    }
+}
+
+@media (max-width: 480px) {
+
+    .grid,
+    .caseStudiesGrid,
+    .statsGrid,
+    .resultsGrid {
+        gap: var(--spacing-md);
+    }
+
+    .media,
+    .portfolioVideo,
+    .caseStudyMedia {
+        height: 160px;
+    }
+}
+
+/* ============================
+   Accessibility & Motion
+============================ */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .card,
+    .offerCard,
+    .serviceCard,
+    .automationServiceCard,
+    .integratorItem,
+    .caseStudyCard,
+    .pricingTier,
+    .portfolioItem,
+    .statCard,
+    .resultCard {
+        transition: none;
+        animation: none;
+        transform: none;
+    }
+
+    .card::before,
+    .offerCard::before,
+    .serviceCard::before,
+    .automationServiceCard::before,
+    .integratorItem::before,
+    .caseStudyCard::before,
+    .pricingTier::before {
+        display: none;
+    }
+
+    .iconBadge,
+    .icon-badge {
+        transition: none;
+        transform: none;
+    }
+}
+
+/* Focus states for accessibility */
+.card:focus-visible,
+.serviceCard:focus-visible,
+.caseStudyCard:focus-visible {
+    outline: 2px solid var(--brand-blue);
+    outline-offset: 2px;
+}
+
+
+/* ============================
+   Band Utilities
+============================ */
+
+.band {
+    padding: clamp(32px, 6vw, 72px) 0;
+}
+
+.bandHeader {
+    text-align: center;
+    margin: 0 auto var(--spacing-xl);
+    max-width: 60ch;
+}
+
+/* ============================
+   Print Styles
+============================ */
+
+@media print {
+
+    .card,
+    .serviceCard,
+    .caseStudyCard {
+        break-inside: avoid;
+        box-shadow: none;
+        border: 1px solid #000;
+    }
+
+    .section--gradient,
+    .gradientSection {
+        background: #fff !important;
+        color: #000 !important;
+    }
+}
+

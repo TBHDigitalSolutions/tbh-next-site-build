@@ -1,0 +1,254 @@
+/* ============================================================================
+   FILE: Modal.module.css
+   PURPOSE: Unified-theme aligned modal (single theme, TBH brand)
+   NOTES:
+   - Globals wrapped in :global(...) to satisfy CSS Modules "pure selector" rule.
+   - Option B: adds .videoContainer (module-scoped) + keeps :global(.video-container) for compatibility.
+   - Animations respect reduced motion; tokens map to unified-theme.css.
+   -------------------------------------------------------------------------- */
+
+/* --------------------------------------------------------------------------
+   Token mapping (single-theme) — must be global for custom properties
+   -------------------------------------------------------------------------- */
+/* ============================
+   Overlay
+============================ */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: var(--modal-z);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--modal-pad-sm);
+
+    background: var(--modal-scrim);
+    backdrop-filter: blur(var(--modal-blur));
+    -webkit-backdrop-filter: blur(var(--modal-blur));
+
+    opacity: 0;
+    animation: modalFadeIn var(--modal-dur) var(--modal-ease) forwards;
+}
+
+/* ============================
+   Dialog wrapper
+============================ */
+.modal-wrapper {
+    background-color: var(--modal-surface);
+    color: var(--modal-text);
+    border: 1px solid var(--modal-border);
+    border-radius: var(--modal-radius);
+    box-shadow: var(--modal-shadow);
+    position: relative;
+
+    width: 100%;
+    max-height: var(--modal-max-h);
+    overflow-y: auto;
+    padding: var(--modal-pad);
+    pointer-events: auto;
+    flex-shrink: 0;
+
+    transform: scale(0.96);
+    animation: modalScaleIn var(--modal-dur) var(--modal-ease) forwards;
+
+    /* Better text rendering on macOS */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Size presets */
+.modal-small {
+    max-width: 400px;
+    width: var(--modal-width-vw);
+}
+
+.modal-medium {
+    max-width: 640px;
+    width: var(--modal-width-vw);
+}
+
+.modal-large {
+    max-width: 960px;
+    width: min(96vw, 960px);
+}
+
+/* ============================
+   Header / Title
+============================ */
+.modal-title {
+    font-family: var(--font-heading, inherit);
+    font-size: var(--modal-title-size);
+    font-weight: var(--weight-bold, 700);
+    line-height: 1.25;
+    margin: 0 0 var(--modal-gap) 0;
+    padding-right: calc(var(--modal-close-size) + var(--modal-gap));
+    /* space for close */
+}
+
+/* ============================
+   Content
+============================ */
+.modal-content {
+    font-size: var(--modal-content-size);
+    line-height: var(--modal-line);
+    color: var(--modal-text);
+}
+
+/* Media inside modal content */
+.modal-content iframe,
+.modal-content video {
+    width: 100%;
+    height: auto;
+    display: block;
+    border: 0;
+    border-radius: 8px;
+    background: #000;
+    /* safe bg for letterboxing */
+}
+
+/* ----------------------------
+   Option B (module class) + compatibility:
+   - Prefer using styles.videoContainer in TSX later
+   - Keep :global(.video-container) for current code
+----------------------------- */
+.videoContainer {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+}
+
+.videoContainer iframe,
+.videoContainer video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+}
+
+/* Compatibility for existing <div class="video-container"> */
+.modal-content :global(.video-container) {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+}
+
+.modal-content :global(.video-container) iframe,
+.modal-content :global(.video-container) video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+}
+
+/* ============================
+   Close Button
+============================ */
+.modal-close {
+    position: absolute;
+    top: var(--space-3, 12px);
+    right: var(--space-3, 12px);
+    width: var(--modal-close-size);
+    height: var(--modal-close-size);
+    padding: var(--modal-close-pad);
+    border-radius: calc(var(--modal-radius) - 8px);
+    border: 1px solid var(--modal-border);
+    background: transparent;
+    color: var(--modal-text);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition:
+        transform var(--modal-dur) var(--modal-ease),
+        background-color var(--modal-dur) var(--modal-ease),
+        border-color var(--modal-dur) var(--modal-ease);
+}
+
+.modal-close:hover {
+    background-color: var(--modal-close-bg-hover);
+    border-color: color-mix(in oklab, var(--modal-brand) 35%, var(--modal-border));
+    transform: translateY(-1px);
+}
+
+.modal-close:active {
+    transform: translateY(0);
+}
+
+.modal-close:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+.modal-close svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+/* ============================
+   Actions Row (optional)
+============================ */
+.modal-actions {
+    display: flex;
+    gap: var(--modal-gap);
+    justify-content: flex-end;
+    margin-top: var(--space-5, 20px);
+}
+
+.modal-actions :is(button, a) {
+    outline-offset: 2px;
+}
+
+.modal-actions :is(button, a):focus-visible {
+    box-shadow: var(--focus-ring);
+}
+
+/* ============================
+   Animations
+============================ */
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes modalScaleIn {
+    from {
+        transform: scale(0.96);
+    }
+
+    to {
+        transform: scale(1);
+    }
+}
+
+/* ============================
+   Responsiveness
+============================ */
+@media (max-width: 640px) {
+    .modal-wrapper {
+        padding: var(--modal-pad-sm);
+        border-radius: calc(var(--modal-radius) - 6px);
+    }
+
+    .modal-title {
+        font-size: var(--modal-title-size-sm);
+    }
+}
+
+/* ============================
+   Reduced Motion
+============================ */
+@media (prefers-reduced-motion: reduce) {
+
+    .modal-overlay,
+    .modal-wrapper {
+        animation: none !important;
+    }
+}

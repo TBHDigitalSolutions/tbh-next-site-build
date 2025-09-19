@@ -1,0 +1,97 @@
+/* ============================
+   🚀 Join Us CTA (Unified)
+============================ */
+
+.joinus-wrapper {
+    width: 100%;
+    background: var(--bg-surface);
+    color: var(--text-primary);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-sm);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: var(--spacing-md);
+    padding: var(--spacing-xl);
+
+    transition:
+        background-color var(--transition-standard),
+        border-color var(--transition-standard),
+        box-shadow var(--transition-standard),
+        transform var(--transition-standard);
+}
+
+.joinus-wrapper:hover {
+    border-color: var(--border-accent, var(--brand-blue));
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+}
+
+/* Title + Divider */
+.joinus-title-wrapper {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-sm);
+    width: fit-content;
+    max-width: 100%;
+}
+
+.joinus-title-divider {
+    width: 100%;
+    max-width: 100%;
+}
+
+.joinus-title {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-h2);
+    font-weight: 700;
+    line-height: var(--line-height-heading);
+    margin: 0;
+    color: var(--text-accent);
+    white-space: nowrap;
+}
+
+/* Description */
+.joinus-description {
+    font-family: var(--font-body);
+    font-size: var(--font-size-body);
+    color: var(--text-secondary);
+    line-height: var(--line-height-body);
+    max-width: 70ch;
+    margin: 0 auto;
+    padding: 0 var(--spacing-lg);
+}
+
+/* CTA */
+.joinus-cta {
+    margin-top: var(--spacing-md);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .joinus-wrapper {
+        padding: var(--spacing-lg);
+    }
+
+    .joinus-title {
+        font-size: var(--font-size-h3);
+    }
+
+    .joinus-description {
+        padding: 0 var(--spacing-md);
+    }
+}
+
+@media (max-width: 480px) {
+    .joinus-wrapper {
+        padding: var(--spacing-md);
+    }
+
+    .joinus-title {
+        font-size: var(--font-size-h4);
+    }
+}

@@ -1,0 +1,392 @@
+/* src/components/sections/section-layouts/PackageCarousel/PackageCarousel.module.css */
+
+.packageCarousel {
+    width: 100%;
+    margin: var(--spacing-xl) 0;
+}
+
+/* ===== HEADER ===== */
+.carouselHeader {
+    text-align: center;
+    margin-bottom: var(--spacing-xl);
+}
+
+.carouselTitle {
+    font-size: clamp(var(--font-size-xl), 1.5rem + 1.2vw, var(--font-size-3xl));
+    font-weight: var(--font-weight-bold);
+    margin: 0 0 var(--spacing-md);
+    color: var(--foreground);
+    line-height: var(--line-height-heading);
+}
+
+.carouselSubtitle {
+    font-size: var(--font-size-lg);
+    color: var(--muted-foreground);
+    max-width: 50ch;
+    margin: 0 auto var(--spacing-lg);
+    line-height: var(--line-height-relaxed);
+}
+
+/* ===== CONTAINER ===== */
+.carouselContainer {
+    position: relative;
+    width: 100%;
+}
+
+.carouselWrapper {
+    width: 100%;
+    overflow: hidden;
+}
+
+/* ===== CAROUSEL LAYOUT ===== */
+.carousel .carouselWrapper {
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;
+}
+
+.carousel .carouselWrapper::-webkit-scrollbar {
+    display: none;
+}
+
+.carouselTrack {
+    display: flex;
+    width: 100%;
+    gap: var(--spacing-lg);
+    padding: 0 var(--spacing-md);
+}
+
+.carouselCard {
+    flex-shrink: 0;
+    scroll-snap-align: start;
+}
+
+/* ===== THREE-UP DESKTOP LAYOUT ===== */
+@media (min-width: 1024px) {
+    .carouselTrack.threeUp {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: var(--spacing-xl);
+        padding: 0;
+        overflow: visible;
+    }
+
+    .carousel.threeUp .carouselWrapper {
+        overflow: visible;
+    }
+
+    .carouselTrack.threeUp .carouselCard {
+        scroll-snap-align: none;
+        width: 100%;
+        min-width: auto;
+        max-width: none;
+    }
+}
+
+/* ===== GRID LAYOUT ===== */
+.grid .carouselWrapper {
+    overflow: visible;
+}
+
+.gridTrack {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--spacing-xl);
+    padding: 0;
+}
+
+@media (min-width: 1024px) {
+    .gridTrack {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+.gridCard {
+    scroll-snap-align: none;
+    flex-shrink: 1;
+}
+
+/* ===== RESPONSIVE GRID ===== */
+@media (max-width: 768px) {
+    .gridTrack {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-lg);
+    }
+
+    .carouselTrack.threeUp {
+        display: flex;
+        overflow-x: auto;
+        gap: var(--spacing-md);
+        padding: 0 var(--spacing-md);
+    }
+
+    .carouselTrack.threeUp .carouselCard {
+        min-width: 280px;
+        scroll-snap-align: start;
+    }
+}
+
+@media (max-width: 1024px) and (min-width: 769px) {
+    .gridTrack {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    }
+
+    .carouselTrack.threeUp {
+        gap: var(--spacing-lg);
+    }
+}
+
+/* ===== FOOTER ACTIONS ===== */
+.carouselFooter {
+    margin-top: var(--spacing-xl);
+}
+
+.footerActions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-lg);
+    flex-wrap: wrap;
+}
+
+.footerButton {
+    min-width: 160px;
+    white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+    .footerActions {
+        flex-direction: column;
+        gap: var(--spacing-sm);
+    }
+
+    .footerButton {
+        width: 100%;
+        min-width: auto;
+    }
+}
+
+/* ===== CAROUSEL RESPONSIVE ===== */
+@media (max-width: 640px) {
+    .packageCarousel {
+        margin: var(--spacing-lg) 0;
+    }
+
+    .carouselTrack {
+        gap: var(--spacing-md);
+        padding: 0 var(--spacing-xs);
+    }
+
+    .carouselHeader {
+        margin-bottom: var(--spacing-lg);
+    }
+
+    .carouselFooter {
+        margin-top: var(--spacing-lg);
+    }
+}
+
+/* ===== FOCUS MANAGEMENT ===== */
+.carouselContainer:focus-within {
+    outline: none;
+}
+
+.footerButton:focus {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+}
+
+/* ===== LOADING STATE ===== */
+.packageCarousel.loading {
+    opacity: 0.6;
+}
+
+.packageCarousel.loading .footerActions {
+    pointer-events: none;
+}
+
+/* ===== EMPTY STATE ===== */
+.packageCarousel:empty {
+    display: none;
+}
+
+/* ===== SCROLL INDICATORS ===== */
+.carousel .carouselWrapper {
+    position: relative;
+}
+
+.carousel .carouselWrapper::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: var(--spacing-xl);
+    background: linear-gradient(90deg,
+            transparent 0%,
+            var(--background) 100%);
+    pointer-events: none;
+    opacity: 0.8;
+    z-index: 1;
+}
+
+.carousel .carouselWrapper::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: var(--spacing-xl);
+    background: linear-gradient(270deg,
+            transparent 0%,
+            var(--background) 100%);
+    pointer-events: none;
+    opacity: 0.8;
+    z-index: 1;
+}
+
+/* Hide scroll indicators on mobile and when using three-up grid */
+@media (max-width: 640px) {
+
+    .carousel .carouselWrapper::before,
+    .carousel .carouselWrapper::after {
+        display: none;
+    }
+}
+
+@media (min-width: 1024px) {
+
+    .carouselTrack.threeUp~.carouselWrapper::before,
+    .carouselTrack.threeUp~.carouselWrapper::after {
+        display: none;
+    }
+}
+
+/* ===== ADD-ONS SECTION ===== */
+.addonsSection {
+    margin-top: var(--spacing-xl);
+    padding-top: var(--spacing-lg);
+    border-top: 1px solid var(--border);
+}
+
+.addonsHeader {
+    margin-bottom: var(--spacing-lg);
+    text-align: center;
+}
+
+.addonsTitle {
+    margin: 0 0 var(--spacing-xs) 0;
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--foreground);
+}
+
+.addonsSubtitle {
+    margin: 0;
+    color: var(--muted-foreground);
+    font-size: var(--font-size-sm);
+}
+
+.addonsGrid {
+    display: grid;
+    gap: var(--spacing-lg);
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+@media (min-width: 1024px) {
+    .addonsGrid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+.addonCard {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    background: var(--card);
+    color: var(--foreground);
+    transition: all var(--transition-normal);
+}
+
+.addonCard:hover {
+    border-color: var(--border-hover);
+    box-shadow: var(--shadow-md);
+}
+
+.addonTitle {
+    margin: 0 0 var(--spacing-xs) 0;
+    font-size: var(--font-size-md);
+    font-weight: var(--font-weight-semibold);
+    color: var(--foreground);
+}
+
+.addonDesc {
+    margin: 0 0 var(--spacing-md) 0;
+    color: var(--muted-foreground);
+    font-size: var(--font-size-sm);
+    line-height: var(--line-height-relaxed);
+}
+
+.addonFooter {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--spacing-xs);
+}
+
+.addonPrice {
+    color: var(--foreground);
+    font-weight: var(--font-weight-semibold);
+    font-size: var(--font-size-sm);
+}
+
+.addonLink {
+    color: var(--primary);
+    text-decoration: none;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    transition: color var(--transition-fast);
+}
+
+.addonLink:hover {
+    color: var(--primary-hover);
+    text-decoration: underline;
+}
+
+.addonLink:focus {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+    border-radius: var(--radius-sm);
+}
+
+/* ===== REDUCED MOTION ===== */
+@media (prefers-reduced-motion: reduce) {
+    .carousel .carouselWrapper {
+        scroll-behavior: auto;
+    }
+
+    .addonCard {
+        transition: none;
+    }
+
+    .addonLink {
+        transition: none;
+    }
+}
+
+/* ===== HIGH CONTRAST MODE ===== */
+@media (prefers-contrast: high) {
+    .addonCard {
+        border-width: 2px;
+    }
+
+    .carousel .carouselWrapper::before,
+    .carousel .carouselWrapper::after {
+        opacity: 1;
+    }
+}

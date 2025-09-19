@@ -1,0 +1,138 @@
+/* ============================================
+   📫 TBH Home Contact — unified-theme styles
+   - Gradient section bg
+   - Surface card + subtle border
+   - Uses global .btn recipes if present
+============================================ */
+
+.home-contact-section {
+    width: 100%;
+    background: var(--gradient-section);
+    border-top: 1px solid var(--border-subtle);
+    border-bottom: 1px solid var(--border-subtle);
+    padding-block: var(--section-pad-block-lg);
+}
+
+.home-contact-container {
+    width: min(calc(100% - 2 * var(--container-pad-inline)), var(--container-max));
+    margin-inline: auto;
+    padding-inline: var(--container-pad-inline);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-xl);
+    align-items: center;
+}
+
+/* Left image */
+.home-contact-media {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.home-contact-media img {
+    inline-size: min(100%, 320px);
+    block-size: auto;
+    opacity: .9;
+    transition: transform var(--transition-fast), opacity var(--transition-fast);
+}
+
+.home-contact-media img:hover {
+    transform: scale(1.04);
+    opacity: 1;
+}
+
+/* Right card */
+.home-contact-card {
+    background: var(--bg-surface);
+    color: var(--text-primary);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-xs);
+    padding: var(--spacing-xl);
+    text-align: center;
+    transition:
+        transform var(--transition-fast),
+        box-shadow var(--transition-fast),
+        border-color var(--transition-fast);
+}
+
+.home-contact-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--border-accent, var(--brand-blue));
+}
+
+/* Content */
+.home-contact-title {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-h2);
+    line-height: var(--line-height-heading);
+    font-weight: 700;
+    color: var(--text-accent);
+    margin: 0 0 var(--spacing-md);
+    border-bottom: 2px solid var(--border-accent, var(--brand-blue));
+    padding-bottom: var(--spacing-sm);
+    display: inline-block;
+}
+
+.home-contact-blurb {
+    font-family: var(--font-body);
+    font-size: var(--font-size-body);
+    color: var(--text-secondary);
+    line-height: var(--line-height-body);
+    margin: 0 0 var(--spacing-lg);
+}
+
+/* CTA — prefer global .btn; fallback styles here */
+.home-contact-actions {
+    display: flex;
+    justify-content: center;
+}
+
+.home-contact-cta.btn {
+    /* if global .btn is present */
+}
+
+.home-contact-cta:not(.btn) {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-small);
+    font-weight: 700;
+    padding: var(--spacing-sm) var(--spacing-lg);
+    border-radius: var(--radius-md);
+    background: var(--accent-primary, var(--brand-blue));
+    color: var(--text-inverse);
+    border: 0;
+    cursor: pointer;
+    box-shadow: var(--shadow-sm);
+    transition: background-color var(--transition-fast), transform var(--transition-fast);
+}
+
+.home-contact-cta:not(.btn):hover {
+    background: var(--accent-hover);
+    transform: translateY(-1px);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .home-contact-container {
+        gap: var(--spacing-lg);
+    }
+}
+
+@media (max-width: 768px) {
+    .home-contact-container {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+
+    .home-contact-card {
+        padding: var(--spacing-lg);
+    }
+}
+
+@media (max-width: 480px) {
+    .home-contact-card {
+        padding: var(--spacing-md);
+    }
+}

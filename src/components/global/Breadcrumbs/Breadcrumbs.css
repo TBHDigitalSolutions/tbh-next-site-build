@@ -1,0 +1,66 @@
+/* ============================
+   🧭 Breadcrumbs Navigation
+============================ */
+
+.breadcrumbs {
+    font-size: var(--font-size-small);
+    color: var(--color-dark-charcoal);
+}
+
+.dark .breadcrumbs {
+    color: var(--color-light-grey);
+}
+
+.breadcrumbs-list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--spacing-xs);
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.breadcrumbs-item {
+    display: flex;
+    align-items: center;
+}
+
+.breadcrumbs-link {
+    font-weight: 500;
+    color: var(--color-dark-charcoal);
+    text-decoration: none;
+    transition: color var(--transition-default);
+}
+
+.breadcrumbs-link:hover {
+    color: var(--color-accent);
+}
+
+.dark .breadcrumbs-link {
+    color: var(--color-light-grey);
+}
+
+.dark .breadcrumbs-link:hover {
+    color: var(--color-accent);
+}
+
+.breadcrumbs-separator {
+    margin: 0 var(--spacing-xs);
+    width: 1rem;
+    height: 1rem;
+    color: var(--color-light-grey);
+}
+
+.dark .breadcrumbs-separator {
+    color: var(--color-dark-charcoal);
+}
+
+.breadcrumbs-current {
+    font-weight: 500;
+    color: var(--color-light-grey);
+}
+
+.dark .breadcrumbs-current {
+    color: var(--color-dark-charcoal);
+}

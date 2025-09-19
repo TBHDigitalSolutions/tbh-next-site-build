@@ -1,0 +1,407 @@
+/* =========================================
+   TBH Unified Theme (tokens + base recipes)
+   Single source of truth for: colors, type,
+   spacing, radii, shadows, motion, z-index,
+   + shared patterns used on services pages
+========================================= */
+
+/* -------------------------------
+   1) Design tokens (from root.css)
+-------------------------------- */
+:root {
+    /* Typography families */
+    --font-heading: 'Aldrich', sans-serif;
+    --font-hero: 'SovjetBox', sans-serif;
+    --font-body: 'Newsreader', serif;
+
+    /* Line heights */
+    --line-height-tight: 1.2;
+    --line-height-heading: 1.2;
+    --line-height-normal: 1.5;
+    --line-height-body: 1.7;
+    --line-height-body-alt: 1.8;
+
+    /* Fluid type scale */
+    --font-size-h1-hero: clamp(2.25rem, 1.40rem + 3.00vw, 3.50rem);
+    --font-size-h1: clamp(2.00rem, 1.40rem + 2.00vw, 2.625rem);
+    --font-size-h2: clamp(1.75rem, 1.30rem + 1.60vw, 2.375rem);
+    --font-size-h3: clamp(1.375rem, 1.20rem + 0.90vw, 1.75rem);
+    --font-size-h4: clamp(1.25rem, 1.15rem + 0.50vw, 1.50rem);
+
+    --font-size-body: clamp(1.00rem, 0.94rem + 0.25vw, 1.125rem);
+    --font-size-small: clamp(0.875rem, 0.85rem + 0.15vw, 1.00rem);
+    --font-size-caption: clamp(0.75rem, 0.72rem + 0.12vw, 0.875rem);
+
+    --font-size-xs: var(--font-size-caption);
+    --font-size-sm: var(--font-size-small);
+    --font-size-base: var(--font-size-body);
+    --font-size-lg: clamp(1.125rem, 1.05rem + 0.25vw, 1.25rem);
+    --font-size-xl: clamp(1.25rem, 1.15rem + 0.40vw, 1.50rem);
+    --font-size-2xl: clamp(1.50rem, 1.30rem + 0.80vw, 1.875rem);
+    --font-size-3xl: clamp(1.875rem, 1.50rem + 1.20vw, 2.50rem);
+
+    /* Color system (deep navy + charcoal cards) */
+    --bg-primary: #060512;
+    /* page background (deep navy) */
+    --bg-surface: #1B1B1F;
+    /* charcoal cards/panels */
+    --bg-elevated: #0E1730;
+    /* headers, bars */
+    --bg-secondary: #F8F9FA;
+    /* light surface (when needed) */
+
+    --text-primary: #F4F6F7;
+    /* off white */
+    --text-secondary: #D7DBDD;
+    /* muted text */
+    --text-tertiary: #8A8F98;
+    /* captions/meta */
+    --text-inverse: #060512;
+    /* text on bright backgrounds */
+    --text-accent: #0EAFFB;
+    /* headings / accents */
+
+    --brand-blue: #0EAFFB;
+    /* CTAs / links */
+    --accent-primary: var(--brand-blue);
+    --accent-hover: #5AC8FA;
+
+    --border-subtle: #2C2F36;
+    --border-strong: #3C414A;
+    --border-accent: var(--brand-blue);
+
+    /* Gradients */
+    --gradient-dark: linear-gradient(180deg, #060512 0%, #0E1730 100%);
+    --gradient-light: linear-gradient(180deg, #FFFFFF 0%, #F8F9FA 100%);
+    --gradient-section: var(--gradient-dark);
+
+    /* Spacing */
+    --spacing-xs: 0.375rem;
+    /* 6px */
+    --spacing-sm: 0.5rem;
+    /* 8px */
+    --spacing-md: 0.75rem;
+    /* 12px */
+    --spacing-lg: 1.5rem;
+    /* 24px */
+    --spacing-xl: 2rem;
+    /* 32px */
+    --spacing-2xl: 3rem;
+    /* 48px */
+    --spacing-3xl: 4rem;
+    /* 64px */
+
+    /* Radii */
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-xl: 16px;
+    --radius-full: 9999px;
+
+    /* Shadows */
+    --shadow-xs: 0 1px 2px rgba(0, 0, 0, .24);
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, .28);
+    --shadow-md: 0 6px 18px rgba(0, 0, 0, .32);
+    --shadow-lg: 0 10px 30px rgba(0, 0, 0, .38);
+    --shadow-xl: 0 16px 44px rgba(0, 0, 0, .42);
+
+    /* Motion */
+    --transition-fast: 150ms ease;
+    --transition-standard: 250ms ease;
+    --transition-slow: 400ms ease;
+
+    /* Z-index */
+    --z-index-base: 1;
+    --z-index-raised: 10;
+    --z-index-sticky: 50;
+    --z-index-high: 100;
+    --z-index-overlay: 1000;
+
+    /* Layout */
+    --container-max: 1200px;
+    --container-pad-inline: clamp(16px, 3vw, 32px);
+    --section-pad-block: clamp(2rem, 6vw, 3.75rem);
+    --section-pad-block-lg: clamp(2.5rem, 7vw, 5rem);
+
+    /* Layering */
+    --modal-z: var(--z-index-modal, 9999);
+
+    /* Surface & text */
+    --modal-surface: var(--surface-elevated, #ffffff);
+    --modal-text: var(--text-primary, #121417);
+    --modal-muted: var(--text-muted, #6b7280);
+
+    /* Brand (TBH) */
+    --modal-brand: var(--brand, #0ea5e9);
+    --modal-brand-strong: var(--brand-600, #0284c7);
+
+    /* Borders & elevation */
+    --modal-border: var(--border-subtle, rgba(17, 24, 39, 0.08));
+    --modal-shadow: var(--shadow-lg, 0 24px 48px rgba(0, 0, 0, 0.18), 0 0 0 1px rgba(0, 0, 0, 0.04));
+    --modal-radius: var(--radius-2xl, 16px);
+
+    /* Spacing & sizing */
+    --modal-pad: var(--space-6, 24px);
+    --modal-pad-sm: var(--space-4, 16px);
+    --modal-gap: var(--space-4, 16px);
+    --modal-max-h: 90vh;
+    --modal-width-vw: 92vw;
+
+    /* Typography */
+    --modal-title-size: var(--font-size-2xl, 1.5rem);
+    --modal-title-size-sm: var(--font-size-xl, 1.25rem);
+    --modal-content-size: var(--font-size-md, 1rem);
+    --modal-line: var(--line-height-md, 1.6);
+
+    /* Motion */
+    --modal-ease: var(--ease-standard, cubic-bezier(.2, .8, .2, 1));
+    --modal-dur: var(--duration-fast, 200ms);
+
+    /* Overlay */
+    --modal-scrim: var(--overlay-scrim, color-mix(in oklab, black 68%, transparent));
+    --modal-blur: var(--blur-backdrop, 6px);
+
+    /* Close button */
+    --modal-close-size: 40px;
+    --modal-close-pad: 8px;
+    --modal-close-bg-hover: color-mix(in oklab, var(--modal-brand) 10%, transparent);
+
+    /* Focus ring */
+    --focus-ring: 0 0 0 3px color-mix(in oklab, var(--modal-brand) 45%, white);
+
+ }
+
+/* ----------------------------------------------------------
+   1.a) Aliases used by the services modules (compat layer)
+   (so their existing module CSS “just works”)
+----------------------------------------------------------- */
+:root {
+    --off-white: #ffffff;
+    /* used in several cards */
+    --charcoal-grey: var(--text-secondary);
+    --light-grey: var(--text-secondary);
+    --border-grey: var(--border-subtle);
+    --light-hover: var(--accent-hover);
+    --deep-navy: var(--bg-primary);
+    --charcoal-navy: var(--bg-elevated);
+}
+
+/* ----------------------------------------
+   2) Base text color & heading defaults
+----------------------------------------- */
+html,
+body {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+}
+
+body,
+p,
+span,
+div {
+    font-family: var(--font-body);
+    font-size: var(--font-size-body);
+    line-height: var(--line-height-body);
+    color: var(--text-primary);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: var(--font-heading);
+    line-height: var(--line-height-heading);
+    color: var(--text-accent);
+    margin: 0 0 0.5em 0;
+}
+
+h1 {
+    font-size: var(--font-size-h1);
+}
+
+h2 {
+    font-size: var(--font-size-h2);
+}
+
+h3 {
+    font-size: var(--font-size-h3);
+}
+
+h4 {
+    font-size: var(--font-size-h4);
+}
+
+/* ----------------------------------------
+   3) Section + Container rhythm (shared)
+   (used by all services pages)
+----------------------------------------- */
+.tbh-section {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    padding-block: var(--section-pad-block);
+}
+
+.tbh-section--large {
+    padding-block: var(--section-pad-block-lg);
+}
+
+.tbh-container {
+    width: min(calc(100% - 2 * var(--container-pad-inline)), var(--container-max));
+    margin-inline: auto;
+    padding-inline: var(--container-pad-inline);
+    box-sizing: border-box;
+}
+
+/* Deep-navy gradient band helper */
+.gradient-section {
+    background: var(--gradient-section);
+    color: var(--text-primary);
+}
+
+/* ----------------------------------------
+   4) Unified charcoal card recipe
+   (used by ServiceCard, CaseStudy, etc.)
+----------------------------------------- */
+.card {
+    background: var(--bg-surface);
+    color: var(--text-primary);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-xs);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    padding: var(--spacing-xl);
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    transition:
+        transform var(--transition-fast),
+        box-shadow var(--transition-fast),
+        border-color var(--transition-fast),
+        background-color var(--transition-fast),
+        color var(--transition-fast);
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--border-accent);
+}
+
+/* Titles/subtitles with built-in truncation */
+.card__title {
+    font-family: var(--font-heading);
+    font-weight: 800;
+    color: var(--text-accent);
+    line-height: var(--line-height-heading);
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: var(--font-size-h4);
+}
+
+.card__subtitle {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    color: var(--text-secondary);
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.card__body {
+    font-family: var(--font-body);
+    font-size: var(--font-size-base);
+    color: var(--text-secondary);
+    line-height: var(--line-height-body);
+    margin: 0;
+    min-height: 0;
+}
+
+.card a,
+.card .break-anywhere {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+/* Reduced motion safety */
+@media (prefers-reduced-motion: reduce) {
+    .card {
+        transition: none !important;
+    }
+}
+
+/* ----------------------------------------
+   5) Equalized card grid helper
+----------------------------------------- */
+.cards-equalizer {
+    display: grid;
+    grid-template-columns: 1fr;
+    /* mobile-first */
+    gap: var(--spacing-xl);
+    align-items: stretch;
+    grid-auto-rows: 1fr;
+    /* equal-height rows */
+}
+
+.cards-equalizer>* {
+    height: 100%;
+    min-width: 0;
+}
+
+.cards-equalizer[data-cols="2"] {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.cards-equalizer[data-cols="3"] {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.cards-equalizer[data-cols="4"] {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+@media (min-width: 640px) {
+    .cards-equalizer.cols-2 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: var(--spacing-lg);
+    }
+}
+
+@media (min-width: 1024px) {
+    .cards-equalizer.cols-3 {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: var(--spacing-xl);
+    }
+}
+
+@media (min-width: 1024px) {
+    .cards-equalizer.cols-4 {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: var(--spacing-xl);
+    }
+}
+
+/* ----------------------------------------
+   6) Light, helpful utilities
+----------------------------------------- */
+.centered-header {
+    text-align: center;
+    max-width: 960px;
+    margin: 0 auto var(--spacing-xl);
+}
+
+.visually-hidden {
+    position: absolute !important;
+    clip: rect(1px, 1px, 1px, 1px);
+    padding: 0;
+    border: 0;
+    height: 1px;
+    width: 1px;
+    overflow: hidden;
+}

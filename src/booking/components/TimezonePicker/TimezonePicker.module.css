@@ -1,0 +1,237 @@
+/* src/booking/components/TimezonePicker/TimezonePicker.module.css */
+
+/* ============== */
+/* Root & Layout  */
+/* ============== */
+
+.root {
+    display: grid;
+    gap: 8px;
+    width: 100%;
+}
+
+/* Header row: label + "Use my timezone" button */
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.label {
+    font-weight: 600;
+    color: var(--text-primary, #121417);
+}
+
+/* ==================== */
+/* Detect (quick action) */
+/* ==================== */
+
+.detectBtn {
+    appearance: none;
+    border: 1px solid var(--border-subtle, #e5e5e5);
+    background: var(--bg-surface, #ffffff);
+    color: var(--text-secondary, #6b7280);
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-size: 12px;
+    line-height: 1;
+    cursor: pointer;
+    transition: background-color 120ms ease, color 120ms ease, border-color 120ms ease, box-shadow 120ms ease;
+}
+
+.detectBtn:hover:not(:disabled) {
+    background: color-mix(in oklab, var(--bg-elevated, #f8f9fa) 65%, transparent);
+    color: var(--text-primary, #111827);
+}
+
+.detectBtn:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--brand-blue, #3b82f6) 35%, transparent);
+    border-color: var(--brand-blue, #3b82f6);
+}
+
+.detectBtn:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* ============== */
+/* Search input   */
+/* ============== */
+
+.input {
+    border: 1px solid var(--border-subtle, #e5e5e5);
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 14px;
+    outline: none;
+    width: 100%;
+    background: var(--bg-surface, #ffffff);
+    color: var(--text-primary, #121417);
+    transition: border-color 120ms ease, box-shadow 120ms ease, background-color 120ms ease;
+}
+
+.input:disabled {
+    background: var(--bg-secondary, #f1f5f9);
+    color: var(--text-secondary, #6b7280);
+}
+
+.input::placeholder {
+    color: color-mix(in oklab, var(--text-secondary, #6b7280) 80%, transparent);
+}
+
+.input:focus-visible {
+    border-color: var(--brand-blue, #3b82f6);
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--brand-blue, #3b82f6) 28%, transparent);
+}
+
+/* ============== */
+/* Listbox        */
+/* ============== */
+
+.listbox {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    max-height: var(--tzp-max-height, 280px);
+    overflow: auto;
+    border: 1px solid var(--border-subtle, #e5e5e5);
+    border-radius: 8px;
+    background: var(--bg-surface, #ffffff);
+    box-shadow: var(--shadow-sm, 0 1px 2px rgba(0, 0, 0, .05));
+    scroll-behavior: smooth;
+}
+
+/* Scrollbar (WebKit/Chromium) */
+.listbox::-webkit-scrollbar {
+    width: 10px;
+}
+
+.listbox::-webkit-scrollbar-thumb {
+    background: color-mix(in oklab, var(--text-secondary, #6b7280) 25%, transparent);
+    border-radius: 8px;
+    border: 2px solid var(--bg-surface, #ffffff);
+}
+
+.listbox::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+/* Firefox scrollbar */
+@supports (scrollbar-color: auto) {
+    .listbox {
+        scrollbar-color: color-mix(in oklab, var(--text-secondary, #6b7280) 25%, transparent) transparent;
+        scrollbar-width: thin;
+    }
+}
+
+/* Empty state */
+.noResults {
+    padding: 10px 12px;
+    color: var(--text-secondary, #6b7280);
+    font-size: 14px;
+}
+
+/* ============== */
+/* Options        */
+/* ============== */
+
+.option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 12px;
+    cursor: pointer;
+    color: var(--text-primary, #121417);
+    background: transparent;
+    border-bottom: 1px solid var(--border-subtle, #e5e5e5);
+    transition: background-color 120ms ease, color 120ms ease;
+}
+
+.option:last-child {
+    border-bottom: none;
+}
+
+.option:hover {
+    background: color-mix(in oklab, var(--accent-primary, #0ea5e9) 10%, transparent);
+}
+
+.optionActive {
+    background: color-mix(in oklab, var(--accent-primary, #0ea5e9) 7%, transparent);
+}
+
+.optionSelected {
+    background: color-mix(in oklab, var(--accent-primary, #0ea5e9) 12%, transparent);
+}
+
+/* Option content stack */
+.optionContent {
+    display: grid;
+    gap: 2px;
+    min-width: 0;
+}
+
+.optionLabel {
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.2;
+    color: inherit;
+    overflow-wrap: anywhere;
+}
+
+.optionMeta {
+    font-size: 11px;
+    color: var(--text-secondary, #6b7280);
+}
+
+/* UTC offset badge on the right */
+.badge {
+    font-variant-numeric: tabular-nums;
+    background: var(--bg-elevated, #f8f9fa);
+    border: 1px solid var(--border-subtle, #e5e5e5);
+    padding: 2px 6px;
+    border-radius: 6px;
+    font-size: 12px;
+    color: var(--text-secondary, #6b7280);
+    white-space: nowrap;
+}
+
+/* ============== */
+/* Selection note */
+/* ============== */
+
+.selectionNote {
+    font-size: 12px;
+    color: var(--text-secondary, #6b7280);
+}
+
+/* ============================= */
+/* Accessibility & Motion prefs  */
+/* ============================= */
+
+:where(.root, .input, .detectBtn, .option, .listbox) {
+    -webkit-tap-highlight-color: transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .detectBtn,
+    .input,
+    .option {
+        transition: none;
+    }
+
+    .listbox {
+        scroll-behavior: auto;
+    }
+}
+
+@media (prefers-contrast: more) {
+
+    .detectBtn:focus-visible,
+    .input:focus-visible {
+        box-shadow: 0 0 0 3px var(--brand-blue, #3b82f6) !important;
+    }
+}

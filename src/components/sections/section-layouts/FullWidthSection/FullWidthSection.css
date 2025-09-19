@@ -1,0 +1,60 @@
+/* ============================================
+   🧩 FullWidth Section (Unified Theme Refactor)
+   - data-tone drives background from theme tokens
+   - Preserves: full-bleed, padding, divider helpers
+============================================ */
+
+/* Base band (no hardcoded bg; tone controls it) */
+.full-width-section {
+  position: relative;
+  width: 100%;
+  color: var(--text-primary);
+  transition:
+    background-color var(--transition-standard, 250ms ease),
+    color var(--transition-standard, 250ms ease);
+}
+
+/* Theme tones (default is "gradient" via TSX) */
+.full-width-section[data-tone="gradient"]   { background: var(--gradient-section); }
+.full-width-section[data-tone="primary"]    { background: var(--bg-primary); }
+.full-width-section[data-tone="surface"]    { background: var(--bg-surface); }
+.full-width-section[data-tone="transparent"]{ background: transparent; }
+
+/* Optional full-bleed breakout */
+.full-width-breakout {
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  isolation: isolate;
+}
+
+/* Optional vertical padding helper */
+.full-width-padded {
+  padding-block: var(--section-pad-block);
+}
+
+/* Divider region */
+.full-width-divider {
+  margin-top: var(--spacing-lg);
+}
+
+/* Full-bleed divider */
+.full-width-divider.breakout {
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+}
+
+/* Responsive niceties */
+@media (max-width: 768px) {
+  .full-width-padded {
+    padding-block: var(--spacing-lg);
+  }
+}
+
+/* Reduced-motion safety */
+@media (prefers-reduced-motion: reduce) {
+  .full-width-section {
+    transition: none;
+  }
+}

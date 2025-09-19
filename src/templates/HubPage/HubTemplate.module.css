@@ -1,0 +1,17 @@
+/* src/templates/HubPage/HubTemplate.module.css */
+
+/* Local template hooks only.
+   All tokens/typography/grids come from styles/services-unified.module.css. 
+
+.servicePage {
+    /* optional local tweaks (kept minimal) 
+    isolation: isolate;
+}*/
+
+/* local wrapper around the slider so we can adjust spacing if needed 
+.testimonials {
+    margin-top: var(--spacing-md);
+}*/
+
+/* Example header alignment override (if you need to nudge on just this template) */
+/* .centeredHeader { } */

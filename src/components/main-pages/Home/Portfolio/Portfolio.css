@@ -1,0 +1,225 @@
+/* ============================
+   🎨 TBH Portfolio Section Styles - Brand Aligned
+============================ */
+
+.portfolio-section {
+    width: 100%;
+    padding: var(--section-padding-major) 0;
+    background: var(--gradient-section);
+    border-bottom: var(--section-border-bottom);
+    text-align: center;
+    transition: background-color var(--transition-standard), color var(--transition-standard);
+}
+
+/* ✅ Portfolio Section Title - TBH Brand */
+.portfolio-title {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-h2);
+    font-weight: 600;
+    color: var(--text-accent);
+    text-transform: uppercase;
+    margin-bottom: var(--section-title-margin-bottom);
+    border-bottom: var(--section-title-border);
+    padding-bottom: var(--section-title-padding-bottom);
+    display: inline-block;
+    text-align: center;
+}
+
+/* ✅ Portfolio Description - TBH Brand */
+.portfolio-description {
+    font-family: var(--font-body);
+    font-size: var(--font-size-body);
+    color: var(--text-secondary);
+    max-width: var(--content-max-width);
+    margin: 0 auto var(--spacing-xl);
+    line-height: var(--line-height-body);
+    text-align: center;
+}
+
+/* ============================
+   🗂️ Portfolio Grid Layout - TBH Standards
+============================ */
+
+.portfolio-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: var(--card-gap);
+    max-width: var(--container-max-width);
+    margin: 0 auto;
+    padding: 0 var(--spacing-md);
+}
+
+/* ============================
+   🃏 Portfolio Item Card - TBH Brand
+============================ */
+
+.portfolio-item {
+    background-color: var(--bg-elevated);
+    color: var(--text-primary);
+    border-radius: var(--radius-lg);
+    padding: var(--card-padding-large);
+    text-align: center;
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border-subtle);
+    transition: transform var(--transition-standard), box-shadow var(--transition-standard);
+    cursor: pointer;
+}
+
+/* ✅ TBH Hover Effects */
+.portfolio-item:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+    background-color: var(--text-primary);
+    color: var(--text-inverse);
+}
+
+/* ============================
+   📹 Portfolio Video Container - TBH Brand
+============================ */
+
+.portfolio-video-container {
+    position: relative;
+    width: 100%;
+    height: 200px;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    margin-bottom: var(--spacing-md);
+}
+
+.portfolio-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: var(--radius-md);
+    transition: transform var(--transition-standard);
+}
+
+.portfolio-item:hover .portfolio-video {
+    transform: scale(1.05);
+}
+
+.portfolio-image-fallback {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border-radius: var(--radius-md);
+    transition: transform var(--transition-standard);
+}
+
+.portfolio-item:hover .portfolio-image-fallback {
+    transform: scale(1.05);
+}
+
+/* ============================
+   📝 Portfolio Item Content - TBH Brand
+============================ */
+
+.portfolio-item-title {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-h4);
+    font-weight: 600;
+    color: var(--text-accent);
+    margin-top: var(--spacing-md);
+    margin-bottom: var(--spacing-sm);
+    transition: color var(--transition-standard);
+}
+
+.portfolio-item:hover .portfolio-item-title {
+    color: var(--text-inverse);
+}
+
+.portfolio-item-description {
+    font-family: var(--font-body);
+    font-size: var(--font-size-body);
+    color: var(--text-secondary);
+    line-height: var(--line-height-body);
+    margin-top: var(--spacing-sm);
+    transition: color var(--transition-standard);
+}
+
+.portfolio-item:hover .portfolio-item-description {
+    color: var(--text-inverse);
+}
+
+/* ============================
+   📱 TBH Responsive Breakpoints
+============================ */
+
+/* Tablet Adjustments */
+@media (max-width: 1024px) {
+    .portfolio-title {
+        font-size: var(--font-size-h2-mobile);
+    }
+
+    .portfolio-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--spacing-md);
+    }
+
+    .portfolio-item-title {
+        font-size: var(--font-size-h4);
+    }
+}
+
+/* Mobile Adjustments */
+@media (max-width: 768px) {
+    .portfolio-section {
+        padding: var(--spacing-lg) 0;
+    }
+
+    .portfolio-title {
+        font-size: var(--font-size-h2-mobile);
+        margin-bottom: var(--spacing-md);
+    }
+
+    .portfolio-description {
+        margin-bottom: var(--spacing-lg);
+        padding: 0 var(--mobile-padding);
+    }
+
+    .portfolio-grid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-md);
+        padding: 0 var(--mobile-padding);
+    }
+
+    .portfolio-item {
+        padding: var(--card-padding);
+    }
+
+    .portfolio-video-container {
+        height: 180px;
+    }
+
+    .portfolio-item-title {
+        font-size: var(--font-size-h4);
+    }
+
+    .portfolio-item-description {
+        font-size: var(--font-size-small);
+    }
+}
+
+/* Small Mobile Adjustments */
+@media (max-width: 480px) {
+    .portfolio-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .portfolio-item {
+        padding: var(--spacing-md);
+    }
+
+    .portfolio-video-container {
+        height: 160px;
+    }
+
+    .portfolio-item-title {
+        font-size: var(--font-size-h4);
+    }
+
+    .portfolio-item-description {
+        font-size: var(--font-size-small);
+    }
+}

@@ -1,0 +1,485 @@
+/* ==========================================================================
+   FAQAccordion.module.css — PRODUCTION READY
+   - Scoped root (.faq) with :global(...) hooks for Accordion internals
+   - Unified theme tokens for colors, spacing, radii, shadows, motion
+   ========================================================================== */
+
+/* Local root wrapper (used to scope :global selectors and stay “pure”) */
+.faq {
+    width: 100%;
+    background: var(--bg-primary); 
+    color: var(--text-primary);
+}
+
+/* ============================
+   HEADER (local)
+============================ */
+
+.faqHeader {
+    text-align: center;
+    margin: 0 auto var(--spacing-xl);
+    padding-bottom: var(--spacing-md);
+    max-width: 960px;
+    border-bottom: 2px solid color-mix(in oklab, var(--brand-blue) 30%, transparent);
+}
+
+.faqTitle {
+    margin: 0;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    letter-spacing: 0.2px;
+    color: var(--text-primary);
+    font-size: clamp(1.25rem, 1.25vw + 1rem, 1.75rem);
+    line-height: 1.2;
+}
+
+/* ============================
+   ACCORDION CONTAINER (global child)
+   Note: We style the Accordion’s inner DOM via :global, but scoped under .faq
+============================ */
+
+.faq :global(.faq-accordion) {
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: var(--spacing-xl) var(--spacing-md);
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+}
+
+.faq :global(.faq-accordion.variant-minimal) {
+    background: transparent;
+    box-shadow: none;
+    border-color: transparent;
+    padding: var(--spacing-lg) 0;
+}
+
+/* Dark theme surface tweak */
+[data-theme="dark"] .faq :global(.faq-accordion) {
+    background: var(--bg-elevated);
+}
+
+/* ============================
+   CONTROLS / SEARCH / FILTERS (global)
+============================ */
+
+.faq :global(.faq-controls) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-md);
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: var(--spacing-lg);
+    padding: var(--spacing-lg);
+    background: color-mix(in oklab, var(--brand-blue) 6%, transparent);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-subtle);
+}
+
+[data-theme="dark"] .faq :global(.faq-controls) {
+    background: color-mix(in oklab, var(--brand-blue) 10%, transparent);
+}
+
+.faq :global(.faq-search) {
+    position: relative;
+    flex: 1;
+    min-width: 260px;
+    max-width: 420px;
+}
+
+.faq :global(.faq-search-input) {
+    width: 100%;
+    padding: var(--spacing-sm) var(--spacing-lg) var(--spacing-sm) var(--spacing-md);
+    font-size: var(--font-size-body);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    background: var(--bg-surface);
+    color: var(--text-primary);
+    transition: border-color var(--motion-fast, 160ms) ease, box-shadow var(--motion-fast, 160ms) ease;
+}
+
+.faq :global(.faq-search-input:focus) {
+    outline: none;
+    border-color: var(--brand-blue);
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--brand-blue) 20%, transparent);
+}
+
+[data-theme="dark"] .faq :global(.faq-search-input) {
+    background: var(--bg-elevated);
+}
+
+.faq :global(.faq-categories) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-xs);
+    flex: 2;
+    min-width: 260px;
+}
+
+.faq :global(.faq-category-btn) {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    background: transparent;
+    color: var(--text-secondary);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: transform var(--motion-fast, 160ms) ease, background var(--motion-fast, 160ms) ease, color var(--motion-fast, 160ms) ease, border-color var(--motion-fast, 160ms) ease;
+    white-space: nowrap;
+}
+
+.faq :global(.faq-category-btn:hover),
+.faq :global(.faq-category-btn.active) {
+    background: var(--brand-blue);
+    color: var(--text-inverse, #fff);
+    border-color: var(--brand-blue);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
+}
+
+/* Sorting */
+.faq :global(.faq-sorting) {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+}
+
+.faq :global(.sort-label) {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    text-transform: uppercase;
+}
+
+.faq :global(.sort-select) {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: 0.875rem;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    background: var(--bg-surface);
+    color: var(--text-primary);
+    cursor: pointer;
+}
+
+/* ============================
+   RESULTS INFO (global)
+============================ */
+
+.faq :global(.faq-results-info) {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-md);
+    padding: var(--spacing-sm) var(--spacing-md);
+    background: color-mix(in oklab, var(--brand-blue) 6%, transparent);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-subtle);
+}
+
+.faq :global(.results-text) {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
+.faq :global(.clear-filters-btn) {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    background: var(--brand-blue);
+    color: var(--text-inverse, #fff);
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: transform var(--motion-fast, 160ms) ease, background var(--motion-fast, 160ms) ease, box-shadow var(--motion-fast, 160ms) ease;
+}
+
+.faq :global(.clear-filters-btn:hover) {
+    background: color-mix(in oklab, var(--brand-blue) 85%, white);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
+}
+
+/* ============================
+   CONTENT / GROUPS (global)
+============================ */
+
+.faq :global(.faq-content) {
+    margin-bottom: var(--spacing-xl);
+}
+
+.faq :global(.faq-categorized) {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xl);
+}
+
+.faq :global(.faq-category-section) {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: var(--shadow-xs);
+}
+
+.faq :global(.category-header) {
+    padding: var(--spacing-lg);
+    background: color-mix(in oklab, var(--brand-blue) 8%, transparent);
+    border-bottom: 1px solid var(--border-subtle);
+}
+
+.faq :global(.category-title) {
+    font-family: var(--font-heading);
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    text-transform: none;
+    margin: 0 0 var(--spacing-xs);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.faq :global(.category-description) {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    line-height: var(--line-height-normal);
+    margin: 0;
+}
+
+/* ============================
+   ANSWER CONTENT (global)
+============================ */
+
+.faq :global(.faq-answer-content) {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.faq :global(.faq-answer) {
+    line-height: var(--line-height-normal);
+    color: var(--text-primary);
+}
+
+.faq :global(.faq-answer h1),
+.faq :global(.faq-answer h2),
+.faq :global(.faq-answer h3),
+.faq :global(.faq-answer h4),
+.faq :global(.faq-answer h5),
+.faq :global(.faq-answer h6) {
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-sm);
+}
+
+.faq :global(.faq-answer a) {
+    color: var(--brand-blue);
+    text-decoration: underline;
+    transition: color var(--motion-fast, 160ms) ease;
+}
+
+.faq :global(.faq-answer a:hover) {
+    color: color-mix(in oklab, var(--brand-blue) 85%, white);
+}
+
+.faq :global(.faq-answer code) {
+    background: color-mix(in oklab, var(--brand-blue) 10%, transparent);
+    color: var(--brand-blue);
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-family: var(--font-code, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace);
+    font-size: 0.875em;
+}
+
+.faq :global(.faq-answer pre) {
+    background: color-mix(in oklab, var(--brand-blue) 6%, transparent);
+    padding: var(--spacing-md);
+    border-radius: var(--radius-sm);
+    border-left: 3px solid var(--brand-blue);
+    overflow-x: auto;
+    margin: var(--spacing-md) 0;
+}
+
+/* Helpful */
+.faq :global(.faq-helpful-section) {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    padding-top: var(--spacing-md);
+    border-top: 1px solid var(--border-subtle);
+}
+
+.faq :global(.helpful-text) {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    text-transform: uppercase;
+}
+
+.faq :global(.helpful-buttons) {
+    display: flex;
+    gap: var(--spacing-xs);
+}
+
+.faq :global(.helpful-btn) {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: 0.75rem;
+    background: transparent;
+    color: var(--text-secondary);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: transform var(--motion-fast, 160ms) ease, background var(--motion-fast, 160ms) ease, color var(--motion-fast, 160ms) ease, border-color var(--motion-fast, 160ms) ease;
+}
+
+.faq :global(.helpful-btn:hover),
+.faq :global(.helpful-btn.active) {
+    background: var(--brand-blue);
+    color: var(--text-inverse, #fff);
+    border-color: var(--brand-blue);
+    transform: translateY(-2px);
+}
+
+/* Empty state */
+.faq :global(.faq-empty-state) {
+    text-align: center;
+    padding: var(--spacing-xxl);
+    background: color-mix(in oklab, var(--brand-blue) 4%, transparent);
+    border: 2px dashed color-mix(in oklab, var(--brand-blue) 30%, transparent);
+    border-radius: var(--radius-md);
+    color: var(--text-secondary);
+}
+
+/* Footer */
+.faq :global(.faq-footer) {
+    margin-top: var(--spacing-xl);
+    padding-top: var(--spacing-lg);
+    border-top: 2px solid var(--border-subtle);
+}
+
+.faq :global(.contact-support) {
+    text-align: center;
+    background: var(--bg-surface);
+    padding: var(--spacing-xl);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-subtle);
+}
+
+/* ============================
+   RESPONSIVE
+============================ */
+
+@media (max-width: 1024px) {
+    .faqHeader {
+        margin-bottom: var(--spacing-lg);
+    }
+
+    .faq :global(.faq-controls) {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .faq :global(.faq-categories) {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 768px) {
+    .faq :global(.faq-accordion) {
+        padding: var(--spacing-lg) var(--spacing-sm);
+        margin: 0 var(--spacing-sm);
+    }
+
+    .faqTitle {
+        font-size: 1.25rem;
+    }
+
+    .faq :global(.faq-controls) {
+        padding: var(--spacing-md);
+    }
+
+    .faq :global(.faq-categories) {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}
+
+@media (max-width: 480px) {
+    .faq :global(.faq-accordion) {
+        padding: var(--spacing-md) var(--spacing-xs);
+        margin: 0;
+        border-radius: 0;
+    }
+}
+
+/* ============================
+   ACCESSIBILITY
+============================ */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .faq :global(.faq-accordion),
+    .faq :global(.faq-category-btn),
+    .faq :global(.helpful-btn),
+    .faq :global(.clear-filters-btn) {
+        animation: none;
+        transition: none;
+    }
+}
+
+.faq :global(.faq-search-input:focus),
+.faq :global(.faq-category-btn:focus),
+.faq :global(.sort-select:focus),
+.faq :global(.helpful-btn:focus),
+.faq :global(.clear-filters-btn:focus) {
+    outline: 3px solid color-mix(in oklab, var(--brand-blue) 30%, transparent);
+    outline-offset: 2px;
+}
+
+/* High contrast */
+@media (prefers-contrast: high) {
+    .faq :global(.faq-accordion) {
+        border: 2px solid var(--brand-blue);
+    }
+
+    .faq :global(.faq-category-btn),
+    .faq :global(.helpful-btn),
+    .faq :global(.faq-empty-state) {
+        border-width: 2px;
+    }
+}
+
+/* Print */
+@media print {
+    .faq :global(.faq-accordion) {
+        box-shadow: none;
+        background: white;
+        color: black;
+    }
+
+    .faq :global(.faq-controls),
+    .faq :global(.faq-results-info),
+    .faq :global(.faq-helpful-section),
+    .faq :global(.faq-footer) {
+        display: none;
+    }
+
+    .faqHeader {
+        border-bottom: 2px solid black;
+    }
+
+    .faqTitle {
+        color: black;
+    }
+}

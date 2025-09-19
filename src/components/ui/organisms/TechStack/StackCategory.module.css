@@ -1,0 +1,71 @@
+/* =========================================================================
+   TBH — StackCategory (production, unified theme)
+   Matches StackCategory.tsx class API: wrapper, header, title, subtitle, content
+============================================================================ */
+
+.wrapper {
+    width: 100%;
+    max-width: var(--container-max, 1200px);
+    margin-inline: auto;
+    padding-block: var(--section-pad-block, clamp(2rem, 6vw, 3.75rem));
+    padding-inline: var(--container-pad-inline, 16px);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+}
+
+.header {
+    text-align: center;
+    margin-bottom: var(--spacing-xl, 24px);
+}
+
+.title {
+    margin: 0 0 var(--spacing-sm, 12px) 0;
+    font-family: var(--font-heading);
+    font-size: var(--font-size-h2);
+    font-weight: 800;
+    line-height: var(--line-height-heading);
+    color: var(--text-accent);
+    text-transform: uppercase;
+    letter-spacing: .4px;
+    padding-bottom: var(--spacing-xs, 8px);
+    display: inline-block;
+    border-bottom: 2px solid var(--border-primary, var(--brand-blue));
+}
+
+.subtitle {
+    margin: 0 auto;
+    max-width: 70ch;
+    font-family: var(--font-body);
+    font-size: var(--font-size-body);
+    color: var(--text-secondary);
+    line-height: var(--line-height-body);
+}
+
+.content {
+    display: grid;
+    gap: var(--spacing-lg, 20px);
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    align-items: stretch;
+    /* equal-height rows when children are cards */
+    grid-auto-rows: 1fr;
+}
+
+/* Focus visibility for any interactive children */
+.content :where(a, button, [tabindex]):focus-visible,
+.wrapper :where(section, article, div).card:focus-within {
+    outline: 2px solid var(--brand-blue);
+    outline-offset: 2px;
+    border-radius: var(--radius-md);
+}
+
+/* Responsive ramps */
+@media (max-width: 768px) {
+    .title {
+        font-size: var(--font-size-h3);
+    }
+
+    .content {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-md, 16px);
+    }
+}

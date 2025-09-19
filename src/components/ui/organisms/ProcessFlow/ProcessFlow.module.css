@@ -1,0 +1,675 @@
+/* src/components/ui/organisms/ProcessFlow/ProcessFlow.module.css */
+
+/* ============================
+   BASE STYLES
+============================ */
+.processFlow {
+    width: 100%;
+    padding: var(--spacing-lg) 0;
+    position: relative;
+
+    /* CSS Custom Properties */
+    --flow-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --flow-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --flow-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    --flow-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.header {
+    text-align: center;
+    margin-bottom: var(--spacing-xl);
+}
+
+.title {
+    font-size: var(--font-size-2xl);
+    font-weight: 700;
+    color: var(--deep-navy);
+    margin-bottom: var(--spacing-sm);
+    font-family: var(--font-heading);
+}
+
+.subtitle {
+    font-size: var(--font-size-base);
+    color: var(--charcoal-grey);
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: var(--line-height-relaxed);
+}
+
+/* ============================
+   STEPS CONTAINER
+============================ */
+.stepsContainer {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+    position: relative;
+}
+
+.stepWrapper {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* ============================
+   CONNECTORS
+============================ */
+.connector {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+}
+
+.connector.vertical {
+    height: var(--spacing-lg);
+    width: 2px;
+    margin: var(--spacing-sm) 0;
+}
+
+.connector.horizontal {
+    width: var(--spacing-lg);
+    height: 2px;
+    margin: 0 var(--spacing-sm);
+}
+
+.connectorLine {
+    background: var(--border-grey);
+    transition: var(--flow-transition);
+}
+
+.connector.vertical .connectorLine {
+    width: 2px;
+    height: 100%;
+}
+
+.connector.horizontal .connectorLine {
+    height: 2px;
+    width: 100%;
+}
+
+/* Connector styles */
+.connector.line .connectorLine {
+    background: var(--brand-blue);
+}
+
+.connector.dotted .connectorLine {
+    background-image: linear-gradient(to bottom, var(--brand-blue) 50%, transparent 50%);
+    background-size: 2px 8px;
+    background-repeat: repeat-y;
+}
+
+.connector.horizontal.dotted .connectorLine {
+    background-image: linear-gradient(to right, var(--brand-blue) 50%, transparent 50%);
+    background-size: 8px 2px;
+    background-repeat: repeat-x;
+}
+
+.connector.dashed .connectorLine {
+    border: 1px dashed var(--brand-blue);
+    background: none;
+}
+
+.connector.arrow .arrowHead {
+    color: var(--brand-blue);
+    font-size: var(--font-size-lg);
+    margin-left: var(--spacing-xs);
+}
+
+.connector.curved .connectorLine {
+    border-radius: var(--spacing-lg);
+    background: linear-gradient(45deg, var(--brand-blue), var(--light-hover));
+}
+
+/* ============================
+   VARIANTS
+============================ */
+
+/* Default Variant */
+.default .stepsContainer {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* Timeline Variant */
+.timeline .stepsContainer {
+    position: relative;
+    padding-left: var(--spacing-xl);
+}
+
+.timeline .stepsContainer::before {
+    content: '';
+    position: absolute;
+    left: 24px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--border-grey);
+}
+
+.timeline .stepWrapper {
+    align-items: flex-start;
+}
+
+.timeline .connector {
+    display: none;
+}
+
+/* Horizontal Variant */
+.horizontal .stepsContainer {
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
+    overflow-x: auto;
+    padding: var(--spacing-md) 0;
+    scroll-behavior: smooth;
+}
+
+.horizontal .stepWrapper {
+    min-width: 300px;
+    flex: 0 0 auto;
+}
+
+.horizontal .connector.vertical {
+    display: none;
+}
+
+.horizontal .connector.horizontal {
+    display: flex;
+}
+
+/* Cards Variant */
+.cards .stepsContainer {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-xl);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.cards .connector {
+    display: none;
+}
+
+/* Minimal Variant */
+.minimal .stepsContainer {
+    gap: var(--spacing-md);
+}
+
+.minimal .connector .connectorLine {
+    background: var(--light-grey);
+    opacity: 0.5;
+}
+
+/* Roadmap Variant */
+.roadmap {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.02), rgba(59, 130, 246, 0.05));
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-xl);
+}
+
+.roadmap .stepsContainer {
+    position: relative;
+}
+
+.roadmap .stepsContainer::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--brand-blue), var(--light-hover));
+    transform: translateX(-50%);
+    z-index: 0;
+}
+
+/* ============================
+   ORIENTATIONS
+============================ */
+.vertical .stepsContainer {
+    flex-direction: column;
+}
+
+.horizontal .stepsContainer {
+    flex-direction: row;
+}
+
+/* ============================
+   SPACING VARIANTS
+============================ */
+.compact .stepsContainer {
+    gap: var(--spacing-md);
+}
+
+.compact .connector.vertical {
+    height: var(--spacing-md);
+}
+
+.spacious .stepsContainer {
+    gap: var(--spacing-xl);
+}
+
+.spacious .connector.vertical {
+    height: var(--spacing-xl);
+}
+
+/* ============================
+   SIZE VARIANTS
+============================ */
+.small {
+    padding: var(--spacing-md) 0;
+}
+
+.small .title {
+    font-size: var(--font-size-xl);
+}
+
+.small .subtitle {
+    font-size: var(--font-size-sm);
+}
+
+.large {
+    padding: var(--spacing-xxl) 0;
+}
+
+.large .title {
+    font-size: var(--font-size-3xl);
+}
+
+.large .subtitle {
+    font-size: var(--font-size-lg);
+}
+
+/* ============================
+   COLOR SCHEMES
+============================ */
+.blue {
+    --flow-primary: #3b82f6;
+    --flow-secondary: #60a5fa;
+}
+
+.green {
+    --flow-primary: #10b981;
+    --flow-secondary: #34d399;
+}
+
+.purple {
+    --flow-primary: #8b5cf6;
+    --flow-secondary: #a78bfa;
+}
+
+.orange {
+    --flow-primary: #f97316;
+    --flow-secondary: #fb923c;
+}
+
+.red {
+    --flow-primary: #ef4444;
+    --flow-secondary: #f87171;
+}
+
+/* ============================
+   CENTERED LAYOUT
+============================ */
+.centered {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.centered .stepsContainer {
+    width: 100%;
+}
+
+/* ============================
+   CAROUSEL NAVIGATION
+============================ */
+.carouselNavigation {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-lg);
+}
+
+.navButton {
+    width: 40px;
+    height: 40px;
+    border: 1px solid var(--border-grey);
+    border-radius: var(--radius-full);
+    background: var(--off-white);
+    color: var(--charcoal-grey);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: var(--flow-transition);
+}
+
+.navButton:hover:not(:disabled) {
+    background: var(--brand-blue);
+    color: var(--deep-navy);
+    border-color: var(--brand-blue);
+}
+
+.navButton:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.slideIndicators {
+    display: flex;
+    gap: var(--spacing-xs);
+}
+
+.slideIndicator {
+    width: 8px;
+    height: 8px;
+    border-radius: var(--radius-full);
+    background: var(--border-grey);
+    border: none;
+    cursor: pointer;
+    transition: var(--flow-transition);
+}
+
+.slideIndicator.active {
+    background: var(--brand-blue);
+}
+
+/* ============================
+   BORDER STYLES
+============================ */
+.subtle {
+    border: 1px solid var(--border-grey);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+}
+
+.solid {
+    border: 2px solid var(--brand-blue);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+}
+
+/* ============================
+   LOADING STATE
+============================ */
+.loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 300px;
+}
+
+.loadingSpinner {
+    text-align: center;
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid var(--border-grey);
+    border-top: 4px solid var(--brand-blue);
+    border-radius: var(--radius-full);
+    animation: spin 1s linear infinite;
+    margin: 0 auto var(--spacing-md);
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* ============================
+   ERROR STATE
+============================ */
+.error {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 200px;
+}
+
+.errorMessage {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    color: #ef4444;
+    font-size: var(--font-size-base);
+    text-align: center;
+}
+
+.errorMessage ion-icon {
+    font-size: var(--font-size-xl);
+}
+
+/* ============================
+   EMPTY STATE
+============================ */
+.empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 200px;
+}
+
+.emptyState {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: var(--light-grey);
+}
+
+.emptyState ion-icon {
+    font-size: var(--font-size-3xl);
+    margin-bottom: var(--spacing-sm);
+}
+
+/* ============================
+   FOOTER
+============================ */
+.footer {
+    margin-top: var(--spacing-xl);
+    text-align: center;
+    padding-top: var(--spacing-lg);
+    border-top: 1px solid var(--border-grey);
+}
+
+/* ============================
+   DARK THEME
+============================ */
+[data-theme="dark"] .processFlow {
+    background: var(--charcoal-navy);
+}
+
+[data-theme="dark"] .title {
+    color: var(--off-white);
+}
+
+[data-theme="dark"] .subtitle {
+    color: var(--light-grey);
+}
+
+[data-theme="dark"] .connectorLine {
+    background: var(--border-grey);
+}
+
+[data-theme="dark"] .timeline .stepsContainer::before {
+    background: var(--border-grey);
+}
+
+[data-theme="dark"] .navButton {
+    background: var(--charcoal-navy);
+    border-color: var(--border-grey);
+    color: var(--light-grey);
+}
+
+[data-theme="dark"] .navButton:hover:not(:disabled) {
+    background: var(--brand-blue);
+    color: var(--deep-navy);
+}
+
+/* ============================
+   RESPONSIVE DESIGN
+============================ */
+@media (max-width: 1024px) {
+    .horizontal .stepsContainer {
+        justify-content: flex-start;
+    }
+
+    .horizontal .stepWrapper {
+        min-width: 280px;
+    }
+}
+
+@media (max-width: 768px) {
+    .processFlow {
+        padding: var(--spacing-md) 0;
+    }
+
+    .title {
+        font-size: var(--font-size-xl);
+    }
+
+    .subtitle {
+        font-size: var(--font-size-sm);
+    }
+
+    .horizontal .stepsContainer {
+        flex-direction: column;
+    }
+
+    .horizontal .connector.horizontal {
+        display: none;
+    }
+
+    .horizontal .connector.vertical {
+        display: flex;
+    }
+
+    .timeline .stepsContainer {
+        padding-left: var(--spacing-md);
+    }
+
+    .timeline .stepsContainer::before {
+        left: 16px;
+    }
+
+    /* Show carousel navigation on mobile for default variant */
+    .responsive.default .carouselNavigation {
+        display: flex;
+    }
+
+    .responsive.default .stepsContainer {
+        overflow: hidden;
+    }
+
+    .responsive.default .stepWrapper {
+        min-width: 100%;
+        display: none;
+    }
+
+    .responsive.default .stepWrapper:first-child {
+        display: flex;
+    }
+}
+
+@media (max-width: 480px) {
+    .stepsContainer {
+        gap: var(--spacing-md);
+    }
+
+    .connector.vertical {
+        height: var(--spacing-md);
+    }
+
+    .roadmap {
+        padding: var(--spacing-md);
+    }
+
+    .navButton {
+        width: 32px;
+        height: 32px;
+    }
+}
+
+/* ============================
+   ACCESSIBILITY
+============================ */
+@media (prefers-reduced-motion: reduce) {
+    .processFlow {
+        animation: none;
+    }
+
+    .visible {
+        opacity: 1;
+        transform: none;
+    }
+
+    .spinner {
+        animation: none;
+    }
+
+    .connector,
+    .navButton {
+        transition: none;
+    }
+}
+
+/* Focus states */
+.navButton:focus,
+.slideIndicator:focus {
+    outline: 2px solid var(--brand-blue);
+    outline-offset: 2px;
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+    .processFlow {
+        border: 1px solid;
+    }
+
+    .connectorLine {
+        border: 1px solid;
+        background: none;
+    }
+
+    .navButton {
+        border-width: 2px;
+    }
+}
+
+/* ============================
+   PRINT STYLES
+============================ */
+@media print {
+    .processFlow {
+        break-inside: avoid;
+    }
+
+    .carouselNavigation {
+        display: none;
+    }
+
+    .stepsContainer {
+        display: block;
+    }
+
+    .stepWrapper {
+        break-inside: avoid;
+        margin-bottom: var(--spacing-lg);
+    }
+
+    .connector {
+        display: none;
+    }
+}

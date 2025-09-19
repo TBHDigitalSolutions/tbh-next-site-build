@@ -1,0 +1,81 @@
+/seo-services
+├── ai-seo
+│   ├── ai-search-optimization
+│   │   ├── search-generative-experience-optimization
+│   │   ├── ai-powered-search-positioning
+│   │   └── machine-learning-algorithm-adaptation
+│   ├── llm-answer-seo
+│   │   ├── large-language-model-response-optimization
+│   │   ├── featured-snippet-ai-optimization
+│   │   └── conversational-search-optimization
+│   └── visibility-engineering
+│       ├── ai-search-visibility-strategy
+│       ├── algorithm-specific-optimization
+│       └── future-proofing-search-technologies
+├── marketing
+│   ├── community-seo
+│   │   ├── forum-community-optimization
+│   │   ├── user-generated-content-seo
+│   │   └── social-proof-engagement-optimization
+│   ├── content-hubs
+│   │   ├── topic-cluster-development
+│   │   ├── hub-spoke-content-architecture
+│   │   └── authority-building-content-depth
+│   ├── content-syndication
+│   │   ├── multi-platform-content-distribution
+│   │   ├── syndication-network-optimization
+│   │   └── cross-platform-seo-coordination
+│   ├── digital-pr
+│   │   ├── link-building-pr-campaigns
+│   │   ├── brand-mention-optimization
+│   │   └── authority-site-relationship-building
+│   ├── ecommerce-seo
+│   │   ├── product-page-optimization
+│   │   ├── category-page-structure
+│   │   └── shopping-search-optimization
+│   ├── keyword-strategy
+│   │   ├── keyword-research-analysis
+│   │   ├── search-intent-mapping
+│   │   └── competitive-keyword-analysis
+│   ├── local-seo
+│   │   ├── google-business-profile-optimization
+│   │   ├── local-search-visibility
+│   │   └── location-based-ranking-strategies
+│   ├── marketplace-seo
+│   │   ├── amazon-marketplace-optimization
+│   │   ├── product-listing-optimization
+│   │   └── marketplace-ranking-factors
+│   ├── on-page
+│   │   ├── title-meta-description-optimization
+│   │   ├── header-content-optimization
+│   │   └── internal-linking-strategy
+│   └── video-seo
+│       ├── youtube-optimization
+│       ├── video-content-search-optimization
+│       └── video-schema-markup
+└── technical
+    ├── core-web-vitals
+    │   ├── page-speed-optimization
+    │   ├── largest-contentful-paint-improvement
+    │   ├── cumulative-layout-shift-reduction
+    │   └── first-input-delay-optimization
+    ├── indexation-routing
+    │   ├── crawl-path-optimization
+    │   ├── url-structure-hierarchy
+    │   └── sitemap-optimization-submission
+    ├── international-seo
+    │   ├── hreflang-implementation
+    │   ├── multi-language-site-optimization
+    │   └── geographic-targeting-strategies
+    ├── migration-seo
+    │   ├── site-migration-planning-execution
+    │   ├── redirect-mapping-301
+    │   └── traffic-preservation-strategies
+    ├── schema
+    │   ├── structured-data-implementation
+    │   ├── rich-snippet-optimization
+    │   └── knowledge-graph-optimization
+    └── technical-audit
+        ├── comprehensive-site-analysis
+        ├── technical-issue-identification
+        └── performance-bottleneck-analysis

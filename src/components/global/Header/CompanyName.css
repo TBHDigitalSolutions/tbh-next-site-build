@@ -1,0 +1,59 @@
+/* ============================
+   🏢 Company Name Styles
+============================ */
+.companyname {
+    font-weight: 700;
+    line-height: 1.1;
+    transition: color var(--transition-standard), transform var(--transition-standard);
+}
+
+.companyname-light,
+.companyname-dark {
+    /* keep gradient option via background-clip when needed */
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.companyname-tagline {
+    display: block;
+    font-size: var(--font-size-caption);
+    color: var(--text-secondary);
+}
+
+.companyname-header {
+    font-size: var(--font-size-h1);
+}
+
+.companyname-body {
+    font-size: var(--font-size-body);
+}
+
+.companyname-sovjetBox {
+    font-family: var(--font-logo);
+}
+
+.companyname-aldrich {
+    font-family: var(--font-heading);
+}
+
+.companyname-link {
+    text-decoration: none;
+}
+
+.companyname-link:hover {
+    color: var(--accent-hover);
+}
+
+@media (max-width: 768px) {
+    .companyname-header {
+        font-size: var(--font-size-h2);
+    }
+
+    .companyname-body {
+        font-size: var(--font-size-small);
+    }
+
+    .companyname-tagline {
+        font-size: var(--font-size-caption);
+    }
+}

@@ -1,0 +1,118 @@
+/* ============================
+   🌟 Test Hero Styles
+============================ */
+
+.TestHero-container {
+    width: 100%;
+    position: relative;
+    width: 100%;
+    height: clamp(40vh, 60vh, 80vh);
+    /* ✅ Scales based on screen size */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.dark .TestHero-container {
+    background: var(--background-dark);
+    box-shadow: var(--shadow-dark);
+    border-bottom: 3px solid #0EAFFB;
+    border-bottom: 3px solid var(--color-accent);
+}
+
+/* ✅ Hero Heading */
+.TestHero-heading {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-h1);
+    font-weight: bold;
+    color: var(--color-off-white);
+    text-shadow: var(--glow-accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dark .TestHero-heading {
+    color: var(--color-off-white);
+}
+
+/* ✅ Highlighted Text */
+.TestHero-highlight {
+    color: var(--color-accent);
+}
+
+/* ✅ Subtitle */
+.TestHero-subtitle {
+    font-size: var(--font-size-body);
+    color: var(--color-light-grey);
+    max-width: 700px;
+    margin-top: var(--spacing-sm);
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.dark .TestHero-subtitle {
+    color: var(--color-off-white);
+}
+
+/* ✅ CTA Button */
+.TestHero-cta {
+    margin-top: var(--spacing-md);
+}
+
+.TestHero-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-family: var(--font-heading);
+    font-size: var(--font-size-body);
+    font-weight: bold;
+    text-transform: uppercase;
+    border-radius: var(--radius-md);
+    background-color: var(--color-accent);
+    color: var(--color-off-white);
+    transition: background-color var(--transition-default), transform var(--transition-fast);
+    cursor: pointer;
+    text-align: center;
+    white-space: nowrap;
+    box-shadow: var(--glow-accent);
+    text-decoration: none;
+}
+
+.TestHero-btn:hover {
+    background-color: var(--color-accent-hover);
+    box-shadow: var(--glow-accent-hover);
+    transform: scale(1.05);
+}
+
+.TestHero-btn:active {
+    transform: scale(0.98);
+}
+
+.TestHero-btn:disabled {
+    background-color: var(--color-light-grey);
+    color: var(--color-dark-charcoal);
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+/* ✅ Responsive Styles */
+@media (max-width: 768px) {
+    .TestHero-heading {
+        font-size: var(--font-size-h2);
+    }
+
+    .TestHero-subtitle {
+        font-size: var(--font-size-small);
+    }
+
+    .TestHero-btn {
+        padding: var(--spacing-xs) var(--spacing-sm);
+        font-size: var(--font-size-small);
+    }
+}

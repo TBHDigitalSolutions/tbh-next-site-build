@@ -1,0 +1,62 @@
+/* Section shell aligns to the same vertical rhythm as Services & Capabilities */
+.section {
+    padding-top: var(--section-pt, 2.5rem);
+    padding-bottom: var(--section-pb, 2.5rem);
+}
+
+.header {
+    margin-bottom: var(--space-5, 1.5rem);
+}
+
+.title {
+    margin: 0 0 0.5rem 0;
+    font-size: clamp(1.25rem, 1.1rem + 1vw, 1.75rem);
+    line-height: 1.2;
+    font-weight: 700;
+    color: var(--text-strong, #0f172a);
+}
+
+.intro {
+    margin: 0;
+    color: var(--text-muted, #475569);
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+.divider {
+    border: 0;
+    height: 1px;
+    margin: var(--space-4, 1rem) 0 0 0;
+    background: var(--border-muted, rgba(15, 23, 42, 0.08));
+}
+
+/* Each content block (pillars / bullets / expandables) gets consistent spacing */
+.block+.block {
+    margin-top: var(--space-6, 2rem);
+}
+
+/* Slightly bigger top gap before expandables for scan comfort */
+.expandables {
+    margin-top: var(--space-7, 2.5rem);
+}
+
+/* Responsive tune-ups */
+@media (max-width: 768px) {
+    .section {
+        padding-top: var(--section-pt-sm, 2rem);
+        padding-bottom: var(--section-pb-sm, 2rem);
+    }
+
+    .header {
+        margin-bottom: var(--space-4, 1rem);
+    }
+
+    .expandables {
+        margin-top: var(--space-6, 2rem);
+    }
+}
+
+/* Optional: section separation if followed immediately by another major band */
+.section+* {
+    margin-top: var(--space-8, 3rem);
+}

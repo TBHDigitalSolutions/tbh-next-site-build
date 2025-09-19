@@ -1,0 +1,242 @@
+/* src/components/sections/Web-Dev/PortfolioDemo/Gallery/PortfolioGallery.module.css
+   Production-ready CSS Module for <PortfolioGallery />
+   -----------------------------------------------------------------------------
+   • Uses theme CSS variables with sensible fallbacks (works even if some vars
+     are missing). Tie these into your root.css design tokens when available.
+   • Responsive grid via [data-columns] attribute (2 | 3 | 4).
+   • Accessible focus styles, reduced-motion friendly, dark-mode aware.
+   • Card wrappers separate interactivity from presentation.
+   • NOTE: No bare :root — variables are scoped to .gallerySection for CSS Modules.
+   --------------------------------------------------------------------------- */
+
+/* ====== Theming fallbacks (override with your global root variables) ====== */
+.gallerySection {
+    --pg-spacing-xs: var(--spacing-xs, 6px);
+    --pg-spacing-sm: var(--spacing-sm, 10px);
+    --pg-spacing-md: var(--spacing-md, 16px);
+    --pg-spacing-lg: var(--spacing-lg, 24px);
+    --pg-spacing-xl: var(--spacing-xl, 32px);
+
+    --pg-radius-sm: var(--radius-sm, 8px);
+    --pg-radius-md: var(--radius-md, 12px);
+    --pg-radius-lg: var(--radius-lg, 16px);
+    --pg-ring: var(--focus-ring-color, hsl(210 90% 60% / 0.6));
+
+    --pg-text: var(--text-color, hsl(222 22% 12%));
+    --pg-text-muted: var(--text-muted, hsl(222 12% 40%));
+    --pg-bg: var(--surface, #fff);
+    --pg-bg-subtle: var(--surface-2, hsl(0 0% 98%));
+    --pg-border: var(--border-color, hsl(220 14% 90%));
+    --pg-shadow: var(--shadow-md, 0 8px 24px hsl(220 3% 15% / 0.08));
+    --pg-shadow-lg: var(--shadow-lg, 0 10px 30px hsl(220 3% 15% / 0.12));
+
+    --pg-grid-gap: var(--grid-gap, 20px);
+    --pg-max-content: var(--max-content, 1200px);
+
+    --pg-card-bg: var(--card-bg, var(--pg-bg));
+    --pg-card-border: var(--card-border, var(--pg-border));
+    --pg-card-hover-bg: var(--card-hover-bg, hsl(0 0% 100%));
+    --pg-card-hover-translate: 2px;
+    --pg-card-hover-scale: 1.01;
+    --pg-card-transition: 200ms cubic-bezier(.2, .8, .2, 1);
+}
+
+/* ============================== Section =================================== */
+.gallerySection {
+    margin-inline: auto;
+    padding: clamp(24px, 4vw, 40px) 0;
+    max-width: var(--pg-max-content);
+    color: var(--pg-text);
+}
+
+.header {
+    margin-bottom: clamp(16px, 3vw, 24px);
+    text-align: center;
+}
+
+.title {
+    font-size: clamp(1.35rem, 1.2rem + 1vw, 2rem);
+    line-height: 1.2;
+    margin: 0 0 var(--pg-spacing-sm);
+    letter-spacing: -0.01em;
+}
+
+.subtitle {
+    margin: 0 auto;
+    max-width: 68ch;
+    color: var(--pg-text-muted);
+    font-size: clamp(.95rem, .9rem + .3vw, 1.05rem);
+}
+
+/* Controls row (search + filters) */
+.controlsRow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--pg-spacing-sm);
+    align-items: center;
+    justify-content: space-between;
+    margin: var(--pg-spacing-lg) 0 var(--pg-spacing-md);
+    padding: var(--pg-spacing-sm);
+    background: var(--pg-bg-subtle);
+    border: 1px solid var(--pg-border);
+    border-radius: var(--pg-radius-lg);
+}
+
+/* =============================== Grid ===================================== */
+.grid {
+    display: grid;
+    gap: var(--pg-grid-gap);
+    align-items: stretch;
+}
+
+/* Column presets via data attribute; gracefully collapse on small screens */
+.grid[data-columns="2"] {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.grid[data-columns="3"] {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.grid[data-columns="4"] {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+@media (max-width: 960px) {
+    .grid[data-columns="4"] {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 720px) {
+
+    .grid[data-columns="4"],
+    .grid[data-columns="3"] {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 520px) {
+
+    .grid[data-columns="4"],
+    .grid[data-columns="3"],
+    .grid[data-columns="2"] {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ============================= Card shells ================================ */
+.cardWrapper {
+    list-style: none;
+    /* Create a stacking context for safe transforms & focus rings */
+    isolation: isolate;
+}
+
+.cardInteractive,
+.cardStatic {
+    border-radius: var(--pg-radius-lg);
+    background: var(--pg-card-bg);
+    border: 1px solid var(--pg-card-border);
+    box-shadow: var(--pg-shadow);
+    overflow: clip;
+    min-height: 100%;
+}
+
+/* Interactive wrapper: click/keyboard activation on the whole tile */
+.cardInteractive {
+    cursor: pointer;
+    transition:
+        transform var(--pg-card-transition),
+        box-shadow var(--pg-card-transition),
+        background-color var(--pg-card-transition),
+        border-color var(--pg-card-transition);
+    will-change: transform, box-shadow;
+}
+
+.cardInteractive:hover {
+    background: var(--pg-card-hover-bg);
+    transform: translateY(calc(var(--pg-card-hover-translate) * -1)) scale(var(--pg-card-hover-scale));
+    box-shadow: var(--pg-shadow-lg);
+    border-color: color-mix(in oklab, var(--pg-card-border) 60%, var(--pg-ring) 40%);
+}
+
+/* Focus styles (keyboard) */
+.cardInteractive:focus {
+    outline: none;
+}
+
+.cardInteractive:focus-visible {
+    outline: 3px solid var(--pg-ring);
+    outline-offset: 2px;
+}
+
+/* Static card (no click) */
+.cardStatic {
+    cursor: default;
+}
+
+/* ============================== Empty state =============================== */
+.emptyState {
+    display: grid;
+    place-items: center;
+    text-align: center;
+    gap: var(--pg-spacing-sm);
+    padding: clamp(24px, 6vw, 64px);
+    margin-top: var(--pg-spacing-lg);
+    color: var(--pg-text-muted);
+    background: var(--pg-bg-subtle);
+    border: 1px dashed var(--pg-border);
+    border-radius: var(--pg-radius-lg);
+}
+
+/* ============================== Utilities ================================= */
+@media (prefers-reduced-motion: reduce) {
+    .cardInteractive {
+        transition: none;
+    }
+
+    .cardInteractive:hover {
+        transform: none;
+    }
+}
+
+/* Dark mode support (works with either class or media query) */
+:global(:root.dark) .gallerySection,
+:global(.dark) .gallerySection {
+    --pg-text: var(--text-color, hsl(220 15% 92%));
+    --pg-text-muted: var(--text-muted, hsl(220 10% 70%));
+    --pg-bg: var(--surface, hsl(222 22% 10%));
+    --pg-bg-subtle: var(--surface-2, hsl(222 16% 14%));
+    --pg-border: var(--border-color, hsl(220 12% 22%));
+    --pg-shadow: var(--shadow-md, 0 8px 24px hsl(0 0% 0% / 0.35));
+    --pg-shadow-lg: var(--shadow-lg, 0 10px 30px hsl(0 0% 0% / 0.45));
+    --pg-card-bg: var(--card-bg, hsl(222 22% 12%));
+    --pg-card-border: var(--card-border, hsl(220 12% 24%));
+    --pg-card-hover-bg: var(--card-hover-bg, hsl(222 22% 13%));
+    --pg-ring: var(--focus-ring-color, hsl(210 90% 60% / 0.6));
+}
+
+@media (prefers-color-scheme: dark) {
+
+    /* Only apply if app doesn't use a .dark class */
+    :global(:root:not(.light, .dark)) .gallerySection {
+        --pg-text: var(--text-color, hsl(220 15% 92%));
+        --pg-text-muted: var(--text-muted, hsl(220 10% 70%));
+        --pg-bg: var(--surface, hsl(222 22% 10%));
+        --pg-bg-subtle: var(--surface-2, hsl(222 16% 14%));
+        --pg-border: var(--border-color, hsl(220 12% 22%));
+        --pg-shadow: var(--shadow-md, 0 8px 24px hsl(0 0% 0% / 0.35));
+        --pg-shadow-lg: var(--shadow-lg, 0 10px 30px hsl(0 0% 0% / 0.45));
+        --pg-card-bg: var(--card-bg, hsl(222 22% 12%));
+        --pg-card-border: var(--card-border, hsl(220 12% 24%));
+        --pg-card-hover-bg: var(--card-hover-bg, hsl(222 22% 13%));
+        --pg-ring: var(--focus-ring-color, hsl(210 90% 60% / 0.6));
+    }
+}
+
+/* Optional: container-aware tightening if you use container queries in your app */
+@container (min-width: 1100px) {
+    .controlsRow {
+        padding: var(--pg-spacing-md);
+    }
+}

@@ -1,0 +1,48 @@
+/content-production-services
+├── creative-services
+│   ├── design
+│   │   ├── graphic-design
+│   │   ├── logo-design
+│   │   └── brand-identity
+│   ├── photography
+│   │   ├── product-photography
+│   │   ├── corporate-photography
+│   │   └── event-photography
+│   └── video-production
+│       ├── promotional-videos
+│       ├── training-videos
+│       └── social-media-videos
+├── writing-editorial
+│   ├── copywriting
+│   │   ├── web-copy
+│   │   ├── ad-copy
+│   │   ├── email-copy
+│   │   └── blog-writing
+│   └── editorial-strategy
+│       ├── content-planning
+│       ├── content-calendar
+│       ├── editorial-guidelines
+│       └── content-audits
+├── production-publishing
+│   ├── cms-publishing
+│   │   ├── website-publishing
+│   │   ├── blog-management
+│   │   └── social-media-publishing
+│   └── packaging
+│       ├── print-packaging
+│       ├── digital-packaging
+│       └── product-packaging-design
+└── sales-marketing-materials
+    ├── sales-materials
+    │   ├── brochures
+    │   ├── case-studies
+    │   ├── white-papers
+    │   └── proposals
+    ├── brand-collateral
+    │   ├── business-cards
+    │   ├── trade-show-materials
+    │   └── brand-guidelines
+    └── presentation-design
+        ├── sales-presentations
+        ├── pitch-decks
+        └── training-materials

@@ -1,0 +1,199 @@
+/* ===========================================
+   🃏 TBH Service Card (unified-theme tokens)
+   - Surface background + subtle border
+   - Lift-on-hover, accessible focus ring
+   - No custom --card-* variables
+=========================================== */
+
+.service-card {
+    background: var(--bg-surface);
+    color: var(--text-primary);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-xl);
+    padding: var(--spacing-lg);
+    box-shadow: var(--shadow-xs);
+    transition:
+        transform var(--transition-fast),
+        box-shadow var(--transition-fast),
+        border-color var(--transition-fast),
+        background-color var(--transition-fast),
+        color var(--transition-fast);
+    max-inline-size: 100%;
+    min-block-size: clamp(18rem, 16rem + 2vw, 22rem);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-align: center;
+    isolation: isolate;
+    /* keep internal effects contained */
+}
+
+/* Hover / Active (mouse) */
+.service-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--border-accent, var(--brand-blue));
+}
+
+/* Keyboard focus */
+.service-card:focus-visible {
+    outline: 2px solid var(--accent-primary, var(--brand-blue));
+    outline-offset: 2px;
+    box-shadow: var(--shadow-md);
+}
+
+/* -------------------------------------------
+   Content
+------------------------------------------- */
+.service-card-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    inline-size: 100%;
+    block-size: 100%;
+    align-items: center;
+    text-align: center;
+}
+
+.service-title {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-h3);
+    font-weight: 600;
+    color: var(--text-accent);
+    margin: 0 0 var(--spacing-sm) 0;
+    line-height: var(--line-height-heading);
+    transition: color var(--transition-fast);
+}
+
+.service-description {
+    font-family: var(--font-body);
+    font-size: var(--font-size-body);
+    color: var(--text-secondary);
+    line-height: var(--line-height-body);
+    margin: 0 0 var(--spacing-md) 0;
+    transition: color var(--transition-fast);
+}
+
+.service-highlights {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: var(--spacing-xs);
+    text-align: left;
+    inline-size: 100%;
+}
+
+.service-highlight-item {
+    position: relative;
+    padding-left: var(--spacing-md);
+    font-family: var(--font-body);
+    font-size: var(--font-size-small);
+    color: var(--text-secondary);
+    line-height: var(--line-height-body);
+    transition: color var(--transition-fast);
+}
+
+/* Brand checkmark */
+.service-highlight-item::before {
+    content: "✓";
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline-start: 0;
+    color: var(--accent-primary, var(--brand-blue));
+    font-size: var(--font-size-small);
+    font-weight: 700;
+    line-height: var(--line-height-body);
+}
+
+/* Subtle content emphasis on hover (no inversion) */
+.service-card:hover .service-title {
+    color: var(--text-primary);
+}
+
+.service-card:hover .service-description,
+.service-card:hover .service-highlight-item {
+    color: var(--text-primary);
+}
+
+/* -------------------------------------------
+   Responsive
+------------------------------------------- */
+
+@media (min-width: 1024px) {
+    .service-card {
+        padding: var(--spacing-xl);
+        min-block-size: clamp(20rem, 18rem + 2vw, 24rem);
+    }
+}
+
+@media (max-width: 1024px) {
+    .service-title {
+        font-size: var(--font-size-h3);
+    }
+
+    .service-description {
+        font-size: var(--font-size-body);
+    }
+}
+
+@media (max-width: 768px) {
+    .service-card {
+        padding: var(--spacing-lg);
+        text-align: center;
+    }
+
+    .service-title {
+        font-size: var(--font-size-h4);
+        margin-bottom: var(--spacing-xs);
+    }
+
+    .service-description {
+        font-size: var(--font-size-small);
+        margin-bottom: var(--spacing-sm);
+    }
+
+    .service-highlights {
+        text-align: left;
+    }
+
+    .service-highlight-item {
+        font-size: var(--font-size-small);
+        padding-left: var(--spacing-sm);
+    }
+}
+
+@media (max-width: 480px) {
+    .service-card {
+        padding: var(--spacing-md);
+        min-block-size: 18rem;
+    }
+
+    .service-title {
+        font-size: var(--font-size-h4);
+    }
+
+    .service-description {
+        font-size: var(--font-size-small);
+    }
+
+    .service-highlight-item {
+        font-size: var(--font-size-caption);
+        line-height: 1.5;
+    }
+}
+
+/* -------------------------------------------
+   Reduced Motion
+------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+    .service-card {
+        transition: none;
+    }
+
+    .service-title,
+    .service-description,
+    .service-highlight-item {
+        transition: none;
+    }
+}

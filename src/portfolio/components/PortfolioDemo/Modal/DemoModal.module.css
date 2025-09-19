@@ -1,0 +1,400 @@
+/* src/components/sections/Web-Dev/PortfolioDemo/Modal/DemoModal.module.css
+   Production-ready styles for <DemoModal />
+   ---------------------------------------------------------------------------
+   • Theme-aware via CSS variables with safe fallbacks (scoped to .overlay)
+   • Overlay + dialog with responsive sizing and strong a11y focus treatment
+   • Loading spinner & blocked-embed fallback
+   • Reduced-motion & dark-mode support
+   --------------------------------------------------------------------------- */
+
+/* Component-scoped tokens (avoid bare :root in CSS Modules) */
+.overlay {
+    /* Spacing & radius */
+    --dm-space-xs: var(--spacing-xs, 6px);
+    --dm-space-sm: var(--spacing-sm, 10px);
+    --dm-space-md: var(--spacing-md, 16px);
+    --dm-space-lg: var(--spacing-lg, 24px);
+    --dm-space-xl: var(--spacing-xl, 32px);
+
+    --dm-radius-sm: var(--radius-sm, 8px);
+    --dm-radius-md: var(--radius-md, 12px);
+    --dm-radius-lg: var(--radius-lg, 16px);
+
+    /* Colors & tokens */
+    --dm-text: var(--text-color, hsl(222 22% 12%));
+    --dm-text-muted: var(--text-muted, hsl(222 12% 40%));
+    --dm-border: var(--border-color, hsl(220 14% 90%));
+    --dm-surface: var(--surface, #fff);
+    --dm-surface-2: var(--surface-2, hsl(0 0% 98%));
+    --dm-accent: var(--brand, hsl(210 90% 50%));
+    --dm-accent-contrast: var(--brand-contrast, #fff);
+    --dm-ring: var(--focus-ring-color, hsl(210 90% 60% / 0.6));
+
+    /* Layering & overlay */
+    --dm-z: var(--z-modal, 1000);
+    --dm-overlay: var(--overlay, hsl(0 0% 0% / 0.55));
+    --dm-backdrop-blur: var(--backdrop-blur, 6px);
+
+    /* Shadows */
+    --dm-shadow: var(--shadow-lg, 0 20px 50px hsl(220 3% 15% / 0.25));
+    --dm-shadow-inner: inset 0 0 0 1px var(--dm-border);
+
+    position: fixed;
+    inset: 0;
+    z-index: var(--dm-z);
+    display: grid;
+    place-items: center;
+    background: var(--dm-overlay);
+    -webkit-backdrop-filter: blur(var(--dm-backdrop-blur)) saturate(120%);
+    backdrop-filter: blur(var(--dm-backdrop-blur)) saturate(120%);
+    animation: dm-fade-in .18s ease;
+}
+
+/* =============================== Dialog =================================== */
+.dialog {
+    position: relative;
+    display: grid;
+    grid-template-rows:
+        auto
+        /* header */
+        auto
+        /* tech row (optional) */
+        1fr
+        /* frame */
+        auto;
+    /* footer (optional) */
+    gap: 0;
+    width: min(1100px, calc(100vw - 2 * var(--dm-space-md)));
+    max-height: calc(100dvh - 2 * var(--dm-space-lg));
+    background: var(--dm-surface);
+    color: var(--dm-text);
+    border: 1px solid var(--dm-border);
+    border-radius: clamp(var(--dm-radius-md), 1vw, var(--dm-radius-lg));
+    box-shadow: var(--dm-shadow);
+    overflow: hidden;
+    outline: none;
+}
+
+@media (max-width: 720px) {
+    .dialog {
+        width: 100vw;
+        max-height: 100dvh;
+        border-radius: 0;
+    }
+}
+
+/* =============================== Header =================================== */
+.header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--dm-space-md);
+    padding: var(--dm-space-md) var(--dm-space-lg) var(--dm-space-sm);
+    border-bottom: 1px solid var(--dm-border);
+    background: var(--dm-surface);
+}
+
+.headerMeta {
+    min-width: 0;
+}
+
+.title {
+    margin: 0 0 4px 0;
+    font-size: clamp(1.05rem, 0.9rem + 0.6vw, 1.35rem);
+    letter-spacing: -0.01em;
+    line-height: 1.25;
+}
+
+.subMeta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px var(--dm-space-sm);
+    margin-top: 2px;
+}
+
+.pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: color-mix(in oklab, var(--dm-accent) 12%, white);
+    color: color-mix(in oklab, var(--dm-accent) 60%, black);
+    border: 1px solid color-mix(in oklab, var(--dm-accent) 40%, var(--dm-border));
+    font-size: 0.8rem;
+    white-space: nowrap;
+}
+
+.timeline,
+.counter {
+    color: var(--dm-text-muted);
+    font-size: 0.9rem;
+    white-space: nowrap;
+}
+
+.counter {
+    margin-left: 2px;
+}
+
+.description {
+    margin: var(--dm-space-sm) 0 0;
+    color: var(--dm-text-muted);
+    max-width: 80ch;
+    font-size: 0.95rem;
+}
+
+.headerActions {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.iconButton {
+    --_size: 36px;
+    width: var(--_size);
+    height: var(--_size);
+    display: inline-grid;
+    place-items: center;
+    border-radius: 999px;
+    border: 1px solid var(--dm-border);
+    background: var(--dm-surface);
+    color: var(--dm-text);
+    transition: background-color .15s ease, border-color .15s ease, transform .15s ease, box-shadow .15s ease;
+    text-decoration: none;
+}
+
+.iconButton:hover {
+    background: var(--dm-surface-2);
+    transform: translateY(-1px);
+}
+
+.iconButton:focus {
+    outline: none;
+}
+
+.iconButton:focus-visible {
+    box-shadow: 0 0 0 3px var(--dm-ring);
+}
+
+/* ============================== Tech Row ================================== */
+.techRow {
+    padding: var(--dm-space-sm) var(--dm-space-lg);
+    border-bottom: 1px solid var(--dm-border);
+    background: var(--dm-surface);
+}
+
+.techList {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.techChip {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 8px;
+    border-radius: 999px;
+    background: var(--dm-surface-2);
+    border: 1px solid var(--dm-border);
+    color: var(--dm-text);
+    font-size: 0.8rem;
+    line-height: 1.1;
+}
+
+/* ============================== Frame Area ================================ */
+.frameWrap {
+    position: relative;
+    min-height: clamp(240px, 50vh, 640px);
+    background: var(--dm-surface-2);
+}
+
+.iframe {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    background: #fff;
+    /* most demos assume a light base */
+}
+
+/* Spinner */
+.spinner {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    gap: var(--dm-space-sm);
+    color: var(--dm-text-muted);
+    background: linear-gradient(180deg, transparent, hsl(0 0% 100% / 0.6));
+    pointer-events: none;
+    z-index: 1;
+}
+
+.spinnerIcon {
+    animation: dm-spin 1s linear infinite;
+}
+
+.spinnerText {
+    font-size: 0.95rem;
+}
+
+/* Blocked-embed fallback */
+.blocked {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: grid;
+    place-items: center;
+    text-align: center;
+    gap: var(--dm-space-sm);
+    padding: var(--dm-space-lg);
+    color: var(--dm-text);
+    background:
+        radial-gradient(120% 100% at 50% 0%, hsl(0 0% 100% / 0.85), transparent 70%),
+        var(--dm-surface-2);
+    border-top: 1px dashed var(--dm-border);
+}
+
+.blocked p {
+    margin: 0;
+    color: var(--dm-text-muted);
+}
+
+.blockedLink {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border-radius: 999px;
+    background: color-mix(in oklab, var(--dm-accent) 92%, black 8%);
+    color: var(--dm-accent-contrast);
+    text-decoration: none;
+    border: 1px solid color-mix(in oklab, var(--dm-accent) 70%, black 30%);
+    transition: transform .15s ease, box-shadow .15s ease, filter .15s ease;
+}
+
+.blockedLink:hover {
+    transform: translateY(-1px);
+    filter: brightness(1.02);
+}
+
+.blockedLink:focus {
+    outline: none;
+}
+
+.blockedLink:focus-visible {
+    box-shadow: 0 0 0 3px var(--dm-ring);
+}
+
+/* =============================== Footer =================================== */
+.footer {
+    border-top: 1px solid var(--dm-border);
+    background: var(--dm-surface);
+    padding: var(--dm-space-sm) var(--dm-space-lg);
+}
+
+.navGroup {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--dm-space-sm);
+}
+
+.navBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border-radius: 999px;
+    border: 1px solid var(--dm-border);
+    background: var(--dm-surface);
+    color: var(--dm-text);
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: background-color .15s ease, border-color .15s ease, transform .15s ease, box-shadow .15s ease;
+}
+
+.navBtn:hover:not(:disabled) {
+    background: var(--dm-surface-2);
+    transform: translateY(-1px);
+}
+
+.navBtn:focus {
+    outline: none;
+}
+
+.navBtn:focus-visible {
+    box-shadow: 0 0 0 3px var(--dm-ring);
+}
+
+.navBtn:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+.navText {
+    line-height: 1;
+}
+
+/* ============================ Animations ================================== */
+@keyframes dm-fade-in {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes dm-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ======================= Reduced Motion Support =========================== */
+@media (prefers-reduced-motion: reduce) {
+    .overlay {
+        animation: none;
+    }
+
+    .spinnerIcon {
+        animation: none;
+    }
+
+    .iconButton,
+    .navBtn,
+    .blockedLink {
+        transition: none;
+    }
+}
+
+/* =============================== Dark Mode ================================ */
+/* Use :global(...) so theme classes on the document root are respected */
+:global(:root.dark) .overlay,
+:global(.dark) .overlay {
+    --dm-text: var(--text-color, hsl(220 15% 92%));
+    --dm-text-muted: var(--text-muted, hsl(220 10% 70%));
+    --dm-border: var(--border-color, hsl(220 12% 22%));
+    --dm-surface: var(--surface, hsl(222 22% 10%));
+    --dm-surface-2: var(--surface-2, hsl(222 16% 14%));
+    --dm-overlay: var(--overlay, hsl(0 0% 0% / 0.6));
+    --dm-shadow: var(--shadow-lg, 0 20px 50px hsl(0 0% 0% / 0.45));
+}
+
+@media (prefers-color-scheme: dark) {
+    :global(:root:not(.light, .dark)) .overlay {
+        --dm-text: var(--text-color, hsl(220 15% 92%));
+        --dm-text-muted: var(--text-muted, hsl(220 10% 70%));
+        --dm-border: var(--border-color, hsl(220 12% 22%));
+        --dm-surface: var(--surface, hsl(222 22% 10%));
+        --dm-surface-2: var(--surface-2, hsl(222 16% 14%));
+        --dm-overlay: var(--overlay, hsl(0 0% 0% / 0.6));
+        --dm-shadow: var(--shadow-lg, 0 20px 50px hsl(0 0% 0% / 0.45));
+    }
+}

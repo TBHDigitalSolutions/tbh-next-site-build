@@ -1,0 +1,190 @@
+/* ============================
+   🌟 Trust Signals Styles
+============================ */
+
+/* ✅ Main Container */
+.trustsignals {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-lg);
+    max-width: var(--container-width);
+    padding: var(--spacing-xl);
+    background: var(--background-gradient-light);
+    box-shadow: var(--shadow-light);
+    border-bottom: 3px solid var(--color-accent);
+    transition: var(--transition-default);
+}
+
+/* ✅ Ensuring Equal Padding for All Children */
+.trustsignals>* {
+    width: 100%;
+    padding: var(--spacing-md);
+}
+
+/* ✅ Dark Mode */
+.dark .trustsignals {
+    background: var(--background-dark);
+    color: var(--color-off-white);
+    box-shadow: var(--shadow-dark);
+}
+
+/* ============================
+   🏆 Section Titles
+============================ */
+.trustsignals-title {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-h1);
+    font-weight: bold;
+    text-shadow: var(--glow-accent);
+    margin-bottom: var(--spacing-lg);
+    text-align: center;
+}
+
+/* ✅ Dark Mode */
+.dark .trustsignals-title {
+    color: var(--color-off-white);
+}
+
+/* ✅ Subtitles */
+.trustsignals-subtitle {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-h2);
+    font-weight: bold;
+    margin-top: var(--spacing-lg);
+    text-align: center;
+}
+
+/* ✅ Dark Mode */
+.dark .trustsignals-subtitle {
+    color: var(--color-off-white);
+}
+
+/* ============================
+   🌟 Client Logos Grid
+============================ */
+.trustsignals-logos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    justify-content: center;
+    align-items: center;
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-md);
+    width: 100%;
+    max-width: 900px;
+    padding: var(--spacing-md);
+}
+
+/* ✅ Client Logo */
+.trustsignals-logo {
+    width: 120px;
+    height: auto;
+    object-fit: contain;
+    opacity: 0.85;
+    transition: opacity var(--transition-fast), transform var(--transition-fast);
+    filter: grayscale(50%);
+}
+
+/* ✅ Hover Effect */
+.trustsignals-logo:hover {
+    opacity: 1;
+    transform: scale(1.1);
+    filter: grayscale(0%);
+}
+
+/* ============================
+   ⭐ Testimonials Section
+============================ */
+.trustsignals-testimonials {
+    width: 100%;
+    max-width: 1100px;
+    margin-top: var(--spacing-md);
+    padding: var(--spacing-md);
+}
+
+/* ✅ Centering the Testimonial Slider */
+.trustsignals-testimonials .testimonialslider-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+/* ============================
+   🔒 Security & Compliance Badges
+============================ */
+.trustsignals-badges {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    justify-content: center;
+    align-items: center;
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-md);
+    width: 100%;
+    max-width: 900px;
+    padding: var(--spacing-md);
+}
+
+/* ✅ Security Badge */
+.trustsignals-badge {
+    width: 110px;
+    height: auto;
+    object-fit: contain;
+    opacity: 0.85;
+    transition: opacity var(--transition-fast), transform var(--transition-fast);
+    filter: grayscale(40%);
+}
+
+/* ✅ Hover Effect */
+.trustsignals-badge:hover {
+    opacity: 1;
+    transform: scale(1.1);
+    filter: grayscale(0%);
+}
+
+/* ============================
+   📱 Responsive Styles
+============================ */
+@media (max-width: 1024px) {
+    .trustsignals-title {
+        font-size: var(--font-size-h2);
+    }
+
+    .trustsignals-subtitle {
+        font-size: var(--font-size-h3);
+    }
+
+    .trustsignals-logos,
+    .trustsignals-badges {
+        max-width: 100%;
+    }
+
+    .trustsignals-logo,
+    .trustsignals-badge {
+        width: 100px;
+    }
+}
+
+@media (max-width: 768px) {
+    .trustsignals {
+        padding: var(--spacing-lg);
+    }
+
+    .trustsignals-title {
+        font-size: var(--font-size-h3);
+    }
+
+    .trustsignals-subtitle {
+        font-size: var(--font-size-body);
+    }
+
+    .trustsignals-logo,
+    .trustsignals-badge {
+        width: 90px;
+    }
+
+    .trustsignals-testimonials {
+        max-width: 100%;
+    }
+}

@@ -1,0 +1,76 @@
+/* ==============================
+   🎨 CTA Modal Styles
+============================== */
+
+/* ✅ Modal Overlay */
+.cta-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    backdrop-filter: blur(5px);
+    transition: opacity 0.3s ease-in-out;
+}
+
+/* ✅ Modal Content */
+.cta-modal-content {
+    background: var(--background-light);
+    color: var(--primary-text);
+    width: 90%;
+    max-width: 500px;
+    padding: var(--spacing-lg);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
+    position: relative;
+    text-align: center;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+/* ✅ Modal Close Button */
+.cta-modal-close-button {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    font-size: 1.8rem;
+    background: transparent;
+    border: none;
+    color: var(--primary-text);
+    cursor: pointer;
+    transition: color 0.2s ease-in-out;
+}
+
+.cta-modal-close-button:hover {
+    color: var(--color-accent);
+}
+
+/* ✅ Modal Title */
+.cta-modal-title {
+    font-size: var(--font-size-lg);
+    font-weight: bold;
+    margin-bottom: var(--spacing-md);
+    color: var(--text-color-primary);
+}
+
+/* ✅ Prevent Background Scrolling */
+.no-scroll {
+    overflow: hidden;
+}
+
+/* ✅ Fade In Animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

@@ -1,0 +1,172 @@
+/* ============================
+   🔥 TBH Digital Solutions - CTA Button
+   Call-to-Action Button Styles
+============================ */
+
+.cta-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-xs);
+    padding: var(--spacing-sm) var(--spacing-lg);
+    font-family: var(--font-heading);
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    cursor: pointer;
+    transition:
+        background-color var(--transition-default),
+        color var(--transition-default),
+        box-shadow var(--transition-default),
+        transform var(--transition-default);
+    box-shadow: var(--shadow-light);
+    white-space: nowrap;
+    user-select: none;
+    min-width: 180px;
+    text-align: center;
+    border: 2px solid transparent;
+    position: relative;
+    overflow: hidden;
+}
+
+/* ============================
+   ✅ CTA Button Variants
+============================ */
+
+/* Primary CTA - High Emphasis */
+.cta-button.primary {
+    background-color: var(--color-accent);
+    color: var(--color-off-white);
+    border-color: var(--color-accent);
+    box-shadow: var(--glow-accent);
+}
+
+.cta-button.primary:hover {
+    background-color: var(--color-accent-hover);
+    box-shadow: var(--glow-accent-hover);
+    transform: var(--scale-md) var(--translate-y-sm);
+}
+
+.cta-button.primary:focus {
+    outline: 3px solid rgba(14, 175, 251, 0.5);
+    outline-offset: 2px;
+}
+
+.cta-button.primary:active {
+    transform: var(--scale-sm);
+    box-shadow: var(--glow-accent);
+}
+
+/* Secondary CTA - Medium Emphasis */
+.cta-button.secondary {
+    background-color: transparent;
+    color: var(--color-accent);
+    border-color: var(--color-accent);
+}
+
+.cta-button.secondary:hover {
+    background-color: rgba(14, 175, 251, 0.1);
+    box-shadow: var(--glow-accent);
+    transform: var(--scale-md) var(--translate-y-sm);
+}
+
+.cta-button.secondary:focus {
+    outline: 3px solid rgba(14, 175, 251, 0.5);
+    outline-offset: 2px;
+}
+
+.cta-button.secondary:active {
+    transform: var(--scale-sm);
+    box-shadow: var(--glow-accent);
+}
+
+/* ============================
+   ✅ CTA Button Sizes
+============================ */
+
+/* Small CTA Button */
+.cta-button.sm {
+    padding: var(--spacing-xs) var(--spacing-md);
+    font-size: var(--font-size-small);
+    min-width: 140px;
+}
+
+/* Medium CTA Button (Default) */
+.cta-button.md {
+    padding: var(--spacing-sm) var(--spacing-lg);
+    font-size: var(--font-size-body);
+    min-width: 180px;
+}
+
+/* Large CTA Button */
+.cta-button.lg {
+    padding: var(--spacing-md) var(--spacing-xl);
+    font-size: var(--font-size-h4);
+    min-width: 220px;
+}
+
+/* ============================
+   ✅ CTA Button Icon
+============================ */
+.cta-button-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform var(--transition-default);
+}
+
+.cta-button:hover .cta-button-icon {
+    transform: translateX(3px);
+}
+
+/* ============================
+   ✅ Animation Effect
+============================ */
+.cta-button::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg,
+            transparent,
+            rgba(255, 255, 255, 0.2),
+            transparent);
+    transition: left 0.7s ease;
+}
+
+.cta-button:hover::before {
+    left: 100%;
+}
+
+/* ============================
+   ✅ Dark Mode Adjustments
+============================ */
+.dark .cta-button.primary {
+    box-shadow: var(--glow-accent);
+}
+
+.dark .cta-button.secondary {
+    color: var(--color-accent);
+    border-color: var(--color-accent);
+}
+
+/* ============================
+   ✅ Responsive Adjustments
+============================ */
+@media (max-width: 480px) {
+    .cta-button {
+        min-width: 140px;
+        padding: var(--spacing-xs) var(--spacing-md);
+        font-size: var(--font-size-small);
+    }
+
+    .cta-button.lg {
+        min-width: 180px;
+        padding: var(--spacing-sm) var(--spacing-lg);
+        font-size: var(--font-size-body);
+    }
+}

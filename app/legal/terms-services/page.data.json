@@ -1,0 +1,332 @@
+{
+  "seo": {
+    "title": "Terms of Services | TBH Digital Solutions",
+    "description": "Terms of services for TBH Digital Solutions. Service agreements, digital marketing terms, project deliverables, and client responsibilities.",
+    "keywords": ["terms of services", "service agreement", "digital marketing terms", "project terms", "client agreement"],
+    "robots": "noindex, follow",
+    "canonical": "https://tbhdigitalsolutions.com/terms-services",
+    "schema": {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "Terms of Services",
+      "description": "TBH Digital Solutions Terms of Services - Service agreements and project terms",
+      "url": "https://tbhdigitalsolutions.com/terms-services",
+      "about": {
+        "@type": "Organization",
+        "name": "TBH Digital Solutions"
+      },
+      "mainEntity": {
+        "@type": "Article",
+        "headline": "Terms of Services",
+        "datePublished": "2024-11-02",
+        "dateModified": "2024-11-02",
+        "author": {
+          "@type": "Organization",
+          "name": "TBH Digital Solutions"
+        }
+      }
+    }
+  },
+  "hero": {
+    "title": "Terms of Services",
+    "subtitle": "These terms govern the professional services provided by TBH Digital Solutions. Please review carefully before engaging our services.",
+    "lastUpdated": "November 2, 2024"
+  },
+  "tableOfContents": [
+    { "title": "Service Agreement Overview", "anchor": "service-agreement-overview" },
+    { "title": "Scope of Services", "anchor": "scope-of-services" },
+    { "title": "Client Responsibilities", "anchor": "client-responsibilities" },
+    { "title": "Project Timelines and Deliverables", "anchor": "project-timelines-and-deliverables" },
+    { "title": "Payment Terms and Billing", "anchor": "payment-terms-and-billing" },
+    { "title": "Intellectual Property and Work Product", "anchor": "intellectual-property-and-work-product" },
+    { "title": "Confidentiality and Non-Disclosure", "anchor": "confidentiality-and-non-disclosure" },
+    { "title": "Performance Standards and Guarantees", "anchor": "performance-standards-and-guarantees" },
+    { "title": "Data Access and Third-Party Integrations", "anchor": "data-access-and-third-party-integrations" },
+    { "title": "Modification and Change Requests", "anchor": "modification-and-change-requests" },
+    { "title": "Termination of Services", "anchor": "termination-of-services" },
+    { "title": "Liability and Risk Management", "anchor": "liability-and-risk-management" },
+    { "title": "Dispute Resolution", "anchor": "dispute-resolution" },
+    { "title": "Compliance and Regulatory Requirements", "anchor": "compliance-and-regulatory-requirements" },
+    { "title": "Communication and Reporting", "anchor": "communication-and-reporting" },
+    { "title": "Force Majeure", "anchor": "force-majeure" },
+    { "title": "Contact Information", "anchor": "contact-information" }
+  ],
+  "sections": [
+    {
+      "id": "service-agreement-overview",
+      "title": "1. Service Agreement Overview",
+      "content": "These Terms of Services constitute a binding agreement between TBH Digital Solutions (\"Company,\" \"we,\" \"us\") and the client (\"Client,\" \"you\") for the provision of digital marketing, web development, content production, and related professional services. By engaging our services, you acknowledge and agree to these terms."
+    },
+    {
+      "id": "scope-of-services",
+      "title": "2. Scope of Services",
+      "content": "TBH Digital Solutions provides the following professional services:",
+      "items": [
+        "**SEO Services**: Technical SEO, on-page optimization, content strategy, and search engine optimization",
+        "**Lead Generation**: Paid advertising campaigns, conversion optimization, and lead nurturing systems",
+        "**Marketing Automation**: CRM setup, email marketing, workflow automation, and customer journey mapping",
+        "**Content Production**: Content strategy, copywriting, video production, and creative asset development",
+        "**Web Development**: Website design, development, maintenance, and technical implementation",
+        "**Video Production**: Promotional videos, educational content, and multimedia asset creation"
+      ],
+      "footer": "Specific services will be detailed in individual project proposals or statements of work (SOW)."
+    },
+    {
+      "id": "client-responsibilities",
+      "title": "3. Client Responsibilities",
+      "content": "To ensure successful project completion, clients agree to:",
+      "items": [
+        "**Provide Timely Information**: Supply all necessary content, access credentials, brand assets, and project requirements within agreed timeframes",
+        "**Grant Necessary Access**: Provide admin access to relevant platforms, websites, analytics accounts, and marketing tools as required",
+        "**Maintain Communication**: Respond to requests for feedback, approvals, and clarifications within 48-72 hours during business days",
+        "**Review and Approve Deliverables**: Provide clear, constructive feedback on drafts, designs, and implementations within specified review periods",
+        "**Ensure Legal Compliance**: Verify that all provided content, images, and materials are legally owned or properly licensed",
+        "**Budget Approval**: Approve advertising spend, tool subscriptions, and third-party service costs as outlined in project agreements"
+      ]
+    },
+    {
+      "id": "project-timelines-and-deliverables",
+      "title": "4. Project Timelines and Deliverables",
+      "subsections": [
+        {
+          "title": "Timeline Management",
+          "content": "Project timelines are established based on scope, complexity, and client responsiveness. Delays in client feedback, content provision, or access may extend project timelines accordingly. We will communicate any timeline adjustments promptly."
+        },
+        {
+          "title": "Deliverable Standards",
+          "content": "All deliverables will meet professional industry standards and align with agreed specifications. Deliverables include but are not limited to: strategy documents, implemented campaigns, developed websites, produced content, and performance reports."
+        },
+        {
+          "title": "Revision Process",
+          "content": "Each project includes a specified number of revision rounds. Additional revisions beyond the agreed scope may incur additional charges at our standard hourly rate."
+        }
+      ]
+    },
+    {
+      "id": "payment-terms-and-billing",
+      "title": "5. Payment Terms and Billing",
+      "subsections": [
+        {
+          "title": "Payment Structure",
+          "content": "Services may be billed as one-time projects, monthly retainers, or hourly rates as specified in individual agreements. Payment terms are typically Net 15 or Net 30 days from invoice date."
+        },
+        {
+          "title": "Project Deposits",
+          "content": "Most projects require a 50% deposit before work begins, with the remainder due upon completion or according to agreed milestones."
+        },
+        {
+          "title": "Recurring Services",
+          "content": "Monthly retainer services are billed in advance. Subscription-based services will auto-renew unless cancelled with 30 days written notice."
+        },
+        {
+          "title": "Late Payment",
+          "content": "Late payments may incur a 1.5% monthly service charge. Services may be suspended for accounts past due beyond 30 days."
+        },
+        {
+          "title": "Third-Party Costs",
+          "content": "Advertising spend, premium tools, stock media, and other third-party costs are billed separately and require client pre-approval."
+        }
+      ]
+    },
+    {
+      "id": "intellectual-property-and-work-product",
+      "title": "6. Intellectual Property and Work Product",
+      "subsections": [
+        {
+          "title": "Client Ownership",
+          "content": "Upon full payment, clients own all custom-created content, designs, and materials specifically developed for their project. This includes websites, content, graphics, and campaign materials."
+        },
+        {
+          "title": "Company Ownership",
+          "content": "TBH Digital Solutions retains ownership of proprietary methodologies, templates, tools, and general business processes. Pre-existing intellectual property remains with respective owners."
+        },
+        {
+          "title": "Portfolio Rights",
+          "content": "We reserve the right to showcase completed work in our portfolio, case studies, and marketing materials unless specifically restricted by client agreement."
+        },
+        {
+          "title": "Third-Party Licenses",
+          "content": "Any third-party software, tools, or platforms remain subject to their respective licensing terms. Clients are responsible for ongoing subscription costs post-project completion."
+        }
+      ]
+    },
+    {
+      "id": "confidentiality-and-non-disclosure",
+      "title": "7. Confidentiality and Non-Disclosure",
+      "content": "TBH Digital Solutions maintains strict confidentiality regarding client business information, strategies, data, and proprietary information. We will not disclose confidential information to unauthorized parties and will take reasonable measures to protect client data. This confidentiality extends to all team members and subcontractors working on client projects.",
+      "items": [
+        "**Data Security**: Client data is stored securely and accessed only by authorized team members",
+        "**Non-Disclosure**: Confidential business information will not be shared with competitors or unauthorized parties",
+        "**Secure Communication**: Sensitive information is transmitted through secure, encrypted channels",
+        "**Data Retention**: Client data is retained only as long as necessary for service provision and legal requirements"
+      ]
+    },
+    {
+      "id": "performance-standards-and-guarantees",
+      "title": "8. Performance Standards and Guarantees",
+      "subsections": [
+        {
+          "title": "Service Quality",
+          "content": "We guarantee professional-quality work that meets industry standards and aligns with agreed specifications. All services are performed by qualified professionals with relevant experience and certifications."
+        },
+        {
+          "title": "Performance Expectations",
+          "content": "While we employ best practices and proven strategies, marketing results depend on various factors including market conditions, competition, budget, and client participation. We do not guarantee specific numerical outcomes but commit to transparent reporting and continuous optimization."
+        },
+        {
+          "title": "Issue Resolution",
+          "content": "Any issues with deliverable quality will be addressed promptly at no additional cost. We maintain professional liability insurance to cover our services."
+        }
+      ]
+    },
+    {
+      "id": "data-access-and-third-party-integrations",
+      "title": "9. Data Access and Third-Party Integrations",
+      "content": "Effective service delivery requires access to various client systems and platforms:",
+      "items": [
+        "**Analytics Platforms**: Google Analytics, Facebook Analytics, LinkedIn Analytics for performance tracking",
+        "**Advertising Accounts**: Google Ads, Facebook Ads Manager, LinkedIn Campaign Manager for campaign management",
+        "**CRM Systems**: Access to customer relationship management platforms for automation setup",
+        "**Website Platforms**: Administrative access to websites, content management systems, and hosting accounts",
+        "**Email Marketing**: Access to email platforms for campaign creation and automation setup",
+        "**Social Media**: Business account access for content publishing and engagement management"
+      ],
+      "footer": "All access permissions will be documented and can be revoked by the client at any time. We recommend using role-based access controls where available."
+    },
+    {
+      "id": "modification-and-change-requests",
+      "title": "10. Modification and Change Requests",
+      "subsections": [
+        {
+          "title": "Scope Changes",
+          "content": "Changes to project scope, timelines, or deliverables must be documented in writing and agreed upon by both parties. Scope changes may affect project timelines and costs."
+        },
+        {
+          "title": "Change Order Process",
+          "content": "Significant modifications require a formal change order detailing the new requirements, associated costs, and timeline adjustments. Change orders must be approved before additional work begins."
+        },
+        {
+          "title": "Minor Adjustments",
+          "content": "Minor adjustments within the original project scope can be accommodated without formal change orders, subject to team availability and project timelines."
+        }
+      ]
+    },
+    {
+      "id": "termination-of-services",
+      "title": "11. Termination of Services",
+      "subsections": [
+        {
+          "title": "Client Termination",
+          "content": "Clients may terminate services with 30 days written notice. Early termination may result in charges for work completed and non-refundable costs already incurred (such as advertising spend or tool subscriptions)."
+        },
+        {
+          "title": "Company Termination",
+          "content": "TBH Digital Solutions may terminate services with 30 days notice or immediately for non-payment, breach of terms, or uncooperative behavior that prevents effective service delivery."
+        },
+        {
+          "title": "Transition Support",
+          "content": "Upon termination, we will provide reasonable transition support to ensure continuity of campaigns and access to deliverables. Final invoicing and asset transfer will be completed within 15 business days."
+        }
+      ]
+    },
+    {
+      "id": "liability-and-risk-management",
+      "title": "12. Liability and Risk Management",
+      "subsections": [
+        {
+          "title": "Limitation of Liability",
+          "content": "TBH Digital Solutions' total liability for any claims arising from our services shall not exceed the total amount paid by the client for the specific project or service period in question."
+        },
+        {
+          "title": "Disclaimer of Warranties",
+          "content": "Services are provided 'as is' without warranties of specific results. We disclaim all warranties except those expressly stated in writing."
+        },
+        {
+          "title": "Indemnification",
+          "content": "Clients agree to indemnify TBH Digital Solutions against claims arising from client-provided content, instructions that violate applicable laws, or misuse of deliverables."
+        },
+        {
+          "title": "Insurance Coverage",
+          "content": "We maintain professional liability insurance and general business insurance to cover our operations and client services."
+        }
+      ]
+    },
+    {
+      "id": "dispute-resolution",
+      "title": "13. Dispute Resolution",
+      "subsections": [
+        {
+          "title": "Direct Communication",
+          "content": "Disputes should first be addressed through direct communication between the client and our project management team. Most issues can be resolved through open dialogue and collaborative problem-solving."
+        },
+        {
+          "title": "Mediation",
+          "content": "If direct resolution is not possible, parties agree to attempt mediation through a mutually agreed upon mediator before pursuing other legal remedies."
+        },
+        {
+          "title": "Governing Law",
+          "content": "These terms are governed by the laws of the State of Missouri, United States. Any legal proceedings will be conducted in the appropriate courts of Missouri."
+        }
+      ]
+    },
+    {
+      "id": "compliance-and-regulatory-requirements",
+      "title": "14. Compliance and Regulatory Requirements",
+      "content": "TBH Digital Solutions adheres to applicable advertising standards, data protection regulations, and industry compliance requirements:",
+      "items": [
+        "**GDPR Compliance**: Data processing practices comply with General Data Protection Regulation requirements",
+        "**CCPA Compliance**: California Consumer Privacy Act compliance for applicable client data",
+        "**Platform Policies**: All campaigns and content adhere to platform-specific advertising policies and guidelines",
+        "**Industry Standards**: Services follow established best practices and ethical standards for digital marketing",
+        "**Disclosure Requirements**: Proper disclosure of sponsored content, affiliate relationships, and advertising as required by FTC guidelines"
+      ]
+    },
+    {
+      "id": "communication-and-reporting",
+      "title": "15. Communication and Reporting",
+      "subsections": [
+        {
+          "title": "Regular Updates",
+          "content": "Clients receive regular progress updates, performance reports, and strategic recommendations according to agreed schedules. Communication frequency varies by service type and client preferences."
+        },
+        {
+          "title": "Reporting Standards",
+          "content": "All reports include relevant KPIs, actionable insights, and strategic recommendations. Data is presented in clear, understandable formats with executive summaries for key stakeholders."
+        },
+        {
+          "title": "Emergency Communication",
+          "content": "Critical issues affecting live campaigns or websites will be communicated immediately via phone and email. Emergency contact information is provided to all clients."
+        },
+        {
+          "title": "Response Times",
+          "content": "We commit to responding to client communications within 24 hours during business days, with urgent matters addressed within 4 hours."
+        }
+      ]
+    },
+    {
+      "id": "force-majeure",
+      "title": "16. Force Majeure",
+      "content": "TBH Digital Solutions shall not be liable for delays or failures in performance resulting from circumstances beyond our reasonable control, including but not limited to natural disasters, government actions, internet outages, third-party platform changes, or other force majeure events. We will communicate any such delays promptly and work to minimize impact on client projects."
+    },
+    {
+      "id": "contact-information",
+      "title": "17. Contact Information",
+      "content": "For questions regarding these Terms of Services or to discuss your project requirements:",
+      "items": [
+        "**Email**: [info@tbhdigitalsolutions.com](mailto:info@tbhdigitalsolutions.com)",
+        "**Business Address**: TBH Digital Solutions, St. Louis, Mo",
+        "**Business Hours**: Monday - Friday, 9:00 AM - 6:00 PM CST"
+      ]
+    }
+  ],
+  "footer": {
+    "content": "These Terms of Services represent our commitment to transparent, professional service delivery. We believe in building long-term partnerships based on mutual respect, clear communication, and exceptional results.",
+    "effective_date": "These terms are effective as of November 2, 2024, and apply to all new service agreements. Existing contracts remain governed by their original terms unless amended in writing."
+  },
+  "contact": {
+    "email": "info@tbhdigitalsolutions.com",
+    "address": "TBH Digital Solutions, St. Louis, Mo",
+    "hours": "Monday - Friday, 9:00 AM - 6:00 PM CST"
+  }
+}
+    

@@ -1,0 +1,99 @@
+/* ====== Testimonial Slider (global, unique class names) ====== */
+
+.tms-slider {
+    overflow: hidden;
+    width: 100%;
+}
+
+/* Row of cards (3 across desktop, 2 tablet, 1 mobile) */
+.tms-sliderGrid {
+    --tms-gap: var(--spacing-lg, 24px);
+    --tms-cards-per-row: 3;
+    /* overridden by inline style */
+    display: flex;
+    gap: var(--tms-gap);
+    flex-wrap: nowrap;
+    /* force a single horizontal row */
+    align-items: stretch;
+}
+
+.tms-sliderGrid>* {
+    display: flex;
+    /* equalize heights */
+    flex: 0 1 calc((100% - (var(--tms-gap) * (var(--tms-cards-per-row) - 1))) / var(--tms-cards-per-row));
+    min-width: 0;
+}
+
+@media (max-width: 1024px) {
+    .tms-sliderGrid {
+        --tms-cards-per-row: 2;
+    }
+}
+
+@media (max-width: 768px) {
+    .tms-sliderGrid {
+        --tms-cards-per-row: 1;
+    }
+}
+
+/* ====== Card visuals ====== */
+.tms-card {
+    position: relative;
+    width: 100%;
+    border-radius: var(--radius-2xl, 16px);
+    padding: var(--spacing-xl, 24px);
+    background: linear-gradient(180deg,
+            color-mix(in oklab, var(--bg-surface, rgba(255, 255, 255, .06)) 94%, transparent),
+            color-mix(in oklab, var(--bg-surface, rgba(255, 255, 255, .06)) 98%, transparent));
+    border: 1px solid color-mix(in oklab, var(--border-subtle, rgba(255, 255, 255, .12)) 80%, transparent);
+    box-shadow: var(--shadow-md, 0 10px 30px rgba(0, 0, 0, .2));
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    gap: var(--spacing-md, 16px);
+    transition: transform var(--transition-fast, .2s ease), box-shadow var(--transition-fast, .2s ease);
+}
+
+.tms-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg, 0 18px 40px rgba(0, 0, 0, .3));
+}
+
+/* Avatar */
+.tms-avatarWrap {
+    display: grid;
+    place-items: center;
+}
+
+.tms-avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 999px;
+    object-fit: cover;
+    box-shadow: var(--shadow-sm, 0 3px 10px rgba(0, 0, 0, .2));
+    border: 1px solid color-mix(in oklab, var(--border-subtle, rgba(255, 255, 255, .12)) 80%, transparent);
+}
+
+/* Quote */
+.tms-quote {
+    margin: 0;
+    color: var(--text-primary, #fff);
+    font-style: italic;
+    line-height: 1.6;
+    opacity: .95;
+}
+
+/* Meta */
+.tms-meta {
+    display: grid;
+    gap: 4px;
+}
+
+.tms-author {
+    color: var(--text-accent, #7cc7ff);
+    font-weight: 700;
+}
+
+.tms-role {
+    color: var(--text-secondary, rgba(255, 255, 255, .72));
+    font-size: .95em;
+}

@@ -1,0 +1,177 @@
+/* src/booking/sections/BookingHeroSection/BookingHeroSection.module.css */
+/* Lightweight styles for BookingHeroSection wrapper */
+
+.section {
+    /* Layout */
+    position: relative;
+    width: 100%;
+
+    /* Spacing */
+    padding: var(--spacing-xl, 32px) 0;
+
+    /* Background */
+    background: var(--bg-surface, #ffffff);
+
+    /* Container queries */
+    container-type: inline-size;
+    container-name: booking-hero;
+}
+
+/* ============================================================================
+ * ServiceHero Enhancements (via global CSS variables)
+ * ============================================================================ */
+
+/* Override ServiceHero variables when used within BookingHeroSection */
+.section {
+    --service-hero-min-height: 400px;
+    --service-hero-text-align: center;
+    --service-hero-overlay-opacity: 0.45;
+    --service-hero-overlay-color: rgba(6, 5, 18, 0.55);
+}
+
+/* ============================================================================
+ * CTA Actions Enhancement
+ * ============================================================================ */
+
+.section .service-hero-actions {
+    /* Ensure proper spacing for booking CTAs */
+    margin-top: var(--spacing-xl, 32px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-md, 16px);
+}
+
+.section .service-hero-button {
+    /* Enhanced button styling for booking context */
+    min-width: 200px;
+    padding: var(--spacing-md, 16px) var(--spacing-2xl, 48px);
+    font-weight: 600;
+    font-size: var(--font-size-lg, 1.125rem);
+
+    /* Booking-specific visual enhancement */
+    box-shadow: var(--shadow-sm, 0 2px 8px rgba(0, 0, 0, 0.1));
+    transition: all var(--transition-fast, 150ms) ease;
+}
+
+.section .service-hero-button:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md, 0 4px 12px rgba(0, 0, 0, 0.15));
+}
+
+/* ============================================================================
+ * Analytics Integration (invisible helper classes)
+ * ============================================================================ */
+
+.section[data-analytics-context] {
+    /* Analytics marker - no visual changes */
+}
+
+.section[data-service] {
+    /* Service context marker - no visual changes */
+}
+
+/* ============================================================================
+ * Variant Support
+ * ============================================================================ */
+
+.section[data-variant] {
+    /* Variant marker for analytics - no visual changes */
+}
+
+.section[data-disable-href-navigation="true"] {
+    /* Modal flow indicator - no visual changes */
+}
+
+/* ============================================================================
+ * Responsive Enhancements
+ * ============================================================================ */
+
+@container booking-hero (max-width: 768px) {
+    .section {
+        padding: var(--spacing-lg, 24px) 0;
+    }
+
+    .section .service-hero-actions {
+        margin-top: var(--spacing-lg, 24px);
+    }
+
+    .section .service-hero-button {
+        min-width: 100%;
+        max-width: 320px;
+        padding: var(--spacing-md, 16px) var(--spacing-xl, 32px);
+        font-size: var(--font-size-md, 1rem);
+    }
+}
+
+@container booking-hero (max-width: 480px) {
+    .section {
+        padding: var(--spacing-md, 16px) 0;
+    }
+
+    .section .service-hero-button {
+        padding: var(--spacing-sm, 8px) var(--spacing-lg, 24px);
+        font-size: var(--font-size-sm, 0.875rem);
+    }
+}
+
+/* ============================================================================
+ * Accessibility Enhancements
+ * ============================================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+    .section .service-hero-button {
+        transition: none;
+    }
+
+    .section .service-hero-button:hover {
+        transform: none;
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .section .service-hero-button {
+        border-width: 2px;
+    }
+}
+
+/* ============================================================================
+ * Focus Management
+ * ============================================================================ */
+
+.section:focus-within {
+    /* Subtle indication when section contains focused elements */
+    position: relative;
+}
+
+/* ============================================================================
+ * Error State Support
+ * ============================================================================ */
+
+.section[data-error="true"] {
+    /* Visual indication of error state */
+    opacity: 0.7;
+}
+
+.section[data-loading="true"] {
+    /* Visual indication of loading state */
+    pointer-events: none;
+    opacity: 0.8;
+}
+
+/* ============================================================================
+ * Print Styles
+ * ============================================================================ */
+
+@media print {
+    .section {
+        background: white !important;
+        padding: var(--spacing-md, 16px) 0 !important;
+    }
+
+    .section .service-hero-button {
+        /* Hide interactive elements in print */
+        display: none !important;
+    }
+}

@@ -1,0 +1,325 @@
+/* src/booking/components/MeetingTypeSelector/MeetingTypeSelector.module.css */
+
+/* ===========================
+   Root / Layout
+   =========================== */
+.selector {
+    display: grid;
+    gap: 12px;
+    width: 100%;
+    background: var(--bg-surface, #fff);
+    border: 1px solid var(--border-subtle, #e5e5e5);
+    border-radius: var(--radius-lg, 12px);
+    padding: clamp(12px, 2.2vw, 16px);
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+/* ===========================
+   Filter
+   =========================== */
+.filter {
+    flex: 1 1 360px;
+    min-width: 240px;
+    max-width: 640px;
+    display: grid;
+    grid-template-columns: 22px 1fr;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid var(--border-subtle, #e5e5e5);
+    border-radius: 10px;
+    background: var(--bg-surface, #fff);
+    padding: 8px 10px;
+}
+
+.filter svg,
+.filter span[aria-hidden] {
+    opacity: 0.75;
+}
+
+.filterInput {
+    width: 100%;
+    border: 0;
+    outline: none;
+    background: transparent;
+    color: var(--text-primary, #121417);
+    font-size: 14px;
+}
+
+.filterInput::placeholder {
+    color: color-mix(in oklab, var(--text-secondary, #6b7280) 80%, transparent);
+}
+
+.filterInput:disabled {
+    color: var(--text-secondary, #6b7280);
+}
+
+/* Focus ring for the whole filter group */
+.filter:focus-within {
+    border-color: var(--brand-blue, #3b82f6);
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--brand-blue, #3b82f6) 28%, transparent);
+}
+
+/* ===========================
+   Meta (timezone, etc.)
+   =========================== */
+.meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--text-secondary, #6b7280);
+    font-size: 12px;
+}
+
+.tz {
+    white-space: nowrap;
+}
+
+/* ===========================
+   Grid of cards
+   =========================== */
+.grid {
+    display: grid;
+    gap: 12px;
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+
+@media (min-width: 560px) {
+    .grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (min-width: 960px) {
+    .grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+/* ===========================
+   Card
+   =========================== */
+.card {
+    position: relative;
+    text-align: left;
+    padding: 14px 14px 12px;
+    border: 1px solid var(--border-subtle, #e5e5e5);
+    border-radius: 12px;
+    background: var(--bg-surface, #fff);
+    color: var(--text-primary, #121417);
+    cursor: pointer;
+    transition: border-color 120ms ease, box-shadow 120ms ease, background-color 120ms ease, transform 120ms ease;
+    display: grid;
+    gap: 8px;
+}
+
+.card:hover:not(:disabled) {
+    border-color: color-mix(in oklab, var(--border-strong, #d1d5db) 80%, transparent);
+    box-shadow: var(--shadow-sm, 0 2px 8px rgba(0, 0, 0, .06));
+}
+
+.card:focus-visible {
+    outline: none;
+    border-color: var(--brand-blue, #3b82f6);
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--brand-blue, #3b82f6) 30%, transparent);
+}
+
+.cardSelected {
+    border-color: var(--accent-primary, #0ea5e9);
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--accent-primary, #0ea5e9) 28%, transparent);
+    background: color-mix(in oklab, var(--accent-primary, #0ea5e9) 6%, transparent);
+}
+
+.cardDisabled,
+.card:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* Badge (e.g., “Popular”) */
+.badge {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 2px 8px;
+    font-size: 12px;
+    border-radius: 9999px;
+    background: var(--bg-elevated, #f8f9fa);
+    color: var(--text-secondary, #6b7280);
+    border: 1px solid var(--border-subtle, #e5e5e5);
+}
+
+/* Header: title + check */
+.cardHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.title {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.25;
+    color: inherit;
+}
+
+.check {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 9999px;
+    background: var(--accent-primary, #0ea5e9);
+    color: #fff;
+    font-size: 12px;
+}
+
+/* Body copy */
+.description {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.4;
+    color: var(--text-secondary, #6b7280);
+}
+
+/* Meta row: duration / price */
+.metaRow {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 2px;
+}
+
+.optionDuration,
+.optionPrice {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--text-secondary, #6b7280);
+}
+
+/* Availability note */
+.note {
+    margin: 0;
+    font-size: 12px;
+    color: var(--text-secondary, #6b7280);
+}
+
+/* ===========================
+   Empty state
+   =========================== */
+.empty {
+    display: grid;
+    place-items: center;
+    min-height: 140px;
+    border: 1px dashed var(--border-subtle, #e5e5e5);
+    border-radius: 12px;
+    background: var(--bg-elevated, #f8f9fa);
+}
+
+.emptyText {
+    margin: 10px 0;
+    color: var(--text-secondary, #6b7280);
+    font-size: 14px;
+}
+
+/* ===========================
+   Error state
+   =========================== */
+.error {
+    padding: 14px;
+    border: 1px solid var(--border-subtle, #e5e5e5);
+    border-radius: 12px;
+    background: var(--bg-elevated, #f8f9fa);
+}
+
+.errorTitle {
+    margin: 0 0 6px;
+    color: var(--text-danger, #dc2626);
+    font-weight: 700;
+}
+
+.errorMessage {
+    margin: 0;
+    color: color-mix(in oklab, var(--text-danger, #dc2626) 88%, var(--text-primary, #111827));
+    font-size: 14px;
+}
+
+/* ===========================
+   Skeleton loading
+   =========================== */
+.skeletonGrid {
+    display: grid;
+    gap: 12px;
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+
+@media (min-width: 560px) {
+    .skeletonGrid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (min-width: 960px) {
+    .skeletonGrid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+.skeletonCard {
+    height: 108px;
+    border-radius: 12px;
+    background:
+        linear-gradient(90deg,
+            color-mix(in oklab, var(--bg-elevated, #f8f9fa) 92%, transparent) 25%,
+            color-mix(in oklab, var(--bg-elevated, #f8f9fa) 100%, transparent) 37%,
+            color-mix(in oklab, var(--bg-elevated, #f8f9fa) 92%, transparent) 63%);
+    background-size: 400% 100%;
+    animation: shimmer 1.2s ease-in-out infinite;
+    border: 1px solid var(--border-subtle, #e5e5e5);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .skeletonCard {
+        animation-duration: 2s;
+    }
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: 100% 0;
+    }
+
+    100% {
+        background-position: 0 0;
+    }
+}
+
+/* ===========================
+   Accessibility & Touch
+   =========================== */
+:where(.selector, .card, .filter) {
+    -webkit-tap-highlight-color: transparent;
+}
+
+@media (prefers-contrast: more) {
+
+    .card:focus-visible,
+    .filter:focus-within {
+        box-shadow: 0 0 0 3px var(--brand-blue, #3b82f6) !important;
+    }
+}

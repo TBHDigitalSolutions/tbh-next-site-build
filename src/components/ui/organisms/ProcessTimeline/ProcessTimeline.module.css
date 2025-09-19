@@ -1,0 +1,510 @@
+/* =========================================================================
+   TBH — ProcessTimeline (production, unified theme)
+   Path: src/components/features/about/ProcessTimeline/ProcessTimeline.module.css
+   - Uses tokens from unified-theme.css + root.css
+   - Alternating vertical timeline, unified card recipe
+   - Accessible focus states, reduced-motion guards, print-safe
+============================================================================ */
+
+/* -------------------- Wrapper & Header -------------------- */
+
+.timeline {
+    width: 100%;
+    max-width: var(--container-max, 1200px);
+    margin-inline: auto;
+    padding-block: var(--section-pad-block, clamp(2rem, 6vw, 3.75rem));
+    padding-inline: var(--container-pad-inline, 16px);
+    color: var(--text-primary);
+}
+
+.header {
+    text-align: center;
+    margin-bottom: var(--spacing-xl, 24px);
+}
+
+.title {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-h2);
+    font-weight: 800;
+    color: var(--text-accent);
+    margin: 0 0 var(--spacing-md, 16px) 0;
+    text-transform: uppercase;
+    display: inline-block;
+    padding-bottom: var(--spacing-xs, 8px);
+    border-bottom: 2px solid var(--border-primary, var(--brand-blue));
+    letter-spacing: .4px;
+}
+
+.summary {
+    margin: 0 0 var(--spacing-xs, 8px) 0;
+    color: var(--text-secondary);
+    font-weight: 600;
+}
+
+.subtitle {
+    font-family: var(--font-body);
+    font-size: var(--font-size-body);
+    color: var(--text-secondary);
+    line-height: var(--line-height-body);
+    max-width: 70ch;
+    margin: 0 auto;
+}
+
+/* -------------------- Container & Spine -------------------- */
+
+.container {
+    position: relative;
+    padding-block: var(--spacing-xl, 24px);
+}
+
+.line {
+    position: absolute;
+    inset: 0 auto 0 50%;
+    width: 4px;
+    transform: translateX(-50%);
+    border-radius: var(--radius-sm);
+    background: linear-gradient(to bottom,
+            var(--brand-blue) 0%,
+            var(--brand-blue) 36%,
+            var(--border-subtle) 36%,
+            var(--border-subtle) 100%);
+}
+
+/* -------------------- Ordered list -------------------- */
+
+.list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+/* -------------------- Items -------------------- */
+
+.item {
+    position: relative;
+    padding-block: var(--spacing-xl, 24px);
+    opacity: .92;
+    transition:
+        opacity var(--transition-standard, 300ms),
+        transform var(--transition-standard, 300ms),
+        box-shadow var(--transition-standard, 300ms);
+}
+
+.item+.item {
+    margin-top: var(--spacing-sm, 12px);
+}
+
+.item:hover {
+    opacity: 1;
+}
+
+.active {
+    opacity: 1;
+    transform: translateY(-1px);
+}
+
+.complete {
+    opacity: 1;
+}
+
+/* -------------------- Marker (node on the spine) -------------------- */
+
+.marker {
+    position: absolute;
+    top: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-full);
+    background: var(--bg-surface);
+    border: 3px solid var(--border-primary, var(--brand-blue));
+    display: grid;
+    place-items: center;
+    box-shadow: var(--shadow-xs);
+    color: var(--text-primary);
+}
+
+.markerIcon {
+    font-size: 20px;
+    opacity: .9;
+}
+
+/* Completed / active marker accents */
+.active .marker {
+    background: var(--brand-blue);
+    border-color: var(--brand-blue);
+    color: var(--bg-primary);
+    box-shadow: 0 0 20px color-mix(in oklab, var(--brand-blue) 40%, transparent);
+}
+
+.complete .marker {
+    background: var(--success-strong, #29d397);
+    border-color: var(--success-strong, #29d397);
+    color: var(--bg-primary);
+}
+
+/* -------------------- Content Card (unified recipe) -------------------- */
+
+.content {
+    position: relative;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-xl);
+    padding: var(--spacing-xl, 24px);
+    box-shadow: var(--shadow-sm);
+    transition:
+        box-shadow var(--transition-standard, 300ms),
+        border-color var(--transition-standard, 300ms),
+        transform var(--transition-standard, 300ms),
+        background-color var(--transition-standard, 300ms);
+}
+
+.item.expanded .content {
+    box-shadow: var(--shadow-lg);
+    border-color: var(--border-primary, var(--brand-blue));
+}
+
+/* Pointer (speech triangle) */
+.content::before {
+    content: "";
+    position: absolute;
+    top: 32px;
+    left: -12px;
+    width: 0;
+    height: 0;
+    border-top: 12px solid transparent;
+    border-bottom: 12px solid transparent;
+    border-right: 12px solid var(--bg-elevated, #0E1730);
+    transition: border-color var(--transition-standard, 300ms);
+}
+
+/* -------------------- Two-column alternating (desktop) -------------------- */
+
+.variant-vertical .content {
+    width: calc(50% - 72px);
+}
+
+/* Odd → left column */
+.variant-vertical .item:nth-child(odd) .content {
+    margin-right: calc(50% + 72px);
+    text-align: right;
+}
+
+/* Even → right column */
+.variant-vertical .item:nth-child(even) .content {
+    margin-left: calc(50% + 72px);
+    text-align: left;
+}
+
+/* Flip the triangle for right-column cards */
+.variant-vertical .item:nth-child(odd) .content::before {
+    right: -12px;
+    left: auto;
+    border-right: 0;
+    border-left: 12px solid var(--bg-elevated, #0E1730);
+}
+
+/* -------------------- Head (title row) -------------------- */
+
+.head {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: start;
+    gap: var(--spacing-sm, 12px);
+    margin-bottom: var(--spacing-md, 16px);
+}
+
+.phaseMeta {
+    display: flex;
+    align-items: baseline;
+    gap: var(--spacing-2xs, 6px);
+    color: var(--text-secondary);
+}
+
+.stepLabel {
+    font-size: var(--font-size-small);
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    color: var(--brand-blue);
+    font-weight: 800;
+}
+
+.stepNumber {
+    font-family: var(--font-heading);
+    font-weight: 800;
+    color: var(--text-secondary);
+}
+
+.titleWrap {
+    display: flex;
+    align-items: baseline;
+    gap: var(--spacing-sm, 12px);
+    flex-wrap: wrap;
+}
+
+.phaseTitle {
+    margin: 0;
+    font-family: var(--font-heading);
+    font-size: var(--font-size-h4);
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.badge {
+    display: inline-block;
+    padding: var(--spacing-2xs, 6px) var(--spacing-xs, 8px);
+    background: var(--brand-blue);
+    color: var(--bg-primary);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-small);
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.description {
+    grid-column: 1 / -1;
+    margin: 0;
+    color: var(--text-secondary);
+    line-height: var(--line-height-body);
+}
+
+/* -------------------- Toggle / details -------------------- */
+
+.toggle {
+    margin-left: auto;
+    align-self: start;
+    border: 1px solid var(--border-subtle);
+    background: var(--brand-blue);
+    color: var(--text-primary);
+    padding: 6px 10px;
+    border-radius: var(--radius-md);
+    font-size: var(--font-size-small);
+    cursor: pointer;
+    transition:
+        background var(--transition-standard, 300ms),
+        border-color var(--transition-standard, 300ms),
+        color var(--transition-standard, 300ms),
+        transform var(--transition-standard, 300ms);
+}
+
+.toggle:hover {
+    background: var(--bg-elevated, #0E1730);
+    border-color: var(--border-primary, var(--brand-blue));
+}
+
+.toggle:focus-visible {
+    outline: 2px solid var(--brand-blue);
+    outline-offset: 2px;
+}
+
+.toggleIcon {
+    margin-right: 6px;
+    display: inline-block;
+    transform: translateY(-0.5px);
+}
+
+/* Details region */
+.details[hidden] {
+    display: none;
+}
+
+.details {
+    margin-top: var(--spacing-sm, 12px);
+}
+
+/* -------------------- Sections inside details -------------------- */
+
+.section+.section {
+    margin-top: var(--spacing-md, 16px);
+    padding-top: var(--spacing-md, 16px);
+    border-top: 1px solid var(--border-subtle);
+}
+
+.sectionTitle {
+    margin: 0 0 var(--spacing-xs, 8px) 0;
+    text-transform: uppercase;
+    letter-spacing: .4px;
+    font-size: var(--font-size-small);
+    font-weight: 800;
+    color: var(--text-accent);
+}
+
+.bullets {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 8px;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.bullets li {
+    position: relative;
+    padding-left: var(--spacing-md, 16px);
+    color: var(--text-secondary);
+    line-height: 1.45;
+}
+
+.bullets li::before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    top: .25em;
+    color: var(--brand-blue);
+    font-weight: 800;
+    font-size: 12px;
+}
+
+.note {
+    color: var(--text-secondary);
+}
+
+.footer {
+    margin-top: var(--spacing-md, 16px);
+    display: flex;
+    justify-content: flex-end;
+}
+
+.ctaSlot :global(.btn),
+.ctaSlot :where(a, button) {
+    margin-left: auto;
+}
+
+/* -------------------- Variants -------------------- */
+
+.variant-detailed .content {
+    box-shadow: var(--shadow-md);
+}
+
+/* -------------------- Responsive -------------------- */
+
+/* Tablet: stack cards on the left of the spine */
+@media (max-width: 1024px) {
+    .line {
+        left: 30px;
+        transform: translateX(-50%);
+    }
+
+    .marker {
+        left: 30px;
+        transform: translateX(-50%);
+    }
+
+    .variant-vertical .content {
+        width: calc(100% - 80px);
+        margin-left: 80px !important;
+        margin-right: 0 !important;
+        text-align: left !important;
+    }
+
+    .content::before {
+        left: -12px !important;
+        right: auto !important;
+        border-left: 0 !important;
+        border-right: 12px solid var(--bg-elevated, #0E1730) !important;
+    }
+
+    .bullets {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    .timeline {
+        padding-inline: var(--container-pad-inline, 16px);
+    }
+
+    .title {
+        font-size: var(--font-size-h3);
+    }
+
+    .marker {
+        width: 40px;
+        height: 40px;
+    }
+
+    .phaseTitle {
+        font-size: var(--font-size-h5, clamp(1.125rem, 1.05rem + .25vw, 1.25rem));
+    }
+
+    .content {
+        padding: var(--spacing-lg, 20px);
+    }
+}
+
+/* Small Mobile */
+@media (max-width: 480px) {
+    .description {
+        font-size: var(--font-size-small);
+    }
+
+    .content {
+        padding: var(--spacing-md, 16px);
+    }
+
+    .line {
+        left: 20px;
+    }
+
+    .marker {
+        left: 20px;
+    }
+
+    .variant-vertical .content {
+        margin-left: 60px !important;
+        width: calc(100% - 60px);
+    }
+}
+
+/* -------------------- Accessibility & Motion -------------------- */
+
+.timeline :where(button, .content, .marker):focus-visible {
+    outline: 2px solid var(--brand-blue);
+    outline-offset: 2px;
+    border-radius: var(--radius-md);
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .item,
+    .marker,
+    .content,
+    .toggle {
+        transition: none !important;
+        animation: none !important;
+    }
+
+    .active {
+        transform: none !important;
+    }
+}
+
+/* -------------------- Print -------------------- */
+
+@media print {
+    .timeline {
+        background: #fff !important;
+        color: #000 !important;
+    }
+
+    .line {
+        background: #bbb !important;
+    }
+
+    .marker,
+    .content {
+        background: #fff !important;
+        color: #000 !important;
+        box-shadow: none !important;
+        border: 1px solid #ccc !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    .badge {
+        background: #000 !important;
+        color: #fff !important;
+    }
+}

@@ -1,0 +1,204 @@
+/* src/components/sections/Web-Dev/PortfolioDemo/Gallery/GalleryControls.module.css
+   ---------------------------------------------------------------------------
+   • Pairs with PortfolioGallery.module.css .controlsRow wrapper.
+   • Theme-ready via CSS variables with fallbacks.
+   • Accessible focus states; compact, responsive layout.
+   • IMPORTANT: In CSS Modules, avoid bare :root — scope tokens to .container.
+   --------------------------------------------------------------------------- */
+
+/* Scope design tokens to the component root instead of :root */
+.container {
+    /* Spacing & radius */
+    --gc-space-xs: var(--spacing-xs, 6px);
+    --gc-space-sm: var(--spacing-sm, 10px);
+    --gc-space-md: var(--spacing-md, 16px);
+    --gc-space-lg: var(--spacing-lg, 24px);
+
+    --gc-radius-sm: var(--radius-sm, 8px);
+    --gc-radius-md: var(--radius-md, 12px);
+    --gc-ring: var(--focus-ring-color, hsl(210 90% 60% / 0.6));
+
+    /* Colors & text */
+    --gc-text: var(--text-color, hsl(222 22% 12%));
+    --gc-text-muted: var(--text-muted, hsl(222 12% 40%));
+    --gc-border: var(--border-color, hsl(220 14% 90%));
+    --gc-surface: var(--surface, #fff);
+    --gc-surface-2: var(--surface-2, hsl(0 0% 98%));
+    --gc-accent: var(--brand, hsl(210 90% 50%));
+    --gc-accent-contrast: var(--brand-contrast, #fff);
+
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: var(--gc-space-md);
+    width: 100%;
+    align-items: center;
+}
+
+@media (max-width: 960px) {
+    .container {
+        grid-template-columns: 1fr;
+        gap: var(--gc-space-sm);
+    }
+}
+
+/* Search */
+.searchGroup {
+    display: grid;
+    gap: 6px;
+    min-width: 220px;
+}
+
+.searchLabel {
+    font-size: 0.9rem;
+    color: var(--gc-text-muted);
+}
+
+.searchInput {
+    height: 40px;
+    padding: 0 var(--gc-space-md);
+    border: 1px solid var(--gc-border);
+    background: var(--gc-surface);
+    color: var(--gc-text);
+    border-radius: var(--gc-radius-md);
+    outline: none;
+    transition: border-color .15s ease, box-shadow .15s ease, background-color .15s ease;
+}
+
+.searchInput::placeholder {
+    color: color-mix(in oklab, var(--gc-text-muted) 80%, white 20%);
+}
+
+.searchInput:focus {
+    border-color: color-mix(in oklab, var(--gc-border) 60%, var(--gc-accent) 40%);
+    box-shadow: 0 0 0 3px var(--gc-ring);
+}
+
+/* Filters */
+.filtersGroup {
+    /* wrapping element for chips */
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    height: 36px;
+    padding: 0 12px;
+    border-radius: 999px;
+    border: 1px solid var(--gc-border);
+    background: var(--gc-surface);
+    color: var(--gc-text);
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background-color .15s ease, border-color .15s ease, transform .15s ease;
+}
+
+.chip:hover {
+    background: var(--gc-surface-2);
+    transform: translateY(-1px);
+}
+
+.chip:focus {
+    outline: none;
+}
+
+.chip:focus-visible {
+    box-shadow: 0 0 0 3px var(--gc-ring);
+}
+
+.chipActive {
+    background: color-mix(in oklab, var(--gc-accent) 92%, black 8%);
+    border-color: color-mix(in oklab, var(--gc-accent) 70%, black 30%);
+    color: var(--gc-accent-contrast);
+}
+
+.chipDot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: currentColor;
+    opacity: 0.65;
+}
+
+.chipText {
+    line-height: 1;
+    white-space: nowrap;
+}
+
+/* Actions (right-aligned area) */
+.actions {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.clearBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    height: 36px;
+    padding: 0 12px;
+    border-radius: 999px;
+    border: 1px solid var(--gc-border);
+    background: transparent;
+    color: var(--gc-text-muted);
+    cursor: pointer;
+    transition: background-color .15s ease, color .15s ease, border-color .15s ease, transform .15s ease;
+}
+
+.clearBtn:hover {
+    background: var(--gc-surface);
+    color: var(--gc-text);
+    transform: translateY(-1px);
+}
+
+.clearBtn:focus {
+    outline: none;
+}
+
+.clearBtn:focus-visible {
+    box-shadow: 0 0 0 3px var(--gc-ring);
+}
+
+.clearIcon {
+    opacity: 0.75;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+
+    .chip,
+    .clearBtn {
+        transition: none;
+    }
+}
+
+/* Dark mode (explicit .dark class on the document root) */
+:global(.dark) .container {
+    --gc-text: var(--text-color, hsl(220 15% 92%));
+    --gc-text-muted: var(--text-muted, hsl(220 10% 70%));
+    --gc-border: var(--border-color, hsl(220 12% 22%));
+    --gc-surface: var(--surface, hsl(222 22% 10%));
+    --gc-surface-2: var(--surface-2, hsl(222 16% 14%));
+    --gc-accent-contrast: var(--brand-contrast, #fff);
+}
+
+/* Dark mode (automatic when no explicit theme class is set) */
+@media (prefers-color-scheme: dark) {
+    :global(:root:not(.light, .dark)) .container {
+        --gc-text: var(--text-color, hsl(220 15% 92%));
+        --gc-text-muted: var(--text-muted, hsl(220 10% 70%));
+        --gc-border: var(--border-color, hsl(220 12% 22%));
+        --gc-surface: var(--surface, hsl(222 22% 10%));
+        --gc-surface-2: var(--surface-2, hsl(222 16% 14%));
+        --gc-accent-contrast: var(--brand-contrast, #fff);
+    }
+}

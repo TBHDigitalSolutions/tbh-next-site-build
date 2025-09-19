@@ -1,0 +1,340 @@
+/* ============================
+   🏗️ TBH Digital Solutions - Hero Section Wrapper Styles
+   Aligned with Brand Guide & Root Variables
+============================ */
+
+.hero-section-wrapper {
+    position: relative;
+    width: 100%;
+    height: clamp(60vh, 80vh, 100vh);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    border-bottom: var(--section-border-bottom);
+}
+
+/* Height Variants */
+.hero-min-height {
+    min-height: 60vh;
+}
+
+.hero-full-height {
+    min-height: 100vh;
+}
+
+.hero-medium-height {
+    min-height: 75vh;
+}
+
+/* Background container (always present so overlay can tint even without an image) */
+.hero-background {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background: var(--gradient-section);
+}
+
+/* Background Image */
+.hero-image {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+    transition: transform var(--transition-slow);
+}
+
+.hero-image:hover {
+    transform: scale(1.02);
+}
+
+/* Overlay (tint) */
+.hero-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: var(--hero-overlay);
+    /* new: allow opacity to be controlled from TS via CSS var */
+    opacity: var(--hero-overlay-opacity, 0.5);
+    pointer-events: none;
+    /* don't block links/buttons */
+}
+
+/* Foreground Content Container */
+.hero-foreground {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    height: 100%;
+    min-height: inherit;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: var(--section-padding-major);
+    background: transparent;
+}
+
+/* Alignment Options */
+.align-center {
+    text-align: center;
+    align-items: center;
+}
+
+.align-left {
+    text-align: left;
+    align-items: flex-start;
+}
+
+.align-right {
+    text-align: right;
+    align-items: flex-end;
+}
+
+/* Hero Content */
+.hero-content {
+    max-width: var(--content-max-width);
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.align-left .hero-content {
+    margin-left: 0;
+    margin-right: auto;
+}
+
+.align-right .hero-content {
+    margin-left: auto;
+    margin-right: 0;
+}
+
+/* ============================
+   🎨 Typography
+============================ */
+
+.hero-title {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-h1);
+    font-weight: 700;
+    color: var(--text-accent);
+    line-height: var(--line-height-heading);
+    text-shadow: var(--text-shadow-hero);
+    margin-bottom: var(--spacing-sm);
+}
+
+.hero-subtitle {
+    font-family: var(--font-body);
+    font-size: var(--font-size-h4);
+    color: var(--text-secondary);
+    line-height: var(--line-height-body);
+    max-width: 48rem;
+    margin-top: var(--spacing-sm);
+}
+
+.align-center .hero-subtitle {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Children slot */
+.hero-children {
+    margin-top: var(--spacing-lg);
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.align-center .hero-children {
+    align-items: center;
+}
+
+.align-left .hero-children {
+    align-items: flex-start;
+}
+
+.align-right .hero-children {
+    align-items: flex-end;
+}
+
+/* ============================
+   📱 Responsive
+============================ */
+
+@media (min-width: 1200px) {
+    .hero-foreground {
+        padding: var(--spacing-xxl);
+    }
+
+    .hero-title {
+        font-size: var(--font-size-h1-hero);
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1199px) {
+    .hero-foreground {
+        padding: var(--spacing-xl);
+    }
+
+    .hero-title {
+        font-size: clamp(2rem, 4vw, 3rem);
+    }
+
+    .hero-subtitle {
+        font-size: clamp(1rem, 2vw, 1.25rem);
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-section-wrapper {
+        min-height: 50vh;
+    }
+
+    .hero-foreground {
+        padding: var(--mobile-padding);
+        justify-content: center;
+    }
+
+    .hero-title {
+        font-size: var(--font-size-h2-mobile);
+        text-align: center;
+    }
+
+    .hero-subtitle {
+        font-size: var(--font-size-body);
+        text-align: center;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .hero-children {
+        align-items: center;
+        text-align: center;
+    }
+
+    /* Override alignment on mobile for better UX */
+    .align-left,
+    .align-right {
+        text-align: center;
+        align-items: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-foreground {
+        padding: var(--spacing-md);
+    }
+
+    .hero-title {
+        font-size: clamp(1.25rem, 6vw, 1.75rem);
+    }
+
+    .hero-subtitle {
+        font-size: var(--font-size-small);
+    }
+}
+
+/* ============================
+   🌙 Theme modes
+============================ */
+
+[data-theme="dark"] .hero-title {
+    color: var(--text-accent);
+    text-shadow: var(--text-shadow-hero);
+}
+
+[data-theme="dark"] .hero-subtitle {
+    color: var(--text-secondary);
+}
+
+[data-theme="light"] .hero-title {
+    color: var(--text-accent);
+    text-shadow: 2px 2px 8px rgba(255, 255, 255, .8);
+}
+
+[data-theme="light"] .hero-subtitle {
+    color: var(--text-secondary);
+}
+
+/* ============================
+   ✨ Motion
+============================ */
+
+@keyframes heroSectionFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.hero-content {
+    animation: heroSectionFadeIn 1.2s ease-out;
+}
+
+.hero-title {
+    animation: heroSectionFadeIn 1.4s ease-out .2s both;
+}
+
+.hero-subtitle {
+    animation: heroSectionFadeIn 1.6s ease-out .4s both;
+}
+
+.hero-children {
+    animation: heroSectionFadeIn 1.8s ease-out .6s both;
+}
+
+/* Reduce motion preferences */
+@media (prefers-reduced-motion: reduce) {
+    .hero-image {
+        transition: none;
+    }
+
+    .hero-image:hover {
+        transform: none;
+    }
+
+    .hero-content,
+    .hero-title,
+    .hero-subtitle,
+    .hero-children {
+        animation: none;
+    }
+}
+
+/* ============================
+   🎯 Utilities
+============================ */
+
+/* Background Variants */
+.hero-bg-gradient {
+    background: var(--gradient-section);
+}
+
+.hero-bg-solid {
+    background-color: var(--bg-primary);
+}
+
+/* Content Width Variants */
+.hero-content-wide {
+    max-width: var(--container-max-width);
+}
+
+.hero-content-narrow {
+    max-width: 600px;
+}
+
+/* Spacing Variants (applied on wrapper for outer padding scale) */
+.hero-spacing-large {
+    padding: var(--spacing-xxl);
+}
+
+.hero-spacing-small {
+    padding: var(--spacing-lg);
+}

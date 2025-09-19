@@ -1,0 +1,145 @@
+/* ============================================
+   🦸 Products Hero — TBH Unified Theme
+   - Gradient band hero with readable overlay
+   - Centered max-width container
+   - Unified typography & spacing
+============================================ */
+
+.products-hero {
+    position: relative;
+    width: 100%;
+    min-height: clamp(480px, 65vh, 720px);
+
+    /* Theme surfaces */
+    background: var(--gradient-section);
+    /* unified gradient band */
+    color: var(--text-primary);
+
+    /* Optional background mark (brand) */
+    background-image: url("/logos/tbh-logo-primary.svg");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+
+    /* Section rhythm; account for fixed header */
+    padding-block: var(--section-pad-block-lg);
+    padding-top: calc(var(--header-height, 80px) + var(--spacing-md));
+
+    border-bottom: 1px solid var(--border-subtle);
+    box-shadow: var(--shadow-none, none);
+
+    transition:
+        background-color var(--transition-standard),
+        color var(--transition-standard),
+        box-shadow var(--transition-standard);
+}
+
+/* Readability overlay (keeps markup you already render) */
+.products-hero-overlay {
+    position: absolute;
+    inset: 0;
+    /* strong but breathable overlay for text contrast */
+    background: color-mix(in oklab, black 60%, transparent);
+    z-index: 1;
+    pointer-events: none;
+}
+
+/* Centered content container */
+.products-hero-content {
+    position: relative;
+    z-index: 2;
+
+    width: min(calc(100% - 2 * var(--container-pad-inline)), var(--container-max));
+    margin-inline: auto;
+    padding-inline: var(--container-pad-inline);
+
+    display: grid;
+    gap: var(--spacing-sm);
+    text-align: center;
+    box-sizing: border-box;
+}
+
+/* Title */
+.products-hero-title {
+    font-family: var(--font-hero, var(--font-heading));
+    font-size: var(--font-size-h1-hero, var(--font-size-h2));
+    line-height: var(--line-height-tight);
+    font-weight: 800;
+    color: var(--text-accent);
+    margin: 0 0 var(--spacing-sm);
+
+    /* hold single line on wide view; wrap on smaller screens */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Subtitles / supporting lines */
+.products-hero-subtitle,
+.products-hero-cta,
+.products-hero-contact {
+    font-family: var(--font-body);
+    font-size: var(--font-size-body);
+    line-height: var(--line-height-body);
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+/* Emphasized CTA line (use accent text color for consistency) */
+.products-hero-cta {
+    font-weight: 700;
+    color: var(--text-accent);
+}
+
+/* Contact line (kept subtle accent) */
+.products-hero-contact {
+    font-weight: 600;
+    color: var(--text-accent);
+    margin-bottom: var(--spacing-lg);
+}
+
+/* CTA Buttons row (shared Button component supplies its own styles) */
+.products-hero-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--spacing-md);
+}
+
+/* ============================
+   Responsive
+============================ */
+@media (max-width: 1024px) {
+    .products-hero {
+        padding-block: var(--section-pad-block);
+    }
+
+    .products-hero-title {
+        font-size: var(--font-size-h2);
+        white-space: normal;
+        /* allow wrap on narrower screens */
+        text-overflow: clip;
+    }
+}
+
+@media (max-width: 768px) {
+    .products-hero {
+        min-height: 420px;
+    }
+
+    .products-hero-title {
+        font-size: var(--font-size-h3);
+    }
+}
+
+/* ============================
+   Reduced motion
+============================ */
+@media (prefers-reduced-motion: reduce) {
+
+    .products-hero,
+    .products-hero-overlay,
+    .products-hero-content {
+        transition: none !important;
+    }
+}

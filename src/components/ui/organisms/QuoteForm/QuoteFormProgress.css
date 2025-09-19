@@ -1,0 +1,59 @@
+/* ============================
+   ✅ Quote Form Progress Styles
+============================ */
+
+.quote-progress-container {
+    width: 100%;
+    margin-bottom: var(--spacing-md);
+}
+
+/* ✅ Step Labels */
+.quote-progress-steps {
+    display: flex;
+    justify-content: space-between;
+    font-size: var(--font-size-small);
+    font-weight: bold;
+    color: var(--color-light-grey);
+    margin-bottom: var(--spacing-xs);
+}
+
+/* ✅ Active Step */
+.quote-progress-step.active-step {
+    color: var(--color-accent);
+}
+
+/* ✅ Progress Bar */
+.quote-progress-bar {
+    position: relative;
+    width: 100%;
+    height: 6px;
+    background: var(--color-light-grey);
+    border-radius: var(--radius-pill);
+    overflow: hidden;
+}
+
+/* ✅ Animated Progress Fill */
+.quote-progress-fill {
+    height: 100%;
+    background: var(--color-accent);
+    transition: width 0.3s ease-in-out;
+}
+
+/* ============================
+   ✅ Dark Mode Adjustments
+============================ */
+.dark .quote-progress-steps {
+    color: var(--color-dark-charcoal);
+}
+
+.dark .quote-progress-step.active-step {
+    color: var(--color-accent);
+}
+
+.dark .quote-progress-bar {
+    background: var(--background-dark);
+}
+
+.dark .quote-progress-fill {
+    background: var(--color-accent);
+}

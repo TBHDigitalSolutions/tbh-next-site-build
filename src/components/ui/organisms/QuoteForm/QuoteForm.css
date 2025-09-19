@@ -1,0 +1,134 @@
+ /* ============================
+   ✅ Quote Form Styles
+============================ */
+
+ .quote-form {
+     background: var(--background-light);
+     color: var(--color-soft-black);
+     padding: var(--spacing-lg);
+     border-radius: var(--radius-lg);
+     box-shadow: var(--shadow-light);
+     max-width: 600px;
+     margin: auto;
+     transition: background 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+ }
+
+ /* ✅ Title */
+ .quote-form-title {
+     font-family: var(--font-heading);
+     font-size: var(--font-size-h2);
+     font-weight: bold;
+     text-align: center;
+     margin-bottom: var(--spacing-md);
+ }
+
+ /* ✅ Success & Error Messages */
+ .quote-form-success,
+ .quote-form-error {
+     text-align: center;
+     font-weight: bold;
+     margin-bottom: var(--spacing-sm);
+ }
+
+ .quote-form-success {
+     color: var(--color-success);
+ }
+
+ .quote-form-error {
+     color: var(--color-danger);
+ }
+
+ /* ✅ Form Layout */
+ .quote-form-body {
+     display: flex;
+     flex-direction: column;
+     gap: var(--spacing-md);
+ }
+
+ /* ✅ Input Fields */
+ .quote-form-group {
+     display: flex;
+     flex-direction: column;
+ }
+
+ .quote-form-label {
+     font-family: var(--font-body);
+     font-size: var(--font-size-small);
+     font-weight: bold;
+     margin-bottom: var(--spacing-xs);
+ }
+
+ .quote-form-input,
+ .quote-form-select,
+ .quote-form-textarea {
+     width: 100%;
+     padding: var(--spacing-sm);
+     border: 1px solid var(--color-dark-charcoal);
+     border-radius: var(--radius-md);
+     font-family: var(--font-body);
+     font-size: var(--font-size-body);
+     background: var(--background-light);
+     color: var(--color-soft-black);
+     transition: border 0.3s ease-in-out, background 0.3s ease-in-out;
+ }
+
+ .quote-form-input:focus,
+ .quote-form-select:focus,
+ .quote-form-textarea:focus {
+     border-color: var(--color-accent);
+     outline: none;
+ }
+
+ /* ✅ Dark Mode */
+ .dark .quote-form {
+     background: var(--background-dark);
+     color: var(--color-off-white);
+     box-shadow: var(--shadow-dark);
+ }
+
+ .dark .quote-form-input,
+ .dark .quote-form-select,
+ .dark .quote-form-textarea {
+     background: var(--background-dark);
+     color: var(--color-off-white);
+     border-color: var(--color-accent);
+ }
+
+ .dark .quote-form-input:focus,
+ .dark .quote-form-select:focus,
+ .dark .quote-form-textarea:focus {
+     border-color: var(--color-accent-hover);
+ }
+
+ /* ✅ Navigation Buttons */
+ .quote-form-actions {
+     display: flex;
+     justify-content: space-between;
+ }
+
+ .quote-form-back,
+ .quote-form-next,
+ .quote-form-submit {
+     display: flex;
+     align-items: center;
+     gap: 8px;
+     padding: var(--spacing-sm);
+     border-radius: var(--radius-md);
+     font-weight: bold;
+     transition: background 0.3s ease-in-out;
+ }
+
+ .quote-form-next {
+     background: var(--color-accent);
+     color: var(--color-off-white);
+ }
+
+ .quote-form-submit {
+     background: var(--color-success);
+     color: var(--color-off-white);
+ }
+
+ .quote-form-next:hover,
+ .quote-form-submit:hover {
+     opacity: 0.9;
+ }

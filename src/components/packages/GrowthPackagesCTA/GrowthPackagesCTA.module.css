@@ -1,0 +1,58 @@
+/* src/components/services/GrowthPackagesCTA.module.css */
+
+.strip {
+    /* narrow visual, no external spacing */
+    margin-block: 0;
+    padding-block: var(--spacing-md);
+    /* let parent containers control background; keep it neutral */
+    background: transparent;
+}
+
+.inner {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: var(--spacing-lg);
+}
+
+.content {
+    display: grid;
+    gap: var(--spacing-2xs);
+}
+
+.title {
+    margin: 0;
+    font: 800 clamp(1.25rem, 2.2vw, 1.75rem) / 1.2 var(--font-heading, system-ui, sans-serif);
+    color: var(--text-accent, #0f172a);
+}
+
+.subtitle {
+    margin: 0;
+    color: var(--text-secondary, #475569);
+    font-size: clamp(0.95rem, 1.6vw, 1rem);
+    line-height: 1.5;
+}
+
+.actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.button {
+    /* optional: tweak tokens for this strip without touching the shared Button */
+    --btn-bg: var(--accent-primary, #0EAFFB);
+    --btn-fg: var(--off-white, #ffffff);
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+    .inner {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-md);
+    }
+
+    .actions {
+        justify-content: start;
+    }
+}

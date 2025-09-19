@@ -1,0 +1,194 @@
+/* src/templates/ServicePage/ServiceTemplate.module.css */
+
+/* ===== SERVICE PAGE LAYOUT ===== */
+.servicePage {
+    width: 100%;
+    min-height: 100vh;
+}
+
+/* ===== SECTION SPACING ===== */
+.servicePage>*+* {
+    margin-top: 0;
+}
+
+/* ===== HERO ENHANCEMENTS ===== */
+.heroSection {
+    position: relative;
+    z-index: 1;
+}
+
+/* ===== CONTENT SECTIONS ===== */
+.contentSection {
+    position: relative;
+    z-index: 2;
+}
+
+.surfaceSection {
+    background: var(--muted);
+}
+
+.gradientSection {
+    background: var(--gradient-section, linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%));
+}
+
+/* ===== TWO COLUMN VIDEO SECTION ===== */
+.twoColumnSection {
+    margin: 3rem 0;
+}
+
+/* ===== CAPABILITIES SECTION ===== */
+.capabilitiesSection {
+    padding: 3rem 0;
+}
+
+.capabilitiesGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+/* ===== PRICING SECTION ===== */
+.pricingSection {
+    background: var(--card);
+    border-radius: 1rem;
+    padding: 3rem 0;
+}
+
+.pricingHeader {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.pricingTitle {
+    font-size: clamp(1.75rem, 1.5rem + 1.2vw, 2.25rem);
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: var(--foreground);
+}
+
+.pricingSubtitle {
+    font-size: 1.125rem;
+    color: var(--muted-foreground);
+    max-width: 50ch;
+    margin: 0 auto;
+}
+
+/* ===== SERVICE CARDS SECTION ===== */
+.serviceCardsSection {
+    padding: 3rem 0;
+}
+
+.serviceCardsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+/* ===== PORTFOLIO SECTION ===== */
+.portfolioSection {
+    padding: 3rem 0;
+}
+
+/* ===== TESTIMONIALS SECTION ===== */
+.testimonialsSection {
+    padding: 3rem 0;
+}
+
+/* ===== FAQ SECTION ===== */
+.faqSection {
+    padding: 3rem 0;
+}
+
+/* ===== CTA SECTION ===== */
+.ctaSection {
+    padding: 4rem 0;
+}
+
+/* ===== COMPARISON TABLE ===== */
+.comparisonTable {
+    margin-top: 2rem;
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+/* ===== BREADCRUMBS ===== */
+.breadcrumbsSection {
+    padding: 1rem 0;
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 768px) {
+
+    .capabilitiesGrid,
+    .serviceCardsGrid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .pricingSection,
+    .capabilitiesSection,
+    .serviceCardsSection,
+    .portfolioSection,
+    .testimonialsSection,
+    .faqSection {
+        padding: 2rem 0;
+    }
+
+    .ctaSection {
+        padding: 3rem 0;
+    }
+
+    .pricingHeader {
+        margin-bottom: 2rem;
+    }
+}
+
+@media (max-width: 640px) {
+    .servicePage {
+        overflow-x: hidden;
+    }
+
+    .pricingTitle {
+        font-size: 1.75rem;
+    }
+
+    .pricingSubtitle {
+        font-size: 1rem;
+    }
+}
+
+/* ===== ACCESSIBILITY ===== */
+.servicePage:focus-within {
+    outline: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .servicePage * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* ===== PRINT STYLES ===== */
+@media print {
+    .servicePage {
+        color: black;
+        background: white;
+    }
+
+    .ctaSection,
+    .breadcrumbsSection {
+        display: none;
+    }
+
+    .pricingSection,
+    .capabilitiesSection,
+    .serviceCardsSection {
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+}

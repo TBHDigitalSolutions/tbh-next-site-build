@@ -1,0 +1,176 @@
+/* ============================
+   📣 TBH Digital Solutions - CTA Section
+   Call-to-Action Section Styles
+============================ */
+
+.cta-section {
+    background-color: rgba(14, 175, 251, 0.1);
+    border: 1px solid rgba(14, 175, 251, 0.3);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    margin: var(--spacing-xl) 0;
+    box-shadow: var(--shadow-light);
+    position: relative;
+    overflow: hidden;
+}
+
+body.dark .cta-section {
+    background-color: rgba(14, 175, 251, 0.2);
+    border-color: rgba(14, 175, 251, 0.4);
+    box-shadow: var(--shadow-dark);
+}
+
+/* ============================
+   ✅ CTA Layout Variants
+============================ */
+
+/* Centered layout (default) */
+.cta-centered {
+    text-align: center;
+}
+
+.cta-centered .cta-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    max-width: 48rem;
+    margin: 0 auto;
+}
+
+/* Split layout (text on left, actions on right) */
+.cta-split {
+    text-align: left;
+}
+
+@media (min-width: var(--breakpoint-md)) {
+    .cta-split .cta-content {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: var(--spacing-xl);
+        align-items: center;
+    }
+
+    .cta-split .cta-actions {
+        justify-content: flex-start;
+    }
+}
+
+/* Full width layout */
+.cta-fullwidth {
+    border-radius: 0;
+    padding: var(--spacing-xl) var(--spacing-lg);
+    margin-left: calc(var(--spacing-lg) * -1);
+    margin-right: calc(var(--spacing-lg) * -1);
+    width: 100vw;
+    text-align: center;
+}
+
+.cta-fullwidth .cta-content {
+    max-width: var(--container-max-width);
+    margin: 0 auto;
+}
+
+/* ============================
+   ✅ CTA Content Elements
+============================ */
+
+.cta-title {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-h2);
+    margin-bottom: var(--spacing-md);
+    color: var(--color-soft-black);
+    line-height: var(--line-height-h1);
+}
+
+body.dark .cta-title {
+    color: var(--color-off-white);
+}
+
+.cta-description {
+    font-size: var(--font-size-body);
+    color: var(--color-dark-charcoal);
+    margin-bottom: var(--spacing-lg);
+    line-height: var(--line-height-body);
+}
+
+body.dark .cta-description {
+    color: var(--color-light-grey);
+}
+
+.cta-actions {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    justify-content: center;
+    align-items: center;
+}
+
+/* ============================
+   ✅ CTA with Image
+============================ */
+
+.cta-image {
+    margin-bottom: var(--spacing-lg);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: var(--shadow-light);
+}
+
+body.dark .cta-image {
+    box-shadow: var(--shadow-dark);
+}
+
+.cta-image img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    display: block;
+}
+
+@media (min-width: var(--breakpoint-md)) {
+    .cta-split .cta-image {
+        grid-column: 2;
+        grid-row: 1;
+        margin-bottom: 0;
+    }
+
+    .cta-split .cta-content {
+        grid-column: 1;
+        grid-row: 1;
+    }
+}
+
+/* ============================
+   ✅ Responsive Adjustments
+============================ */
+
+@media (min-width: var(--breakpoint-sm)) {
+    .cta-actions {
+        flex-direction: row;
+    }
+}
+
+@media (min-width: var(--breakpoint-md)) {
+    .cta-section {
+        padding: var(--spacing-xl);
+    }
+
+    .cta-title {
+        font-size: var(--font-size-h1);
+    }
+
+    .cta-description {
+        font-size: var(--font-size-h4);
+    }
+}
+
+@media (max-width: var(--breakpoint-sm)) {
+    .cta-actions {
+        width: 100%;
+    }
+
+    .cta-actions .cta-button {
+        width: 100%;
+    }
+}

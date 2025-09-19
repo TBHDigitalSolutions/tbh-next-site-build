@@ -1,0 +1,750 @@
+/**
+ * HeroWrapper.css - Production Ready Hero Section Styles
+ * =======================================================
+ * 
+ * Comprehensive styles for the HeroWrapper component that provides
+ * full-bleed hero sections with video, image, and gradient backgrounds.
+ * 
+ * Features:
+ * - Full-bleed edge-to-edge layout
+ * - Video and image background support
+ * - Responsive height variants
+ * - Content positioning system
+ * - Overlay and parallax effects
+ * - Theme integration
+ * - Performance optimizations
+ * - Accessibility support
+ * - Debug mode styling
+ * 
+ * Dependencies:
+ * - root.css (CSS custom properties)
+ * - layout.css (full-bleed utilities)
+ */
+
+/* ===================================================================
+   Core Hero Section Styles
+=================================================================== */
+
+.hero-section {
+    /* Full-bleed layout (edge-to-edge) */
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+
+    /* Positioning and layout */
+    position: relative;
+    display: flex;
+    flex-direction: column;
+
+    /* Isolation for z-index stacking */
+    isolation: isolate;
+
+    /* Prevent overflow issues */
+    overflow: clip;
+
+    /* Default background */
+    background: var(--gradient-hero, var(--gradient-section));
+
+    /* Theme-aware text color */
+    color: var(--text-primary);
+
+    /* Performance optimizations */
+    contain: layout style;
+    transform: translateZ(0);
+}
+
+/* ===================================================================
+   Height Variants
+=================================================================== */
+
+.hero-auto {
+    min-height: auto;
+}
+
+.hero-small {
+    min-height: 50vh;
+}
+
+.hero-medium {
+    min-height: 70vh;
+}
+
+.hero-large {
+    min-height: 85vh;
+}
+
+.hero-full {
+    min-height: 100vh;
+}
+
+/* ===================================================================
+   Background Type Variants
+=================================================================== */
+
+.hero-bg-none {
+    background: transparent;
+}
+
+.hero-bg-gradient {
+    background: var(--gradient-hero, var(--gradient-section));
+}
+
+.hero-bg-solid {
+    background-color: var(--bg-primary);
+}
+
+.hero-bg-image,
+.hero-bg-video {
+    background: var(--bg-primary);
+    /* Fallback while loading */
+}
+
+/* ===================================================================
+   Content Positioning System
+=================================================================== */
+
+.hero-content-container {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    height: 100%;
+    min-height: inherit;
+    display: flex;
+    flex-direction: column;
+    padding: var(--section-padding-major, 3rem) 0;
+}
+
+.hero-content-center .hero-content-container {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.hero-content-top .hero-content-container {
+    justify-content: flex-start;
+    align-items: center;
+    text-align: center;
+    padding-top: var(--section-padding-major, 3rem);
+}
+
+.hero-content-bottom .hero-content-container {
+    justify-content: flex-end;
+    align-items: center;
+    text-align: center;
+    padding-bottom: var(--section-padding-major, 3rem);
+}
+
+.hero-content-left .hero-content-container {
+    justify-content: center;
+    align-items: flex-start;
+    text-align: left;
+    padding-left: var(--spacing-xl, 2rem);
+}
+
+.hero-content-right .hero-content-container {
+    justify-content: center;
+    align-items: flex-end;
+    text-align: right;
+    padding-right: var(--spacing-xl, 2rem);
+}
+
+/* ===================================================================
+   Media Container (Video/Image Background)
+=================================================================== */
+
+.hero-media-container {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Video Background Styles */
+.hero-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    z-index: 0;
+}
+
+/* Image Background Styles */
+.hero-image {
+    object-fit: cover;
+    object-position: center;
+    transition: transform var(--transition-slow, 0.8s ease);
+}
+
+.hero-fallback-image {
+    object-fit: cover;
+    object-position: center;
+}
+
+/* ===================================================================
+   Overlay System
+=================================================================== */
+
+.hero-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background: var(--hero-overlay, rgba(6, 5, 18, 0.4));
+    opacity: var(--hero-overlay-opacity, 0.4);
+    mix-blend-mode: var(--hero-overlay-blend, normal);
+    transition: opacity var(--transition-standard, 0.3s ease);
+}
+
+/* ===================================================================
+   Parallax Effects
+=================================================================== */
+
+.hero-parallax .hero-image {
+    transform: scale(1.1);
+    transition: transform var(--transition-slow, 0.8s ease);
+}
+
+.hero-parallax .hero-media-container {
+    will-change: transform;
+}
+
+/* Subtle parallax on scroll (requires JavaScript) */
+.hero-parallax[data-parallax-offset] .hero-media-container {
+    transform: translateY(var(--parallax-offset, 0px));
+}
+
+/* ===================================================================
+   Animation System
+=================================================================== */
+
+.hero-animated {
+    opacity: 0;
+    animation: heroFadeIn 1.2s ease-out forwards;
+}
+
+.hero-animated .hero-content-container {
+    opacity: 0;
+    transform: translateY(30px);
+    animation: heroContentSlideUp 1s ease-out 0.3s forwards;
+}
+
+@keyframes heroFadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes heroContentSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Staggered animation for child elements */
+.hero-animated .hero-content-container>* {
+    opacity: 0;
+    animation: heroChildFadeInUp 0.8s ease-out forwards;
+}
+
+.hero-animated .hero-content-container>*:nth-child(1) {
+    animation-delay: 0.5s;
+}
+
+.hero-animated .hero-content-container>*:nth-child(2) {
+    animation-delay: 0.7s;
+}
+
+.hero-animated .hero-content-container>*:nth-child(3) {
+    animation-delay: 0.9s;
+}
+
+.hero-animated .hero-content-container>*:nth-child(4) {
+    animation-delay: 1.1s;
+}
+
+@keyframes heroChildFadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ===================================================================
+   Responsive Behavior
+=================================================================== */
+
+/* Tablet adjustments */
+@media (max-width: 1024px) {
+    .hero-section {
+        min-height: 60vh;
+    }
+
+    .hero-full {
+        min-height: 80vh;
+    }
+
+    .hero-large {
+        min-height: 70vh;
+    }
+
+    .hero-medium {
+        min-height: 60vh;
+    }
+
+    .hero-content-container {
+        padding: var(--spacing-xl, 2rem) var(--spacing-md, 1rem);
+    }
+
+    .hero-content-left .hero-content-container {
+        padding-left: var(--spacing-lg, 1.5rem);
+    }
+
+    .hero-content-right .hero-content-container {
+        padding-right: var(--spacing-lg, 1.5rem);
+    }
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+    .hero-section {
+        min-height: 50vh;
+    }
+
+    .hero-full {
+        min-height: 70vh;
+    }
+
+    .hero-large {
+        min-height: 60vh;
+    }
+
+    .hero-medium {
+        min-height: 50vh;
+    }
+
+    .hero-small {
+        min-height: 40vh;
+    }
+
+    .hero-content-container {
+        padding: var(--spacing-lg, 1.5rem) var(--mobile-padding, 0.75rem);
+    }
+
+    /* Stack content positioning on mobile */
+    .hero-content-left .hero-content-container,
+    .hero-content-right .hero-content-container {
+        align-items: center;
+        text-align: center;
+        padding-left: var(--mobile-padding, 0.75rem);
+        padding-right: var(--mobile-padding, 0.75rem);
+    }
+}
+
+/* Small mobile adjustments */
+@media (max-width: 480px) {
+    .hero-section {
+        min-height: 45vh;
+    }
+
+    .hero-content-container {
+        padding: var(--spacing-md, 1rem) var(--spacing-sm, 0.75rem);
+    }
+}
+
+/* ===================================================================
+   Theme Integration
+=================================================================== */
+
+/* Light theme hero styles */
+:root[data-theme="light"] .hero-section,
+.light .hero-section {
+    background: var(--gradient-hero-light, linear-gradient(135deg, #f8f9fa, #e9ecef));
+    color: var(--text-primary);
+}
+
+:root[data-theme="light"] .hero-overlay,
+.light .hero-overlay {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* Dark theme hero styles */
+:root[data-theme="dark"] .hero-section,
+.dark .hero-section {
+    background: var(--gradient-hero-dark, var(--gradient-section));
+    color: var(--text-primary);
+}
+
+:root[data-theme="dark"] .hero-overlay,
+.dark .hero-overlay {
+    background: var(--hero-overlay, rgba(6, 5, 18, 0.4));
+}
+
+/* Auto theme (system preference) */
+@media (prefers-color-scheme: light) {
+    :root:not([data-theme]) .hero-section {
+        background: var(--gradient-hero-light, linear-gradient(135deg, #f8f9fa, #e9ecef));
+        color: var(--text-primary);
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme]) .hero-section {
+        background: var(--gradient-hero-dark, var(--gradient-section));
+        color: var(--text-primary);
+    }
+}
+
+/* ===================================================================
+   Development Debug Styles
+=================================================================== */
+
+.hero-debug {
+    position: relative;
+    outline: 2px dashed #8b5cf6;
+    outline-offset: -2px;
+}
+
+.hero-debug::after {
+    content: "HeroWrapper [" attr(data-height) "] " attr(data-background-type);
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    background: rgba(139, 92, 246, 0.9);
+    color: white;
+    padding: 2px 6px;
+    font-size: 10px;
+    font-family: monospace;
+    z-index: 9999;
+    pointer-events: none;
+}
+
+/* Debug overlay for different background types */
+.hero-debug[data-background-type="video"]::after {
+    background: rgba(239, 68, 68, 0.9);
+}
+
+.hero-debug[data-background-type="image"]::after {
+    background: rgba(34, 197, 94, 0.9);
+}
+
+.hero-debug[data-background-type="gradient"]::after {
+    background: rgba(59, 130, 246, 0.9);
+}
+
+/* ===================================================================
+   Performance Optimizations
+=================================================================== */
+
+/* GPU acceleration for smooth animations */
+.hero-section {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+}
+
+/* Optimize for hero with video backgrounds */
+.hero-bg-video {
+    contain: layout style paint;
+}
+
+.hero-bg-video .hero-video {
+    will-change: transform;
+}
+
+/* Optimize for hero with image backgrounds */
+.hero-bg-image .hero-image {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+}
+
+/* ===================================================================
+   Accessibility Support
+=================================================================== */
+
+/* Focus management for interactive hero content */
+.hero-section:focus {
+    outline: 2px solid var(--accent-primary, #0EAFFB);
+    outline-offset: 2px;
+}
+
+.hero-section:focus:not(:focus-visible) {
+    outline: none;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .hero-section {
+        border: 2px solid currentColor;
+    }
+
+    .hero-overlay {
+        display: none;
+    }
+}
+
+/* Ensure sufficient contrast for text over backgrounds */
+.hero-bg-image .hero-content-container,
+.hero-bg-video .hero-content-container {
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* ===================================================================
+   Print Styles
+=================================================================== */
+
+@media print {
+    .hero-section {
+        background: white !important;
+        color: black !important;
+        min-height: auto !important;
+        page-break-inside: avoid;
+    }
+
+    .hero-media-container,
+    .hero-overlay {
+        display: none !important;
+    }
+
+    .hero-content-container {
+        position: static;
+        padding: 1rem 0;
+        text-shadow: none;
+    }
+
+    .hero-debug::after {
+        display: none;
+    }
+}
+
+/* ===================================================================
+   Reduced Motion Support
+=================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+    .hero-animated {
+        animation: none;
+        opacity: 1;
+    }
+
+    .hero-animated .hero-content-container,
+    .hero-animated .hero-content-container>* {
+        animation: none;
+        opacity: 1;
+        transform: none;
+    }
+
+    .hero-parallax .hero-image {
+        transform: none;
+        transition: none;
+    }
+
+    .hero-image {
+        transition: none;
+    }
+
+    .hero-overlay {
+        transition: none;
+    }
+}
+
+/* ===================================================================
+   Legacy Browser Support
+=================================================================== */
+
+/* Fallbacks for older browsers */
+@supports not (min-height: 70vh) {
+    .hero-section {
+        min-height: 500px;
+    }
+
+    .hero-medium {
+        min-height: 400px;
+    }
+
+    .hero-large {
+        min-height: 600px;
+    }
+
+    .hero-full {
+        min-height: 100vh;
+    }
+}
+
+@supports not (object-fit: cover) {
+
+    .hero-video,
+    .hero-image {
+        width: 100%;
+        height: 100%;
+    }
+}
+
+@supports not (inset: 0) {
+
+    .hero-media-container,
+    .hero-overlay {
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+    }
+}
+
+/* IE11 specific fixes */
+@media screen and (-ms-high-contrast: active),
+(-ms-high-contrast: none) {
+    .hero-section {
+        display: block;
+    }
+
+    .hero-content-container {
+        display: block;
+        height: auto;
+    }
+}
+
+/* ===================================================================
+   Utility Classes for Advanced Use Cases
+=================================================================== */
+
+/* Hero with fixed attachment (desktop only) */
+.hero-fixed-background {
+    background-attachment: fixed;
+}
+
+@media (max-width: 768px) {
+    .hero-fixed-background {
+        background-attachment: scroll;
+    }
+}
+
+/* Hero with blur effect on background */
+.hero-blur-background .hero-media-container::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    backdrop-filter: blur(2px);
+    z-index: 1;
+}
+
+/* Hero with vignette effect */
+.hero-vignette::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at center,
+            transparent 30%,
+            rgba(0, 0, 0, 0.3) 70%);
+    z-index: 2;
+    pointer-events: none;
+}
+
+/* Hero with scroll indicator */
+.hero-scroll-indicator::after {
+    content: "";
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 2px;
+    height: 2rem;
+    background: var(--accent-primary, #0EAFFB);
+    opacity: 0.7;
+    animation: scrollPulse 2s infinite;
+}
+
+@keyframes scrollPulse {
+
+    0%,
+    100% {
+        opacity: 0.3;
+        transform: translateX(-50%) translateY(0);
+    }
+
+    50% {
+        opacity: 1;
+        transform: translateX(-50%) translateY(10px);
+    }
+}
+
+/* ===================================================================
+   Container Integration
+=================================================================== */
+
+/* Hero content container works seamlessly with Container component */
+.hero-section .container {
+    width: min(var(--container-max-width, 1200px), 100%);
+    margin-inline: auto;
+    padding-inline: var(--spacing-md, 1rem);
+    z-index: 10;
+    position: relative;
+}
+
+/* Ensure container content is properly styled in hero context */
+.hero-section .container h1,
+.hero-section .container h2,
+.hero-section .container h3 {
+    color: var(--text-inverse, var(--off-white));
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.hero-section .container p {
+    color: var(--text-inverse, var(--light-grey));
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* ===================================================================
+   Special Effects
+=================================================================== */
+
+/* Gradient text effect for hero titles */
+.hero-gradient-text {
+    background: linear-gradient(45deg, var(--brand-blue), var(--light-hover));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Glowing effect for hero elements */
+.hero-glow {
+    filter: drop-shadow(0 0 10px rgba(14, 175, 251, 0.3));
+}
+
+/* Floating animation for hero elements */
+.hero-float {
+    animation: heroFloat 6s ease-in-out infinite;
+}
+
+@keyframes heroFloat {
+
+    0%,
+    100% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+}

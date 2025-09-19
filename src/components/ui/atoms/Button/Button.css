@@ -1,0 +1,207 @@
+/* =========================================
+   🎛️ Button (token-aligned, overridable)
+   Matches project tokens & ServiceHero usage
+   API: .btn [primary|secondary] [sm|md|lg]
+========================================= */
+
+/* --------
+   Defaults (can be overridden per-instance)
+   Usage example (Service Hero):
+   .service-hero .service-hero-button {
+     --btn-bg: var(--accent-primary);
+     --btn-fg: var(--off-white);
+   }
+--------- */
+.btn {
+    /* Core, overridable button vars */
+    --btn-bg: var(--accent-primary, #0EAFFB);
+    --btn-fg: var(--off-white, #ffffff);
+    --btn-border: var(--btn-bg);
+    --btn-shadow: var(--shadow-md, 0 6px 18px rgba(0, 0, 0, .25));
+
+    /* Hover/active derived colors (graceful fallback) */
+    --btn-bg-hover: color-mix(in oklab, var(--btn-bg) 88%, white);
+    --btn-fg-hover: var(--btn-fg);
+    --btn-bg-active: color-mix(in oklab, var(--btn-bg) 78%, white);
+    --btn-fg-active: var(--btn-fg);
+
+    /* Motion & radius from system */
+    --btn-transition: var(--transition-standard, .25s ease);
+    --btn-radius: var(--radius-md, .5rem);
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-xs, .5rem);
+    padding: var(--spacing-sm, .75rem) var(--spacing-lg, 1.25rem);
+
+    font-family: var(--font-heading, system-ui, sans-serif);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-radius: var(--btn-radius);
+    text-decoration: none;
+    cursor: pointer;
+
+    transition:
+        background-color var(--btn-transition),
+        color var(--btn-transition),
+        box-shadow var(--btn-transition),
+        transform var(--btn-transition);
+
+    box-shadow: var(--btn-shadow);
+    white-space: nowrap;
+    user-select: none;
+    min-width: 160px;
+    text-align: center;
+    border: 2px solid transparent;
+    will-change: transform, box-shadow;
+}
+
+/* ============================
+   Variants
+============================ */
+
+/* Primary (solid) */
+.btn.primary {
+    background-color: var(--btn-bg);
+    color: var(--btn-fg);
+    border-color: var(--btn-border);
+}
+
+.btn.primary:hover {
+    background-color: var(--btn-bg-hover);
+    color: var(--btn-fg-hover);
+    box-shadow: var(--shadow-lg, 0 10px 30px rgba(0, 0, 0, .3));
+    transform: translateY(-2px);
+}
+
+.btn.primary:active {
+    background-color: var(--btn-bg-active);
+    color: var(--btn-fg-active);
+    transform: translateY(0);
+    box-shadow: var(--shadow-md, 0 6px 18px rgba(0, 0, 0, .25));
+}
+
+/* Secondary (outline → invert on hover) */
+.btn.secondary {
+    background-color: transparent;
+    color: var(--btn-bg);
+    border-color: var(--btn-bg);
+}
+
+.btn.secondary:hover {
+    background-color: var(--btn-bg);
+    color: var(--btn-fg);
+    box-shadow: var(--shadow-lg, 0 10px 30px rgba(0, 0, 0, .3));
+    transform: translateY(-2px);
+}
+
+.btn.secondary:active {
+    background-color: var(--btn-bg-active);
+    color: var(--btn-fg-active);
+    transform: translateY(0);
+    box-shadow: var(--shadow-md, 0 6px 18px rgba(0, 0, 0, .25));
+}
+
+/* ============================
+   Sizes
+============================ */
+
+.btn.sm {
+    padding: var(--spacing-xs, .5rem) var(--spacing-md, 1rem);
+    font-size: var(--text-sm, .95rem);
+}
+
+.btn.md {
+    padding: var(--spacing-sm, .75rem) var(--spacing-lg, 1.25rem);
+    font-size: var(--text-md, 1rem);
+}
+
+.btn.lg {
+    padding: var(--spacing-md, 1rem) var(--spacing-xl, 1.5rem);
+    font-size: var(--text-lg, 1.125rem);
+}
+
+/* ============================
+   States, Focus & A11y
+============================ */
+
+.btn[aria-disabled="true"],
+.btn.disabled {
+    opacity: .5;
+    pointer-events: none;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.btn:focus-visible {
+    outline: 3px solid var(--accent-primary, #0EAFFB);
+    outline-offset: 2px;
+}
+
+/* Optional under‑bar flourish */
+.btn::after {
+    content: "";
+    display: block;
+    width: 0;
+    height: 2px;
+    background: currentColor;
+    transition: width .3s ease;
+    margin-top: 4px;
+}
+
+.btn.primary:hover::after,
+.btn.secondary:hover::after {
+    width: 100%;
+}
+
+/* ============================
+   Theming
+============================ */
+
+/* Dark theme already uses accent + off-white nicely; no override needed */
+.dark .btn.primary {
+    background-color: var(--btn-bg);
+    color: var(--btn-fg);
+}
+
+.dark .btn.secondary {
+    background-color: transparent;
+    color: var(--btn-bg);
+    border-color: var(--btn-bg);
+}
+
+/* High-contrast preference */
+@media (prefers-contrast: high) {
+    .btn {
+        box-shadow: none;
+    }
+
+    .btn.primary,
+    .btn.secondary:hover {
+        border-color: currentColor;
+    }
+}
+
+/* Motion preference */
+@media (prefers-reduced-motion: reduce) {
+    .btn {
+        transition: none;
+    }
+
+    .btn:hover,
+    .btn:active {
+        transform: none;
+    }
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+    .btn {
+        min-width: 140px;
+        font-size: var(--text-md, 1rem);
+        padding: var(--spacing-xs, .5rem) var(--spacing-md, 1rem);
+    }
+}

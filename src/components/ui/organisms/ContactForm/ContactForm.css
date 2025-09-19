@@ -1,0 +1,258 @@
+/* ============================================
+   📩 TBH Contact Form — unified-theme styles
+   - Uses tokens from unified-theme.css
+   - Card-like container, compact spacing
+   - Accessible focus, clear error messaging
+============================================ */
+
+.contactform {
+    width: 100%;
+    max-width: 480px;
+    /* compact form width */
+    background: var(--bg-surface);
+    color: var(--text-primary);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-xs);
+    padding: var(--spacing-lg);
+    display: grid;
+    gap: var(--spacing-md);
+    transition:
+        background-color var(--transition-standard),
+        border-color var(--transition-standard),
+        box-shadow var(--transition-standard);
+}
+
+.contactform:hover {
+    box-shadow: var(--shadow-md);
+}
+
+.contactform-wrapper {
+    display: grid;
+    gap: var(--spacing-md);
+}
+
+/* --------------------------------------------
+   Labels
+-------------------------------------------- */
+.contactform-label {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-small);
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin: 0 0 var(--spacing-xs);
+}
+
+/* --------------------------------------------
+   Inputs / Selects / Textareas
+   (align with unified form recipe)
+-------------------------------------------- */
+.contactform-input,
+.contactform-select,
+.contactform-textarea {
+    width: 100%;
+    background: var(--bg-surface);
+    color: var(--text-primary);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    padding: 0.625rem 0.75rem;
+    /* matches unified inputs */
+    font-family: var(--font-body);
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-normal);
+    transition: border-color var(--transition-fast),
+        box-shadow var(--transition-fast);
+}
+
+.contactform-input::placeholder,
+.contactform-textarea::placeholder {
+    color: var(--text-tertiary, rgba(255, 255, 255, .6));
+}
+
+:where(.contactform-input,
+    .contactform-select,
+    .contactform-textarea):focus {
+    outline: 2px solid var(--accent-primary, var(--brand-blue));
+    outline-offset: 2px;
+    border-color: var(--accent-primary, var(--brand-blue));
+    box-shadow: 0 0 0 2px color-mix(in oklab, var(--accent-primary, var(--brand-blue)) 30%, transparent);
+}
+
+/* Row split (email/phone) */
+.contactform-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-md);
+}
+
+.contactform-half {
+    width: 100%;
+}
+
+/* Textarea sizing */
+.contactform-textarea {
+    min-height: 120px;
+    max-height: 320px;
+    resize: vertical;
+    line-height: var(--line-height-body);
+}
+
+/* --------------------------------------------
+   Validation states (token-based emphasis)
+-------------------------------------------- */
+.contactform-input-error {
+    border-color: var(--accent-primary, var(--brand-blue));
+    box-shadow: 0 0 0 2px color-mix(in oklab, var(--accent-primary, var(--brand-blue)) 30%, transparent);
+}
+
+.contactform-error {
+    font-family: var(--font-body);
+    font-size: var(--font-size-small);
+    color: var(--text-accent);
+    margin-top: var(--spacing-xs);
+}
+
+/* --------------------------------------------
+   Consent checkbox
+-------------------------------------------- */
+.contactform-checkbox {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--spacing-sm);
+    align-items: start;
+}
+
+.contactform-checkbox-input {
+    inline-size: 18px;
+    block-size: 18px;
+    accent-color: var(--accent-primary, var(--brand-blue));
+    cursor: pointer;
+    margin-top: 2px;
+}
+
+.contactform-checkbox-label {
+    font-family: var(--font-body);
+    font-size: var(--font-size-small);
+    color: var(--text-secondary);
+    line-height: var(--line-height-body);
+    cursor: pointer;
+}
+
+.contactform-checkbox-label a {
+    color: var(--accent-primary, var(--brand-blue));
+    text-decoration: underline;
+    transition: color var(--transition-standard);
+}
+
+.contactform-checkbox-label a:hover {
+    color: var(--accent-hover);
+}
+
+/* --------------------------------------------
+   Submit button
+   (works with shared Button; adds safe fallbacks)
+-------------------------------------------- */
+.contactform-button-container {
+    display: flex;
+    justify-content: center;
+}
+
+.contactform-button {
+    width: 100%;
+    /* If your shared Button sets .btn styles, they’ll win.
+     These are gentle fallbacks using tokens. */
+    font-family: var(--font-heading);
+    font-size: var(--font-size-small);
+    font-weight: 700;
+    padding: var(--spacing-sm) var(--spacing-lg);
+    border-radius: var(--radius-md);
+    border: 0;
+    background: var(--accent-primary, var(--brand-blue));
+    color: var(--text-inverse);
+    box-shadow: var(--shadow-sm);
+    transition: background-color var(--transition-fast),
+        transform var(--transition-fast),
+        box-shadow var(--transition-fast);
+}
+
+.contactform-button:hover {
+    background: var(--accent-hover);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+.contactform-button:focus-visible {
+    outline: 2px solid var(--accent-primary, var(--brand-blue));
+    outline-offset: 2px;
+}
+
+.contactform-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* --------------------------------------------
+   Loading / success (token-friendly styles)
+-------------------------------------------- */
+.contactform-loading {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+.contactform-success {
+    text-align: center;
+    padding: var(--spacing-lg);
+    border-radius: var(--radius-lg);
+    background: color-mix(in oklab, var(--accent-primary, var(--brand-blue)) 10%, transparent);
+    border: 1px solid var(--border-subtle);
+    color: var(--text-primary);
+    font-family: var(--font-heading);
+    font-weight: 600;
+}
+
+/* --------------------------------------------
+   Responsive
+-------------------------------------------- */
+@media (max-width: 1024px) {
+    .contactform {
+        max-width: 100%;
+        padding: var(--spacing-lg);
+    }
+}
+
+@media (max-width: 768px) {
+    .contactform {
+        padding: var(--spacing-md);
+        gap: var(--spacing-md);
+    }
+
+    .contactform-row {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-md);
+    }
+}
+
+@media (max-width: 480px) {
+    .contactform {
+        padding: var(--spacing-md);
+    }
+
+    .contactform-textarea {
+        min-height: 100px;
+    }
+}
+
+/* --------------------------------------------
+   Motion preferences
+-------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+
+    .contactform,
+    .contactform-input,
+    .contactform-select,
+    .contactform-textarea,
+    .contactform-button {
+        transition: none !important;
+    }
+}

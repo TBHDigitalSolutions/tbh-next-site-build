@@ -1,0 +1,277 @@
+/* src/components/ui/organisms/ComparisonTable/ComparisonTable.module.css */
+/* Token-driven, responsive, a11y-friendly comparison table
+   - Uses variables from unified services theme (colors, spacing, radii, etc.)
+   - Adds .legend, .legendItem, .footnote, .dense used by the TSX
+   - Replaces non-existent tokens with valid ones from the theme
+*/
+
+/* ============================
+   Wrapper & Section Header
+============================ */
+
+.wrapper {
+    background: transparent;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: var(--spacing-lg);
+}
+
+.title {
+    font-family: var(--font-heading);
+    color: var(--text-accent);
+    font-size: var(--font-size-h4);
+    /* was var(--spacing-2xs); replace with existing token */
+    margin: 0 0 var(--spacing-xs);
+    letter-spacing: 0.3px;
+}
+
+.subtitle {
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+/* Boolean legend (shown only when booleans exist) */
+.legend {
+    display: inline-flex;
+    gap: var(--spacing-sm);
+    align-items: center;
+    justify-content: center;
+    margin-bottom: var(--spacing-sm);
+}
+
+.legendItem {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+}
+
+/* ============================
+   Groups
+============================ */
+
+.group+.group {
+    margin-top: var(--spacing-xl);
+}
+
+.groupTitle {
+    font-family: var(--font-heading);
+    /* var(--font-size-h6) does not exist; use small heading size */
+    font-size: var(--font-size-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    color: var(--text-accent);
+    border-bottom: 2px solid var(--border-subtle);
+    /* was var(--spacing-2xs); replace with existing token */
+    padding-bottom: var(--spacing-xs);
+    margin: 0 0 var(--spacing-md);
+}
+
+/* ============================
+   Desktop / Tablet Table
+============================ */
+
+.tableScroll {
+    overflow: auto;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-subtle);
+    background: var(--bg-surface);
+    box-shadow: var(--shadow-sm);
+}
+
+.table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+/* Sticky header on the scoped table only */
+.table.sticky thead th {
+    position: sticky;
+    top: 0;
+    background: var(--bg-elevated);
+    z-index: var(--z-index-sticky);
+    box-shadow: inset 0 -1px 0 var(--border-subtle);
+}
+
+/* Scoped cell padding (avoid bare selectors in CSS Modules) */
+.table thead th,
+.table tbody td,
+.table tbody th {
+    padding: 12px 14px;
+}
+
+/* Dense mode (compact rows) */
+.dense thead th,
+.dense tbody td,
+.dense tbody th {
+    padding: 8px 10px;
+}
+
+/* Header cells */
+.table thead th {
+    color: var(--text-primary);
+    font-weight: 700;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.featureCol {
+    text-align: left;
+    min-width: 220px;
+}
+
+.tierCol {
+    min-width: 160px;
+}
+
+.tierHeadCell {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    justify-content: center;
+}
+
+.tierName {
+    color: var(--text-accent);
+    font-family: var(--font-heading);
+}
+
+.badge {
+    display: inline-block;
+    padding: 4px 8px;
+    font-size: var(--font-size-xs);
+    border-radius: var(--radius-sm);
+    background: color-mix(in oklab, var(--brand-blue) 22%, transparent);
+    color: var(--text-accent);
+    white-space: nowrap;
+}
+
+/* Zebra striping, scoped */
+.table tbody tr:nth-child(even) td,
+.table tbody tr:nth-child(even) th {
+    background: color-mix(in oklab, var(--bg-surface) 90%, var(--bg-elevated));
+}
+
+.featureName {
+    text-align: left;
+    color: var(--text-primary);
+    font-weight: 600;
+    min-width: 220px;
+}
+
+.help {
+    display: block;
+    font-style: normal;
+    color: var(--text-secondary);
+    font-size: var(--font-size-sm);
+    margin-top: 4px;
+}
+
+/* Optional per-row footnote (rendered under label) */
+.footnote {
+    display: block;
+    margin-top: 2px;
+    font-size: var(--font-size-xs);
+    color: var(--text-tertiary);
+}
+
+.valueCell {
+    text-align: center;
+    color: var(--text-secondary);
+}
+
+/* ✓ / — emphasis */
+.yes {
+    color: var(--success-600, #1d9e54);
+    font-weight: 700;
+}
+
+.no {
+    color: var(--text-tertiary);
+}
+
+/* Highlighted column */
+.highlightCol {
+    background: color-mix(in oklab, var(--brand-blue) 6%, transparent);
+}
+
+/* ============================
+   Mobile Stacked Variant
+============================ */
+
+.mobileList {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .tableScroll {
+        display: none;
+    }
+
+    .mobileList {
+        display: grid;
+        gap: var(--spacing-md);
+    }
+
+    .mobileFeature {
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius-lg);
+        background: var(--bg-surface);
+        padding: var(--spacing-md);
+    }
+
+    .mobileFeatureHead {
+        margin-bottom: var(--spacing-sm);
+    }
+
+    .mobileFeatureName {
+        font-weight: 700;
+        color: var(--text-accent);
+    }
+
+    .mobileFeatureVals {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: grid;
+        gap: 8px;
+    }
+
+    .mobileVal {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--spacing-sm);
+        padding: 10px 0;
+        border-top: 1px solid var(--border-subtle);
+    }
+
+    .mobileVal:first-child {
+        border-top: 0;
+    }
+
+    .mobileTier {
+        font-weight: 600;
+        color: var(--text-primary);
+    }
+
+    .mobileValue {
+        font-weight: 600;
+    }
+
+    /* Keep mobile list clean; no column wash */
+    .highlightCol {
+        background: transparent;
+    }
+}
+
+/* ============================
+   Reduced Motion
+============================ */
+
+@media (prefers-reduced-motion: reduce) {
+    .tableScroll {
+        box-shadow: none;
+    }
+}

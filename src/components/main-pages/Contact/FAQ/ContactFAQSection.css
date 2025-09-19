@@ -1,0 +1,223 @@
+/* ============================================
+   ❓ Contact FAQ Section (TBH Unified Theme)
+   - Dark gradient band with neon-blue accents
+   - Works with Accordion.css (cards variant)
+============================================ */
+
+/* Section band (adds subtle full-bleed lines) */
+.contactfaq {
+    position: relative;
+    width: 100%;
+    padding-block: var(--section-pad-block);
+    background: var(--gradient-section);
+    color: var(--text-primary);
+    border-top: 1px solid var(--border-subtle);
+    border-bottom: 1px solid var(--border-subtle);
+    isolation: isolate;
+}
+
+/* Decorative, soft blue line near the top (like the screenshot) */
+.contactfaq::before {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    inset-block-start: 0.85rem;
+    height: 3px;
+    background: linear-gradient(90deg,
+            transparent,
+            var(--border-accent, var(--brand-blue)),
+            transparent);
+    filter: drop-shadow(0 6px 8px color-mix(in oklab, var(--brand-blue) 30%, transparent));
+    pointer-events: none;
+}
+
+/* Container + Title */
+.contactfaq-header {
+    width: min(calc(100% - 2 * var(--container-pad-inline)), var(--container-max));
+    margin: 0 auto var(--spacing-xl);
+    padding-inline: var(--container-pad-inline);
+    text-align: center;
+}
+
+.contactfaq-title {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-h2);
+    font-weight: 700;
+    color: var(--text-accent);
+    margin: 0;
+    letter-spacing: 0.02em;
+    padding-bottom: var(--spacing-xs);
+    border-bottom: 2px solid var(--border-accent, var(--brand-blue));
+}
+
+/* Blue underline below the title with gentle blur */
+.contactfaq-divider-under-title {
+    width: 80%;
+    height: 3px;
+    margin: var(--spacing-sm) auto var(--spacing-lg);
+    border-radius: var(--radius-sm);
+    background: linear-gradient(90deg,
+            transparent,
+            var(--border-accent, var(--brand-blue)),
+            transparent);
+    filter: drop-shadow(0 3px 6px color-mix(in oklab, var(--brand-blue) 25%, transparent));
+}
+
+/* FAQ list grid */
+.contactfaq-list {
+    width: min(calc(100% - 2 * var(--container-pad-inline)), var(--container-max));
+    margin: 0 auto;
+    padding-inline: var(--container-pad-inline);
+    display: grid;
+    gap: var(--spacing-lg);
+    align-items: stretch;
+}
+
+/* Card shell for each FAQ (works with Accordion markup) */
+.contactfaq-item {
+    background: var(--bg-surface);
+    color: var(--text-primary);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-xl);
+    padding: 0;
+    /* Accordion provides header/content padding */
+    box-shadow: var(--shadow-xs);
+    overflow: clip;
+    transition:
+        transform var(--transition-standard),
+        box-shadow var(--transition-standard),
+        border-color var(--transition-standard);
+}
+
+/* Hover lift & accent */
+.contactfaq-item:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--border-accent, var(--brand-blue));
+}
+
+/* Tighten Accordion internals (scoped to FAQ) */
+.contactfaq-item .accordion-header {
+    padding: var(--spacing-lg);
+}
+
+.contactfaq-item .accordion-title {
+    font-size: var(--font-size-h4);
+    color: var(--text-accent);
+}
+
+.contactfaq-item .accordion-content-inner {
+    padding: 0 var(--spacing-lg) var(--spacing-lg);
+    border-top: 1px solid var(--border-subtle);
+    background: color-mix(in oklab, var(--bg-surface) 92%, transparent);
+}
+
+/* Loading state */
+.contactfaq-loading {
+    width: min(calc(100% - 2 * var(--container-pad-inline)), var(--container-max));
+    margin: var(--spacing-xl) auto;
+    padding-inline: var(--container-pad-inline);
+    display: grid;
+    place-items: center;
+    gap: var(--spacing-sm);
+    color: var(--text-secondary);
+}
+
+.contactfaq-loading .spinner {
+    inline-size: 28px;
+    block-size: 28px;
+    border-radius: var(--radius-full);
+    border: 2px solid var(--border-subtle);
+    border-top-color: var(--accent-primary, var(--brand-blue));
+    animation: spin 0.9s linear infinite;
+}
+
+/* Empty state (no results) */
+.contactfaq-empty {
+    width: min(calc(100% - 2 * var(--container-pad-inline)), var(--container-max));
+    margin: var(--spacing-xl) auto;
+    padding-inline: var(--container-pad-inline);
+    display: grid;
+    place-items: center;
+    text-align: center;
+    gap: var(--spacing-sm);
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-xs);
+    padding: var(--spacing-xl);
+}
+
+.contactfaq-empty .empty-icon {
+    font-size: clamp(1.75rem, 1.2rem + 1.5vw, 2.25rem);
+    color: var(--text-accent);
+    line-height: 1;
+}
+
+.contactfaq-empty .empty-message {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: var(--font-size-body);
+    color: var(--text-secondary);
+}
+
+/* Full-bleed bottom divider (matches screenshot) */
+.contactfaq-divider-bottom {
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+    height: 3px;
+    background: linear-gradient(90deg,
+            transparent,
+            var(--border-accent, var(--brand-blue)),
+            transparent);
+    filter: drop-shadow(0 -3px 6px color-mix(in oklab, var(--brand-blue) 25%, transparent));
+}
+
+/* Responsive tweaks */
+@media (max-width: 1024px) {
+    .contactfaq-title {
+        font-size: var(--font-size-h3);
+    }
+
+    .contactfaq-list {
+        gap: var(--spacing-md);
+    }
+}
+
+@media (max-width: 768px) {
+    .contactfaq {
+        padding-block: var(--section-pad-block);
+    }
+
+    .contactfaq-divider-under-title {
+        width: 92%;
+    }
+}
+
+@media (max-width: 480px) {
+    .contactfaq-item .accordion-header {
+        padding: var(--spacing-md);
+    }
+
+    .contactfaq-item .accordion-content-inner {
+        padding: 0 var(--spacing-md) var(--spacing-md);
+    }
+}
+
+/* Motion */
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .contactfaq *,
+    .contactfaq-divider-under-title,
+    .contactfaq-divider-bottom {
+        transition: none !important;
+        animation: none !important;
+    }
+}

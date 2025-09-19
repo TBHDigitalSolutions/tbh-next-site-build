@@ -1,0 +1,122 @@
+/* ============================
+   🏭 TBH Industries Grid - Brand Aligned
+============================ */
+
+.industries-section {
+    width: 100%;
+    padding: var(--section-padding-major) 0;
+    background: var(--gradient-section);
+    border-bottom: var(--section-border-bottom);
+    text-align: center;
+    transition: background-color var(--transition-standard), color var(--transition-standard);
+}
+
+/* ✅ Industries Section Title - TBH Brand */
+.industries-title {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-h2);
+    font-weight: 600;
+    color: var(--text-accent);
+    text-transform: uppercase;
+    margin-bottom: var(--section-title-margin-bottom);
+    border-bottom: var(--section-title-border);
+    padding-bottom: var(--section-title-padding-bottom);
+    display: inline-block;
+    text-align: center;
+}
+
+/* ✅ Industries Description - TBH Brand */
+.industries-description {
+    font-family: var(--font-body);
+    font-size: var(--font-size-body);
+    color: var(--text-secondary);
+    max-width: var(--content-max-width);
+    margin: 0 auto var(--spacing-xl);
+    line-height: var(--line-height-body);
+    text-align: center;
+}
+
+/* ============================
+   🗂️ Industries Grid Layout - TBH Standards
+============================ */
+
+.industries-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--card-gap);
+    max-width: var(--container-max-width);
+    margin: 0 auto;
+    padding: 0 var(--spacing-md);
+    align-items: start;
+    /* Ensures cards align at top and grow naturally */
+}
+
+/* ============================
+   📱 TBH Responsive Breakpoints
+============================ */
+
+/* Large Desktop */
+@media (min-width: 1280px) {
+    .industries-grid {
+        grid-template-columns: repeat(4, 1fr);
+        /* Four columns on large screens */
+    }
+}
+
+/* Desktop */
+@media (min-width: 1024px) and (max-width: 1279px) {
+    .industries-grid {
+        grid-template-columns: repeat(3, 1fr);
+        /* Three columns on desktop */
+        gap: var(--spacing-lg);
+    }
+}
+
+/* Tablet */
+@media (max-width: 1024px) {
+    .industries-section {
+        padding: var(--spacing-xl) 0;
+    }
+
+    .industries-title {
+        font-size: var(--font-size-h2-mobile);
+    }
+
+    .industries-grid {
+        grid-template-columns: repeat(2, 1fr);
+        /* Two columns on tablet */
+        gap: var(--spacing-lg);
+    }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    .industries-section {
+        padding: var(--spacing-lg) 0;
+    }
+
+    .industries-title {
+        font-size: var(--font-size-h2-mobile);
+        margin-bottom: var(--spacing-md);
+    }
+
+    .industries-description {
+        margin-bottom: var(--spacing-lg);
+        padding: 0 var(--mobile-padding);
+    }
+
+    .industries-grid {
+        grid-template-columns: 1fr;
+        /* Single column on mobile */
+        gap: var(--spacing-md);
+        padding: 0 var(--mobile-padding);
+    }
+}
+
+/* Small Mobile */
+@media (max-width: 480px) {
+    .industries-grid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-sm);
+    }
+}

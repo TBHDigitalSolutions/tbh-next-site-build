@@ -1,0 +1,630 @@
+/* /src/portfolio/templates/PortfolioCategoryTemplate/PortfolioCategoryTemplate.module.css */
+
+/* -------------------------------------------------------------------------- */
+/* Root & Tokens                                                              */
+/* -------------------------------------------------------------------------- */
+
+.categoryPageClient {
+    display: flex;
+    flex-direction: column;
+    gap: 4rem;
+    width: 100%;
+    min-height: 100vh;
+    background: var(--color-bg-surface, #ffffff);
+    color: var(--color-text-primary, #0b1020);
+}
+
+/* -------------------------------------------------------------------------- */
+/* Hero                                                                       */
+/* -------------------------------------------------------------------------- */
+
+.heroSection {
+    background: linear-gradient(135deg, var(--color-bg-surface, #ffffff) 0%, var(--color-bg-muted, #f6f7f8) 100%);
+    position: relative;
+    isolation: isolate;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Search                                                                     */
+/* -------------------------------------------------------------------------- */
+
+.searchSection {
+    background: var(--color-bg-surface, #ffffff);
+    border-bottom: 1px solid var(--color-border-subtle, #e5e7eb);
+}
+
+/* -------------------------------------------------------------------------- */
+/* Main Content                                                               */
+/* -------------------------------------------------------------------------- */
+
+.contentSection {
+    background: var(--color-bg-surface, #ffffff);
+    padding: clamp(2rem, 4vw, 4rem) 0;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Section Headers                                                            */
+/* -------------------------------------------------------------------------- */
+
+.sectionHeader {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.sectionTitle {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: var(--color-text-primary, #111827);
+    line-height: 1.2;
+}
+
+.sectionSubtitle {
+    font-size: 1.125rem;
+    color: var(--color-text-secondary, #6b7280);
+    max-width: 42rem;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Portfolio Section                                                          */
+/* -------------------------------------------------------------------------- */
+
+.portfolioSection {
+    margin-bottom: 4rem;
+}
+
+.galleryContainer {
+    margin-top: 2rem;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Metrics                                                                    */
+/* -------------------------------------------------------------------------- */
+
+.metricsSection {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.25rem;
+    margin: clamp(1.5rem, 3vw, 3rem) 0;
+    padding: clamp(1rem, 2.5vw, 2rem);
+    background: var(--color-bg-muted, #f6f7f8);
+    border-radius: 1rem;
+    border: 1px solid var(--color-border-subtle, #e5e7eb);
+}
+
+.metric {
+    text-align: center;
+}
+
+.metricValue {
+    display: block;
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 800;
+    color: var(--color-accent-primary, #3b82f6);
+    line-height: 1.1;
+}
+
+.metricLabel {
+    display: block;
+    margin-top: 0.25rem;
+    color: var(--color-text-secondary, #6b7280);
+    font-size: 0.8125rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Empty State                                                                */
+/* -------------------------------------------------------------------------- */
+
+.emptyState {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: var(--color-bg-muted, #f9fafb);
+    border-radius: 1rem;
+    border: 2px dashed var(--color-border-subtle, #e5e7eb);
+}
+
+.emptyStateContent h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: var(--color-text-primary, #111827);
+}
+
+.emptyStateContent p {
+    color: var(--color-text-secondary, #6b7280);
+    margin-bottom: 2rem;
+}
+
+.contactLink {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    background: var(--color-accent-primary, #3b82f6);
+    color: white;
+    text-decoration: none;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    transition: background-color 0.2s ease;
+}
+
+.contactLink:hover {
+    background: var(--color-accent-primary-dark, #2563eb);
+}
+
+/* -------------------------------------------------------------------------- */
+/* Tools Section                                                              */
+/* -------------------------------------------------------------------------- */
+
+.toolsSection {
+    margin-bottom: 4rem;
+}
+
+.singleTool {
+    max-width: 1024px;
+    margin: 0 auto;
+}
+
+.toolsTabs {
+    max-width: 1024px;
+    margin: 0 auto;
+}
+
+.tabList {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid var(--color-border-subtle, #e5e7eb);
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.tabList::-webkit-scrollbar {
+    display: none;
+}
+
+.tabButton {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: var(--color-text-secondary, #6b7280);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.tabButton:hover {
+    color: var(--color-text-primary, #111827);
+    background: var(--color-bg-muted, #f9fafb);
+}
+
+.tabButton.active {
+    color: var(--color-accent-primary, #3b82f6);
+    border-bottom-color: var(--color-accent-primary, #3b82f6);
+}
+
+.tabBadge {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+    background: var(--color-accent-light, #dbeafe);
+    color: var(--color-accent-primary, #3b82f6);
+    border-radius: 0.25rem;
+    font-weight: 600;
+}
+
+.tabPanel {
+    display: none;
+}
+
+.tabPanel.active {
+    display: block;
+}
+
+.toolCard {
+    background: white;
+    border: 1px solid var(--color-border-subtle, #e5e7eb);
+    border-radius: 1rem;
+    padding: 2rem;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+}
+
+.toolHeader {
+    margin-bottom: 2rem;
+    position: relative;
+}
+
+.toolTitle {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--color-text-primary, #111827);
+}
+
+.toolDescription {
+    color: var(--color-text-secondary, #6b7280);
+    line-height: 1.6;
+    margin-bottom: 1rem;
+}
+
+.toolBadge {
+    display: inline-block;
+    font-size: 0.75rem;
+    padding: 0.25rem 0.75rem;
+    background: var(--color-success-light, #dcfce7);
+    color: var(--color-success, #16a34a);
+    border-radius: 1rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+}
+
+.toolComponent {
+    border-top: 1px solid var(--color-border-subtle, #e5e7eb);
+    padding-top: 2rem;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Case Studies Section                                                       */
+/* -------------------------------------------------------------------------- */
+
+.caseStudiesSection {
+    margin-bottom: 4rem;
+}
+
+.caseStudiesGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.caseStudyCard {
+    background: white;
+    border: 1px solid var(--color-border-subtle, #e5e7eb);
+    border-radius: 1rem;
+    padding: 2rem;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+}
+
+.caseStudyCard:hover {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+.caseStudyLogo {
+    margin-bottom: 1.5rem;
+    height: 3rem;
+}
+
+.caseStudyLogo img {
+    height: 100%;
+    width: auto;
+    object-fit: contain;
+}
+
+.caseStudyContent {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.caseStudyTitle {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--color-text-primary, #111827);
+    margin: 0;
+}
+
+.caseStudyClient {
+    font-weight: 500;
+    color: var(--color-accent-primary, #3b82f6);
+    margin: 0;
+}
+
+.caseStudySummary {
+    color: var(--color-text-secondary, #6b7280);
+    line-height: 1.6;
+    margin: 0;
+}
+
+.caseStudyMetrics {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1.5rem;
+    background: var(--color-bg-muted, #f9fafb);
+    border-radius: 0.5rem;
+    margin: 1rem 0;
+}
+
+.primaryMetric {
+    text-align: center;
+}
+
+.secondaryMetrics {
+    display: flex;
+    justify-content: space-around;
+    gap: 1rem;
+}
+
+.secondaryMetric {
+    text-align: center;
+    flex: 1;
+}
+
+.metricValue {
+    display: block;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--color-accent-primary, #3b82f6);
+    line-height: 1;
+}
+
+.secondaryMetric .metricValue {
+    font-size: 1.5rem;
+}
+
+.metricLabel {
+    display: block;
+    font-size: 0.875rem;
+    color: var(--color-text-secondary, #6b7280);
+    margin-top: 0.25rem;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+    font-weight: 500;
+}
+
+.caseStudyLink {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--color-accent-primary, #3b82f6);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s ease;
+    margin-top: auto;
+}
+
+.caseStudyLink:hover {
+    color: var(--color-accent-primary-dark, #2563eb);
+}
+
+.linkIcon {
+    width: 1rem;
+    height: 1rem;
+    transition: transform 0.2s ease;
+}
+
+.caseStudyLink:hover .linkIcon {
+    transform: translateX(2px);
+}
+
+/* -------------------------------------------------------------------------- */
+/* Packages and CTA Sections                                                 */
+/* -------------------------------------------------------------------------- */
+
+.packagesSection,
+.ctaSection {
+    margin-bottom: 4rem;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Legacy Support (for template compatibility)                               */
+/* -------------------------------------------------------------------------- */
+
+.template {
+    /* Maintain compatibility with existing template structure */
+    min-height: 100vh;
+    background: var(--color-bg-surface, #ffffff);
+    color: var(--color-text-primary, #0b1020);
+}
+
+.emptyStateTitle {
+    margin: 0 0 0.5rem 0;
+    font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+    font-weight: 700;
+    color: var(--color-text-primary, #111827);
+}
+
+.emptyStateText {
+    margin: 0 0 1.25rem 0;
+    color: var(--color-text-secondary, #6b7280);
+    max-width: 36rem;
+    line-height: 1.55;
+}
+
+.emptyStateCTA {
+    appearance: none;
+    border: 0;
+    outline: 0;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    border-radius: 0.625rem;
+    background: var(--color-accent-primary, #3b82f6);
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.9375rem;
+    transition: transform 160ms ease, box-shadow 160ms ease, background-color 160ms ease;
+}
+
+.emptyStateCTA:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(59, 130, 246, 0.25);
+}
+
+.emptyStateCTA:focus-visible {
+    outline: 3px solid rgba(59, 130, 246, 0.45);
+    outline-offset: 2px;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Responsive Design                                                          */
+/* -------------------------------------------------------------------------- */
+
+@media (max-width: 1024px) {
+    .categoryPageClient {
+        gap: 3rem;
+    }
+
+    .metricsSection {
+        gap: 1rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .categoryPageClient {
+        gap: 3rem;
+    }
+
+    .sectionTitle {
+        font-size: 2rem;
+    }
+
+    .sectionSubtitle {
+        font-size: 1rem;
+    }
+
+    .tabList {
+        gap: 0.25rem;
+    }
+
+    .tabButton {
+        padding: 0.5rem 1rem;
+        font-size: 0.875rem;
+    }
+
+    .toolCard {
+        padding: 1.5rem;
+    }
+
+    .caseStudiesGrid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .secondaryMetrics {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .metricValue {
+        font-size: 1.5rem;
+    }
+
+    .secondaryMetric .metricValue {
+        font-size: 1.25rem;
+    }
+
+    .metricsSection {
+        grid-template-columns: repeat(2, 1fr);
+        padding: 1rem;
+    }
+}
+
+@media (max-width: 640px) {
+    .sectionHeader {
+        margin-bottom: 1.5rem;
+    }
+
+    .metricsSection {
+        grid-template-columns: repeat(2, 1fr);
+        padding: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .emptyState {
+        padding: 2rem 1rem;
+    }
+
+    .toolCard {
+        padding: 1rem;
+    }
+
+    .caseStudyCard {
+        padding: 1.5rem;
+    }
+}
+
+/* -------------------------------------------------------------------------- */
+/* Accessibility & Focus States                                               */
+/* -------------------------------------------------------------------------- */
+
+.tabButton:focus-visible,
+.contactLink:focus-visible,
+.caseStudyLink:focus-visible {
+    outline: 2px solid var(--color-accent-primary, #3b82f6);
+    outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+
+    .caseStudyCard,
+    .toolCard {
+        border-width: 2px;
+    }
+
+    .tabButton.active {
+        border-bottom-width: 3px;
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+
+    .caseStudyCard,
+    .tabButton,
+    .contactLink,
+    .caseStudyLink,
+    .linkIcon,
+    .emptyStateCTA {
+        transition: none;
+        transform: none;
+    }
+
+    .caseStudyCard:hover,
+    .contactLink:hover,
+    .emptyStateCTA:hover {
+        transform: none;
+    }
+
+    .caseStudyLink:hover .linkIcon {
+        transform: none;
+    }
+}
+
+/* -------------------------------------------------------------------------- */
+/* Print styles                                                               */
+/* -------------------------------------------------------------------------- */
+
+@media print {
+
+    .heroSection,
+    .searchSection,
+    .ctaSection {
+        display: none !important;
+    }
+
+    .contentSection {
+        padding: 0;
+    }
+
+    .caseStudyCard,
+    .toolCard {
+        border: 1px solid var(--color-border-subtle, #e5e7eb);
+        break-inside: avoid;
+    }
+}

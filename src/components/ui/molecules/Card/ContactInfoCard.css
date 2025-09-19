@@ -1,0 +1,157 @@
+/* ============================================
+   🃏 Contact Info Card — TBH Unified Theme
+   Layout: icon top-center, text centered below
+============================================ */
+
+.contact-info-card {
+    background: var(--bg-surface);
+    color: var(--text-primary);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-xs);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-md);
+    text-align: center;
+
+    padding: var(--spacing-xl);
+    min-width: 0;
+    /* prevent inner overflow in flex/grid parents */
+
+    transition:
+        transform var(--transition-fast),
+        border-color var(--transition-fast),
+        box-shadow var(--transition-fast),
+        background-color var(--transition-fast),
+        color var(--transition-fast);
+}
+
+.contact-info-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--border-accent, var(--brand-blue));
+}
+
+/* Icon (top, centered) */
+.contact-info-box1 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.contact-info-icon {
+    inline-size: clamp(3.25rem, 2.5rem + 2vw, 4rem);
+    block-size: clamp(3.25rem, 2.5rem + 2vw, 4rem);
+    border-radius: var(--radius-full);
+    display: grid;
+    place-items: center;
+
+    background: color-mix(in oklab, var(--brand-blue) 18%, transparent);
+    color: var(--text-inverse);
+    font-size: var(--font-size-large);
+    box-shadow: var(--shadow-sm);
+}
+
+/* Content (centered) */
+.contact-info-box2 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-sm);
+    width: 100%;
+    min-width: 0;
+    /* allow text to wrap */
+}
+
+/* Title — keep single line on desktop, allow wrap on small screens */
+.contact-info-title {
+    font-family: var(--font-heading);
+    font-size: clamp(var(--font-size-h5), 0.9rem + 0.9vw, var(--font-size-h4));
+    font-weight: 700;
+    color: var(--text-accent);
+    margin: 0;
+    line-height: var(--line-height-heading);
+    white-space: nowrap;
+    /* ← no wrap on wider screens */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    /* safety if space becomes tight */
+}
+
+/* Accent divider under title */
+.contact-info-card-divider {
+    width: 120px;
+    height: 3px;
+    border-radius: var(--radius-full);
+    background: linear-gradient(90deg,
+            transparent,
+            var(--border-accent, var(--brand-blue)),
+            transparent);
+    filter: drop-shadow(0 3px 6px color-mix(in oklab, var(--brand-blue) 25%, transparent));
+}
+
+/* Description */
+.contact-info-description {
+    font-family: var(--font-body);
+    font-size: var(--font-size-body);
+    color: var(--text-secondary);
+    line-height: var(--line-height-body);
+    margin: 0;
+    max-width: 60ch;
+}
+
+/* Details (email/phone/link) — wrap long strings inside the card */
+.contact-info-details {
+    display: block;
+    /* block so max-width applies */
+    max-width: 100%;
+    font-family: var(--font-heading);
+    font-size: var(--font-size-small);
+    font-weight: 700;
+    color: var(--accent-primary, var(--brand-blue));
+    text-decoration: underline;
+    text-underline-offset: 2px;
+
+    /* keep long, unbroken strings (emails/URLs) inside the card */
+    overflow-wrap: anywhere;
+    /* modern: breaks anywhere if needed */
+    word-break: break-word;
+    /* fallback for Safari/older engines */
+}
+
+.contact-info-details:hover {
+    color: var(--accent-hover);
+}
+
+.contact-info-details:focus-visible {
+    outline: 2px solid var(--accent-primary, var(--brand-blue));
+    outline-offset: 2px;
+    border-radius: var(--radius-sm);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .contact-info-card {
+        padding: var(--spacing-lg);
+    }
+
+    .contact-info-title {
+        white-space: normal;
+        /* allow wrap on small screens */
+        text-overflow: clip;
+    }
+
+    .contact-info-card-divider {
+        width: 96px;
+    }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    .contact-info-card {
+        transition: none !important;
+    }
+}

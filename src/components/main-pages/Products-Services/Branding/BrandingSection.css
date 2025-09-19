@@ -1,0 +1,124 @@
+/* ============================
+   ✅ Branding Section Styles
+============================ */
+
+.branding-section {
+    padding: var(--spacing-xl) 0;
+    background: var(--background-light);
+    transition: background 0.3s ease-in-out;
+}
+
+.dark .branding-section {
+    background: var(--background-dark);
+}
+
+/* ✅ Container */
+.branding-container {
+    max-width: var(--container-max-width);
+    margin: 0 auto;
+    padding: 0 var(--spacing-md);
+    text-align: center;
+}
+
+/* ✅ Section Title */
+.branding-title {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-h2);
+    font-weight: bold;
+    color: var(--color-soft-black);
+}
+
+.dark .branding-title {
+    color: var(--color-off-white);
+}
+
+/* ✅ Section Description */
+.branding-description {
+    font-family: var(--font-body);
+    font-size: var(--font-size-body);
+    color: var(--color-dark-charcoal);
+    margin-top: var(--spacing-xs);
+}
+
+.dark .branding-description {
+    color: var(--color-light-grey);
+}
+
+/* ✅ Branding Content */
+.branding-content {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-lg);
+    margin-top: var(--spacing-lg);
+}
+
+@media (min-width: 768px) {
+    .branding-content {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* ✅ Features List */
+.branding-features {
+    text-align: left;
+}
+
+.branding-features-title {
+    font-size: var(--font-size-h3);
+    font-weight: 600;
+    color: var(--color-soft-black);
+}
+
+.dark .branding-features-title {
+    color: var(--color-off-white);
+}
+
+.branding-features-list {
+    margin-top: var(--spacing-sm);
+    list-style: none;
+    padding: 0;
+}
+
+.branding-feature-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    margin-bottom: var(--spacing-xs);
+}
+
+.branding-feature-icon {
+    color: var(--color-accent);
+    font-size: var(--icon-size-lg);
+}
+
+.branding-feature-text {
+    font-size: var(--font-size-body);
+    color: var(--color-dark-charcoal);
+}
+
+.dark .branding-feature-text {
+    color: var(--color-light-grey);
+}
+
+/* ✅ Branding Image */
+.branding-image-wrapper {
+    display: flex;
+    justify-content: center;
+}
+
+.branding-image {
+    width: 100%;
+    max-width: 500px;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-light);
+    transition: box-shadow var(--transition-default);
+}
+
+.dark .branding-image {
+    box-shadow: var(--shadow-dark);
+}
+
+/* ✅ CTA Button */
+.branding-cta {
+    margin-top: var(--spacing-lg);
+}

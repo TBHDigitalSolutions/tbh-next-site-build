@@ -1,0 +1,146 @@
+/video-production-services
+├── pre-production
+│   ├── concept-development
+│   │   ├── creative-brainstorming-ideation
+│   │   ├── brand-alignment-messaging-strategy
+│   │   ├── target-audience-analysis
+│   │   └── creative-brief-development
+│   ├── scripting-storyboarding
+│   │   ├── script-writing-dialogue-creation
+│   │   ├── visual-storyboard-development
+│   │   ├── shot-list-planning
+│   │   └── narrative-structure-design
+│   ├── location-scouting-permits
+│   │   ├── location-research-selection
+│   │   ├── site-visits-technical-assessments
+│   │   ├── permit-acquisition-legal-compliance
+│   │   └── backup-location-planning
+│   ├── talent-casting-crew
+│   │   ├── talent-sourcing-auditions
+│   │   ├── professional-crew-assembly
+│   │   ├── equipment-specialist-coordination
+│   │   └── union-contractor-management
+│   └── production-scheduling
+│       ├── timeline-development-milestones
+│       ├── resource-allocation-planning
+│       ├── budget-breakdown-tracking
+│       └── contingency-planning
+├── production
+│   ├── corporate-videos
+│   │   ├── company-overviews-culture-videos
+│   │   ├── executive-communications
+│   │   ├── internal-announcements
+│   │   └── brand-storytelling-content
+│   ├── brand-films
+│   │   ├── cinematic-brand-narratives
+│   │   ├── emotional-storytelling-pieces
+│   │   ├── brand-documentary-content
+│   │   └── lifestyle-aspirational-videos
+│   ├── testimonials-interviews
+│   │   ├── customer-success-stories
+│   │   ├── expert-interviews-thought-leadership
+│   │   ├── case-study-video-production
+│   │   └── employee-spotlight-features
+│   ├── event-coverage-live
+│   │   ├── conference-seminar-filming
+│   │   ├── live-streaming-production
+│   │   ├── awards-ceremony-coverage
+│   │   └── workshop-training-documentation
+│   ├── explainers
+│   │   ├── product-demonstration-videos
+│   │   ├── process-explanation-content
+│   │   ├── educational-how-to-videos
+│   │   └── animated-explainer-production
+│   ├── product-launches
+│   │   ├── launch-event-documentation
+│   │   ├── product-reveal-videos
+│   │   ├── behind-the-scenes-content
+│   │   └── multi-angle-product-showcases
+│   └── training-videos
+│       ├── employee-onboarding-content
+│       ├── skills-training-modules
+│       ├── compliance-safety-videos
+│       └── interactive-training-materials
+├── post-production
+│   ├── editing-narrative
+│   │   ├── story-structure-pacing
+│   │   ├── multi-camera-editing
+│   │   ├── interview-dialogue-editing
+│   │   └── b-roll-integration-sequencing
+│   ├── color-grading-audio
+│   │   ├── professional-color-correction
+│   │   ├── cinematic-color-grading
+│   │   ├── audio-mixing-mastering
+│   │   └── sound-design-music-integration
+│   ├── motion-graphics-animation
+│   │   ├── title-sequences-lower-thirds
+│   │   ├── animated-graphics-transitions
+│   │   ├── data-visualization-infographics
+│   │   └── logo-animations-brand-elements
+│   └── versioning-delivery
+│       ├── platform-specific-formatting
+│       ├── multiple-aspect-ratio-versions
+│       ├── file-optimization-compression
+│       └── quality-assurance-final-delivery
+├── distribution
+│   ├── social-media-content
+│   │   ├── platform-optimized-vertical-formats
+│   │   ├── instagram-stories-reels
+│   │   ├── tiktok-short-form-content
+│   │   └── linkedin-professional-networks
+│   ├── ad-kits
+│   │   ├── meta-advertising-formats
+│   │   ├── youtube-preroll-display-ads
+│   │   ├── tiktok-advertising-content
+│   │   └── linkedin-sponsored-content
+│   ├── ctv-youtube
+│   │   ├── connected-tv-campaign-content
+│   │   ├── youtube-channel-optimization
+│   │   ├── long-form-streaming-content
+│   │   └── premium-video-advertising
+│   ├── multi-platform-optimization
+│   │   ├── cross-platform-content-strategy
+│   │   ├── format-aspect-ratio-optimization
+│   │   ├── platform-specific-best-practices
+│   │   └── content-calendar-coordination
+│   └── analytics-performance
+│       ├── video-performance-tracking
+│       ├── engagement-metrics-analysis
+│       ├── roi-measurement-reporting
+│       └── optimization-recommendations
+└── premium-packages
+    ├── social-content-pack
+    │   ├── multi-format-social-media-suite
+    │   ├── platform-specific-optimizations
+    │   ├── content-calendar-integration
+    │   └── performance-tracking-included
+    ├── video-ads-package
+    │   ├── complete-advertising-campaign-suite
+    │   ├── multiple-ad-format-variations
+    │   ├── ab-testing-versions
+    │   └── campaign-performance-analysis
+    ├── ecommerce-product-kit
+    │   ├── product-demonstration-videos
+    │   ├── 360-degree-product-showcases
+    │   ├── lifestyle-usage-scenarios
+    │   └── cross-platform-optimization
+    ├── event-content-package
+    │   ├── full-event-documentation
+    │   ├── highlight-reels-recap-videos
+    │   ├── social-media-content-suite
+    │   └── speaker-session-breakouts
+    ├── thought-leadership-series
+    │   ├── multi-episode-content-creation
+    │   ├── consistent-branding-format
+    │   ├── distribution-strategy-planning
+    │   └── audience-engagement-tracking
+    ├── training-onboarding-pack
+    │   ├── comprehensive-training-modules
+    │   ├── interactive-learning-components
+    │   ├── assessment-quiz-integration
+    │   └── learning-management-system-compatibility
+    └── distribution-analytics
+        ├── premium-multi-platform-distribution
+        ├── advanced-analytics-reporting
+        ├── performance-optimization-services
+        └── ongoing-content-strategy-support

@@ -1,0 +1,337 @@
+/* ============================
+   🌐 TBH Digital Solutions - Global Layout Styles
+   Purpose: page chrome only + full-bleed utilities (no hero styles)
+   Tokens: src/styles/unified-theme.css
+   Notes:
+   - Single scroll owner (document)
+   - Fixed header with responsive height tokens
+   - Sticky footer via body flex in globals.css
+============================ */
+
+/* ============================
+   Document-Only Scrolling
+============================ */
+html,
+body {
+    height: 100%;
+    overflow-x: hidden;
+    /* Prevent horizontal scroll */
+}
+
+body.app-shell {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: visible;
+    /* CRITICAL: No scroll container here */
+}
+
+/* ============================
+   Page Chrome (Header/Footer)
+============================ */
+.header-section,
+.footer-section {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.header-section {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: var(--z-index-high, 100);
+    background: var(--bg-elevated);
+    box-shadow: var(--shadow-sm);
+    height: var(--header-height, 80px);
+    backdrop-filter: var(--backdrop-header, none);
+    transition:
+        background-color var(--transition-standard),
+        box-shadow var(--transition-standard);
+    /* Safe-area support for iOS notch */
+    padding-inline: max(0px, env(safe-area-inset-left));
+    padding-block-start: max(0px, env(safe-area-inset-top));
+    will-change: background-color, box-shadow;
+    overflow: visible;
+    /* No scrollbar */
+}
+
+.footer-section {
+    flex-shrink: 0;
+    background: var(--gradient-section);
+    margin-top: auto;
+    /* works with body flex column */
+    padding: var(--spacing-lg) 0;
+    border-top: 1px solid var(--border-subtle);
+    overflow: visible;
+    /* No scrollbar */
+}
+
+/* ============================
+   Main Content Section
+============================ */
+.main-content-section {
+    flex: 1 0 auto;
+    /* sticky footer pattern */
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 0;
+
+    /* Account for fixed header (+ safe area) */
+    padding-top: calc(var(--header-height, 80px) + env(safe-area-inset-top, 0px));
+
+    background: var(--bg-primary);
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+
+    /* CRITICAL: Never create scroll container */
+    overflow: visible !important;
+}
+
+/* ============================
+   Full-Width / Full-Bleed Utilities (generic)
+   (Heroes should use their own CSS; these are neutral helpers)
+============================ */
+.full-width-section,
+.full-width-section-full-bleed,
+.breakout {
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+    position: relative;
+    isolation: isolate;
+    overflow: visible;
+    /* No scroll containers */
+}
+
+/* Constrain content inside a full-bleed section */
+.full-width-section .container {
+    width: min(calc(100% - 2 * var(--container-pad-inline)), var(--container-max));
+    margin-inline: auto;
+    padding-inline: var(--container-pad-inline);
+    position: relative;
+    z-index: 10;
+}
+
+/* ============================
+   Section Rhythm & Spacing (opt-in classes)
+============================ */
+.content-section {
+    width: 100%;
+    padding-block: var(--section-pad-block);
+    background: var(--gradient-section);
+}
+
+.content-section-major {
+    padding-block: var(--section-pad-block-lg);
+}
+
+.section-padding {
+    padding-block: var(--section-pad-block);
+}
+
+.section-major {
+    padding-block: var(--section-pad-block-lg);
+}
+
+section+section {
+    margin-top: 0;
+    /* no double gaps */
+}
+
+/* ============================
+   Container System (generic)
+============================ */
+.container {
+    width: min(calc(100% - 2 * var(--container-pad-inline)), var(--container-max));
+    margin-inline: auto;
+    padding-inline: var(--container-pad-inline);
+    box-sizing: border-box;
+    overflow: visible;
+    /* No scrollbar */
+}
+
+/* Narrow/wide helpers (sane defaults; override per page if needed) */
+.container-narrow {
+    max-width: 800px;
+}
+
+.container-wide {
+    max-width: 1320px;
+}
+
+.container-full {
+    max-width: 100%;
+}
+
+/* ============================
+   Prevent Accidental Scroll Containers
+============================ */
+.main-content-wrapper,
+.services-container,
+.main-content-child-section,
+.content-section,
+.section-padding,
+.full-width-section-content {
+    overflow: visible !important;
+}
+
+/* Legacy helpers (compat) - Prefer Container component over these */
+.main-content-child-section,
+.services-container {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    display: block;
+    background: var(--bg-primary);
+}
+
+/* ============================
+   Accessibility
+============================ */
+*:focus {
+    outline: 2px solid var(--accent-primary, var(--brand-blue));
+    outline-offset: 2px;
+}
+
+*:focus:not(:focus-visible) {
+    outline: none;
+}
+
+/* Skip link */
+.skip-link {
+    position: absolute;
+    inset-block-start: -40px;
+    inset-inline-start: 6px;
+    background: var(--bg-elevated);
+    color: var(--text-primary);
+    padding: 8px;
+    text-decoration: none;
+    border-radius: var(--radius-sm);
+    z-index: var(--z-index-high, 100);
+    transition: inset-block-start var(--transition-standard);
+}
+
+.skip-link:focus {
+    inset-block-start: 6px;
+}
+
+/* ============================
+   Themed Scrollbar (Document-Level Only)
+============================ */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--border-subtle);
+    border-radius: var(--radius-sm);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-primary, var(--brand-blue));
+}
+
+/* ============================
+   Responsive Design
+============================ */
+@media (max-width: 1024px) {
+    .header-section {
+        height: var(--header-height-tablet, 70px);
+    }
+
+    .main-content-section {
+        padding-top: calc(var(--header-height-tablet, 70px) + env(safe-area-inset-top, 0px));
+        overflow: visible !important;
+    }
+
+    .container {
+        padding-inline: var(--container-pad-inline);
+    }
+}
+
+@media (max-width: 768px) {
+    .header-section {
+        height: var(--header-height-mobile, 60px);
+    }
+
+    .main-content-section {
+        padding-top: calc(var(--header-height-mobile, 60px) + env(safe-area-inset-top, 0px));
+        overflow: visible !important;
+    }
+
+    .content-section {
+        padding-block: var(--spacing-lg);
+    }
+
+    .content-section-major {
+        padding-block: var(--spacing-xl);
+    }
+
+    .section-padding {
+        padding-block: var(--spacing-lg);
+    }
+
+    .container {
+        padding-inline: var(--container-pad-inline);
+    }
+}
+
+@media (max-width: 480px) {
+    .header-section {
+        height: var(--header-height-small, 50px);
+    }
+
+    .main-content-section {
+        padding-top: calc(var(--header-height-small, 50px) + env(safe-area-inset-top, 0px));
+        overflow: visible !important;
+    }
+
+    .footer-section {
+        padding-block: var(--spacing-md);
+    }
+}
+
+/* ============================
+   Print Styles
+============================ */
+@media print {
+    .main-content-section {
+        overflow: visible !important;
+        padding-top: 0 !important;
+    }
+
+    .header-section {
+        position: static !important;
+        height: auto !important;
+        overflow: visible !important;
+    }
+
+    .footer-section {
+        margin-top: 0 !important;
+    }
+}
+
+/* ============================
+   Utilities
+============================ */
+.overflow-visible {
+    overflow: visible !important;
+}
+
+.no-scroll {
+    overflow: visible !important;
+}
+
+.document-scroll-only * {
+    overflow: visible !important;
+}

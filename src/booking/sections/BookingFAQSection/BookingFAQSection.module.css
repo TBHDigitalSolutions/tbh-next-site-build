@@ -1,0 +1,530 @@
+/* src/booking/sections/BookingFAQSection/BookingFAQSection.module.css */
+/* Production-ready styles for BookingFAQSection component */
+
+.section {
+    /* Layout */
+    position: relative;
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+
+    /* Spacing */
+    padding: var(--spacing-xl, 32px) 0;
+
+    /* Background */
+    background: var(--bg-surface, #ffffff);
+
+    /* Typography */
+    color: var(--text-primary, #121417);
+    font-family: var(--font-body, inherit);
+
+    /* Container queries */
+    container-type: inline-size;
+    container-name: booking-faq;
+}
+
+/* ============================================================================
+ * Header Styles
+ * ============================================================================ */
+
+.header {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md, 16px);
+    justify-content: space-between;
+    padding: var(--spacing-lg, 24px) 0;
+    border-bottom: 1px solid var(--border-subtle, #e5e5e5);
+    margin-bottom: var(--spacing-xl, 32px);
+}
+
+.title {
+    margin: 0;
+    font-size: var(--font-size-xl, 1.25rem);
+    font-weight: 700;
+    color: var(--text-primary, #121417);
+    font-family: var(--font-heading, inherit);
+    line-height: 1.3;
+}
+
+.controls {
+    display: flex;
+    gap: var(--spacing-sm, 8px);
+    flex-shrink: 0;
+}
+
+.controlButton {
+    /* Reset */
+    all: unset;
+
+    /* Layout */
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-xs, 4px);
+
+    /* Sizing */
+    padding: var(--spacing-sm, 8px) var(--spacing-md, 16px);
+
+    /* Typography */
+    font-size: var(--font-size-sm, 0.875rem);
+    font-weight: 500;
+
+    /* Visual */
+    background: var(--bg-surface, #ffffff);
+    color: var(--text-secondary, #6b7280);
+    border: 1px solid var(--border-subtle, #e5e5e5);
+    border-radius: var(--radius-md, 6px);
+
+    /* Interaction */
+    cursor: pointer;
+    transition: all var(--transition-fast, 150ms) ease;
+
+    /* Focus */
+    &:focus-visible {
+        outline: 2px solid var(--accent-primary, #0ea5e9);
+        outline-offset: 2px;
+    }
+
+    &:hover {
+        background: var(--bg-secondary, #f1f5f9);
+        border-color: var(--accent-primary, #0ea5e9);
+        color: var(--accent-primary, #0ea5e9);
+    }
+
+    &:active {
+        transform: translateY(1px);
+    }
+}
+
+/* ============================================================================
+ * Search Styles
+ * ============================================================================ */
+
+.searchContainer {
+    margin-bottom: var(--spacing-xl, 32px);
+}
+
+.searchLabel {
+    display: block;
+    margin-bottom: var(--spacing-xs, 4px);
+    font-size: var(--font-size-sm, 0.875rem);
+    font-weight: 500;
+    color: var(--text-secondary, #6b7280);
+}
+
+.searchInput {
+    /* Layout */
+    width: 100%;
+
+    /* Sizing */
+    padding: var(--spacing-md, 16px) var(--spacing-lg, 24px);
+
+    /* Typography */
+    font-size: var(--font-size-md, 1rem);
+    font-family: inherit;
+
+    /* Visual */
+    background: var(--bg-surface, #ffffff);
+    color: var(--text-primary, #121417);
+    border: 1px solid var(--border-subtle, #e5e5e5);
+    border-radius: var(--radius-md, 6px);
+
+    /* Interaction */
+    transition: all var(--transition-fast, 150ms) ease;
+
+    /* Focus */
+    &:focus {
+        outline: none;
+        border-color: var(--accent-primary, #0ea5e9);
+        box-shadow: 0 0 0 3px color-mix(in oklab, var(--accent-primary, #0ea5e9) 10%, transparent);
+    }
+
+    &::placeholder {
+        color: var(--text-tertiary, #9ca3af);
+    }
+}
+
+/* ============================================================================
+ * FAQ List Styles
+ * ============================================================================ */
+
+.list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md, 16px);
+}
+
+.item {
+    background: var(--bg-surface, #ffffff);
+    border: 1px solid var(--border-subtle, #e5e5e5);
+    border-radius: var(--radius-md, 8px);
+    overflow: hidden;
+    transition: all var(--transition-fast, 150ms) ease;
+
+    &:hover {
+        border-color: var(--accent-primary, #0ea5e9);
+        box-shadow: var(--shadow-sm, 0 2px 8px rgba(0, 0, 0, 0.1));
+    }
+}
+
+.itemHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-md, 16px);
+    padding: var(--spacing-lg, 24px) var(--spacing-lg, 24px);
+    background: var(--bg-elevated, #f8f9fa);
+    border-bottom: 1px solid var(--border-subtle, #e5e5e5);
+}
+
+.questionButton {
+    /* Reset */
+    all: unset;
+
+    /* Layout */
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md, 16px);
+    width: 100%;
+
+    /* Typography */
+    font-size: var(--font-size-md, 1rem);
+    font-weight: 600;
+    color: var(--text-primary, #121417);
+    text-align: left;
+    line-height: 1.4;
+
+    /* Interaction */
+    cursor: pointer;
+    transition: color var(--transition-fast, 150ms) ease;
+
+    /* Focus */
+    &:focus-visible {
+        outline: 2px solid var(--accent-primary, #0ea5e9);
+        outline-offset: -2px;
+        border-radius: var(--radius-sm, 4px);
+    }
+
+    &:hover {
+        color: var(--accent-primary, #0ea5e9);
+    }
+}
+
+.questionText {
+    flex: 1;
+    min-width: 0;
+}
+
+.expandIcon {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--font-size-lg, 1.125rem);
+    color: var(--text-secondary, #6b7280);
+    transform-origin: center;
+    transition: transform var(--transition-fast, 150ms) ease;
+}
+
+.expandIcon.expanded {
+    transform: rotate(180deg);
+}
+
+.itemActions {
+    display: flex;
+    gap: var(--spacing-sm, 8px);
+    margin-left: var(--spacing-sm, 8px);
+}
+
+.actionButton {
+    /* Reset */
+    all: unset;
+
+    /* Layout */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    /* Sizing */
+    width: 32px;
+    height: 32px;
+
+    /* Visual */
+    background: var(--bg-surface, #ffffff);
+    color: var(--text-secondary, #6b7280);
+    border: 1px solid var(--border-subtle, #e5e5e5);
+    border-radius: var(--radius-sm, 4px);
+
+    /* Typography */
+    font-size: var(--font-size-sm, 0.875rem);
+
+    /* Interaction */
+    cursor: pointer;
+    transition: all var(--transition-fast, 150ms) ease;
+
+    /* Focus */
+    &:focus-visible {
+        outline: 2px solid var(--accent-primary, #0ea5e9);
+        outline-offset: 2px;
+    }
+
+    &:hover {
+        background: var(--accent-primary, #0ea5e9);
+        border-color: var(--accent-primary, #0ea5e9);
+        color: var(--accent-contrast, #ffffff);
+        transform: scale(1.05);
+    }
+
+    &:active {
+        transform: scale(0.95);
+    }
+}
+
+.answer {
+    padding: var(--spacing-lg, 24px);
+    color: var(--text-primary, #121417);
+    line-height: 1.6;
+    border-top: 1px solid var(--border-subtle, #e5e5e5);
+}
+
+.answer[hidden] {
+    display: none;
+}
+
+/* Answer content styling */
+.answer p {
+    margin: 0 0 var(--spacing-md, 16px) 0;
+}
+
+.answer p:last-child {
+    margin-bottom: 0;
+}
+
+.answer a {
+    color: var(--accent-primary, #0ea5e9);
+    text-decoration: none;
+    transition: color var(--transition-fast, 150ms) ease;
+}
+
+.answer a:hover {
+    color: var(--accent-secondary, #0284c7);
+    text-decoration: underline;
+}
+
+.answer ul,
+.answer ol {
+    margin: 0 0 var(--spacing-md, 16px) var(--spacing-lg, 24px);
+    padding: 0;
+}
+
+.answer li {
+    margin-bottom: var(--spacing-xs, 4px);
+}
+
+.answer code {
+    font-family: var(--font-mono, 'Monaco', 'Consolas', monospace);
+    font-size: 0.9em;
+    background: var(--bg-secondary, #f1f5f9);
+    padding: 2px 4px;
+    border-radius: var(--radius-sm, 4px);
+}
+
+/* ============================================================================
+ * Empty State
+ * ============================================================================ */
+
+.empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 200px;
+    padding: var(--spacing-xl, 32px);
+    text-align: center;
+    background: var(--bg-elevated, #f8f9fa);
+    border: 1px dashed var(--border-strong, #d1d5db);
+    border-radius: var(--radius-md, 8px);
+    color: var(--text-secondary, #6b7280);
+}
+
+.emptyIcon {
+    width: 48px;
+    height: 48px;
+    margin-bottom: var(--spacing-md, 16px);
+    opacity: 0.6;
+}
+
+.emptyMessage {
+    margin: 0;
+    font-size: var(--font-size-md, 1rem);
+    line-height: 1.4;
+}
+
+/* ============================================================================
+ * Responsive Design
+ * ============================================================================ */
+
+@container booking-faq (max-width: 640px) {
+    .section {
+        padding: var(--spacing-lg, 24px) 0;
+    }
+
+    .header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: var(--spacing-sm, 8px);
+        padding: var(--spacing-md, 16px) 0;
+    }
+
+    .controls {
+        justify-content: space-between;
+    }
+
+    .controlButton {
+        flex: 1;
+        justify-content: center;
+    }
+
+    .itemHeader {
+        padding: var(--spacing-md, 16px);
+    }
+
+    .questionButton {
+        font-size: var(--font-size-sm, 0.875rem);
+    }
+
+    .answer {
+        padding: var(--spacing-md, 16px);
+        font-size: var(--font-size-sm, 0.875rem);
+    }
+
+    .itemActions {
+        gap: var(--spacing-xs, 4px);
+    }
+
+    .actionButton {
+        width: 28px;
+        height: 28px;
+        font-size: var(--font-size-xs, 0.75rem);
+    }
+}
+
+@container booking-faq (max-width: 480px) {
+    .searchInput {
+        padding: var(--spacing-sm, 8px) var(--spacing-md, 16px);
+        font-size: var(--font-size-sm, 0.875rem);
+    }
+
+    .list {
+        gap: var(--spacing-sm, 8px);
+    }
+
+    .item {
+        border-radius: var(--radius-sm, 4px);
+    }
+
+    .questionButton {
+        gap: var(--spacing-sm, 8px);
+    }
+}
+
+/* ============================================================================
+ * High Contrast Support
+ * ============================================================================ */
+
+@media (prefers-contrast: high) {
+    .item {
+        border-width: 2px;
+    }
+
+    .searchInput {
+        border-width: 2px;
+    }
+
+    .controlButton,
+    .actionButton {
+        border-width: 2px;
+    }
+}
+
+/* ============================================================================
+ * Reduced Motion Support
+ * ============================================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .item,
+    .expandIcon,
+    .controlButton,
+    .actionButton,
+    .searchInput {
+        transition: none;
+    }
+}
+
+/* ============================================================================
+ * Focus Management
+ * ============================================================================ */
+
+.section:focus-within {
+    position: relative;
+}
+
+.section:focus-within::before {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border: 2px solid var(--accent-primary, #0ea5e9);
+    border-radius: var(--radius-md, 8px);
+    opacity: 0.3;
+    pointer-events: none;
+    z-index: -1;
+}
+
+/* Screen reader only content */
+.srOnly {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* ============================================================================
+ * Print Styles
+ * ============================================================================ */
+
+@media print {
+    .section {
+        background: white !important;
+        color: black !important;
+    }
+
+    .controls,
+    .searchContainer,
+    .actionButton {
+        display: none !important;
+    }
+
+    .item {
+        border: 1px solid #000 !important;
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+
+    .answer {
+        display: block !important;
+    }
+
+    .expandIcon {
+        display: none !important;
+    }
+}

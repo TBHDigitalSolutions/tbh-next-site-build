@@ -1,0 +1,832 @@
+/* src/components/ui/organisms/FunnelDiagram/FunnelDiagram.module.css */
+
+/* ============================
+   BASE STYLES
+============================ */
+.funnelDiagram {
+    width: 100%;
+    padding: var(--spacing-xl) 0;
+    position: relative;
+
+    /* CSS Custom Properties - moved from :root to component level */
+    --funnel-primary: #667eea;
+    --funnel-secondary: #764ba2;
+    --funnel-accent: #f093fb;
+    --funnel-success: #10b981;
+    --funnel-warning: #f59e0b;
+    --funnel-danger: #ef4444;
+
+    --funnel-bg-light: #ffffff;
+    --funnel-bg-dark: #1a202c;
+    --funnel-text-light: #2d3748;
+    --funnel-text-dark: #f7fafc;
+    --funnel-border: #e2e8f0;
+
+    --funnel-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --funnel-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    --funnel-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    --funnel-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+
+    --funnel-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --funnel-transition-fast: all 0.15s ease;
+    --funnel-transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.header {
+    text-align: center;
+    margin-bottom: var(--spacing-xl);
+}
+
+.title {
+    font-size: var(--font-size-3xl);
+    font-weight: 700;
+    color: var(--deep-navy);
+    margin-bottom: var(--spacing-sm);
+    font-family: var(--font-heading);
+}
+
+.subtitle {
+    font-size: var(--font-size-lg);
+    color: var(--charcoal-grey);
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: var(--line-height-relaxed);
+}
+
+.funnelContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-md);
+    max-width: 800px;
+    margin: 0 auto;
+    position: relative;
+}
+
+.stepWrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+}
+
+.funnelStep {
+    background: var(--funnel-bg-light);
+    border: 2px solid var(--funnel-border);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-xl);
+    transition: var(--funnel-transition);
+    position: relative;
+    overflow: hidden;
+    cursor: default;
+    opacity: 0;
+    transform: translateY(30px);
+    box-shadow: var(--funnel-shadow-md);
+    width: 100%;
+    max-width: 100%;
+}
+
+/* Animation on visibility */
+.visible .funnelStep {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Interactive styles */
+.interactive .funnelStep {
+    cursor: pointer;
+}
+
+.interactive .funnelStep:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--funnel-shadow-xl);
+    border-color: var(--brand-blue);
+}
+
+.funnelStep.active {
+    border-color: var(--brand-blue);
+    box-shadow: var(--funnel-shadow-xl);
+    transform: translateY(-5px);
+}
+
+.funnelStep.highlighted {
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+    border-color: var(--funnel-primary);
+}
+
+/* ============================
+   STEP HEADER
+============================ */
+.stepHeader {
+    display: flex;
+    align-items: center;
+    margin-bottom: var(--spacing-lg);
+    gap: var(--spacing-md);
+}
+
+.stepNumber {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, var(--brand-blue), var(--light-hover));
+    color: var(--deep-navy);
+    border-radius: var(--radius-full);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-family: var(--font-heading);
+    font-size: var(--font-size-lg);
+    flex-shrink: 0;
+    box-shadow: var(--funnel-shadow-sm);
+}
+
+.stepIcon {
+    font-size: var(--font-size-2xl);
+    color: var(--brand-blue);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.stepInfo {
+    flex: 1;
+}
+
+.stageName {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-sm);
+    color: var(--brand-blue);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin: 0 0 var(--spacing-xs) 0;
+    font-weight: 600;
+}
+
+.stageTitle {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-xl);
+    color: var(--deep-navy);
+    margin: 0;
+    font-weight: 700;
+}
+
+.expandIcon {
+    font-size: var(--font-size-lg);
+    color: var(--charcoal-grey);
+    transition: var(--funnel-transition-fast);
+    flex-shrink: 0;
+}
+
+.funnelStep:hover .expandIcon {
+    color: var(--brand-blue);
+    transform: scale(1.1);
+}
+
+/* ============================
+   STEP CONTENT
+============================ */
+.stepContent {
+    width: 100%;
+}
+
+.stageDescription {
+    color: var(--charcoal-grey);
+    line-height: var(--line-height-relaxed);
+    margin-bottom: var(--spacing-lg);
+    font-size: var(--font-size-base);
+}
+
+.stepMeta {
+    display: flex;
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-md);
+    flex-wrap: wrap;
+}
+
+.conversionRate,
+.volume {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    background: rgba(102, 126, 234, 0.1);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-sm);
+}
+
+.conversionValue,
+.volumeValue {
+    font-weight: 600;
+    color: var(--brand-blue);
+}
+
+/* ============================
+   TACTICS SECTION
+============================ */
+.tactics {
+    margin-bottom: var(--spacing-lg);
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transition: var(--funnel-transition);
+}
+
+.tactics.expanded {
+    max-height: 500px;
+    opacity: 1;
+}
+
+.tacticsTitle {
+    font-family: var(--font-heading);
+    color: var(--brand-blue);
+    margin-bottom: var(--spacing-sm);
+    text-transform: uppercase;
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+}
+
+.tacticsList {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+    margin: 0;
+}
+
+.tacticItem {
+    background: rgba(14, 175, 251, 0.1);
+    color: var(--deep-navy);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-sm);
+    border: 1px solid rgba(14, 175, 251, 0.2);
+    transition: var(--funnel-transition-fast);
+}
+
+.tacticItem:hover {
+    background: rgba(14, 175, 251, 0.2);
+    border-color: rgba(14, 175, 251, 0.4);
+}
+
+/* ============================
+   METRICS SECTION
+============================ */
+.metrics {
+    font-size: var(--font-size-sm);
+    color: var(--charcoal-grey);
+    padding: var(--spacing-md);
+    background: #f8f9fa;
+    border-radius: var(--radius-md);
+    border-left: 4px solid var(--brand-blue);
+    margin-top: var(--spacing-md);
+}
+
+/* ============================
+   ARROWS
+============================ */
+.arrow {
+    position: relative;
+    margin: var(--spacing-sm) 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.arrowIcon {
+    width: 24px;
+    height: 24px;
+    fill: var(--brand-blue);
+    transition: var(--funnel-transition);
+}
+
+.arrow.simple .arrowIcon {
+    background: var(--off-white);
+    border-radius: var(--radius-full);
+    padding: var(--spacing-xs);
+    box-shadow: var(--funnel-shadow-sm);
+}
+
+.arrow.curved {
+    position: relative;
+}
+
+.arrow.curved::before {
+    content: '';
+    position: absolute;
+    width: 2px;
+    height: 20px;
+    background: linear-gradient(to bottom, var(--brand-blue), transparent);
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.arrow.animated .arrowIcon {
+    animation: arrowPulse 2s infinite;
+}
+
+.arrow.dotted::before {
+    content: '';
+    position: absolute;
+    width: 2px;
+    height: 20px;
+    background-image: linear-gradient(to bottom, var(--brand-blue) 50%, transparent 50%);
+    background-size: 2px 4px;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+@keyframes arrowPulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    50% {
+        transform: scale(1.2);
+        opacity: 0.7;
+    }
+}
+
+.arrowPulse {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: var(--brand-blue);
+    border-radius: var(--radius-full);
+    opacity: 0.3;
+    animation: arrowPulseExpand 2s infinite;
+}
+
+@keyframes arrowPulseExpand {
+    0% {
+        transform: scale(1);
+        opacity: 0.3;
+    }
+
+    100% {
+        transform: scale(2);
+        opacity: 0;
+    }
+}
+
+/* ============================
+   VARIANTS
+============================ */
+
+/* Static Variant */
+.static .funnelStep {
+    cursor: default;
+}
+
+.static .funnelStep:hover {
+    transform: none;
+    box-shadow: var(--funnel-shadow-md);
+}
+
+.static .tactics {
+    max-height: none;
+    opacity: 1;
+}
+
+/* Animated Variant */
+.animated .funnelStep {
+    animation: slideInFromLeft 0.6s ease-out;
+}
+
+@keyframes slideInFromLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-100px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* 3D Variant */
+.threeDimensional .funnelStep {
+    perspective: 1000px;
+    transform-style: preserve-3d;
+}
+
+.threeDimensional .funnelStep:hover {
+    transform: rotateY(5deg) translateY(-5px);
+}
+
+/* Minimal Variant */
+.minimal .funnelStep {
+    background: transparent;
+    border: 1px solid var(--funnel-border);
+    padding: var(--spacing-lg);
+    box-shadow: none;
+}
+
+.minimal .stepHeader {
+    margin-bottom: var(--spacing-md);
+}
+
+.minimal .stepNumber {
+    width: 30px;
+    height: 30px;
+    font-size: var(--font-size-sm);
+}
+
+/* ============================
+   ORIENTATIONS
+============================ */
+
+/* Horizontal Orientation */
+.horizontal .funnelContainer {
+    flex-direction: row;
+    align-items: stretch;
+    overflow-x: auto;
+    padding: var(--spacing-md) 0;
+}
+
+.horizontal .stepWrapper {
+    flex: 0 0 auto;
+    min-width: 300px;
+}
+
+.horizontal .funnelStep {
+    height: 100%;
+    width: 300px;
+}
+
+.horizontal .arrow {
+    rotate: 90deg;
+}
+
+/* Direction Variants */
+.rightLeft .funnelContainer {
+    flex-direction: row-reverse;
+}
+
+.bottomUp .funnelContainer {
+    flex-direction: column-reverse;
+}
+
+/* ============================
+   SIZE VARIANTS
+============================ */
+.small .funnelStep {
+    padding: var(--spacing-md);
+}
+
+.small .stepNumber {
+    width: 40px;
+    height: 40px;
+    font-size: var(--font-size-base);
+}
+
+.small .stageTitle {
+    font-size: var(--font-size-lg);
+}
+
+.large .funnelStep {
+    padding: var(--spacing-xxl);
+}
+
+.large .stepNumber {
+    width: 60px;
+    height: 60px;
+    font-size: var(--font-size-xl);
+}
+
+.large .stageTitle {
+    font-size: var(--font-size-2xl);
+}
+
+/* ============================
+   INSTRUCTIONS
+============================ */
+.instructions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-sm);
+    margin-top: var(--spacing-xl);
+    padding: var(--spacing-md);
+    background: rgba(102, 126, 234, 0.1);
+    border-radius: var(--radius-md);
+    font-size: var(--font-size-sm);
+    color: var(--charcoal-grey);
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.instructions ion-icon {
+    font-size: var(--font-size-lg);
+    color: var(--brand-blue);
+}
+
+/* ============================
+   LOADING STATE
+============================ */
+.loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 300px;
+}
+
+.loadingSpinner {
+    text-align: center;
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid var(--funnel-border);
+    border-top: 4px solid var(--brand-blue);
+    border-radius: var(--radius-full);
+    animation: spin 1s linear infinite;
+    margin: 0 auto var(--spacing-md);
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* ============================
+   ERROR STATE
+============================ */
+.error {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 200px;
+}
+
+.errorMessage {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    color: var(--funnel-danger);
+    font-size: var(--font-size-base);
+    text-align: center;
+}
+
+.errorMessage ion-icon {
+    font-size: var(--font-size-xl);
+}
+
+/* ============================
+   CLICKABLE STYLES
+============================ */
+.clickable {
+    cursor: pointer;
+    transition: var(--funnel-transition);
+}
+
+.clickable:hover {
+    transform: translateY(-2px);
+}
+
+.clickable:focus {
+    outline: 2px solid var(--brand-blue);
+    outline-offset: 2px;
+}
+
+/* ============================
+   DARK THEME
+============================ */
+[data-theme="dark"] .funnelStep {
+    background: var(--charcoal-navy);
+    border-color: var(--border-grey);
+}
+
+[data-theme="dark"] .title {
+    color: var(--off-white);
+}
+
+[data-theme="dark"] .subtitle {
+    color: var(--light-grey);
+}
+
+[data-theme="dark"] .stageTitle {
+    color: var(--off-white);
+}
+
+[data-theme="dark"] .stageDescription {
+    color: var(--light-grey);
+}
+
+[data-theme="dark"] .metrics {
+    background: var(--deep-navy);
+    color: var(--light-grey);
+}
+
+[data-theme="dark"] .tacticItem {
+    background: rgba(14, 175, 251, 0.2);
+    color: var(--off-white);
+}
+
+[data-theme="dark"] .instructions {
+    background: rgba(102, 126, 234, 0.2);
+    color: var(--light-grey);
+}
+
+/* ============================
+   RESPONSIVE DESIGN
+============================ */
+@media (max-width: 1024px) {
+    .horizontal .funnelContainer {
+        flex-direction: column;
+    }
+
+    .horizontal .stepWrapper {
+        width: 100%;
+        min-width: auto;
+    }
+
+    .horizontal .funnelStep {
+        width: 100%;
+    }
+
+    .horizontal .arrow {
+        rotate: 0deg;
+    }
+}
+
+@media (max-width: 768px) {
+    .funnelDiagram {
+        padding: var(--spacing-lg) 0;
+    }
+
+    .title {
+        font-size: var(--font-size-2xl);
+    }
+
+    .subtitle {
+        font-size: var(--font-size-base);
+    }
+
+    .funnelStep {
+        padding: var(--spacing-lg);
+    }
+
+    .stepHeader {
+        flex-direction: column;
+        text-align: center;
+        gap: var(--spacing-sm);
+    }
+
+    .stepNumber {
+        margin-bottom: var(--spacing-sm);
+    }
+
+    .stepMeta {
+        flex-direction: column;
+        gap: var(--spacing-sm);
+    }
+
+    .tacticsList {
+        justify-content: center;
+    }
+
+    /* Mobile Variants */
+    .responsive.mobileStacked .funnelContainer {
+        gap: var(--spacing-lg);
+    }
+
+    .responsive.mobileCarousel .funnelContainer {
+        flex-direction: row;
+        overflow-x: auto;
+        gap: var(--spacing-md);
+        padding: var(--spacing-md);
+        scroll-snap-type: x mandatory;
+    }
+
+    .responsive.mobileCarousel .stepWrapper {
+        flex: 0 0 280px;
+        scroll-snap-align: center;
+    }
+
+    .responsive.mobileAccordion .funnelStep {
+        margin-bottom: var(--spacing-md);
+    }
+}
+
+@media (max-width: 480px) {
+    .funnelStep {
+        padding: var(--spacing-md);
+    }
+
+    .stepNumber {
+        width: 40px;
+        height: 40px;
+        font-size: var(--font-size-base);
+    }
+
+    .stageTitle {
+        font-size: var(--font-size-lg);
+    }
+
+    .tacticItem {
+        font-size: var(--font-size-xs);
+        padding: calc(var(--spacing-xs) / 2) var(--spacing-xs);
+    }
+
+    .instructions {
+        flex-direction: column;
+        text-align: center;
+        font-size: var(--font-size-xs);
+    }
+}
+
+/* ============================
+   ACCESSIBILITY
+============================ */
+@media (prefers-reduced-motion: reduce) {
+    .funnelStep {
+        animation: none;
+        transition: none;
+    }
+
+    .visible .funnelStep {
+        opacity: 1;
+        transform: none;
+    }
+
+    .arrow.animated .arrowIcon {
+        animation: none;
+    }
+
+    .arrowPulse {
+        animation: none;
+    }
+
+    .animated .funnelStep {
+        animation: none;
+    }
+
+    .threeDimensional .funnelStep:hover {
+        transform: none;
+    }
+}
+
+/* Focus states */
+.interactive .funnelStep:focus {
+    outline: 2px solid var(--brand-blue);
+    outline-offset: 2px;
+}
+
+.interactive .funnelStep:focus:not(:focus-visible) {
+    outline: none;
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+    .funnelStep {
+        border-width: 3px;
+    }
+
+    .stepNumber {
+        border: 2px solid var(--deep-navy);
+    }
+
+    .tacticItem {
+        border-width: 2px;
+    }
+}
+
+/* ============================
+   PRINT STYLES
+============================ */
+@media print {
+    .funnelDiagram {
+        break-inside: avoid;
+    }
+
+    .funnelStep {
+        break-inside: avoid;
+        box-shadow: none;
+        border: 1px solid #000;
+    }
+
+    .tactics {
+        max-height: none;
+        opacity: 1;
+    }
+
+    .instructions {
+        display: none;
+    }
+}

@@ -1,0 +1,106 @@
+/* Backdrop */
+.lightbox-backdrop {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: var(--z-index-modal);
+}
+
+/* Container */
+.lightbox-container {
+    position: relative;
+    max-width: 90vw;
+    max-height: 90vh;
+    outline: none;
+}
+
+/* Content wrapper */
+.lightbox-content {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Image */
+.lightbox-image {
+    max-width: 100%;
+    max-height: 80vh;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow);
+}
+
+/* Navigation buttons */
+.lightbox-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.5);
+    border: none;
+    padding: var(--spacing-sm);
+    border-radius: var(--radius-pill);
+    cursor: pointer;
+    color: #fff;
+    transition: background var(--transition-fast);
+}
+
+.lightbox-nav:hover {
+    background: rgba(0, 0, 0, 0.7);
+}
+
+.lightbox-nav.prev {
+    left: var(--spacing-md);
+}
+
+.lightbox-nav.next {
+    right: var(--spacing-md);
+}
+
+/* Close button */
+.lightbox-close {
+    position: absolute;
+    top: var(--spacing-sm);
+    right: var(--spacing-sm);
+    background: rgba(0, 0, 0, 0.5);
+    border: none;
+    padding: var(--spacing-xs);
+    border-radius: var(--radius-circle);
+    cursor: pointer;
+    color: #fff;
+    transition: background var(--transition-fast);
+}
+
+.lightbox-close:hover {
+    background: rgba(0, 0, 0, 0.7);
+}
+
+/* Caption */
+.lightbox-caption {
+    margin-top: var(--spacing-sm);
+    text-align: center;
+    color: var(--color-off-white);
+    font-size: var(--font-size-small);
+}
+
+/* Light Theme Overrides */
+.light .lightbox-backdrop {
+    background-color: rgba(255, 255, 255, 0.9);
+}
+
+.light .lightbox-nav,
+.light .lightbox-close {
+    background: rgba(255, 255, 255, 0.8);
+    color: var(--primary-text);
+}
+
+.light .lightbox-nav:hover,
+.light .lightbox-close:hover {
+    background: rgba(255, 255, 255, 1);
+}
+
+.light .lightbox-caption {
+    color: var(--color-soft-black);
+}

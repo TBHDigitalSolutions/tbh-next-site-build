@@ -1,0 +1,391 @@
+/**
+ * Container.css — Unified Theme Implementation (Production)
+ * ---------------------------------------------------------
+ * - Background tones via data attributes (gradient | primary | surface | transparent)
+ * - Vertical rhythm via data-padded="true"
+ * - Uses unified tokens: --container-max, --container-pad-inline, --section-pad-block
+ * - No duplication of layout chrome (header/footer) or global resets
+ * - Safe responsive behavior + accessibility + perf/debug helpers
+ */
+
+/* =========================================================
+   Core Container
+   ======================================================= */
+
+.container {
+    width: 100%;
+    max-width: var(--container-max, 1200px);
+    margin-inline: auto;
+    padding-inline: var(--container-pad-inline, var(--spacing-md, 0.75rem));
+    box-sizing: border-box;
+
+    /* Visual defaults */
+    color: var(--text-primary);
+    background: transparent;
+
+    /* Perf hints */
+    contain: layout style;
+    display: block;
+    position: relative;
+
+    /* Transitions respect reduced motion */
+    transition:
+        background-color var(--transition-standard, 250ms ease),
+        color var(--transition-standard, 250ms ease),
+        border-color var(--transition-standard, 250ms ease);
+}
+
+/* Apply section rhythm on demand */
+.container[data-padded="true"] {
+    padding-block: var(--section-pad-block, 2rem);
+}
+
+/* Theme tones (driven from unified-theme.css tokens) */
+.container[data-tone="gradient"] {
+    background: var(--gradient-section);
+}
+
+.container[data-tone="primary"] {
+    background: var(--bg-primary);
+}
+
+.container[data-tone="surface"] {
+    background: var(--bg-surface);
+}
+
+.container[data-tone="transparent"] {
+    background: transparent;
+}
+
+/* =========================================================
+   Size Variants (max-width only; spacing stays token-driven)
+   ======================================================= */
+
+.container-narrow {
+    max-width: var(--container-narrow-max-width, 800px);
+}
+
+.container-normal {
+    max-width: var(--container-max, 1200px);
+}
+
+.container-wide {
+    max-width: var(--container-wide-max-width, 1320px);
+}
+
+.container-full {
+    max-width: 100%;
+}
+
+/* Custom width set inline (no CSS needed) */
+.container-custom {}
+
+/* =========================================================
+   Spacing Variants (horizontal padding presets)
+   ======================================================= */
+
+.container-spacing-none {
+    padding-inline: 0;
+}
+
+.container-spacing-sm {
+    padding-inline: var(--spacing-sm, 0.5rem);
+}
+
+.container-spacing-md {
+    padding-inline: var(--spacing-md, 0.75rem);
+}
+
+.container-spacing-lg {
+    padding-inline: var(--spacing-lg, 1.5rem);
+}
+
+.container-spacing-xl {
+    padding-inline: var(--spacing-xl, 2rem);
+}
+
+.container-spacing-custom {
+    /* padding set inline via style */
+}
+
+/* Mark elements that opt into responsive padding adjustments */
+.container-responsive {
+    /* class-only marker; rules below in media queries */
+}
+
+/* Ensure container hook selector inherits box-sizing */
+[data-container="true"] {
+    box-sizing: border-box;
+}
+
+/* =========================================================
+   Responsive Behavior
+   ======================================================= */
+
+/* Tablet */
+@media (max-width: 1024px) {
+    .container-responsive {
+        padding-inline: var(--spacing-sm, 0.5rem);
+    }
+
+    /* So larger presets don’t over-pad on mid screens */
+    .container-spacing-lg.container-responsive {
+        padding-inline: var(--spacing-md, 0.75rem);
+    }
+
+    .container-spacing-xl.container-responsive {
+        padding-inline: var(--spacing-lg, 1.5rem);
+    }
+
+    /* Wide narrows to normal visual width on tablet if desired */
+    .container-wide.container-responsive {
+        max-width: var(--container-max, 1200px);
+    }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    .container-responsive {
+        padding-inline: var(--spacing-sm, 0.5rem);
+    }
+
+    /* Normalize all spacing presets on mobile for a tighter frame */
+    .container-spacing-md.container-responsive,
+    .container-spacing-lg.container-responsive,
+    .container-spacing-xl.container-responsive {
+        padding-inline: var(--spacing-sm, 0.5rem);
+    }
+
+    /* Narrow → full for legibility */
+    .container-narrow.container-responsive {
+        max-width: 100%;
+    }
+
+    /* Normal/Wide → full width on mobile */
+    .container-normal.container-responsive,
+    .container-wide.container-responsive {
+        max-width: 100%;
+    }
+
+    /* Smaller vertical rhythm on mobile when padded */
+    .container[data-padded="true"] {
+        padding-block: var(--spacing-lg, 1.5rem);
+    }
+}
+
+/* Small Mobile */
+@media (max-width: 480px) {
+    .container-responsive {
+        padding-inline: var(--spacing-xs, 0.375rem);
+    }
+
+    .container-spacing-none.container-responsive {
+        padding-inline: var(--spacing-xs, 0.375rem);
+    }
+}
+
+/* =========================================================
+   Nesting & Special Contexts
+   ======================================================= */
+
+/* Nested containers shouldn’t re-center or shrink unexpectedly */
+.container .container {
+    margin-inline: 0;
+    max-width: 100%;
+    padding-inline: 0;
+}
+
+/* Containers inside full-bleed sections/heroes remain constrained */
+.full-width-section .container,
+.hero-section .container,
+section[role="banner"] .container,
+[data-hero="true"] .container {
+    max-width: var(--container-max, 1200px);
+    margin-inline: auto;
+    position: relative;
+    z-index: 10;
+}
+
+/* Optional breakout helper (use sparingly) */
+.container-breakout {
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+}
+
+/* =========================================================
+   Debug (Development Only)
+   ======================================================= */
+
+.container-debug {
+    position: relative;
+    outline: 2px dashed #22c55e;
+    outline-offset: -2px;
+    background: color-mix(in oklab, #22c55e 2%, transparent);
+}
+
+.container-debug::before {
+    content: "Container [" attr(data-container-size) "]";
+    position: absolute;
+    top: -20px;
+    left: 0;
+    background: rgba(34, 197, 94, 0.9);
+    color: #fff;
+    padding: 2px 6px;
+    font: 10px/1 monospace;
+    z-index: 9999;
+    pointer-events: none;
+    white-space: nowrap;
+    border-radius: 2px;
+}
+
+/* Size-coded labels */
+.container-debug[data-container-size="narrow"]::before {
+    background: rgba(59, 130, 246, 0.9);
+    content: "Container [narrow: 800px]";
+}
+
+.container-debug[data-container-size="normal"]::before {
+    background: rgba(34, 197, 94, 0.9);
+    content: "Container [normal: 1200px]";
+}
+
+.container-debug[data-container-size="wide"]::before {
+    background: rgba(245, 158, 11, 0.9);
+    content: "Container [wide: 1320px]";
+}
+
+.container-debug[data-container-size="full"]::before {
+    background: rgba(239, 68, 68, 0.9);
+    content: "Container [full: 100%]";
+}
+
+.container-debug[data-container-size="custom"]::before {
+    background: rgba(147, 51, 234, 0.9);
+    content: "Container [custom]";
+}
+
+/* Spacing note (example: show when no padding) */
+.container-debug[data-container-spacing="none"]::after {
+    content: "No Padding";
+    position: absolute;
+    top: -20px;
+    right: 0;
+    background: rgba(239, 68, 68, 0.85);
+    color: #fff;
+    padding: 2px 4px;
+    font: 9px/1 monospace;
+    border-radius: 2px;
+}
+
+/* =========================================================
+   Accessibility & Reduced Motion
+   ======================================================= */
+
+.container[tabindex]:focus {
+    outline: 2px solid var(--accent-primary, #0EAFFB);
+    outline-offset: 2px;
+}
+
+.container[tabindex]:focus:not(:focus-visible) {
+    outline: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .container {
+        transition: none;
+    }
+}
+
+/* High-contrast preference */
+@media (prefers-contrast: more) {
+    .container-debug {
+        outline-width: 3px;
+        outline-color: currentColor;
+    }
+
+    .container[tabindex]:focus {
+        outline-width: 3px;
+    }
+}
+
+/* =========================================================
+   Print
+   ======================================================= */
+
+@media print {
+
+    .container,
+    .container-narrow,
+    .container-normal,
+    .container-wide,
+    .container-full {
+        max-width: 100% !important;
+        margin-inline: 0 !important;
+        padding-inline: 0 !important;
+        contain: none;
+    }
+
+    .container-debug::before,
+    .container-debug::after {
+        display: none !important;
+    }
+
+    .container-debug {
+        outline: none !important;
+        background: none !important;
+    }
+}
+
+/* =========================================================
+   Fallbacks
+   ======================================================= */
+
+/* Older engines lacking logical properties support */
+@supports not (margin-inline: auto) {
+
+    .container,
+    .container-narrow,
+    .container-normal,
+    .container-wide {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .container .container {
+        margin-left: 0;
+        margin-right: 0;
+    }
+}
+
+@supports not (padding-inline: 1rem) {
+    .container {
+        padding-left: var(--spacing-md, 0.75rem);
+        padding-right: var(--spacing-md, 0.75rem);
+    }
+
+    .container-spacing-none {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .container-spacing-sm {
+        padding-left: var(--spacing-sm, 0.5rem);
+        padding-right: var(--spacing-sm, 0.5rem);
+    }
+
+    .container-spacing-md {
+        padding-left: var(--spacing-md, 0.75rem);
+        padding-right: var(--spacing-md, 0.75rem);
+    }
+
+    .container-spacing-lg {
+        padding-left: var(--spacing-lg, 1.5rem);
+        padding-right: var(--spacing-lg, 1.5rem);
+    }
+
+    .container-spacing-xl {
+        padding-left: var(--spacing-xl, 2rem);
+        padding-right: var(--spacing-xl, 2rem);
+    }
+}

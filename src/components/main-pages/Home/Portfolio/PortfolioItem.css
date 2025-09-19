@@ -1,0 +1,211 @@
+/* ============================================
+   🖼️ TBH Portfolio Item (unified-theme tokens)
+   - Surface background + subtle border
+   - Media-first card with 1:1 media slot
+   - Lift on hover, clear focus ring
+   - No custom --card-* variables
+============================================ */
+
+.portfolio-item {
+    background: var(--bg-surface);
+    color: var(--text-primary);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    box-shadow: var(--shadow-xs);
+    transition:
+        transform var(--transition-fast),
+        box-shadow var(--transition-fast),
+        border-color var(--transition-fast),
+        background-color var(--transition-fast),
+        color var(--transition-fast);
+    width: 100%;
+    max-width: 100%;
+    display: flex;
+    flex-direction: row;
+    /* horizontal by default (matches original behavior) */
+    gap: var(--spacing-md);
+    isolation: isolate;
+    /* contain internal effects */
+}
+
+/* Hover: lift + accent border (no color inversion) */
+.portfolio-item:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--border-accent, var(--brand-blue));
+}
+
+/* Keyboard focus */
+.portfolio-item:focus-visible {
+    outline: 2px solid var(--accent-primary, var(--brand-blue));
+    outline-offset: 2px;
+    box-shadow: var(--shadow-md);
+}
+
+/* --------------------------------------------
+   Wrapper (structural only)
+-------------------------------------------- */
+.portfolio-wrapper {
+    display: contents;
+}
+
+/* --------------------------------------------
+   Media (1:1 slot)
+-------------------------------------------- */
+.portfolio-media-inner {
+    position: relative;
+    width: 40%;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    border-right: 1px solid var(--border-subtle);
+    transition: border-color var(--transition-fast);
+}
+
+.portfolio-item:hover .portfolio-media-inner {
+    border-right-color: var(--border-accent, var(--brand-blue));
+}
+
+.portfolio-media {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--transition-fast), filter var(--transition-fast);
+}
+
+.portfolio-item:hover .portfolio-media {
+    transform: scale(1.04);
+}
+
+/* --------------------------------------------
+   Content
+-------------------------------------------- */
+.portfolio-content {
+    flex: 1;
+    padding: var(--spacing-lg);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: var(--spacing-sm);
+}
+
+/* Title */
+.portfolio-item-title {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-h3);
+    font-weight: 600;
+    color: var(--text-accent);
+    margin: 0 0 var(--spacing-xs) 0;
+    line-height: var(--line-height-heading);
+    text-align: center;
+    transition: color var(--transition-fast);
+}
+
+.portfolio-item:hover .portfolio-item-title {
+    color: var(--text-primary);
+}
+
+/* Divider (use global .divider recipe; just tighten width/margins here) */
+.portfolio-content .divider {
+    margin: var(--spacing-sm) auto;
+    width: 80%;
+}
+
+/* Description */
+.portfolio-item-description {
+    font-family: var(--font-body);
+    font-size: var(--font-size-body);
+    color: var(--text-secondary);
+    line-height: var(--line-height-body);
+    margin: 0;
+    text-align: left;
+    transition: color var(--transition-fast);
+}
+
+.portfolio-item:hover .portfolio-item-description {
+    color: var(--text-primary);
+}
+
+/* --------------------------------------------
+   Responsive
+-------------------------------------------- */
+
+/* Desktop & large tablets: stack vertically (media on top) */
+@media (min-width: 769px) {
+    .portfolio-item {
+        flex-direction: column;
+        gap: 0;
+    }
+
+    .portfolio-media-inner {
+        width: 100%;
+        aspect-ratio: 1 / 1;
+        border-right: none;
+        border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .portfolio-item:hover .portfolio-media-inner {
+        border-bottom-color: var(--border-accent, var(--brand-blue));
+    }
+
+    .portfolio-content {
+        padding: var(--spacing-xl);
+    }
+}
+
+/* Tablet tweaks */
+@media (max-width: 1024px) and (min-width: 769px) {
+    .portfolio-content {
+        padding: var(--spacing-lg);
+    }
+}
+
+/* Mobile: keep horizontal split, tighten type */
+@media (max-width: 768px) {
+    .portfolio-item {
+        flex-direction: row;
+    }
+
+    .portfolio-media-inner {
+        width: 40%;
+        border-right: 1px solid var(--border-subtle);
+        border-bottom: none;
+    }
+
+    .portfolio-content {
+        padding: var(--spacing-md);
+    }
+
+    .portfolio-item-title {
+        font-size: var(--font-size-h4);
+    }
+
+    .portfolio-item-description {
+        font-size: var(--font-size-small);
+    }
+}
+
+/* Small mobile */
+@media (max-width: 420px) {
+    .portfolio-content {
+        padding: var(--spacing-sm);
+    }
+
+    .portfolio-item-description {
+        font-size: var(--font-size-caption);
+        line-height: 1.5;
+    }
+}
+
+/* --------------------------------------------
+   Reduced motion
+-------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+
+    .portfolio-item,
+    .portfolio-media {
+        transition: none !important;
+    }
+}

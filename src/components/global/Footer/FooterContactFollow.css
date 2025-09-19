@@ -1,0 +1,223 @@
+/* =============================================
+   🎨 TBH Digital Solutions - Footer Contact & Follow
+   Production build: compact, consistent, responsive
+============================================= */
+
+/* Container (inside the right card) */
+.footer-contact-follow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+    padding: 0;
+    /* card handles padding */
+}
+
+/* Titles (aligned with column titles) */
+.footer-title,
+.footer-subtitle {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    color: var(--text-accent);
+    text-transform: uppercase;
+    border-bottom: 2px solid var(--border-primary);
+    padding-bottom: var(--spacing-xs);
+    width: 100%;
+    margin-bottom: 10px;
+    /* trimmed for height */
+}
+
+.footer-title {
+    font-size: var(--font-size-h4);
+}
+
+.footer-subtitle {
+    font-size: var(--font-size-small);
+    margin-top: var(--spacing-sm);
+}
+
+/* Contact list — exact rhythm match with columns */
+.footer-contact-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--footer-item-gap);
+    /* == columns */
+    padding: 2px 0;
+    /* compact */
+    margin: 0;
+    width: 100%;
+    list-style: none;
+}
+
+.footer-contact-item {
+    display: flex;
+    align-items: center;
+    gap: var(--footer-icon-gap);
+    /* == columns */
+    padding: 2px var(--spacing-xs);
+    /* compact row height */
+    line-height: 1.2;
+    /* == columns */
+    font-size: var(--font-size-small);
+    color: var(--text-primary);
+    border-radius: var(--radius-md);
+    transition: transform var(--transition-standard),
+        background-color var(--transition-standard),
+        color var(--transition-standard);
+}
+
+.footer-contact-item:hover {
+    background-color: rgba(14, 175, 251, 0.05);
+    transform: translateY(-1px);
+}
+
+/* Compact icons reduce height without losing affordance */
+.footer-contact-icon {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-full);
+    background-color: var(--accent-primary);
+    color: var(--text-inverse);
+    box-shadow: var(--shadow-sm);
+    flex-shrink: 0;
+    transition: background-color var(--transition-standard), transform var(--transition-standard), box-shadow var(--transition-standard);
+}
+
+.footer-contact-item:hover .footer-contact-icon {
+    background-color: var(--accent-hover);
+    transform: scale(1.06);
+    box-shadow: var(--shadow-md);
+}
+
+/* Single-line labels with ellipsis */
+.footer-contact-text {
+    font-size: var(--font-size-small);
+    color: var(--text-primary);
+    line-height: 1.2;
+    /* == columns */
+    white-space: nowrap;
+    /* keep on one line */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: color var(--transition-standard);
+}
+
+.footer-contact-item:hover .footer-contact-text {
+    color: var(--text-accent);
+}
+
+/* Socials — tighter by default */
+.footer-social-icons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--footer-item-gap);
+    flex-wrap: wrap;
+    padding: 2px 0;
+    /* compact */
+}
+
+.footer-social-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-full);
+    background-color: var(--accent-primary);
+    color: var(--text-inverse);
+    text-decoration: none;
+    box-shadow: var(--shadow-sm);
+    transition: background-color var(--transition-standard), transform var(--transition-standard), box-shadow var(--transition-standard);
+}
+
+.footer-social-link:hover {
+    background-color: var(--accent-hover);
+    transform: scale(1.06);
+    box-shadow: var(--shadow-md);
+}
+
+/* ========== Responsive ========== */
+@media (min-width: 1200px) {
+    .footer-title {
+        font-size: var(--font-size-h3);
+    }
+}
+
+@media (max-width: 1024px) {
+    .footer-contact-icon {
+        width: 36px;
+        height: 36px;
+    }
+
+    .footer-social-link {
+        width: 42px;
+        height: 42px;
+    }
+}
+
+@media (max-width: 768px) {
+
+    .footer-title,
+    .footer-subtitle {
+        font-size: var(--font-size-small);
+    }
+
+    .footer-contact-list {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .footer-contact-item {
+        flex-direction: column;
+        min-width: 96px;
+        gap: var(--footer-item-gap);
+    }
+
+    .footer-contact-text {
+        font-size: var(--font-size-caption);
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+
+    .footer-title,
+    .footer-subtitle {
+        font-size: var(--font-size-caption);
+    }
+
+    .footer-social-link {
+        width: 36px;
+        height: 36px;
+    }
+
+    .footer-contact-icon {
+        width: 32px;
+        height: 32px;
+    }
+}
+
+/* ========== Theme Parity ========== */
+[data-theme="dark"] .footer-contact-item:hover {
+    background-color: rgba(14, 175, 251, 0.10);
+}
+
+[data-theme="light"] .footer-contact-item:hover {
+    background-color: rgba(14, 175, 251, 0.05);
+}
+
+/* ========== Motion & Accessibility ========== */
+@media (prefers-reduced-motion: reduce) {
+
+    .footer-contact-item:hover,
+    .footer-social-link:hover {
+        transform: none;
+    }
+}

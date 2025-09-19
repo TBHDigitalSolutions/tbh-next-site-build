@@ -1,0 +1,87 @@
+/* =========================================================================
+   TBH – TechStack Main Component (production, unified theme)
+   Base wrapper styles for TechStack organism
+============================================================================ */
+
+.wrapper {
+    width: 100%;
+    max-width: var(--container-max, 1200px);
+    margin-inline: auto;
+    padding-block: var(--section-pad-block, clamp(2rem, 6vw, 3.75rem));
+    padding-inline: var(--container-pad-inline, 16px);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+}
+
+.section {
+    margin-bottom: var(--spacing-xl, 24px);
+}
+
+.section:last-child {
+    margin-bottom: 0;
+}
+
+/* Header styles for section title/subtitle */
+.header {
+    text-align: center;
+    margin-bottom: var(--spacing-xl, 24px);
+}
+
+.title {
+    margin: 0 0 var(--spacing-sm, 12px) 0;
+    font-family: var(--font-heading);
+    font-size: var(--font-size-h2);
+    font-weight: 800;
+    line-height: var(--line-height-heading);
+    color: var(--text-primary);
+    letter-spacing: -0.01em;
+}
+
+.subtitle {
+    margin: 0 auto;
+    max-width: 70ch;
+    font-family: var(--font-body);
+    font-size: var(--font-size-body);
+    color: var(--text-secondary);
+    line-height: var(--line-height-body);
+}
+
+/* Category sections when using StackCategory */
+.categorySection {
+    margin-bottom: var(--spacing-2xl, 32px);
+}
+
+.categorySection:last-child {
+    margin-bottom: 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .title {
+        font-size: var(--font-size-h3);
+    }
+
+    .wrapper {
+        padding-inline: var(--spacing-md, 16px);
+    }
+}
+
+/* Focus management for nested interactive elements */
+.wrapper :focus-visible {
+    outline: 2px solid var(--brand-blue);
+    outline-offset: 2px;
+    border-radius: var(--radius-md);
+}
+
+/* Utility class for screen readers */
+.srOnly {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+}

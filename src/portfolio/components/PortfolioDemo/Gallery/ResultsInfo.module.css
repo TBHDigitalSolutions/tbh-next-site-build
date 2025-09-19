@@ -1,0 +1,142 @@
+/* src/components/sections/Web-Dev/PortfolioDemo/Gallery/ResultsInfo.module.css
+   ---------------------------------------------------------------------------
+   • Theme-friendly via design token fallbacks (scoped to .resultsBar)
+   • Responsive layout with graceful wrapping
+   • A11y: clear visual hierarchy; sr-only utility
+   • NOTE: No bare :root — CSS Modules require a local class or id.
+   --------------------------------------------------------------------------- */
+
+/* Component-scoped tokens (replaces bare :root) */
+.resultsBar {
+    /* Spacing & radius */
+    --ri-spacing-xs: var(--spacing-xs, 6px);
+    --ri-spacing-sm: var(--spacing-sm, 10px);
+    --ri-spacing-md: var(--spacing-md, 16px);
+    --ri-spacing-lg: var(--spacing-lg, 24px);
+
+    --ri-radius-sm: var(--radius-sm, 8px);
+    --ri-radius-md: var(--radius-md, 12px);
+
+    /* Typography & colors */
+    --ri-text: var(--text-color, hsl(222 22% 12%));
+    --ri-text-muted: var(--text-muted, hsl(222 12% 40%));
+    --ri-accent: var(--brand, hsl(210 90% 50%));
+    --ri-border: var(--border-color, hsl(220 14% 90%));
+    --ri-surface: var(--surface, #fff);
+    --ri-surface-subtle: var(--surface-2, hsl(0 0% 98%));
+    --ri-chip-bg: var(--chip-bg, hsl(210 16% 96%));
+    --ri-chip-text: var(--chip-text, hsl(221 16% 24%));
+
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--ri-spacing-sm) var(--ri-spacing-lg);
+    padding: var(--ri-spacing-sm) var(--ri-spacing-md);
+    border: 1px solid var(--ri-border);
+    border-radius: var(--ri-radius-md);
+    background: var(--ri-surface-subtle);
+    color: var(--ri-text);
+}
+
+/* Left side: count & summary */
+.count {
+    display: inline-flex;
+    align-items: baseline;
+    gap: var(--ri-spacing-sm);
+    min-height: 2.25rem;
+}
+
+.countNumber {
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    font-size: clamp(1.1rem, 0.95rem + 0.6vw, 1.4rem);
+    color: var(--ri-accent);
+    line-height: 1;
+}
+
+.countLabel {
+    font-size: 0.95rem;
+    color: var(--ri-text-muted);
+}
+
+.countSummary {
+    margin-left: var(--ri-spacing-md);
+    color: var(--ri-text-muted);
+    font-size: 0.95rem;
+    white-space: nowrap;
+}
+
+@media (max-width: 720px) {
+    .countSummary {
+        display: none;
+        /* keep the compact number/label on small screens */
+    }
+}
+
+/* Right side: active filter "chips" */
+.filters {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--ri-spacing-sm);
+}
+
+.chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    border-radius: var(--ri-radius-sm);
+    background: var(--ri-chip-bg);
+    color: var(--ri-chip-text);
+    border: 1px solid var(--ri-border);
+    line-height: 1.1;
+}
+
+.chipLabel {
+    font-size: 0.75rem;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    opacity: 0.8;
+}
+
+.chipValue {
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+/* Screen-reader only text helper */
+.srOnly {
+    position: absolute !important;
+    height: 1px;
+    width: 1px;
+    overflow: hidden;
+    clip: rect(1px, 1px, 1px, 1px);
+    white-space: nowrap;
+    border: 0;
+    padding: 0;
+    margin: -1px;
+}
+
+/* Dark mode (global theme classes) */
+:global(:root.dark) .resultsBar,
+:global(.dark) .resultsBar {
+    --ri-text: var(--text-color, hsl(220 15% 92%));
+    --ri-text-muted: var(--text-muted, hsl(220 10% 70%));
+    --ri-border: var(--border-color, hsl(220 12% 22%));
+    --ri-surface-subtle: var(--surface-2, hsl(222 16% 14%));
+    --ri-chip-bg: var(--chip-bg, hsl(222 16% 18%));
+    --ri-chip-text: var(--chip-text, hsl(0 0% 95%));
+}
+
+/* Dark mode (automatic when no explicit theme class is set) */
+@media (prefers-color-scheme: dark) {
+    :global(:root:not(.light, .dark)) .resultsBar {
+        --ri-text: var(--text-color, hsl(220 15% 92%));
+        --ri-text-muted: var(--text-muted, hsl(220 10% 70%));
+        --ri-border: var(--border-color, hsl(220 12% 22%));
+        --ri-surface-subtle: var(--surface-2, hsl(222 16% 14%));
+        --ri-chip-bg: var(--chip-bg, hsl(222 16% 18%));
+        --ri-chip-text: var(--chip-text, hsl(0 0% 95%));
+    }
+}

@@ -1,0 +1,370 @@
+/* =========================================================================
+   TBH — TechStackShowcase (production, unified theme)
+   - Unifies tabs, search, grid cards with canonical tokens
+   - Replaces accent-* + bg-hover + section-padding-vertical, etc.
+============================================================================ */
+
+/* ---------- Section Wrapper ---------- */
+.wrapper {
+    width: 100%;
+    max-width: var(--container-max, 1200px);
+    margin-inline: auto;
+    padding-block: var(--section-pad-block, clamp(2rem, 6vw, 3.75rem));
+    padding-inline: var(--container-pad-inline, 16px);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+}
+
+/* ---------- Header ---------- */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: var(--spacing-lg, 20px);
+    flex-wrap: wrap;
+}
+
+.title {
+    margin: 0;
+    font-family: var(--font-heading);
+    font-weight: 800;
+    font-size: var(--font-size-h2);
+    line-height: var(--line-height-heading);
+    letter-spacing: -0.01em;
+    color: var(--text-primary);
+}
+
+.subtitle {
+    margin-top: var(--spacing-2xs, 6px);
+    color: var(--text-secondary);
+    font-size: var(--font-size-body);
+    line-height: var(--line-height-body);
+}
+
+/* ---------- Controls (Tabs + Search) ---------- */
+.controls {
+    display: flex;
+    gap: var(--spacing-sm, 12px);
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.tabs {
+    display: flex;
+    gap: var(--spacing-2xs, 6px);
+}
+
+.tab {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-4xs, 4px);
+    padding: var(--spacing-2xs, 6px) var(--spacing-sm, 12px);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-subtle);
+    background: var(--bg-surface);
+    color: var(--text-primary);
+    font-size: var(--font-size-small);
+    line-height: 1.2;
+    box-shadow: var(--shadow-xs);
+    transition:
+        background-color var(--transition-fast, 150ms),
+        color var(--transition-fast, 150ms),
+        border-color var(--transition-fast, 150ms),
+        box-shadow var(--transition-fast, 150ms),
+        transform var(--transition-fast, 150ms);
+}
+
+.tab:hover {
+    background: var(--bg-elevated, #0E1730);
+    border-color: var(--border-primary, var(--brand-blue));
+    transform: translateY(-1px);
+}
+
+.tab:focus-visible {
+    outline: 2px solid var(--brand-blue);
+    outline-offset: 2px;
+}
+
+.active {
+    background: color-mix(in oklab, var(--brand-blue) 18%, var(--bg-surface));
+    color: var(--text-primary);
+    border-color: var(--border-primary, var(--brand-blue));
+    box-shadow: var(--shadow-sm);
+}
+
+.countBadge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 1.25rem;
+    height: 1.25rem;
+    padding: 0 var(--spacing-4xs, 4px);
+    border-radius: var(--radius-full);
+    background: var(--bg-surface);
+    color: currentColor;
+    font-size: var(--font-size-xs);
+    line-height: 1;
+    border: 1px solid var(--border-subtle);
+}
+
+.search {
+    padding: var(--spacing-2xs, 6px) var(--spacing-sm, 12px);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    background: var(--bg-surface);
+    color: var(--text-primary);
+    min-width: 220px;
+    box-shadow: var(--shadow-xs) inset;
+    transition:
+        border-color var(--transition-fast, 150ms),
+        background-color var(--transition-fast, 150ms),
+        box-shadow var(--transition-fast, 150ms);
+}
+
+.search::placeholder {
+    color: color-mix(in oklab, var(--text-secondary) 80%, transparent);
+}
+
+.search:hover {
+    border-color: var(--border-primary, var(--brand-blue));
+}
+
+.search:focus-visible {
+    outline: 2px solid var(--brand-blue);
+    outline-offset: 2px;
+    background: var(--bg-primary);
+}
+
+/* ---------- Grid & Cards ---------- */
+.grid {
+    margin-top: var(--spacing-xl, 24px);
+    display: grid;
+    gap: var(--spacing-md, 16px);
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    align-items: stretch;
+    grid-auto-rows: 1fr;
+    /* equal-height rows */
+}
+
+.card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-xl);
+    padding: var(--spacing-lg, 20px);
+    box-shadow: var(--shadow-xs);
+    transition:
+        transform var(--transition-fast, 150ms),
+        box-shadow var(--transition-fast, 150ms),
+        border-color var(--transition-fast, 150ms),
+        background-color var(--transition-fast, 150ms);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--border-primary, var(--brand-blue));
+}
+
+.card:focus-within {
+    outline: 2px solid var(--brand-blue);
+    outline-offset: 2px;
+}
+
+.featured {
+    outline: 2px solid var(--border-primary, var(--brand-blue));
+    outline-offset: 2px;
+}
+
+.logo {
+    margin-bottom: var(--spacing-xs, 8px);
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+}
+
+.cardTitle {
+    margin: 0 0 var(--spacing-2xs, 6px) 0;
+    color: var(--text-primary);
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: var(--font-size-h4);
+    line-height: 1.25;
+}
+
+.meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-2xs, 6px);
+    margin-top: var(--spacing-xs, 8px);
+}
+
+.badge {
+    padding: 2px 8px;
+    border-radius: var(--radius-md);
+    background: var(--bg-surface);
+    color: var(--text-secondary);
+    font-size: var(--font-size-small);
+    border: 1px solid var(--border-subtle);
+    line-height: 1.2;
+}
+
+.link {
+    margin-top: var(--spacing-sm, 12px);
+    display: inline-block;
+    color: var(--brand-blue);
+    font-weight: 700;
+    text-decoration: none;
+    transition: color var(--transition-fast, 150ms), transform var(--transition-fast, 150ms);
+}
+
+.link:hover {
+    color: var(--brand-hover, #5AC8FA);
+    text-decoration: underline;
+    transform: translateY(-1px);
+}
+
+/* ---------- Empty / Reset ---------- */
+.empty {
+    margin-top: var(--spacing-lg, 20px);
+    padding: var(--spacing-lg, 20px);
+    border-radius: var(--radius-xl);
+    border: 1px dashed var(--border-subtle);
+    background: var(--bg-surface);
+    color: var(--text-secondary);
+    text-align: center;
+}
+
+.resetBtn {
+    margin-top: var(--spacing-sm, 12px);
+    padding: var(--spacing-2xs, 6px) var(--spacing-sm, 12px);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-primary, var(--brand-blue));
+    background: color-mix(in oklab, var(--brand-blue) 18%, var(--bg-surface));
+    color: var(--text-primary);
+    font-weight: 700;
+    cursor: pointer;
+    transition:
+        background-color var(--transition-fast, 150ms),
+        color var(--transition-fast, 150ms),
+        border-color var(--transition-fast, 150ms),
+        transform var(--transition-fast, 150ms);
+}
+
+.resetBtn:hover {
+    transform: translateY(-1px);
+    filter: brightness(1.02);
+}
+
+.resetBtn:focus-visible {
+    outline: 2px solid var(--brand-blue);
+    outline-offset: 2px;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 1200px) {
+    .title {
+        font-size: var(--font-size-h3);
+    }
+}
+
+@media (max-width: 1024px) {
+    .header {
+        align-items: stretch;
+    }
+
+    .grid {
+        gap: var(--spacing-md, 16px);
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    }
+}
+
+@media (max-width: 768px) {
+    .title {
+        font-size: var(--font-size-h4);
+    }
+
+    .controls {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .search {
+        min-width: 180px;
+    }
+}
+
+@media (max-width: 520px) {
+    .header {
+        flex-direction: column;
+        gap: var(--spacing-md, 16px);
+    }
+
+    .controls {
+        flex-direction: column;
+        align-items: stretch;
+        gap: var(--spacing-sm, 12px);
+    }
+
+    .tabs {
+        overflow-x: auto;
+        padding-bottom: var(--spacing-4xs, 4px);
+    }
+
+    .grid {
+        grid-template-columns: 1fr;
+    }
+
+    .search {
+        min-width: 100%;
+    }
+}
+
+/* ---------- Motion & High-Contrast ---------- */
+@media (prefers-reduced-motion: reduce) {
+
+    .tab,
+    .card,
+    .link,
+    .resetBtn {
+        transition: none !important;
+    }
+
+    .card:hover,
+    .tab:hover,
+    .link:hover {
+        transform: none !important;
+    }
+}
+
+@media (forced-colors: active) {
+
+    .tab,
+    .card,
+    .badge,
+    .search,
+    .resetBtn {
+        border: 1px solid ButtonText;
+    }
+
+    .active {
+        background: Highlight;
+        color: HighlightText;
+    }
+}
+
+/* ---------- Utilities ---------- */
+/* Screen-reader-only helper for labels used in TSX (scoped to this component) */
+.wrapper :global(.sr-only) {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+}

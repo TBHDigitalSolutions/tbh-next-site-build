@@ -1,0 +1,153 @@
+/* ============================================
+   📞 TBH Contact Modal — unified-theme styles
+   Depends on: unified-theme.css (tokens)
+   - Overlay: blurred, high z-index
+   - Content: surface card, subtle border, lift
+   - Heading: brand-accent underline
+   - Close: accessible focus, hover affordance
+============================================ */
+
+/* Overlay */
+.contactmodal-overlay {
+    position: fixed;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    padding: var(--container-pad-inline);
+    background: rgba(0, 0, 0, 0.55);
+    /* non-token okay for scrim */
+    backdrop-filter: blur(10px);
+    z-index: var(--z-index-overlay, 1000);
+    animation: overlayFadeIn var(--transition-standard) both;
+    overscroll-behavior: contain;
+    isolation: isolate;
+}
+
+/* Modal panel */
+.contactmodal-content {
+    background: var(--bg-surface);
+    color: var(--text-primary);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-lg);
+
+    width: min(720px, 100%);
+    max-height: min(90dvh, 760px);
+    overflow: auto;
+    /* inner scroll if needed */
+    -webkit-overflow-scrolling: touch;
+
+    padding: var(--spacing-xl);
+    position: relative;
+
+    transform: translateY(8px) scale(0.985);
+    animation: contentIn var(--transition-slow) both;
+    transition:
+        background-color var(--transition-standard),
+        border-color var(--transition-standard),
+        box-shadow var(--transition-standard);
+}
+
+/* Heading */
+.contactmodal-heading {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-h2);
+    line-height: var(--line-height-heading);
+    font-weight: 700;
+    color: var(--text-accent);
+    text-align: center;
+
+    margin: 0 0 var(--spacing-md);
+    padding-bottom: var(--spacing-xs);
+    display: inline-block;
+    border-bottom: 2px solid var(--border-accent, var(--brand-blue));
+}
+
+/* Close button (icon) */
+.contactmodal-close {
+    position: absolute;
+    inset-block-start: var(--spacing-sm);
+    inset-inline-end: var(--spacing-sm);
+    inline-size: auto;
+    block-size: auto;
+
+    background: transparent;
+    border: 0;
+    color: var(--text-secondary);
+    line-height: 0;
+    padding: var(--spacing-xs);
+    border-radius: var(--radius-full);
+    cursor: pointer;
+
+    transition:
+        background-color var(--transition-fast),
+        color var(--transition-fast),
+        transform var(--transition-fast);
+}
+
+.contactmodal-close:hover {
+    background: color-mix(in oklab, var(--brand-blue) 12%, transparent);
+    color: var(--text-inverse);
+    transform: scale(1.06);
+}
+
+.contactmodal-close:focus-visible {
+    outline: 2px solid var(--accent-primary, var(--brand-blue));
+    outline-offset: 2px;
+}
+
+/* Space & form niceties (the ContactForm already uses unified tokens) */
+.contactmodal-content form {
+    display: grid;
+    gap: var(--spacing-md);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .contactmodal-content {
+        padding: var(--spacing-lg);
+        border-radius: var(--radius-lg);
+    }
+
+    .contactmodal-heading {
+        font-size: var(--font-size-h3);
+    }
+}
+
+@media (max-width: 480px) {
+    .contactmodal-content {
+        padding: var(--spacing-md);
+    }
+}
+
+/* Animations */
+@keyframes overlayFadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes contentIn {
+    from {
+        opacity: 0;
+        transform: translateY(16px) scale(0.975);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Reduced motion accessibility */
+@media (prefers-reduced-motion: reduce) {
+
+    .contactmodal-overlay,
+    .contactmodal-content {
+        animation: none !important;
+    }
+}

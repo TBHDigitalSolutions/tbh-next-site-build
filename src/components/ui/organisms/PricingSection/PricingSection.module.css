@@ -1,0 +1,342 @@
+/* ================================================
+   🎬 PricingSection.module.css (Production Ready)
+   - Token-first (unified theme)
+   - Card styles aligned with unified card recipe
+   - Responsive, a11y-friendly, dark-mode aware
+================================================ */
+
+/* SECTION WRAPPER
+   SectionContainer provides the horizontal container. */
+.pricingSection {
+    padding-block: var(--section-pad-block);
+    background: transparent;
+}
+
+/* Optional grid helper if you need spacing around a grid wrapper */
+.pricingGrid {
+    margin-top: var(--spacing-xl);
+}
+
+/* PRICING CARD
+   Uses unified “charcoal card” recipe values for consistency.
+   Note: Pricing cards are rendered by <PricingTiers />, but we keep
+   these hooks for any local overrides / legacy usage. */
+.pricingTier {
+    position: relative;
+    background: var(--bg-surface);
+    color: var(--text-primary);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-xs);
+    padding: var(--spacing-xl);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    height: 100%;
+    transition:
+        transform var(--transition-standard),
+        box-shadow var(--transition-standard),
+        border-color var(--transition-standard),
+        background-color var(--transition-standard),
+        color var(--transition-standard);
+    will-change: transform;
+}
+
+/* Hover lift (unified card behavior) */
+.pricingTier:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--border-accent);
+}
+
+/* FEATURED STATE */
+.featured {
+    border-color: var(--border-accent);
+    box-shadow: 0 0 0 1px var(--border-accent), var(--shadow-lg);
+}
+
+.featured::before {
+    /* Badge ribbon */
+    content: 'Most Popular';
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--brand-blue);
+    color: var(--text-inverse);
+    font-family: var(--font-heading);
+    font-size: var(--font-size-xs);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 6px 10px;
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-sm);
+    white-space: nowrap;
+}
+
+/* HEADER */
+.tierHeader {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-sm);
+}
+
+.tierHeader h3 {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-h3);
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: var(--line-height-heading);
+}
+
+.tierDescription {
+    font-family: var(--font-body);
+    font-size: var(--font-size-base);
+    color: var(--text-secondary);
+    line-height: var(--line-height-body);
+    margin: 0;
+}
+
+/* PRICE BLOCK */
+.price {
+    display: inline-flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 6px;
+    margin-top: var(--spacing-sm);
+}
+
+.amount {
+    font-family: var(--font-heading);
+    font-weight: 800;
+    font-size: clamp(1.75rem, 3.2vw, 2.25rem);
+    color: var(--text-primary);
+    line-height: 1;
+}
+
+.period {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+}
+
+/* FEATURES LIST */
+.features {
+    list-style: none;
+    padding: 0;
+    margin: var(--spacing-md) 0 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.features li {
+    position: relative;
+    padding-left: 1.75rem;
+    font-family: var(--font-body);
+    font-size: var(--font-size-base);
+    color: var(--text-secondary);
+    line-height: var(--line-height-body);
+    border-bottom: 1px solid color-mix(in oklab, var(--border-subtle) 60%, transparent);
+    padding-bottom: 10px;
+}
+
+.features li:last-child {
+    border-bottom: 0;
+    padding-bottom: 0;
+}
+
+.features li::before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: var(--brand-blue);
+    font-weight: 800;
+    line-height: 1;
+}
+
+/* META LIST (Turnaround/Revisions/Usage) */
+.meta {
+    list-style: none;
+    padding: 0;
+    margin: var(--spacing-md) 0 0 0;
+    display: grid;
+    gap: 6px;
+}
+
+.meta li {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+    line-height: var(--line-height-normal);
+}
+
+.meta li strong {
+    color: var(--text-primary);
+    font-weight: 700;
+}
+
+/* CTA SPACING HOOK ONLY
+   Visuals are handled by the shared Button styles */
+.tierCta {
+    margin-top: auto;
+}
+
+/* NOTES / DISCLAIMER BLOCK
+   Matches what the <PricingSection /> renders (title/subtitle + notes). */
+.pricingNotes {
+    margin-top: var(--spacing-lg);
+    text-align: center;
+    color: var(--text-secondary);
+}
+
+.pricingNotes p {
+    margin: 0 0 var(--spacing-sm);
+}
+
+/* DARK THEME OVERRIDES */
+:root[data-theme="dark"] .pricingTier {
+    background: var(--bg-surface);
+    border-color: var(--border-subtle);
+    color: var(--text-primary);
+}
+
+:root[data-theme="dark"] .features li {
+    border-bottom-color: color-mix(in oklab, var(--border-subtle) 60%, transparent);
+}
+
+:root[data-theme="dark"] .featured::before {
+    color: var(--text-inverse);
+}
+
+/* HOVER/FOCUS ACCESSIBILITY */
+.pricingTier:focus-within {
+    outline: 3px solid color-mix(in oklab, var(--brand-blue) 40%, transparent);
+    outline-offset: 3px;
+    border-radius: var(--radius-lg);
+}
+
+/* REDUCED MOTION */
+@media (prefers-reduced-motion: reduce) {
+
+    .pricingTier,
+    .pricingTier:hover {
+        transition: none;
+        transform: none;
+        box-shadow: var(--shadow-xs);
+    }
+}
+
+/* RESPONSIVE BREAKPOINTS */
+@media (max-width: 1024px) {
+    .pricingGrid {
+        margin-top: var(--spacing-lg);
+    }
+
+    .amount {
+        font-size: clamp(1.6rem, 3.4vw, 2rem);
+    }
+}
+
+@media (max-width: 768px) {
+    .pricingSection {
+        padding-block: var(--spacing-xl);
+    }
+
+    .pricingTier {
+        padding: var(--spacing-lg);
+    }
+
+    .tierHeader h3 {
+        font-size: calc(var(--font-size-h3) - 2px);
+    }
+
+    .tierDescription {
+        font-size: var(--font-size-sm);
+    }
+
+    .features li {
+        font-size: var(--font-size-sm);
+    }
+
+    .meta li {
+        font-size: var(--font-size-xs);
+    }
+
+    .featured::before {
+        top: -8px;
+        font-size: var(--font-size-xs);
+        padding: 4px 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .pricingSection {
+        padding-block: var(--spacing-lg);
+    }
+
+    .tierHeader h3 {
+        font-size: 1.125rem;
+    }
+
+    .amount {
+        font-size: 1.6rem;
+    }
+
+    .features {
+        gap: 8px;
+    }
+
+    .features li {
+        padding-left: 1.5rem;
+    }
+}
+
+/* HIGH CONTRAST */
+@media (prefers-contrast: more) {
+    .pricingTier {
+        border-width: 2px;
+    }
+}
+/* === Alias classes to match PricingSection.tsx === */
+/* Add these to the end of PricingSection.module.css */
+
+.wrapper {
+    /* mirror .pricingSection */
+    padding: var(--section-padding-vertical, var(--spacing-2xl)) 0;
+    background: transparent;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: var(--spacing-lg);
+}
+
+.title {
+    font-family: var(--font-heading);
+    color: var(--text-accent);
+    font-size: var(--font-size-h4);
+    margin: 0 0 var(--spacing-xs);
+    letter-spacing: 0.3px;
+}
+
+.subtitle {
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+.notes {
+    margin-top: var(--spacing-lg);
+    text-align: center;
+    color: var(--text-secondary);
+}
+
+.disclaimer {
+    margin: 0 0 var(--spacing-sm);
+}
+
+.contact {
+    margin: 0;
+}

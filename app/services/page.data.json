@@ -1,0 +1,148 @@
+{
+  "seoTitle": "Services Directory | TBH Digital Solutions",
+  "seoDescription": "Explore our comprehensive suite of services across web development, video production, SEO, marketing, content production, and lead generation.",
+  "seoKeywords": [
+    "digital services",
+    "video production",
+    "content production",
+    "web development",
+    "SEO services",
+    "marketing",
+    "marketing automation",
+    "lead generation"
+  ],
+  "meta": {
+    "title": "Our Services",
+    "subtitle": "Comprehensive digital solutions designed to accelerate your growth and deliver measurable results.",
+    "description": "From strategy to execution, we deliver services that help businesses grow, engage their audience, and achieve measurable outcomes."
+  },
+  "hero": {
+    "title": "Choose Your",
+    "titleAccent": "Digital Solution",
+    "description": "From strategy to execution, we deliver comprehensive digital services that help businesses grow, engage their audience, and achieve measurable outcomes.",
+    "backgroundVideo": "/videos/Website-Videos/website-hero_1.mp4",
+    "fallbackImage": "/videos/Website-Videos/Screenshot 2024-11-04 at 12.32.59 AM.png",
+    "quickStats": [
+      { "number": "150+", "label": "Projects Completed", "description": "Successful digital transformations" },
+      { "number": "98%", "label": "Client Satisfaction", "description": "Consistently exceeding expectations" },
+      { "number": "24/7", "label": "Support Available", "description": "Always here when you need us" }
+    ]
+  },
+  "categories": [
+    { "id": "all", "label": "All Services", "icon": "grid" },
+    { "id": "creative", "label": "Creative", "icon": "color-palette" },
+    { "id": "technical", "label": "Technical", "icon": "code-slash" },
+    { "id": "marketing", "label": "Marketing", "icon": "trending-up" }
+  ],
+  "services": [
+    {
+      "id": "video-production-services",
+      "title": "Video Production",
+      "description": "Professional video content from concept to delivery",
+      "icon": "videocam",
+      "href": "/services/video-production-services",
+      "previewImage": "/pages-content/video-production/video-production-hero-poster.jpg",
+      "features": ["Concept Development", "Professional Filming", "Post-Production", "Distribution Strategy", "Motion Graphics", "Color Grading"],
+      "deliveryTime": "2-4 weeks",
+      "startingPrice": "Custom Quote",
+      "category": "creative",
+      "popularity": "high"
+    },
+    {
+      "id": "content-production-services",
+      "title": "Content Production",
+      "description": "Editorial content that drives engagement and conversions",
+      "icon": "create",
+      "href": "/services/content-production-services",
+      "previewImage": "/pages-content/content-production/content-production-hero-bg.png",
+      "features": ["Blog Posts", "Case Studies", "White Papers", "Social Content", "Email Campaigns", "SEO Writing"],
+      "deliveryTime": "1-2 weeks",
+      "startingPrice": "$500/month",
+      "category": "creative",
+      "popularity": "high"
+    },
+    {
+      "id": "web-development-services",
+      "title": "Web Development",
+      "description": "Fast, scalable websites built with modern technologies",
+      "icon": "code-slash",
+      "href": "/services/web-development-services",
+      "previewImage": "/pages-content/web-development/web-development-hero-bg.jpg",
+      "features": ["Custom Development", "CMS Integration", "Performance Optimization", "Mobile Responsive", "E-commerce Solutions", "API Integration"],
+      "deliveryTime": "4-8 weeks",
+      "startingPrice": "$5,000",
+      "category": "technical",
+      "popularity": "high"
+    },
+    {
+      "id": "marketing-services",
+      "title": "Marketing",
+      "description": "Integrated strategies across paid, social, email, and automation",
+      "icon": "git-branch",
+      "href": "/services/marketing-services",
+      "previewImage": "/pages-content/marketing-automation/marketing-automation-hero-bg.jpg",
+      "features": ["Paid Media", "Email & CRM", "Automation Workflows", "Analytics & Attribution", "Landing Pages", "Content Distribution"],
+      "deliveryTime": "2-3 weeks",
+      "startingPrice": "$1,500/month",
+      "category": "marketing",
+      "popularity": "medium"
+    },
+    {
+      "id": "seo-services",
+      "title": "SEO Services",
+      "description": "Comprehensive SEO strategies that drive organic traffic",
+      "icon": "trending-up",
+      "href": "/services/seo-services",
+      "previewImage": "/pages-content/seo-services/seo-services-hero-bg.png",
+      "features": ["Technical SEO", "Content Optimization", "Link Building", "Performance Tracking", "Keyword Research", "Local SEO"],
+      "deliveryTime": "Ongoing",
+      "startingPrice": "$2,000/month",
+      "category": "marketing",
+      "popularity": "high"
+    },
+    {
+      "id": "lead-generation-services",
+      "title": "Lead Generation",
+      "description": "Data-driven campaigns that convert prospects into customers",
+      "icon": "magnet",
+      "href": "/services/lead-generation-services",
+      "previewImage": "/pages-content/lead-generation/lead-generation-hero-bg.png",
+      "features": ["Campaign Strategy", "Ad Creation", "Landing Pages", "Conversion Optimization", "A/B Testing", "Analytics Tracking"],
+      "deliveryTime": "1-2 weeks setup",
+      "startingPrice": "$3,000/month",
+      "category": "marketing",
+      "popularity": "medium"
+    }
+  ],
+  "cta": {
+    "title": "Not sure which service you need?",
+    "description": "Schedule a free consultation and we'll help you choose the perfect solution for your business goals.",
+    "primaryButton": { "text": "Schedule Free Consultation", "href": "/contact", "icon": "calendar" },
+    "secondaryButton": { "text": "Chat with Our Team", "href": "/contact", "icon": "chatbubbles" }
+  },
+  "overviewGrid": {
+    "title": "Quick Service Overview",
+    "description": "Get started with the service that fits your needs",
+    "services": [
+      { "id": "video-production-services", "title": "Video Production", "description": "Professional video content", "icon": "videocam", "href": "/services/video-production-services", "thumbnailImage": "/pages-content/video-production/video-production-hero-poster.jpg" },
+      { "id": "content-production-services", "title": "Content Production", "description": "Editorial content strategy", "icon": "create", "href": "/services/content-production-services", "thumbnailImage": "/pages-content/content-production/content-production-hero-bg.png" },
+      { "id": "web-development-services", "title": "Web Development", "description": "Modern website solutions", "icon": "code-slash", "href": "/services/web-development-services", "thumbnailImage": "/pages-content/web-development/web-development-hero-bg.jpg" },
+      { "id": "marketing-services", "title": "Marketing", "description": "Integrated growth programs", "icon": "git-branch", "href": "/services/marketing-services", "thumbnailImage": "/pages-content/marketing-automation/marketing-automation-hero-bg.jpg" },
+      { "id": "seo-services", "title": "SEO Services", "description": "Organic traffic growth", "icon": "trending-up", "href": "/services/seo-services", "thumbnailImage": "/pages-content/seo-services/seo-services-hero-bg.png" },
+      { "id": "lead-generation-services", "title": "Lead Generation", "description": "Convert prospects to customers", "icon": "magnet", "href": "/services/lead-generation-services", "thumbnailImage": "/pages-content/lead-generation/lead-generation-hero-bg.png" }
+    ]
+  },
+  "twoColVideo": {
+    "id": "services-intro-video",
+    "title": "How We Drive Growth",
+    "description": "Our integrated approach combines paid advertising, content strategy, and marketing automation to deliver consistent, scalable results.\n\nFrom first impression to customer retention, we optimize every touchpoint in your marketing funnel.",
+    "video": {
+      "src": "/pages-content/marketing/marketing-process.mp4",
+      "poster": "/pages-content/marketing/marketing-hero-poster.jpg",
+      "autoPlay": false,
+      "loop": true,
+      "muted": true
+    },
+    "cta": { "label": "See Our Process", "href": "#capabilities" }
+  }
+}

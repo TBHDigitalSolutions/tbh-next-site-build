@@ -1,0 +1,550 @@
+/* ==========================================================================
+   Services & Capabilities — Section Styles
+   Uses unified theme variables (colors, radii, spacing, shadows, transitions)
+   ========================================================================== */
+
+/* ---------- Section scaffold ---------- */
+.section {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+}
+
+/* Let the page container control max-width; these hooks align spacing */
+.container {}
+
+.header {
+    text-align: center;
+    margin-block: var(--spacing-2xl) var(--spacing-xl);
+}
+
+.title {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-h2);
+    line-height: var(--line-height-heading);
+    color: var(--text-accent);
+    margin: 0 0 var(--spacing-md);
+    letter-spacing: 0.2px;
+    text-transform: uppercase;
+}
+
+.description {
+    max-width: 72ch;
+    margin: 0 auto;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+/* ---------- Legacy chips (hidden when bullets show) ---------- */
+.chipsWrap {
+    margin-top: var(--spacing-lg);
+    display: grid;
+    justify-items: center;
+    gap: var(--spacing-2xs);
+}
+
+.chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.chip {
+    border: 1px solid var(--border-subtle);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--radius-full);
+    background: var(--bg-surface);
+    color: var(--text-secondary);
+    font-size: var(--font-size-sm);
+}
+
+/* ---------- Shared grid ---------- */
+.grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-xl);
+    padding: 0;
+    margin: var(--spacing-xl) 0 0;
+    list-style: none;
+}
+
+.gridItem {
+    list-style: none;
+}
+
+@media (min-width: 768px) {
+    .grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 1024px) {
+    .grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* ==========================================================================
+   BULLETS — compact, supportive (3×3), visually narrower than cards
+   ========================================================================== */
+
+.bulletsContainer {
+    max-width: var(--container-narrow, 980px);
+    margin-inline: auto;
+}
+
+.bullets {}
+
+/* Visuals: smaller paddings, subtle elevation */
+.bulletsCompact .bulletCard {
+    padding: var(--spacing-md) var(--spacing-lg);
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast);
+}
+
+.bulletsCompact .bulletCard:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    border-color: color-mix(in oklab, var(--brand-blue, #39f) 20%, var(--border-subtle));
+}
+
+.bulletsCompact .bulletTitle {
+    font-size: var(--font-size-lg);
+    margin: 0;
+}
+
+.bulletsCompact .bulletLink {
+    text-decoration: none;
+    color: var(--text-primary);
+}
+
+.bulletsCompact .bulletLink:hover {
+    text-decoration: underline;
+}
+
+/* ==========================================================================
+   CARDS BAND — focal area (six category cards)
+   Uses a separate container and backdrop; includes icon/media + faux CTA
+   ========================================================================== */
+
+.cardsBand {
+    padding-block: var(--spacing-2xl) var(--spacing-3xl);
+    background:
+        radial-gradient(1200px 600px at 50% -200px, color-mix(in oklab, var(--brand-blue, #5ab) 20%, transparent), transparent),
+        linear-gradient(to bottom, color-mix(in oklab, var(--bg-surface) 96%, transparent), transparent);
+}
+
+.cardsContainer {}
+
+.cardsHeader {
+    text-align: center;
+    margin-bottom: var(--spacing-xl);
+}
+
+.cardsTitle {
+    margin: 0 0 var(--spacing-xs);
+    font-size: var(--font-size-h3);
+    color: var(--text-accent);
+}
+
+.cardsSubtitle {
+    margin: 0 auto;
+    max-width: 68ch;
+    color: var(--text-secondary);
+}
+
+/* Clickable card wrapper (whole-card link) */
+.cardLink {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+}
+
+/* Elevated card shell */
+.cardShell {
+    position: relative;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    gap: var(--spacing-md);
+    padding: var(--spacing-xl);
+    border-radius: var(--radius-2xl);
+    background: linear-gradient(180deg,
+            color-mix(in oklab, var(--bg-surface) 94%, transparent),
+            color-mix(in oklab, var(--bg-surface) 98%, transparent));
+    border: 1px solid color-mix(in oklab, var(--border-subtle) 80%, transparent);
+    box-shadow: var(--shadow-md);
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast);
+    isolation: isolate;
+}
+
+.cardShell::before {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    background: linear-gradient(180deg, color-mix(in oklab, var(--brand-blue, #39f) 40%, transparent), transparent);
+    opacity: 0;
+    transition: opacity var(--transition-fast);
+    z-index: 0;
+    pointer-events: none;
+}
+
+.cardShell:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+    border-color: color-mix(in oklab, var(--brand-blue, #39f) 35%, var(--border-subtle));
+}
+
+.cardShell:hover::before {
+    opacity: 0.35;
+}
+
+/* Media/Icon zone (align any <img> or <svg> passed as icon) */
+.cardMedia {
+    height: 56px;
+    display: grid;
+    place-items: center;
+}
+
+.cardIcon {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-lg);
+    display: grid;
+    place-items: center;
+    background: color-mix(in oklab, var(--brand-blue, #39f) 18%, transparent);
+    box-shadow: var(--shadow-sm);
+}
+
+.cardIconFallback {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-lg);
+    background: var(--bg-muted, rgba(255, 255, 255, 0.06));
+    box-shadow: inset 0 0 0 1px var(--border-subtle);
+}
+
+.cardContent {
+    position: relative;
+    z-index: 1;
+}
+
+/* Tighten PillarCard headings when rendered inside cards */
+.cardsGrid .cardShell :global(h3),
+.cardsGrid .cardShell :global(h4) {
+    margin-top: 0;
+}
+
+/* Visual CTA chip in footer (not a real button; whole card is the link) */
+.cardFooter {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.cardGhostCta {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--radius-full);
+    background: color-mix(in oklab, var(--brand-blue, #39f) 15%, transparent);
+    border: 1px solid color-mix(in oklab, var(--brand-blue, #39f) 40%, transparent);
+    font-size: var(--font-size-sm);
+    color: var(--text-primary);
+    transition: background var(--transition-fast), border-color var(--transition-fast);
+}
+
+.cardShell:hover .cardGhostCta {
+    background: color-mix(in oklab, var(--brand-blue, #39f) 22%, transparent);
+    border-color: color-mix(in oklab, var(--brand-blue, #39f) 60%, transparent);
+}
+
+/* CTA row spacing so buttons never overlap cards */
+.ctaRow {
+    display: flex;
+    gap: var(--spacing-md);
+    justify-content: center;
+    margin-top: var(--spacing-2xl);
+    flex-wrap: wrap;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    .cardShell {
+        transition: none;
+    }
+
+    .cardShell:hover {
+        transform: none;
+    }
+}
+
+/* Equal-height helpers for grids */
+.equalGrid {
+    align-items: stretch;
+    grid-auto-rows: 1fr;
+}
+
+.equalItem {
+    display: flex;
+}
+
+.equalCard {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+/* Bullets — uniform pills */
+.bulletsContainer {
+    max-width: var(--container-narrow, 980px);
+    margin-inline: auto;
+}
+
+.bulletsCompact .bulletCard {
+    min-height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-md) var(--spacing-lg);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Deep navy gradient band (dark top → lighter bottom) */
+.deepNavyBand {
+    background: linear-gradient(180deg, var(--bg-primary) 0%, var(--bg-elevated) 100%);
+}
+
+/* Cards — stronger equalization + breathing room */
+.cardsGrid .gridItem {
+    display: flex;
+}
+
+.cardShell.equalCard {
+    min-height: 260px;
+}
+
+/* consistent height across rows */
+@media (min-width: 1280px) {
+    .cardShell.equalCard {
+        min-height: 280px;
+    }
+}
+
+/* Ensure CTA row never overlaps */
+.ctaRow {
+    margin-top: var(--spacing-2xl);
+}
+
+/* ---- header already exists; just ensure the divider has breathing room ---- */
+.header :where(hr, .divider) {
+    margin-top: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+}
+
+/* ===================== Inline bullet links (quiet, clickable) ===================== */
+.bulletsInline {
+    /* match the description measure so it never feels wider than the divider */
+    --measure: 72ch;
+    max-width: var(--measure);
+    margin: 0 auto var(--spacing-xl);
+}
+
+.bulletsInlineList {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-sm) var(--spacing-xl);
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+@media (min-width: 640px) {
+    .bulletsInlineList {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 1024px) {
+    .bulletsInlineList {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+.bulletsInlineItem {
+    list-style: none;
+}
+
+.bulletsInlineLink {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    text-decoration: none;
+    color: var(--text-primary);
+    line-height: 1.45;
+    padding: 2px 0;
+    transition: color var(--transition-fast);
+}
+
+.bulletsInlineLink:hover {
+    color: var(--text-accent);
+    text-decoration: underline;
+}
+
+.bulletDot {
+    width: 6px;
+    height: 6px;
+    border-radius: 999px;
+    background: color-mix(in oklab, var(--brand-blue, #39f) 70%, white 0%);
+    box-shadow: 0 0 0 2px color-mix(in oklab, var(--brand-blue, #39f) 25%, transparent);
+}
+
+.bulletText {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ===================== Cards band (unchanged focal visuals) ===================== */
+.deepNavyBand {
+    background: linear-gradient(180deg, var(--bg-primary) 0%, var(--bg-elevated) 100%);
+}
+
+.equalGrid {
+    align-items: stretch;
+    grid-auto-rows: 1fr;
+}
+
+.equalItem {
+    display: flex;
+}
+
+.equalCard {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.cardsGrid .gridItem {
+    display: flex;
+}
+
+.cardShell.equalCard {
+    min-height: 260px;
+}
+
+@media (min-width: 1280px) {
+    .cardShell.equalCard {
+        min-height: 280px;
+    }
+}
+
+.cardLink {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+}
+
+.cardShell {
+    position: relative;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    gap: var(--spacing-md);
+    padding: var(--spacing-xl);
+    border-radius: var(--radius-2xl);
+    background: linear-gradient(180deg, color-mix(in oklab, var(--bg-surface) 94%, transparent), color-mix(in oklab, var(--bg-surface) 98%, transparent));
+    border: 1px solid color-mix(in oklab, var(--border-subtle) 80%, transparent);
+    box-shadow: var(--shadow-md);
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast);
+    isolation: isolate;
+}
+
+.cardShell::before {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    background: linear-gradient(180deg, color-mix(in oklab, var(--brand-blue, #39f) 40%, transparent), transparent);
+    opacity: 0;
+    transition: opacity var(--transition-fast);
+    pointer-events: none;
+}
+
+.cardShell:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+    border-color: color-mix(in oklab, var(--brand-blue, #39f) 35%, var(--border-subtle));
+}
+
+.cardShell:hover::before {
+    opacity: .35;
+}
+
+.cardMedia {
+    height: 56px;
+    display: grid;
+    place-items: center;
+}
+
+.cardIcon,
+.cardIconFallback {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-lg);
+    display: grid;
+    place-items: center;
+}
+
+.cardIcon {
+    background: color-mix(in oklab, var(--brand-blue, #39f) 18%, transparent);
+    box-shadow: var(--shadow-sm);
+}
+
+.cardIconFallback {
+    background: var(--bg-muted, rgba(255, 255, 255, 0.06));
+    box-shadow: inset 0 0 0 1px var(--border-subtle);
+}
+
+.cardFooter {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.cardGhostCta {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--radius-full);
+    background: color-mix(in oklab, var(--brand-blue, #39f) 15%, transparent);
+    border: 1px solid color-mix(in oklab, var(--brand-blue, #39f) 40%, transparent);
+    font-size: var(--font-size-sm);
+    transition: background var(--transition-fast), border-color var(--transition-fast);
+}
+
+.cardShell:hover .cardGhostCta {
+    background: color-mix(in oklab, var(--brand-blue, #39f) 22%, transparent);
+    border-color: color-mix(in oklab, var(--brand-blue, #39f) 60%, transparent);
+}
+
+/* CTA spacing */
+.ctaRow {
+    display: flex;
+    gap: var(--spacing-md);
+    justify-content: center;
+    margin-top: var(--spacing-2xl);
+    flex-wrap: wrap;
+}
+
+/* Reduce motion */
+@media (prefers-reduced-motion: reduce) {
+    .cardShell {
+        transition: none;
+    }
+
+    .cardShell:hover {
+        transform: none;
+    }
+}

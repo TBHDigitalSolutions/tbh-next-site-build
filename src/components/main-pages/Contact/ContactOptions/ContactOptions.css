@@ -1,0 +1,187 @@
+/* ============================
+   📞 Contact Options Styles
+============================ */
+
+/* ✅ Main Container */
+.contactoptions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-md);
+    /* Reduced gap for a tighter layout */
+    max-width: var(--container-width);
+    padding: var(--spacing-lg);
+    background: var(--background-gradient-light);
+    box-shadow: var(--shadow-light);
+    border-bottom: 3px solid var(--color-accent);
+    transition: var(--transition-default);
+}
+
+/* ✅ Dark Mode */
+.dark .contactoptions {
+    background: var(--background-gradient-dark);
+    color: var(--color-off-white);
+    box-shadow: var(--shadow-dark);
+}
+
+/* ✅ Section Heading */
+.contactoptions-title {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-h1);
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: var(--spacing-md);
+    text-shadow: var(--glow-accent);
+}
+
+/* ============================
+   🔹 Two-Column Layout
+============================ */
+.contactoptions-container {
+    display: flex;
+    justify-content: center;
+    /* Center both sections */
+    align-items: flex-start;
+    gap: var(--spacing-md);
+    /* Reduced spacing for a closer layout */
+    width: 100%;
+    flex-wrap: wrap;
+}
+
+/* ✅ Left Column - Location & Hours */
+.contactoptions-left {
+    flex: 1;
+    min-width: 320px;
+    text-align: left;
+}
+
+/* ✅ Right Column - Contact Methods & Social Media */
+.contactoptions-right {
+    flex: 1;
+    min-width: 320px;
+    text-align: center;
+    /* Center text */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* Align social icons and text */
+}
+
+/* ============================
+   📍 Location & Business Hours
+============================ */
+.contactoptions-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    /* Reduced spacing */
+    font-size: var(--font-size-body);
+    margin-bottom: var(--spacing-sm);
+}
+
+/* ✅ Icons */
+.contactoptions-icon {
+    font-size: var(--icon-size-lg);
+    color: var(--color-accent);
+    min-width: 24px;
+}
+
+/* ✅ Hours List */
+.contactoptions-hours {
+    margin-top: var(--spacing-xs);
+    list-style: none;
+    padding-left: 0;
+}
+
+.contactoptions-hours li {
+    font-size: var(--font-size-body);
+    margin-bottom: var(--spacing-xs);
+}
+
+/* ============================
+   📞 Contact Links & Social Media
+============================ */
+.contactoptions-subtitle {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-h3);
+    font-weight: bold;
+    text-align: center;
+    /* Center subtitle text */
+    margin-bottom: var(--spacing-sm);
+}
+
+/* ✅ Contact Methods */
+.contactoptions-methods {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* Center contact methods */
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
+}
+
+/* ✅ Contact Links */
+.contactoptions-link {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    font-size: var(--font-size-body);
+    text-decoration: none;
+    font-weight: bold;
+    color: var(--color-accent);
+    transition: color var(--transition-default);
+}
+
+.contactoptions-link:hover {
+    color: var(--color-accent-hover);
+}
+
+/* ✅ Icon Adjustments */
+.accent-icon {
+    color: var(--color-accent);
+    font-size: var(--icon-size-lg);
+}
+
+/* ✅ Social Media */
+.contactoptions-right .contactoptions-subtitle {
+    text-align: center;
+    /* Center subtitle */
+    margin-top: var(--spacing-sm);
+}
+
+.contactoptions-right .social-icons {
+    display: flex;
+    justify-content: center;
+    /* Ensure social icons are centered */
+}
+
+/* ============================
+   📱 Responsive Design
+============================ */
+@media (max-width: 768px) {
+    .contactoptions-container {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .contactoptions-left,
+    .contactoptions-right {
+        width: 100%;
+        text-align: center;
+    }
+
+    .contactoptions-item {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .contactoptions-methods {
+        width: 100%;
+        align-items: center;
+    }
+
+    .contactoptions-link {
+        width: 100%;
+    }
+}

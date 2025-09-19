@@ -1,0 +1,436 @@
+/* =============================================
+   🌐 TBH Digital Solutions – Global CSS (production)
+   Scope: base reset, typography, layout primitives
+   NOTE: design tokens now live in src/styles/unified-theme.css
+============================================= */
+
+/* ---------- Imports (cascade order) ---------- */
+/* @import "./unified-theme.css"; */
+@import "./root.css";
+/* 1) Design tokens + base styles */
+@import "./_fonts.css";
+/* 5) Animations last */
+@import "tailwindcss";
+/* =============================================
+   CSS sanity checks (one scrollbar)
+   Keep only the document scrolling.
+============================================= */
+body.app-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  /* sticky footer pattern */
+}
+
+.header-section {}
+
+.main-content-section {
+  flex: 1 0 auto;
+  overflow: visible;
+}
+
+.footer-section {
+  flex-shrink: 0;
+}
+
+*[style*="overflow: auto"],
+*[style*="overflow:auto"] {}
+
+/* =============================================
+   Reset & Base Defaults
+============================================= */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  overflow-x: hidden;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-family: var(--font-body);
+  font-size: var(--font-size-body);
+  line-height: var(--line-height-body);
+}
+
+body {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Media defaults */
+img,
+svg,
+video,
+canvas {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+/* Links — exclude anchor-buttons so .btn controls its own hover/underline */
+a:not(.btn) {
+  color: var(--accent-primary, var(--brand-blue));
+  text-decoration: none;
+  transition: color var(--transition-standard);
+}
+
+a:not(.btn):hover {
+  color: var(--accent-hover, var(--brand-hover));
+  text-decoration: underline;
+}
+
+/* Focus ring — use focus-visible and let .btn own its outline */
+:where(a:not(.btn),
+  button:not(.btn),
+  [role="button"]:not(.btn),
+  input,
+  select,
+  textarea):focus-visible {
+  outline: 2px solid var(--accent-primary, var(--brand-blue));
+  outline-offset: 2px;
+}
+
+/* Prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* =============================================
+   Typography
+============================================= */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0 0 var(--spacing-md);
+  font-family: var(--font-heading);
+  line-height: var(--line-height-heading);
+  color: var(--text-accent);
+  font-weight: 600;
+}
+
+h1 {
+  font-size: var(--font-size-h1);
+  font-weight: 700;
+}
+
+h2 {
+  font-size: var(--font-size-h2);
+}
+
+h3 {
+  font-size: var(--font-size-h3);
+  font-weight: 500;
+}
+
+h4 {
+  font-size: var(--font-size-h4);
+}
+
+h5 {
+  font-size: var(--font-size-h5, 1rem);
+}
+
+h6 {
+  font-size: var(--font-size-h6, .875rem);
+}
+
+p {
+  margin: 0 0 var(--spacing-md);
+  color: var(--text-primary);
+}
+
+/* Lists */
+ul,
+ol {
+  margin: var(--spacing-md) 0;
+  padding-inline-start: var(--spacing-lg);
+}
+
+li {
+  margin-block-end: var(--spacing-sm);
+}
+
+/* Code */
+code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  padding: .2rem .4rem;
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-small);
+}
+
+pre {
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  padding: var(--spacing-md);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+  overflow: auto;
+}
+
+/* Blockquote */
+blockquote {
+  margin: var(--spacing-xl) 0;
+  padding: var(--spacing-md) var(--spacing-lg);
+  border-left: 4px solid var(--accent-primary, var(--brand-blue));
+  background: color-mix(in oklab, var(--accent-primary, var(--brand-blue)) 6%, transparent);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-style: italic;
+}
+
+/* =============================================
+   Layout primitives
+============================================= */
+main {
+  flex: 1;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  padding-top: var(--header-height, 80px);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  background: var(--bg-primary);
+  min-height: calc(100vh - var(--header-height, 80px));
+}
+
+section {
+  width: 100%;
+}
+
+main>section.content-section,
+main>section.section-padding,
+main>section[data-constrained="true"] {
+  padding-block: var(--section-pad-block);
+}
+
+main>section.content-section-major,
+main>section.section-major {
+  padding-block: var(--section-pad-block-lg);
+}
+
+main>section[data-hero="true"],
+main>section[data-full-width="true"] {
+  padding-block: 0;
+}
+
+.section-padding {
+  padding-block: var(--section-pad-block);
+}
+
+.section-major {
+  padding-block: var(--section-pad-block-lg);
+}
+
+.gradient-section {
+  background: var(--gradient-section);
+}
+
+/* =============================================
+   Forms
+============================================= */
+input,
+textarea,
+select {
+  width: 100%;
+  padding: 0.625rem 0.75rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  font: inherit;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--text-tertiary, rgba(255, 255, 255, .6));
+}
+
+:where(input, textarea, select):focus-visible {
+  outline: 2px solid var(--accent-primary, var(--brand-blue));
+  outline-offset: 2px;
+  border-color: var(--accent-primary, var(--brand-blue));
+}
+
+button,
+input[type="submit"] {
+  font-family: var(--font-heading);
+  cursor: pointer;
+}
+
+/* globals.css — used by Modal.tsx when opening */
+body.modal-open {
+  overflow: hidden !important;
+  position: fixed !important;
+  /* Modal.tsx should set top: -scrollY inline */
+  width: 100% !important;
+}
+
+/* =============================================
+   Responsive scales
+============================================= */
+@media (max-width: 1024px) {
+  main {
+    padding-top: var(--header-height-tablet, 70px);
+    min-height: calc(100vh - var(--header-height-tablet, 70px));
+  }
+}
+
+@media (max-width: 768px) {
+  main {
+    padding-top: var(--header-height-mobile, 60px);
+    min-height: calc(100vh - var(--header-height-mobile, 60px));
+  }
+
+  section:not([data-hero="true"]):not([data-full-width="true"]) {
+    padding-block: var(--spacing-lg);
+  }
+}
+
+@media (max-width: 480px) {
+  main {
+    padding-top: var(--header-height-small, 50px);
+    min-height: calc(100vh - var(--header-height-small, 50px));
+  }
+}
+
+/* =============================================
+   Light utilities
+============================================= */
+.text-center {
+  text-align: center;
+}
+
+.text-left {
+  text-align: left;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.text-secondary {
+  color: var(--text-secondary);
+}
+
+.mb-sm {
+  margin-bottom: var(--spacing-sm);
+}
+
+.mb-md {
+  margin-bottom: var(--spacing-md);
+}
+
+.mb-lg {
+  margin-bottom: var(--spacing-lg);
+}
+
+.mb-xl {
+  margin-bottom: var(--spacing-xl);
+}
+
+.mt-sm {
+  margin-top: var(--spacing-sm);
+}
+
+.mt-md {
+  margin-top: var(--spacing-md);
+}
+
+.mt-lg {
+  margin-top: var(--spacing-lg);
+}
+
+.mt-xl {
+  margin-top: var(--spacing-xl);
+}
+
+/* =============================================
+   Brand consistency / theme transitions
+============================================= */
+.theme-transition,
+.theme-transition * {
+  transition: background-color var(--transition-standard),
+    color var(--transition-standard),
+    border-color var(--transition-standard);
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  .theme-transition,
+  .theme-transition * {
+    transition: none !important;
+  }
+}
+
+/* =============================================
+   Scrollbar theming
+============================================= */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-subtle);
+  border-radius: var(--radius-sm);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-primary, var(--brand-blue));
+}
+/* =============================================================================
+   Global Focus Styles
+   Add this to your globals.css or unified-theme.css file
+   ============================================================================= */
+
+/* Default focus-visible outline offset for better accessibility */
+:focus-visible {
+  outline-offset: 2px;
+}
+
+/* Ensure all interactive elements have consistent focus treatment */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+[tabindex]:focus-visible,
+[role="button"]:focus-visible,
+[role="link"]:focus-visible {
+  outline: 2px solid var(--focus-ring-color, #3b82f6);
+  outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  :focus-visible {
+    outline-width: 3px;
+  }
+}

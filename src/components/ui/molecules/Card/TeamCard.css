@@ -1,0 +1,130 @@
+/* ============================
+   🎨 Team Card Styles
+============================ */
+
+.teamcard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: var(--spacing-md);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-light);
+    background: var(--background-gradient-light);
+    border: 1px solid var(--color-light-grey);
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    width: 100%;
+    max-width: var(--card-width);
+    text-align: center;
+    overflow: hidden;
+}
+
+.dark .teamcard {
+    background: var(--background-dark);
+    box-shadow: var(--shadow-dark);
+    border-color: var(--color-dark-charcoal);
+}
+
+/* ✅ Hover & Focus Effects */
+.teamcard:hover {
+    transform: scale(1.05);
+    box-shadow: var(--glow-accent);
+}
+
+/* ✅ Profile Image */
+.teamcard-image {
+    width: 8rem;
+    height: 8rem;
+    border-radius: var(--radius-circle);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    border: 2px solid var(--color-light-grey);
+    transition: box-shadow 0.3s ease-in-out;
+    background: var(--background-gradient-light);
+}
+
+.dark .teamcard-image {
+    border-color: var(--color-dark-charcoal);
+}
+
+.teamcard:hover .teamcard-image {
+    box-shadow: var(--glow-accent);
+}
+
+/* ✅ Name & Position */
+.teamcard-name {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-h3);
+    font-weight: bold;
+    color: var(--color-soft-black);
+    margin-top: var(--spacing-sm);
+}
+
+.dark .teamcard-name {
+    color: var(--color-off-white);
+}
+
+.teamcard-position {
+    font-family: var(--font-alt);
+    font-size: var(--font-size-small);
+    font-weight: 600;
+    color: var(--color-dark-charcoal);
+    margin-top: var(--spacing-xs);
+}
+
+.dark .teamcard-position {
+    color: var(--color-light-grey);
+}
+
+/* ✅ Description */
+.teamcard-description {
+    font-family: var(--font-body);
+    font-size: var(--font-size-small);
+    color: var(--color-dark-charcoal);
+    text-align: left;
+    margin-top: var(--spacing-xs); 
+}
+
+.dark .teamcard-description {
+    color: var(--color-light-grey);
+}
+
+/* ✅ Expand Button */
+.teamcard-btn {
+    background-color: var(--color-accent);
+    color: var(--color-off-white);
+    font-size: var(--font-size-small);
+    font-weight: bold;
+    text-transform: uppercase;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out;
+    margin-top: var(--spacing-sm);
+    box-shadow: var(--glow-accent);
+}
+
+.teamcard-btn:hover {
+    background-color: var(--color-accent-hover);
+    transform: scale(1.05);
+    box-shadow: var(--glow-accent-hover);
+}
+
+.teamcard-btn:active {
+    transform: scale(0.95);
+}
+
+/* ✅ Expanded Bio */
+.teamcard-bio {
+    font-size: var(--font-size-body);
+    color: var(--color-soft-black);
+    text-align: center;
+    margin-top: var(--spacing-sm);
+    padding-top: var(--spacing-sm);
+    border-top: 1px solid var(--color-light-grey);
+    transition: all 0.3s ease-in-out;
+}
+
+.dark .teamcard-bio {
+    color: var(--color-off-white);
+    border-top: 1px solid var(--color-dark-charcoal);
+}

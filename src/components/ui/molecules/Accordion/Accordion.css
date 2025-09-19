@@ -1,0 +1,345 @@
+/* ==========================================================
+   Accordion (Unified Theme)
+   - Global CSS (matches current import)
+   - Uses theme tokens for color, spacing, radii, shadows, motion
+   ========================================================== */
+
+.accordion {
+    width: 100%;
+}
+
+/* Variants scaffold */
+.accordion.variant-default {}
+
+.accordion.variant-bordered .accordion-item {
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    background: var(--bg-surface);
+}
+
+.accordion.variant-minimal .accordion-item {
+    border-bottom: 1px solid var(--border-subtle);
+    border-radius: 0;
+    background: transparent;
+}
+
+.accordion.variant-cards .accordion-item {
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    background: var(--bg-surface);
+    box-shadow: var(--shadow-sm);
+}
+
+/* Sizes scaffold (vertical rhythm) */
+.accordion.size-small .accordion-header {
+    padding: var(--spacing-sm) 0;
+}
+
+.accordion.size-medium .accordion-header {
+    padding: var(--spacing-md) 0;
+}
+
+.accordion.size-large .accordion-header {
+    padding: var(--spacing-lg) 0;
+}
+
+/* Controls (search + categories) */
+.accordion-controls {
+    display: grid;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+}
+
+.accordion-search {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.search-input {
+    width: 100%;
+    background: var(--bg-surface);
+    color: var(--text-primary);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-sm) var(--spacing-lg) var(--spacing-sm) calc(var(--spacing-lg) + 20px);
+    transition: border-color var(--motion-fast, 160ms) ease, box-shadow var(--motion-fast, 160ms) ease;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: var(--brand-blue);
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--brand-blue) 20%, transparent);
+}
+
+.search-icon {
+    position: absolute;
+    left: var(--spacing-sm);
+    font-size: 14px;
+    opacity: 0.6;
+}
+
+.accordion-categories {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+}
+
+.category-btn {
+    appearance: none;
+    border: 1px solid var(--border-subtle);
+    background: var(--bg-surface);
+    color: var(--text-primary);
+    border-radius: var(--radius-pill, 9999px);
+    padding: 6px 12px;
+    font: inherit;
+    cursor: pointer;
+    transition: background var(--motion-fast, 160ms) ease, border-color var(--motion-fast, 160ms) ease, color var(--motion-fast, 160ms) ease;
+}
+
+.category-btn:hover {
+    border-color: var(--brand-blue);
+    color: var(--brand-blue);
+}
+
+.category-btn.active {
+    background: color-mix(in oklab, var(--brand-blue) 10%, var(--bg-surface));
+    border-color: var(--brand-blue);
+    color: var(--brand-blue);
+}
+
+/* Items root */
+.accordion-items {
+    display: grid;
+    gap: var(--spacing-md);
+}
+
+/* Item */
+.accordion-item {
+    background: var(--bg-surface);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-subtle);
+    overflow: hidden;
+    box-shadow: var(--shadow-xs);
+    animation: fade-in-up 0.5s ease both;
+}
+
+.accordion-item.disabled {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+/* Header button */
+.accordion-header {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    background: transparent;
+    color: var(--text-primary);
+    border: 0;
+    text-align: left;
+    cursor: pointer;
+    padding: var(--spacing-lg);
+    gap: var(--spacing-md);
+}
+
+.accordion-header:focus-visible {
+    outline: 2px solid var(--brand-blue);
+    outline-offset: 2px;
+    border-radius: var(--radius-md);
+}
+
+/* Header inner layout */
+.header-content {
+    display: contents;
+    /* keep grid columns defined on header */
+}
+
+.header-text {
+    display: grid;
+    gap: 2px;
+}
+
+.accordion-title {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-lg);
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: 0.2px;
+}
+
+.accordion-category {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+}
+
+.header-actions {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.accordion-badge {
+    display: inline-flex;
+    align-items: center;
+    height: 24px;
+    border-radius: var(--radius-pill, 9999px);
+    padding: 0 var(--spacing-sm);
+    background: color-mix(in oklab, var(--brand-blue) 12%, var(--bg-surface));
+    color: var(--brand-blue);
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+}
+
+/* Icon (plus → x) */
+.accordion-icon {
+    display: inline-flex;
+}
+
+.accordion-toggle-icon {
+    width: 22px;
+    height: 22px;
+    position: relative;
+    transition: transform var(--motion-fast, 160ms) ease;
+}
+
+.icon-line {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 14px;
+    height: 2px;
+    background: var(--text-secondary);
+    border-radius: 1px;
+    transform: translate(-50%, -50%);
+}
+
+.icon-line.vertical {
+    transform: translate(-50%, -50%) rotate(90deg);
+}
+
+.accordion-toggle-icon.open .vertical {
+    opacity: 0;
+    transition: opacity var(--motion-fast, 160ms) ease;
+}
+
+.accordion-toggle-icon.open .horizontal {
+    background: var(--brand-blue);
+}
+
+/* Content panel */
+.accordion-content {
+    overflow: hidden;
+    max-height: 0;
+    background: var(--bg-surface);
+    transition: max-height var(--motion-normal, 200ms) ease;
+}
+
+.accordion-content-inner {
+    padding: 0 var(--spacing-lg) var(--spacing-lg);
+    color: var(--text-secondary);
+    line-height: var(--line-height-normal);
+}
+
+/* Open state */
+.accordion-item.open .accordion-header {
+    background: color-mix(in oklab, var(--bg-surface) 94%, var(--bg-primary));
+}
+
+.accordion-item.open .accordion-content {
+    /* max-height controlled inline for smoother height calc */
+}
+
+/* Tags */
+.accordion-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-xs);
+    margin-top: var(--spacing-md);
+}
+
+.accordion-tag {
+    border: 1px solid var(--border-subtle);
+    color: var(--text-secondary);
+    background: var(--bg-elevated);
+    border-radius: var(--radius-pill, 9999px);
+    padding: 2px 8px;
+    font-size: var(--font-size-xs);
+}
+
+/* Empty state */
+.accordion-empty-state {
+    border: 1px dashed var(--border-subtle);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-xl);
+    text-align: center;
+    background: var(--bg-surface);
+    color: var(--text-secondary);
+}
+
+.empty-icon {
+    font-size: 28px;
+    display: block;
+    margin-bottom: var(--spacing-sm);
+}
+
+.empty-message {
+    margin: 0 0 var(--spacing-sm);
+}
+
+.clear-search-btn {
+    appearance: none;
+    border: 1px solid var(--border-subtle);
+    background: var(--bg-surface);
+    color: var(--text-primary);
+    border-radius: var(--radius-md);
+    padding: 6px 12px;
+    cursor: pointer;
+    transition: border-color var(--motion-fast, 160ms) ease, background var(--motion-fast, 160ms) ease;
+}
+
+.clear-search-btn:hover {
+    border-color: var(--brand-blue);
+    background: color-mix(in oklab, var(--brand-blue) 10%, var(--bg-surface));
+}
+
+/* Results info */
+.accordion-results-info {
+    margin-top: var(--spacing-md);
+    color: var(--text-secondary);
+    font-size: var(--font-size-sm);
+}
+
+/* Motion & a11y */
+@media (prefers-reduced-motion: reduce) {
+    .accordion-content {
+        transition: none;
+    }
+
+    .accordion-toggle-icon {
+        transition: none;
+    }
+
+    .accordion-item {
+        animation: none;
+    }
+}
+
+/* Entrance animation */
+@keyframes fade-in-up {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Dark theme nuance (inherits tokens) */
+[data-theme="dark"] .accordion.variant-minimal .accordion-item {
+    border-bottom-color: var(--border-subtle);
+}

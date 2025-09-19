@@ -1,0 +1,47 @@
+/* ============================
+   📥 Download CTA Button Styles
+============================ */
+
+.download-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm) var(--spacing-lg);
+    border-radius: var(--radius-md);
+    background-color: var(--color-accent);
+    color: var(--color-off-white);
+    font-weight: 600;
+    font-size: var(--font-size-body);
+    font-family: var(--font-heading);
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color var(--transition-default), transform var(--transition-fast);
+}
+
+.download-cta:hover {
+    background-color: var(--color-accent-hover);
+    transform: scale(1.03);
+}
+
+.download-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.download-filetype {
+    font-size: var(--font-size-small);
+    font-weight: normal;
+    opacity: 0.85;
+    margin-left: var(--spacing-xs);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .download-cta {
+        width: 100%;
+        justify-content: center;
+        font-size: var(--font-size-small);
+    }
+}

@@ -1,0 +1,273 @@
+/**
+ * MainContent.css — Production styles for the page canvas (<main>)
+ * ---------------------------------------------------------------
+ * This file intentionally avoids re-defining layout responsibilities
+ * handled in layout.css (e.g., min-height, header padding, flex growth).
+ * It focuses on:
+ *   - Canvas-scoped helpers & utilities
+ *   - Container integration
+ *   - Performance & a11y enhancements
+ *   - Optional debug affordances
+ *
+ * Expected structure:
+ *   <main class="main-content-section"> ... </main>
+ *
+ * NOTE:
+ *  - The single scroll owner is the document/body. Do not add overflow:auto here.
+ *  - Full-bleed sections (Hero/FullWidthSection) handle their own breakout.
+ */
+
+/* =========================================================
+   1) Canvas guardrails (safe, non-conflicting)
+   - Keep canvas from becoming its own scroll container
+   - Never constrain width here (Container component does that)
+========================================================= */
+.main-content-section {
+    overflow: visible;
+    /* ensure no inner scrollbar is introduced */
+    width: 100%;
+    max-width: none;
+
+    /* Perf hints (safe): */
+    contain: layout style;
+    /* isolate layout/style for large pages */
+    will-change: scroll-position;
+    /* hint for long documents */
+    backface-visibility: hidden;
+    transform: translateZ(0);
+    /* GPU nudge for smoothness */
+}
+
+/* Ensure direct children don’t accidentally introduce side gaps */
+.main-content-section>* {
+    margin-inline: 0;
+    box-sizing: border-box;
+}
+
+/* Direct child sections/regions inherit full-width canvas behavior */
+.main-content-section>section,
+.main-content-section>article,
+.main-content-section>div[role="region"],
+.main-content-section>div[role="main"] {
+    width: 100%;
+    max-width: none;
+    margin-inline: 0;
+}
+
+/* =========================================================
+   2) Container integration
+   - Constrained content should be wrapped by your Container component.
+   - These rules ensure nice defaults when a .container is inside <main>.
+========================================================= */
+.main-content-section .container {
+    width: min(var(--container-max-width, 1200px), 100%);
+    margin-inline: auto;
+    padding-inline: var(--spacing-md, 1rem);
+    box-sizing: border-box;
+}
+
+/* Constrained “banded” sections if you opt into a class/attr */
+.main-content-section .content-section,
+.main-content-section section[data-constrained="true"] {
+    width: 100%;
+    max-width: var(--container-max-width, 1200px);
+    margin-inline: auto;
+    padding-inline: var(--spacing-md, 1rem);
+}
+
+/* Full‑bleed sections are handled by their own styles; nothing to add here */
+.main-content-section .full-width-section,
+.main-content-section .hero-section,
+.main-content-section section[data-full-width="true"] {}
+
+/* Utilities for optional breakouts/constraints */
+.main-content-section .breakout {
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+}
+
+.main-content-section .constrain {
+    max-width: var(--container-max-width, 1200px);
+    margin-inline: auto;
+    padding-inline: var(--spacing-md, 1rem);
+}
+
+.main-content-section .constrain-narrow {
+    max-width: var(--container-narrow-max-width, 800px);
+    margin-inline: auto;
+    padding-inline: var(--spacing-md, 1rem);
+}
+
+.main-content-section .constrain-wide {
+    max-width: var(--container-wide-max-width, 1320px);
+    margin-inline: auto;
+    padding-inline: var(--spacing-md, 1rem);
+}
+
+/* =========================================================
+   3) Responsive refinements (container padding only)
+========================================================= */
+@media (max-width: 1024px) {
+
+    .main-content-section .container,
+    .main-content-section .content-section {
+        padding-inline: var(--spacing-sm, 0.75rem);
+    }
+}
+
+@media (max-width: 768px) {
+
+    .main-content-section .container,
+    .main-content-section .content-section {
+        padding-inline: var(--mobile-padding, var(--spacing-sm, 0.75rem));
+    }
+
+    /* Helpful when a section forgets its own side padding */
+    .main-content-section>section {
+        padding-inline: var(--mobile-padding, var(--spacing-sm, 0.75rem));
+    }
+}
+
+@media (max-width: 480px) {
+    .main-content-section .container {
+        padding-inline: var(--mobile-padding-small, var(--spacing-xs, 0.5rem));
+    }
+}
+
+/* =========================================================
+   4) Accessibility & focus
+========================================================= */
+.main-content-section:focus {
+    outline: 2px solid var(--accent-primary, #0EAFFB);
+    outline-offset: 2px;
+}
+
+.main-content-section:focus:not(:focus-visible) {
+    outline: none;
+}
+
+/* If the main is targeted (skip link), respect header offset */
+.main-content-section:target {
+    scroll-margin-top: var(--header-height, 80px);
+}
+
+/* High contrast tweaks */
+@media (prefers-contrast: high) {
+    .main-content-section:focus {
+        outline-width: 3px;
+    }
+}
+
+/* =========================================================
+   5) Development debug (opt-in only)
+   - Enabled by MainContent.tsx when debug=true in development
+========================================================= */
+.main-content-debug {
+    position: relative;
+    outline: 2px dashed #ff6b6b;
+    outline-offset: -2px;
+    background: rgba(255, 107, 107, 0.02);
+}
+
+.main-content-debug::before {
+    content: "MainContent [Full-Width Canvas]";
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: rgba(255, 107, 107, 0.9);
+    color: #fff;
+    padding: 2px 8px;
+    font: 11px/1.2 monospace;
+    z-index: 9999;
+    pointer-events: none;
+    border-radius: 0 0 4px 0;
+}
+
+.main-content-section[style*="--container-max-width"].main-content-debug::before {
+    /* show width override if applied via component prop */
+    content: "MainContent [Override: " attr(style) "]";
+}
+
+/* =========================================================
+   6) Performance & motion preferences
+========================================================= */
+@media (prefers-reduced-motion: reduce) {
+    .main-content-section {
+        transform: none;
+        will-change: auto;
+        scroll-behavior: auto;
+    }
+
+    .main-content-section>section,
+    .main-content-section>article,
+    .main-content-section .hero-section,
+    .main-content-section .full-width-section {
+        transform: none;
+        will-change: auto;
+        transition: none;
+        animation: none;
+    }
+}
+
+/* Optional entrance animation (opt-in via data-attr) */
+.main-content-section[data-animate="true"] {
+    opacity: 0;
+    animation: mainContentFadeIn 0.5s ease-out forwards;
+}
+
+@keyframes mainContentFadeIn {
+    to {
+        opacity: 1;
+    }
+}
+
+/* Stagger demo (if desired) */
+.main-content-section[data-animate="true"]>section:nth-child(1) {
+    animation-delay: .1s;
+}
+
+.main-content-section[data-animate="true"]>section:nth-child(2) {
+    animation-delay: .2s;
+}
+
+.main-content-section[data-animate="true"]>section:nth-child(3) {
+    animation-delay: .3s;
+}
+
+/* =========================================================
+   7) Print styles
+========================================================= */
+@media print {
+    .main-content-section {
+        background: #fff !important;
+        color: #000 !important;
+        display: block;
+        contain: none;
+        transform: none;
+        will-change: auto;
+    }
+
+    .main-content-debug,
+    .main-content-debug::before {
+        display: none !important;
+    }
+
+    .main-content-section>* {
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+}
+
+/* =========================================================
+   8) Legacy mapping (temporary; remove after migration)
+   - If any component still uses .main-content-wrapper, don’t break it.
+========================================================= */
+.main-content-wrapper {
+    display: none;
+}
+
+/* deprecated */
+.main-content-debug.main-content-wrapper {
+    display: block;
+}

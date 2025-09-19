@@ -1,0 +1,84 @@
+/* =============================================
+   🌟 Navbar — Production
+   Compact spacing, uppercase, active underline
+============================================= */
+
+.navbar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: nowrap;
+    width: 100%;
+    max-width: clamp(1040px, 92vw, 1280px);
+    /* match footer/header width */
+    margin: 0 auto;
+    gap: clamp(var(--spacing-xs), 2vw, var(--spacing-md));
+    padding: 0 clamp(var(--spacing-xs), 2vw, var(--spacing-md));
+}
+
+/* Link base */
+.navbar-link {
+    position: relative;
+    font-family: var(--font-heading);
+    font-weight: 600;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--text-primary);
+    white-space: nowrap;
+    font-size: clamp(var(--font-size-small), 1.1vw, var(--font-size-body));
+    padding: clamp(var(--spacing-2xs), .9vw, var(--spacing-sm));
+    transition: color var(--transition-standard), text-shadow var(--transition-standard);
+}
+
+.navbar-link:hover,
+.navbar-link:focus {
+    color: var(--accent-primary);
+    text-shadow: var(--glow-accent);
+}
+
+/* Special highlight (e.g., CTA link) */
+.navbar-special {
+    font-weight: 700;
+    text-align: center;
+    min-width: clamp(90px, 10vw, 120px);
+}
+
+/* Active route indicator */
+.navbar-link.active {
+    font-weight: 700;
+    color: var(--accent-primary);
+}
+
+.navbar-link.active::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -4px;
+    height: 2px;
+    width: 100%;
+    background-color: var(--accent-primary);
+}
+
+/* Tablet */
+@media (max-width: 1024px) {
+    .navbar {
+        gap: clamp(var(--spacing-2xs), 1.6vw, var(--spacing-sm));
+        padding: 0 clamp(var(--spacing-2xs), 1.6vw, var(--spacing-sm));
+    }
+
+    .navbar-link {
+        font-size: clamp(var(--font-size-caption), 1vw, var(--font-size-small));
+        padding: 0 clamp(var(--spacing-2xs), 1vw, var(--spacing-sm));
+    }
+
+    .navbar-special {
+        min-width: clamp(80px, 10vw, 100px);
+    }
+}
+
+/* Mobile — hidden (MobileMenu handles nav) */
+@media (max-width: 768px) {
+    .navbar {
+        display: none;
+    }
+}

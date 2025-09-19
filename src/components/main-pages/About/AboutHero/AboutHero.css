@@ -1,0 +1,131 @@
+/* ============================
+   🌟 About Hero (TBH Unified Theme)
+============================ */
+
+/* Section */
+.about-hero-section {
+    position: relative;
+    width: 100%;
+    min-height: clamp(420px, 65vh, 600px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-block: var(--section-pad-block-lg);
+    background: var(--gradient-section);
+    color: var(--text-primary);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+    transition:
+        background-color var(--transition-standard),
+        box-shadow var(--transition-standard);
+}
+
+/* Container */
+.about-hero-container {
+    width: min(calc(100% - 2 * var(--container-pad-inline)), var(--container-max));
+    margin-inline: auto;
+    padding-inline: var(--container-pad-inline);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Content */
+.about-hero-wrapper {
+    width: 100%;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-md);
+    padding: var(--spacing-sm) var(--spacing-lg);
+    box-sizing: border-box;
+}
+
+/* Heading */
+.about-hero-heading {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-h1);
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: var(--line-height-heading);
+    margin: 0;
+}
+
+/* Highlight */
+.about-hero-highlight {
+    color: var(--text-accent);
+}
+
+/* Divider under title */
+.about-hero-title-divider {
+    width: min(60%, 560px);
+    margin-inline: auto;
+}
+
+/* Subtitle */
+.about-hero-subtitle {
+    font-family: var(--font-body);
+    font-size: var(--font-size-h4);
+    color: var(--text-secondary);
+    max-width: 70ch;
+    margin: 0;
+    line-height: var(--line-height-body);
+}
+
+/* CTA wrapper */
+.about-hero-cta {
+    margin-top: var(--spacing-md);
+}
+
+/* Bottom divider width */
+.about-hero-bottom-divider {
+    width: min(80%, 720px);
+    margin-inline: auto;
+}
+
+/* ============================
+   Responsive
+============================ */
+@media (max-width: 1024px) {
+    .about-hero-section {
+        padding-block: var(--section-pad-block);
+        min-height: clamp(360px, 55vh, 520px);
+    }
+
+    .about-hero-title-divider {
+        width: 70%;
+    }
+}
+
+@media (max-width: 768px) {
+    .about-hero-heading {
+        font-size: var(--font-size-h2);
+    }
+
+    .about-hero-subtitle {
+        font-size: var(--font-size-body);
+    }
+
+    .about-hero-title-divider {
+        width: 80%;
+    }
+
+    .about-hero-bottom-divider {
+        width: 90%;
+    }
+}
+
+@media (max-width: 480px) {
+    .about-hero-section {
+        min-height: clamp(340px, 55vh, 480px);
+    }
+
+    .about-hero-title-divider {
+        width: 90%;
+    }
+
+    .about-hero-bottom-divider {
+        width: 95%;
+    }
+}

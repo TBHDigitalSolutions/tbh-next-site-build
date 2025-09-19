@@ -1,0 +1,395 @@
+/* src/components/ui/organisms/PricingTiers/PricingTiers.module.css
+   — Production module, unified with TBH theme tokens */
+
+/* =========================================
+   Section Shell + Layout Variants
+========================================= */
+.pricingTiers {
+    width: 100%;
+    max-width: var(--container-max, 1200px);
+    margin-inline: auto;
+    padding-block: var(--section-pad-block, var(--spacing-2xl));
+    padding-inline: var(--container-pad-inline, 16px);
+    color: var(--text-primary);
+}
+
+.pricingTiers[data-layout="grid"] .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--spacing-lg);
+    align-items: stretch;
+}
+
+.pricingTiers[data-layout="list"] .grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-lg);
+    align-items: stretch;
+}
+
+/* =========================================
+   Billing Toggle (presentational)
+========================================= */
+.billingToggleSection {
+    display: flex;
+    justify-content: center;
+    margin-block-end: var(--spacing-lg);
+}
+
+.billingToggle {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    padding: 6px;
+    box-shadow: var(--shadow-xs);
+}
+
+.toggleBtn {
+    appearance: none;
+    border: 0;
+    background: transparent;
+    color: var(--text-secondary);
+    font: inherit;
+    font-weight: 600;
+    letter-spacing: .02em;
+    padding: 8px 12px;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: background-color var(--transition-fast), color var(--transition-fast);
+}
+
+.toggleBtn:hover {
+    background: color-mix(in oklab, var(--bg-elevated) 85%, transparent);
+    color: var(--text-primary);
+}
+
+.active {
+    background: var(--brand-blue);
+    color: var(--text-inverse, #060512);
+}
+
+/* =========================================
+   Card
+========================================= */
+.card {
+    position: relative;
+    background: var(--bg-surface);
+    color: var(--text-primary);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-xs);
+    padding: var(--spacing-lg);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    overflow: hidden;
+    height: 100%;
+    transition:
+        transform var(--transition-standard),
+        box-shadow var(--transition-standard),
+        border-color var(--transition-standard),
+        background-color var(--transition-standard);
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--border-accent, var(--brand-blue));
+}
+
+.highlighted {
+    border-color: var(--border-accent, var(--brand-blue));
+    outline: 1px solid color-mix(in oklab, var(--brand-blue) 40%, transparent);
+    outline-offset: 0;
+}
+
+.highlighted::before {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    inset-block-start: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--brand-blue), color-mix(in oklab, var(--brand-blue) 70%, white));
+}
+
+/* =========================================
+   Header
+========================================= */
+.badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: var(--brand-blue);
+    color: var(--text-inverse, #060512);
+    padding: 4px 10px;
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-xs, 12px);
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    box-shadow: 0 2px 6px color-mix(in oklab, var(--brand-blue) 35%, transparent);
+}
+
+.header {
+    text-align: center;
+    margin-block-end: var(--spacing-sm);
+}
+
+.name {
+    margin: 0 0 6px 0;
+    font-family: var(--font-heading);
+    font-weight: 800;
+    font-size: var(--font-size-h4);
+    color: var(--text-accent);
+    text-transform: uppercase;
+    letter-spacing: .02em;
+}
+
+.description {
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: var(--font-size-sm);
+    line-height: var(--line-height-body);
+}
+
+/* =========================================
+   Price Block
+========================================= */
+.priceBlock {
+    text-align: center;
+    display: grid;
+    gap: 6px;
+}
+
+.priceOriginal {
+    text-decoration: line-through;
+    color: var(--text-secondary);
+    font-size: clamp(0.95rem, 0.9rem + 0.2vw, 1.05rem);
+}
+
+.priceNow {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 8px;
+    justify-content: center;
+}
+
+.priceValue {
+    font-family: var(--font-heading);
+    font-weight: 900;
+    font-size: var(--font-size-h1);
+    line-height: 1;
+    color: var(--text-primary);
+}
+
+.priceInterval {
+    font-size: var(--font-size-base);
+    color: var(--text-secondary);
+    font-weight: 600;
+}
+
+.discount {
+    display: inline-block;
+    background: var(--success-strong, #29d397);
+    color: var(--text-inverse, #060512);
+    padding: 2px 8px;
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-xs, 12px);
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+}
+
+/* =========================================
+   Features
+========================================= */
+.featuresSection {
+    /* wrapper hook for spacing if needed in future */
+}
+
+.features {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 8px;
+}
+
+.feature {
+    display: grid;
+    grid-template-columns: 20px 1fr auto;
+    align-items: start;
+    gap: 8px;
+    padding: 6px 0;
+    border-bottom: 1px dashed color-mix(in oklab, var(--border-subtle) 80%, transparent);
+}
+
+.notIncludedFeature {
+    opacity: 0.75;
+}
+
+.icon {
+    inline-size: 20px;
+    block-size: 20px;
+    display: grid;
+    place-items: center;
+    border-radius: var(--radius-sm);
+    font-size: 0.9rem;
+    line-height: 1;
+    font-weight: 700;
+}
+
+.included {
+    color: var(--success-strong, #29d397);
+}
+
+.neutral {
+    color: var(--text-secondary);
+}
+
+.notIncluded {
+    color: var(--error-strong, #e34f4f);
+}
+
+.featureText {
+    color: var(--text-primary);
+    font-size: var(--font-size-sm);
+    line-height: var(--line-height-body);
+}
+
+.featureNote {
+    justify-self: end;
+    color: var(--text-secondary);
+    font-size: var(--font-size-xs, 12px);
+    font-style: italic;
+}
+
+/* =========================================
+   CTA
+========================================= */
+.ctaRow {
+    margin-top: auto;
+    display: grid;
+}
+
+.cta {
+    display: inline-block;
+    text-align: center;
+    padding: 10px 14px;
+    border-radius: var(--radius-md);
+    background: var(--brand-blue);
+    color: var(--text-inverse, #060512);
+    text-decoration: none;
+    font-weight: 800;
+    letter-spacing: .03em;
+    text-transform: uppercase;
+    border: 1px solid transparent;
+    transition:
+        transform var(--transition-fast),
+        box-shadow var(--transition-fast),
+        background-color var(--transition-fast),
+        color var(--transition-fast),
+        border-color var(--transition-fast);
+}
+
+.cta:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
+}
+
+.ctaSecondary {
+    background: var(--bg-surface);
+    color: var(--brand-blue);
+    border-color: color-mix(in oklab, var(--brand-blue) 50%, transparent);
+}
+
+.ctaOutline {
+    background: transparent;
+    color: var(--brand-blue);
+    border-color: var(--brand-blue);
+}
+
+/* =========================================
+   Error / Retry + Skip Link (a11y)
+========================================= */
+.errorFallback {
+    margin: var(--spacing-lg) auto;
+    padding: var(--spacing-lg);
+    max-width: 640px;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    background: var(--bg-surface);
+    box-shadow: var(--shadow-xs);
+    text-align: center;
+}
+
+.retryButton {
+    margin-top: var(--spacing-md);
+    padding: 0.625rem 1rem;
+    border: 1px solid var(--brand-blue);
+    border-radius: var(--radius-md);
+    background: var(--brand-blue);
+    color: var(--text-inverse, #060512);
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast), background-color var(--transition-fast);
+}
+
+.retryButton:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
+}
+
+.skipLink {
+    position: absolute;
+    left: -9999px;
+    top: auto;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}
+
+.skipLink:focus {
+    position: static;
+    width: auto;
+    height: auto;
+    padding: 6px 10px;
+    margin-top: var(--spacing-md);
+    border-radius: var(--radius-sm);
+    background: var(--bg-elevated);
+    outline: 2px solid var(--brand-blue);
+}
+
+/* =========================================
+   Reduced Motion / High Contrast
+========================================= */
+@media (prefers-reduced-motion: reduce) {
+
+    .card,
+    .card:hover,
+    .toggleBtn,
+    .cta,
+    .retryButton {
+        transition: none !important;
+        transform: none !important;
+        box-shadow: var(--shadow-xs) !important;
+    }
+}
+
+@media (prefers-contrast: more) {
+    .card {
+        border-width: 2px;
+    }
+}
+
+/* =========================================
+   Responsive
+========================================= */
+@media (max-width: 640px) {
+    .pricingTiers[data-layout="grid"] .grid {
+        grid-template-columns: 1fr;
+    }
+}

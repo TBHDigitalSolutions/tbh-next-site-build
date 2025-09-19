@@ -1,0 +1,168 @@
+/* ============================================
+   🧩 Service Card — TBH Unified Theme
+   - Card recipe (surface, subtle border, hover lift)
+   - Media with stable aspect ratio
+   - Single-line title/subtitle with ellipsis
+   - Fills grid track height (height: 100%)
+   - src/components/ui/molecules/Card/ServiceCard.css
+============================================ */
+
+.service-card {
+    background: var(--bg-surface);
+    color: var(--text-primary);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-xs);
+
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+
+    width: 100%;
+    height: 100%;
+    /* ← fill equal-height grid tracks */
+    padding: var(--spacing-md);
+    overflow: hidden;
+
+    transition:
+        transform var(--transition-fast),
+        box-shadow var(--transition-fast),
+        border-color var(--transition-fast),
+        background-color var(--transition-fast),
+        color var(--transition-fast);
+}
+
+.service-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--border-accent, var(--brand-blue));
+    box-shadow: var(--shadow-md);
+}
+
+/* ---------- Media (top) ---------- */
+.service-card-media {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    /* stable, consistent media height */
+    border-radius: var(--radius-lg);
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-subtle);
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+}
+
+.service-card-video,
+.service-card-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* If you prefer "contain" for videos, swap object-fit above to contain */
+
+/* ---------- Content ---------- */
+.service-card-content {
+    display: grid;
+    gap: var(--spacing-sm);
+    align-content: start;
+    text-align: left;
+    min-height: 0;
+    /* allow inner text to wrap */
+}
+
+/* Title: single line w/ellipsis */
+.service-card-title {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-h3);
+    font-weight: 800;
+    color: var(--text-accent);
+    line-height: var(--line-height-heading);
+    margin: 0;
+
+    white-space: nowrap;
+    /* single line */
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Subtitle: single line w/ellipsis */
+.service-card-subtitle {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-h5);
+    font-weight: 700;
+    color: var(--text-secondary);
+    margin: 0;
+
+    white-space: nowrap;
+    /* single line */
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Description */
+.service-card-description {
+    font-family: var(--font-body);
+    font-size: var(--font-size-body);
+    color: var(--text-secondary);
+    line-height: var(--line-height-body);
+    margin: 0;
+}
+
+/* Features */
+.service-card-features {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: var(--spacing-2xs, 0.25rem);
+}
+
+.service-card-feature {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: start;
+    gap: var(--spacing-xs);
+
+    font-family: var(--font-body);
+    font-size: var(--font-size-small);
+    color: var(--text-secondary);
+    line-height: var(--line-height-body);
+}
+
+.feature-check-icon {
+    font-size: var(--font-size-large);
+    color: var(--accent-primary, var(--brand-blue));
+    margin-top: 2px;
+}
+
+/* CTA buttons row (uses shared Button component styles) */
+.service-card-buttons {
+    margin-top: var(--spacing-sm);
+    display: flex;
+    gap: var(--spacing-sm);
+}
+
+.service-card-buttons a,
+.service-card-buttons button {
+    flex: 1 1 0;
+    min-width: 0;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 768px) {
+    .service-card {
+        padding: var(--spacing-md);
+    }
+
+    .service-card-title {
+        font-size: var(--font-size-h4);
+    }
+}
+
+/* ---------- Reduced Motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+    .service-card {
+        transition: none !important;
+    }
+}

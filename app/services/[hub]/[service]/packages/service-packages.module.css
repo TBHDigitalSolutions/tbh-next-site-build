@@ -1,0 +1,376 @@
+/* app/services/[service]/packages/service-packages.module.css - Enhanced for PackageCarousel */
+
+/* ===== HERO SECTION ===== */
+.heroDescription {
+    max-width: 60ch;
+    margin: 2rem auto 0;
+    text-align: center;
+}
+
+.heroDescription p {
+    font-size: 1.125rem;
+    color: var(--muted-foreground);
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* ===== SECTION HEADERS ===== */
+.sectionHeader {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.sectionTitle {
+    font-size: clamp(1.75rem, 1.5rem + 1.2vw, 2.25rem);
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: var(--foreground);
+    line-height: 1.2;
+}
+
+.sectionSubtitle {
+    font-size: 1.125rem;
+    color: var(--muted-foreground);
+    max-width: 50ch;
+    margin: 0 auto 2rem;
+    line-height: 1.6;
+}
+
+/* ===== FEATURED PACKAGES INTEGRATION ===== */
+.featuredPackagesSection {
+    margin-bottom: 4rem;
+}
+
+/* Ensure PackageCarousel has proper spacing */
+.featuredPackagesSection>* {
+    margin: 0;
+}
+
+/* ===== COMPARISON GRID (Enhanced to complement PackageCarousel) ===== */
+.comparisonGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+@media (min-width: 1024px) {
+    .comparisonGrid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .comparisonGrid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+}
+
+.comparisonCard {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 1rem;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    min-height: 500px;
+}
+
+.comparisonCard:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+    border-color: var(--primary);
+}
+
+.comparisonHeader {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+    position: relative;
+}
+
+.comparisonTitle {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--foreground);
+    line-height: 1.3;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.comparisonTier {
+    font-size: 0.875rem;
+    color: var(--primary);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    order: -1;
+}
+
+.popularBadge {
+    position: absolute;
+    top: -1rem;
+    right: -1rem;
+    background: var(--primary);
+    color: var(--primary-foreground);
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 0.5rem 1rem;
+    border-radius: 9999px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    z-index: 2;
+}
+
+@media (max-width: 768px) {
+    .popularBadge {
+        position: static;
+        align-self: flex-start;
+        margin-top: 0.5rem;
+        margin-bottom: 0.5rem;
+    }
+}
+
+/* ===== COMPARISON PRICING ===== */
+.comparisonPrice {
+    margin-bottom: 1.5rem;
+    padding: 1.5rem;
+    background: var(--muted);
+    border-radius: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.priceItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.priceLabel {
+    font-size: 0.875rem;
+    color: var(--muted-foreground);
+    font-weight: 500;
+}
+
+.priceValue {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--foreground);
+}
+
+/* ===== COMPARISON CONTENT ===== */
+.comparisonDescription {
+    margin-bottom: 2rem;
+    flex-grow: 1;
+}
+
+.comparisonDescription p {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--muted-foreground);
+    margin: 0;
+}
+
+.comparisonOutcomes {
+    margin-bottom: 2rem;
+    flex-grow: 1;
+}
+
+.outcomeTitle {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--foreground);
+    margin-bottom: 1rem;
+}
+
+.outcomeList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.outcomeItem {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: var(--foreground);
+}
+
+.outcomeIcon {
+    color: var(--primary);
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 0.125rem;
+    width: 1rem;
+    height: 1rem;
+    background: var(--primary);
+    color: var(--primary-foreground);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.625rem;
+}
+
+/* ===== COMPARISON FOOTER ===== */
+.comparisonFooter {
+    margin-top: auto;
+    padding-top: 1rem;
+}
+
+.comparisonCta {
+    display: block;
+    width: 100%;
+    text-align: center;
+    background: var(--primary);
+    color: var(--primary-foreground);
+    padding: 1rem 2rem;
+    border-radius: 0.75rem;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+    border: 2px solid var(--primary);
+}
+
+.comparisonCta:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+.comparisonCta:focus {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+}
+
+/* ===== SECTION SPACING ===== */
+.packageCarouselSection {
+    margin-bottom: 0;
+}
+
+.comparisonSection {
+    margin-top: 2rem;
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 1024px) {
+    .comparisonGrid {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .sectionTitle {
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 640px) {
+    .sectionHeader {
+        margin-bottom: 2rem;
+    }
+
+    .comparisonTitle {
+        font-size: 1.25rem;
+    }
+
+    .heroDescription {
+        margin-top: 1.5rem;
+    }
+
+    .heroDescription p {
+        font-size: 1rem;
+    }
+
+    .comparisonCard {
+        padding: 1.5rem;
+        min-height: auto;
+    }
+
+    .comparisonPrice {
+        padding: 1.25rem;
+    }
+
+    .sectionSubtitle {
+        font-size: 1rem;
+    }
+}
+
+/* ===== INTEGRATION WITH PACKAGECAROUSEL ===== */
+/* Ensure proper spacing between PackageCarousel and comparison sections */
+.sectionHeader+[class*="packageCarousel"] {
+    margin-top: 0;
+}
+
+[class*="packageCarousel"]+.comparisonGrid {
+    margin-top: 3rem;
+}
+
+/* ===== ACCESSIBILITY ===== */
+.comparisonCard:focus-within {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .comparisonCard {
+        transition: none;
+    }
+
+    .comparisonCard:hover {
+        transform: none;
+    }
+
+    .comparisonCta:hover {
+        transform: none;
+    }
+}
+
+/* ===== LOADING STATES ===== */
+.comparisonCard.loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.comparisonCard.loading .comparisonCta {
+    background: var(--muted);
+    color: var(--muted-foreground);
+}
+
+/* ===== PRINT STYLES ===== */
+@media print {
+    .comparisonCard {
+        break-inside: avoid;
+        box-shadow: none;
+        border: 1px solid #ccc;
+    }
+
+    .comparisonCta {
+        display: none;
+    }
+
+    .popularBadge {
+        background: #000;
+        color: #fff;
+    }
+
+    .heroDescription {
+        margin-top: 1rem;
+    }
+}

@@ -1,0 +1,59 @@
+/* ============================
+   👥 Team Grid (TBH Unified Theme)
+   Note: TeamGrid.tsx renders <AutoFlexSection/>.
+   These styles are safe as light wrappers/utilities.
+============================ */
+
+.teamgrid-container {
+    width: min(calc(100% - 2 * var(--container-pad-inline)), var(--container-max));
+    margin-inline: auto;
+    padding-inline: var(--container-pad-inline);
+    padding-block: var(--section-pad-block);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    text-align: center;
+}
+
+.teamgrid-heading {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-h2);
+    font-weight: 700;
+    color: var(--text-accent);
+    margin-bottom: var(--spacing-md);
+}
+
+.teamgrid-divider {
+    width: 45%;
+    height: 3px;
+    background: var(--border-accent, var(--brand-blue));
+    margin: var(--spacing-sm) auto var(--spacing-lg);
+    border-radius: var(--radius-full);
+}
+
+.teamgrid-grid {
+    display: grid;
+    gap: var(--spacing-lg);
+    grid-template-columns: repeat(1, 1fr);
+    align-items: stretch;
+}
+
+/* Tablet */
+@media (min-width: 640px) {
+    .teamgrid-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Larger tablet */
+@media (min-width: 768px) {
+    .teamgrid-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Desktop */
+@media (min-width: 1024px) {
+    .teamgrid-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}

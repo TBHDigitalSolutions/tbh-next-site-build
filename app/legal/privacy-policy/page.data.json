@@ -1,0 +1,290 @@
+{
+  "seo": {
+    "title": "Privacy Policy | TBH Digital Solutions",
+    "description": "Learn how TBH Digital Solutions collects, uses, and protects your personal information. Comprehensive privacy policy covering data processing, user rights, and security measures.",
+    "keywords": ["privacy policy", "data protection", "GDPR", "CCPA", "user rights", "data security"],
+    "robots": "noindex, follow",
+    "canonical": "https://tbhdigitalsolutions.com/privacy-policy",
+    "schema": {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "Privacy Policy",
+      "description": "TBH Digital Solutions Privacy Policy - Data collection, processing, and protection practices",
+      "url": "https://tbhdigitalsolutions.com/privacy-policy",
+      "about": {
+        "@type": "Organization",
+        "name": "TBH Digital Solutions"
+      },
+      "mainEntity": {
+        "@type": "Article",
+        "headline": "Privacy Policy",
+        "datePublished": "2024-11-02",
+        "dateModified": "2024-11-02",
+        "author": {
+          "@type": "Organization",
+          "name": "TBH Digital Solutions"
+        }
+      }
+    }
+  },
+  "hero": {
+    "title": "Privacy Policy",
+    "subtitle": "Your privacy is important to us. This policy explains how we collect, use, and protect your personal information.",
+    "lastUpdated": "November 2, 2024"
+  },
+  "tableOfContents": [
+    { "title": "Note About Children", "anchor": "note-about-children" },
+    { "title": "Legal Bases for Data Processing", "anchor": "legal-bases-for-data-processing" },
+    { "title": "How We Collect Information", "anchor": "how-we-collect-information" },
+    { "title": "Data Retention Policy", "anchor": "data-retention-policy" },
+    { "title": "Use of Your Personal Data", "anchor": "use-of-your-personal-data" },
+    { "title": "Data Storage and Security Measures", "anchor": "data-storage-and-security-measures" },
+    { "title": "Disclosure of Your Personal Data", "anchor": "disclosure-of-your-personal-data" },
+    { "title": "Third-Party Data Sharing", "anchor": "third-party-data-sharing" },
+    { "title": "Automated Decision-Making and Profiling", "anchor": "automated-decision-making-and-profiling" },
+    { "title": "Third-Party Data Collection", "anchor": "third-party-data-collection" },
+    { "title": "Privacy Rights and Choices", "anchor": "privacy-rights-and-choices" },
+    { "title": "GDPR and CCPA Rights", "anchor": "gdpr-ccpa-rights" },
+    { "title": "Data Subject Requests", "anchor": "data-subject-requests" },
+    { "title": "California Users' Privacy Rights", "anchor": "california-privacy-rights" },
+    { "title": "Changes to Privacy Practices", "anchor": "changes-to-privacy-practices" },
+    { "title": "Security of Your Personal Data", "anchor": "security-of-your-personal-data" },
+    { "title": "Employee Access and Confidentiality", "anchor": "employee-access-and-confidentiality" },
+    { "title": "International Data Transfer", "anchor": "international-data-transfer" },
+    { "title": "Contact Information", "anchor": "contact-information" },
+    { "title": "Cookie Policy", "anchor": "cookie-policy" }
+  ],
+  "sections": [
+    {
+      "id": "note-about-children",
+      "title": "1. Note About Children",
+      "content": "Our services are not intended for individuals under 18. We do not knowingly collect personal information from children. If we become aware of data provided by a child, we will delete it as soon as possible. Parents or guardians who believe we may have collected data from their child should contact us."
+    },
+    {
+      "id": "legal-bases-for-data-processing",
+      "title": "2. Legal Bases for Data Processing",
+      "content": "TBH Digital Solutions processes your personal data based on the following legal grounds:",
+      "items": [
+        "**Consent**: Where you have provided clear and explicit consent for us to process your data for specific purposes, such as email marketing.",
+        "**Contract Fulfillment**: Processing is necessary for the performance of a contract, such as providing our services or CRM tools as requested by you.",
+        "**Legitimate Interest**: We process data for our legitimate interests, such as improving services, fraud prevention, or personalized marketing, balanced against user privacy rights.",
+        "**Legal Obligation**: Processing is necessary for compliance with legal obligations, including tax, fraud prevention, and regulatory requirements."
+      ]
+    },
+    {
+      "id": "how-we-collect-information",
+      "title": "3. How We Collect Information",
+      "content": "We collect both **Personal Data** and **Anonymous Data** through various means, including direct input, cookies, and third-party services.",
+      "subsections": [
+        {
+          "title": "Types of Information Collected",
+          "items": [
+            "**Personal Data**: Data identifying you as an individual (e.g., name, email, IP address).",
+            "**Anonymous Data**: Data not directly identifying an individual, such as device type and general usage patterns."
+          ]
+        },
+        {
+          "title": "Collection Methods",
+          "items": [
+            "**Direct Input**: Information provided by users via account creation, forms, or surveys.",
+            "**Cookies and Tracking Technologies**: Including pixels, beacons, and cookies.",
+            "**Third-Party Integrations**: Information collected by analytics, CRM, and advertising partners."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "data-retention-policy",
+      "title": "4. Data Retention Policy",
+      "content": "We retain personal data as long as it is necessary to fulfill the purposes for which it was collected, unless otherwise required by law. Retention periods include:",
+      "items": [
+        "**Account Information**: Retained until account deactivation and for up to 7 years thereafter as required by legal, regulatory, or contractual obligations.",
+        "**Analytics Data**: Retained for a period of 2 years to monitor performance and improve services.",
+        "**Marketing Data**: Retained until the user opts out or withdraws consent.",
+        "**Legal and Compliance Data**: Retained as needed to meet legal requirements and enforce our policies."
+      ],
+      "footer": "Upon user request, we will delete or anonymize data as permitted by law."
+    },
+    {
+      "id": "use-of-your-personal-data",
+      "title": "5. Use of Your Personal Data",
+      "content": "TBH Digital Solutions uses your data for advanced marketing, engagement, and security purposes, including:",
+      "items": [
+        "**Audience Segmentation**: Using demographic and behavioral data for targeted marketing.",
+        "**Behavioral Analytics**: Monitoring interactions to improve content strategies.",
+        "**Automated CRM Campaigns**: Tailoring content based on engagement history.",
+        "**Email and SMS Marketing**: Communicating high-impact offers with user consent.",
+        "**Remarketing and Personalized Ads**: Targeting ads to users on other websites."
+      ]
+    },
+    {
+      "id": "data-storage-and-security-measures",
+      "title": "6. Data Storage and Security Measures",
+      "content": "We implement industry-standard encryption, access controls, and secure transmission protocols. Data is stored primarily in the U.S., with regular backups to ensure continuity.",
+      "items": [
+        "**Encryption Standards**: 256-bit SSL encryption for data in transit.",
+        "**Access Control**: Data access is restricted to authorized personnel only.",
+        "**Backups and Redundancy**: Data is regularly backed up in secure storage."
+      ]
+    },
+    {
+      "id": "disclosure-of-your-personal-data",
+      "title": "7. Disclosure of Your Personal Data",
+      "content": "We may share your data under the following conditions:",
+      "items": [
+        "**With Your Consent**: When you opt-in to data sharing.",
+        "**Service Providers**: Trusted providers for CRM, analytics, and customer support.",
+        "**Legal Requirements**: As required by law or to protect TBH Digital Solutions' rights."
+      ]
+    },
+    {
+      "id": "third-party-data-sharing",
+      "title": "8. Third-Party Data Sharing and Links to Their Policies",
+      "content": "We use the following third-party providers for processing and marketing purposes. Each provider's privacy policies and the types of data shared are listed below:",
+      "items": [
+        "**Google Analytics**: User behavior and site activity ([Google Privacy Policy](https://policies.google.com/privacy))",
+        "**Facebook Pixel**: Engagement tracking for personalized ads ([Facebook Privacy Policy](https://www.facebook.com/policy.php))",
+        "**LinkedIn Ads**: Cross-platform advertising ([LinkedIn Privacy Policy](https://www.linkedin.com/legal/privacy-policy))"
+      ]
+    },
+    {
+      "id": "automated-decision-making-and-profiling",
+      "title": "9. Automated Decision-Making and Profiling",
+      "content": "Automated decision-making processes, such as audience segmentation and ad targeting, are used to enhance user experience and engagement. These processes analyze user behavior to personalize content and ad delivery."
+    },
+    {
+      "id": "third-party-data-collection",
+      "title": "10. Third-Party Data Collection",
+      "content": "We employ cookies, tracking pixels, and beacons to support ad targeting and site analytics. Users can manage cookie preferences in their browser settings."
+    },
+    {
+      "id": "privacy-rights-and-choices",
+      "title": "11. Privacy Rights and Choices; Account Termination",
+      "content": "Your rights include:",
+      "items": [
+        "**Access**: Request a copy of your data.",
+        "**Correction**: Correct inaccurate data.",
+        "**Deletion**: Request data deletion.",
+        "**Opt-Out**: Withdraw consent for marketing communications.",
+        "**Data Portability**: Request data transfer to another provider."
+      ],
+      "footer": "Account deactivation requests can be submitted to our support team."
+    },
+    {
+      "id": "gdpr-ccpa-rights",
+      "title": "12. Specific Rights of Users Under GDPR or CCPA",
+      "content": "Users have the following rights:",
+      "items": [
+        "**Restrict Processing**: Limit processing under certain conditions.",
+        "**Data Portability**: Request data transfer in a machine-readable format.",
+        "**File a Complaint**: Contact relevant authorities regarding data processing.",
+        "**Opt-Out of Data Sales (CCPA)**: Users can opt out of data sharing for advertising."
+      ]
+    },
+    {
+      "id": "data-subject-requests",
+      "title": "13. Data Subject Requests and Process",
+      "content": "To exercise your rights, contact us at [privacy@tbhdigitalsolutions.com](mailto:privacy@tbhdigitalsolutions.com) or via our support portal. Verification steps will apply to ensure secure handling of requests. We aim to respond within 30 days."
+    },
+    {
+      "id": "california-privacy-rights",
+      "title": "14. California Users' Privacy Rights",
+      "content": "California residents can request:",
+      "items": [
+        "**Data Access**: Summary of personal data collected in the past 12 months.",
+        "**Data Deletion**: Removal of data unless retained by law."
+      ]
+    },
+    {
+      "id": "changes-to-privacy-practices",
+      "title": "15. Changes to Privacy Practices",
+      "content": "We may update this Privacy Policy periodically. Significant changes will be posted on this page, and users may be notified via email or in-app alerts."
+    },
+    {
+      "id": "security-of-your-personal-data",
+      "title": "16. Security of Your Personal Data",
+      "content": "We protect data with encryption, secure transmission protocols, and access control measures. However, no transmission is entirely secure, and users acknowledge inherent risks."
+    },
+    {
+      "id": "employee-access-and-confidentiality",
+      "title": "17. Employee Access and Confidentiality",
+      "content": "Access to personal data is restricted to trained employees who require it to perform their duties. All employees with access to user data sign confidentiality agreements and undergo regular security training."
+    },
+    {
+      "id": "international-data-transfer",
+      "title": "18. Users Outside of the United States; Data Transfer",
+      "content": "For international users, your data may be processed in the U.S. or other countries with applicable protections. By using our services, you consent to this transfer."
+    },
+    {
+      "id": "contact-information",
+      "title": "19. Contact Information and Data Protection Officer",
+      "content": "For privacy-related inquiries, please contact:",
+      "items": [
+        "**Email**: [privacy@tbhdigitalsolutions.com](mailto:privacy@tbhdigitalsolutions.com)"
+      ],
+      "footer": "*If a Data Protection Officer (DPO) is appointed, they will oversee compliance with GDPR and other privacy regulations.*"
+    },
+    {
+      "id": "cookie-policy",
+      "title": "20. Cookie Policy",
+      "content": "TBH Digital Solutions uses cookies to enhance user experience and support targeted advertising. Below are details of the cookies we use, including their purpose and duration.",
+      "cookieTable": [
+        {
+          "type": "Essential Cookies",
+          "purpose": "Necessary for core functionality, including security and network management. Ensures users can navigate and use key features of the site.",
+          "duration": "Session-based (deleted when browser is closed)",
+          "party": "First-party"
+        },
+        {
+          "type": "Session Management Cookies",
+          "purpose": "Maintains user sessions, remembers login status and preferences within the site to allow uninterrupted browsing.",
+          "duration": "Session-based",
+          "party": "First-party"
+        },
+        {
+          "type": "Authentication Cookies",
+          "purpose": "Verifies logged-in users for secure access to personalized features.",
+          "duration": "24 hours to 30 days, depending on user preferences",
+          "party": "First-party"
+        },
+        {
+          "type": "Performance Cookies",
+          "purpose": "Collects anonymous data on site performance, error tracking, and load times. Optimizes functionality and helps identify any issues.",
+          "duration": "Persistent (30 days to 1 year)",
+          "party": "First-party"
+        },
+        {
+          "type": "Analytics Cookies",
+          "purpose": "Gathers data on page views, site visits, and user activity on the site to improve content and user experience.",
+          "duration": "Persistent (90 days to 2 years)",
+          "party": "Third-party (e.g., Google Analytics)"
+        },
+        {
+          "type": "Marketing Cookies",
+          "purpose": "Used for ad personalization, targeting, and remarketing campaigns on third-party platforms.",
+          "duration": "Persistent (7 days to 1 year)",
+          "party": "Third-party (e.g., Facebook Pixel, Google Ads)"
+        }
+      ],
+      "cookieManagement": {
+        "title": "Managing Your Cookie Preferences",
+        "content": "You can manage your cookie settings at any time by adjusting your browser settings. You may also choose to opt out of specific third-party cookies through their respective platforms.",
+        "links": [
+          {
+            "text": "Google Analytics Opt-Out",
+            "url": "https://tools.google.com/dlpage/gaoptout"
+          },
+          {
+            "text": "Facebook Ad Preferences",
+            "url": "https://www.facebook.com/ads/preferences"
+          }
+        ]
+      }
+    }
+  ],
+  "contact": {
+    "email": "privacy@tbhdigitalsolutions.com",
+    "phone": null,
+    "address": null
+  }
+}

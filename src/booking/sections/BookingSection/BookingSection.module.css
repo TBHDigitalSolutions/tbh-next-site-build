@@ -1,0 +1,534 @@
+/* src/booking/sections/BookingSection/BookingSection.module.css */
+/* Styles for BookingSection orchestrator component */
+
+.section {
+    /* Layout */
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+
+    /* Spacing */
+    padding: var(--spacing-xl, 32px) 0;
+
+    /* Background */
+    background: var(--bg-surface, #ffffff);
+
+    /* Ensure proper stacking context */
+    isolation: isolate;
+}
+
+.container {
+    /* Layout */
+    width: 100%;
+    max-width: var(--container-max-width, 1200px);
+    margin: 0 auto;
+    padding: 0 var(--spacing-lg, 24px);
+
+    /* Container queries for responsive behavior */
+    container-type: inline-size;
+    container-name: booking-section;
+}
+
+/* ============================================================================
+ * Loading States
+ * ============================================================================ */
+
+.loading {
+    /* Center loading content */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 400px;
+
+    /* Visual feedback */
+    opacity: 0.7;
+    pointer-events: none;
+
+    /* Smooth transition */
+    transition: opacity var(--transition-fast, 150ms) ease;
+}
+
+.loadingSpinner {
+    /* Size */
+    width: 48px;
+    height: 48px;
+
+    /* Border styling for spinner */
+    border: 3px solid var(--border-subtle, #e5e5e5);
+    border-top-color: var(--accent-primary, #0ea5e9);
+    border-radius: 50%;
+
+    /* Animation */
+    animation: booking-spin 1s linear infinite;
+}
+
+.loadingText {
+    /* Typography */
+    margin-top: var(--spacing-md, 16px);
+    font-size: var(--font-size-sm, 0.875rem);
+    color: var(--text-secondary, #6b7280);
+    text-align: center;
+}
+
+/* ============================================================================
+ * Error States
+ * ============================================================================ */
+
+.error {
+    /* Layout */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 300px;
+    padding: var(--spacing-xl, 32px);
+
+    /* Visual styling */
+    background: var(--bg-elevated, #f8f9fa);
+    border: 1px solid var(--border-subtle, #e5e5e5);
+    border-radius: var(--radius-lg, 12px);
+    text-align: center;
+}
+
+.errorIcon {
+    /* Size and spacing */
+    width: 64px;
+    height: 64px;
+    margin-bottom: var(--spacing-lg, 24px);
+
+    /* Color */
+    color: var(--text-danger, #dc2626);
+    opacity: 0.8;
+}
+
+.errorTitle {
+    /* Typography */
+    margin: 0 0 var(--spacing-sm, 8px) 0;
+    font-size: var(--font-size-lg, 1.125rem);
+    font-weight: 600;
+    color: var(--text-primary, #121417);
+}
+
+.errorMessage {
+    /* Typography */
+    margin: 0 0 var(--spacing-lg, 24px) 0;
+    font-size: var(--font-size-md, 1rem);
+    color: var(--text-secondary, #6b7280);
+    line-height: 1.5;
+    max-width: 400px;
+}
+
+.errorActions {
+    /* Layout */
+    display: flex;
+    gap: var(--spacing-md, 16px);
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.retryButton {
+    /* Reset button styles */
+    all: unset;
+
+    /* Layout */
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-sm, 8px);
+
+    /* Sizing and spacing */
+    padding: var(--spacing-sm, 8px) var(--spacing-md, 16px);
+
+    /* Typography */
+    font-size: var(--font-size-sm, 0.875rem);
+    font-weight: 500;
+
+    /* Visual styling */
+    background: var(--accent-primary, #0ea5e9);
+    color: var(--accent-contrast, #ffffff);
+    border-radius: var(--radius-md, 6px);
+
+    /* Interaction */
+    cursor: pointer;
+    transition: all var(--transition-fast, 150ms) ease;
+}
+
+.retryButton:hover {
+    background: var(--accent-secondary, #0284c7);
+    transform: translateY(-1px);
+}
+
+.retryButton:focus-visible {
+    outline: 2px solid var(--accent-primary, #0ea5e9);
+    outline-offset: 2px;
+}
+
+.retryButton:active {
+    transform: translateY(0);
+}
+
+.fallbackButton {
+    /* Reset button styles */
+    all: unset;
+
+    /* Layout */
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-sm, 8px);
+
+    /* Sizing and spacing */
+    padding: var(--spacing-sm, 8px) var(--spacing-md, 16px);
+
+    /* Typography */
+    font-size: var(--font-size-sm, 0.875rem);
+    font-weight: 500;
+
+    /* Visual styling */
+    background: transparent;
+    color: var(--text-secondary, #6b7280);
+    border: 1px solid var(--border-strong, #d1d5db);
+    border-radius: var(--radius-md, 6px);
+
+    /* Interaction */
+    cursor: pointer;
+    transition: all var(--transition-fast, 150ms) ease;
+}
+
+.fallbackButton:hover {
+    background: var(--bg-secondary, #f1f5f9);
+    border-color: var(--accent-primary, #0ea5e9);
+    color: var(--accent-primary, #0ea5e9);
+}
+
+.fallbackButton:focus-visible {
+    outline: 2px solid var(--accent-primary, #0ea5e9);
+    outline-offset: 2px;
+}
+
+/* ============================================================================
+ * Variant Containers
+ * ============================================================================ */
+
+.variantContainer {
+    /* Full width for variant content */
+    width: 100%;
+
+    /* Smooth transitions when switching variants */
+    transition: opacity var(--transition-fast, 150ms) ease;
+}
+
+.variantContainer[data-variant="embed"] {
+    /* Embed variant specific styles */
+    min-height: 600px;
+}
+
+.variantContainer[data-variant="form"] {
+    /* Form variant specific styles */
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.variantContainer[data-variant="calendar"] {
+    /* Calendar variant specific styles */
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* ============================================================================
+ * Progress Indicator
+ * ============================================================================ */
+
+.progress {
+    /* Layout */
+    margin-bottom: var(--spacing-xl, 32px);
+    padding-bottom: var(--spacing-lg, 24px);
+    border-bottom: 1px solid var(--border-subtle, #e5e5e5);
+}
+
+.progressSteps {
+    /* Layout */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    /* Responsive behavior */
+    flex-wrap: wrap;
+    gap: var(--spacing-sm, 8px);
+}
+
+.progressStep {
+    /* Layout */
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm, 8px);
+
+    /* Flex behavior */
+    flex: 1;
+    min-width: 0;
+    /* Allow shrinking */
+}
+
+.progressStep:not(:last-child)::after {
+    /* Connector line */
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border-subtle, #e5e5e5);
+    margin-left: var(--spacing-md, 16px);
+}
+
+.progressStepIcon {
+    /* Size */
+    width: 24px;
+    height: 24px;
+
+    /* Layout */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    /* Visual styling */
+    border-radius: 50%;
+    font-size: var(--font-size-xs, 0.75rem);
+    font-weight: 600;
+
+    /* Transitions */
+    transition: all var(--transition-fast, 150ms) ease;
+}
+
+.progressStepIcon.complete {
+    background: var(--success-primary, #10b981);
+    color: var(--success-contrast, #ffffff);
+}
+
+.progressStepIcon.current {
+    background: var(--accent-primary, #0ea5e9);
+    color: var(--accent-contrast, #ffffff);
+}
+
+.progressStepIcon.pending {
+    background: var(--bg-secondary, #f1f5f9);
+    color: var(--text-tertiary, #9ca3af);
+    border: 1px solid var(--border-subtle, #e5e5e5);
+}
+
+.progressStepLabel {
+    /* Typography */
+    font-size: var(--font-size-sm, 0.875rem);
+    font-weight: 500;
+
+    /* Layout */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.progressStepLabel.complete,
+.progressStepLabel.current {
+    color: var(--text-primary, #121417);
+}
+
+.progressStepLabel.pending {
+    color: var(--text-tertiary, #9ca3af);
+}
+
+/* ============================================================================
+ * Disabled State
+ * ============================================================================ */
+
+.section.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+    user-select: none;
+}
+
+/* ============================================================================
+ * Debug Mode
+ * ============================================================================ */
+
+.section[data-debug="true"] {
+    border: 2px dashed var(--warning-primary, #f59e0b);
+    background: rgba(245, 158, 11, 0.05);
+}
+
+.section[data-debug="true"]::before {
+    content: "DEBUG MODE: BookingSection";
+    position: absolute;
+    top: -12px;
+    left: 12px;
+    padding: 4px 8px;
+    background: var(--warning-primary, #f59e0b);
+    color: white;
+    font-size: 12px;
+    font-weight: 600;
+    border-radius: 4px;
+    z-index: 10;
+}
+
+/* ============================================================================
+ * Animations
+ * ============================================================================ */
+
+@keyframes booking-spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes booking-fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes booking-slide-in {
+    from {
+        opacity: 0;
+        transform: translateX(-16px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.variantContainer {
+    animation: booking-fade-in 0.3s ease-out;
+}
+
+.progressStep {
+    animation: booking-slide-in 0.2s ease-out;
+    animation-fill-mode: both;
+}
+
+.progressStep:nth-child(1) {
+    animation-delay: 0ms;
+}
+
+.progressStep:nth-child(2) {
+    animation-delay: 50ms;
+}
+
+.progressStep:nth-child(3) {
+    animation-delay: 100ms;
+}
+
+.progressStep:nth-child(4) {
+    animation-delay: 150ms;
+}
+
+/* ============================================================================
+ * Responsive Design
+ * ============================================================================ */
+
+@container booking-section (max-width: 640px) {
+    .container {
+        padding: 0 var(--spacing-md, 16px);
+    }
+
+    .progressSteps {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .progressStep:not(:last-child)::after {
+        display: none;
+    }
+
+    .errorActions {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .retryButton,
+    .fallbackButton {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+@container booking-section (max-width: 480px) {
+    .section {
+        padding: var(--spacing-lg, 24px) 0;
+    }
+
+    .loading {
+        min-height: 300px;
+    }
+
+    .variantContainer[data-variant="form"],
+    .variantContainer[data-variant="calendar"] {
+        max-width: none;
+    }
+}
+
+/* ============================================================================
+ * High Contrast Mode Support
+ * ============================================================================ */
+
+@media (prefers-contrast: high) {
+    .section {
+        border: 1px solid;
+    }
+
+    .progressStepIcon {
+        border: 2px solid;
+    }
+
+    .error {
+        border: 2px solid;
+    }
+}
+
+/* ============================================================================
+ * Reduced Motion Support
+ * ============================================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+    .loadingSpinner {
+        animation: none;
+        border-top-color: transparent;
+    }
+
+    .variantContainer,
+    .progressStep,
+    .retryButton,
+    .fallbackButton {
+        animation: none;
+        transition: none;
+    }
+}
+
+/* ============================================================================
+ * Focus Management
+ * ============================================================================ */
+
+.section:focus-within {
+    /* Subtle indication when section contains focused elements */
+    position: relative;
+}
+
+.section:focus-within::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border: 2px solid var(--accent-primary, #0ea5e9);
+    border-radius: var(--radius-lg, 12px);
+    opacity: 0.3;
+    pointer-events: none;
+    z-index: -1;
+}

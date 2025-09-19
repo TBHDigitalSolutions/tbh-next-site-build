@@ -1,0 +1,94 @@
+/* ============================================
+   🧩 Service Grid — TBH Unified Theme
+   - Unified colors/spacing/containers
+   - Always 2-up on tablet/desktop (1-up on mobile)
+   - Equal-height cards via track fill
+============================================ */
+
+.service-grid {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    padding-block: var(--section-pad-block);
+    transition:
+        background-color var(--transition-standard),
+        color var(--transition-standard);
+}
+
+/* Max-width container */
+.service-grid-container {
+    width: min(calc(100% - 2 * var(--container-pad-inline)), var(--container-max));
+    margin-inline: auto;
+    padding-inline: var(--container-pad-inline);
+    text-align: center;
+    box-sizing: border-box;
+}
+
+/* Section title & description */
+.service-grid-title {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-h2);
+    font-weight: 800;
+    line-height: var(--line-height-heading);
+    color: var(--text-accent);
+    margin: 0;
+}
+
+.service-grid-description {
+    font-family: var(--font-body);
+    font-size: var(--font-size-body);
+    line-height: var(--line-height-body);
+    color: var(--text-secondary);
+    max-width: 70ch;
+    margin: var(--spacing-sm) auto var(--spacing-xl);
+}
+
+/* Grid wrapper (1 → 2 columns) with equal-height rows */
+.service-grid-wrapper {
+    display: grid;
+    grid-template-columns: 1fr;
+    /* mobile-first */
+    gap: var(--spacing-xl);
+    align-items: stretch;
+    /* stretch items to track height */
+    grid-auto-rows: 1fr;
+    /* equal-height tracks */
+}
+
+/* Ensure each child fills its grid track */
+.service-grid-wrapper>* {
+    height: 100%;
+    min-width: 0;
+    /* prevent overflow from long content */
+}
+
+/* If your card root has this class, also stretch it */
+.service-grid-wrapper>.service-card {
+    height: 100%;
+}
+
+/* Tablet & up: exactly two columns */
+@media (min-width: 640px) {
+    .service-grid-wrapper {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: var(--spacing-lg);
+    }
+}
+
+/* Desktop: keep 2 columns, restore larger gap */
+@media (min-width: 1024px) {
+    .service-grid-wrapper {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: var(--spacing-xl);
+    }
+}
+
+/* Motion preferences */
+@media (prefers-reduced-motion: reduce) {
+
+    .service-grid,
+    .service-grid-container,
+    .service-grid-wrapper * {
+        transition: none !important;
+        animation: none !important;
+    }
+}

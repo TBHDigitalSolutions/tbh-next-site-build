@@ -1,0 +1,98 @@
+/* =============================================
+   🌟 TBH Header - Production (footer-consistent)
+============================================= */
+
+.header {
+    position: sticky;
+    /* sticky like a modern app bar */
+    top: 0;
+    left: 0;
+    z-index: 50;
+    width: 100%;
+
+    /* Fluid padding + compact height */
+    padding: clamp(10px, 1.5vw, 16px) clamp(12px, 2vw, 24px);
+    backdrop-filter: saturate(140%) blur(6px);
+
+    /* Card-like surface consistent with footer cards */
+    background: var(--bg-elevated);
+    border-bottom: 1px solid var(--border-subtle);
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow var(--transition-standard), transform var(--transition-standard), background-color var(--transition-standard);
+}
+
+.header.scrolled {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+}
+
+.header-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: clamp(1040px, 92vw, 1280px);
+    /* mirrors footer max width */
+    margin: 0 auto;
+    gap: clamp(10px, 1.2vw, 16px);
+}
+
+/* Sections */
+.header-left,
+.header-center,
+.header-right {
+    display: flex;
+    align-items: center;
+}
+
+.header-left {
+    flex: 1.2;
+    justify-content: flex-start;
+}
+
+.header-center {
+    flex: 2;
+    justify-content: center;
+}
+
+.header-right {
+    flex: 1;
+    justify-content: flex-end;
+    gap: clamp(8px, 1vw, 14px);
+}
+
+/* Controls (Login/Theme/Mobile Toggle) */
+.header-icon,
+.theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: clamp(36px, 3vw, 42px);
+    height: clamp(36px, 3vw, 42px);
+    border-radius: var(--radius-lg);
+    background: transparent;
+    color: var(--text-primary);
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: transform var(--transition-standard), color var(--transition-standard), background-color var(--transition-standard), border-color var(--transition-standard);
+}
+
+.header-icon:hover,
+.theme-toggle:hover {
+    transform: translateY(-1px);
+    background-color: rgba(14, 175, 251, 0.08);
+    border-color: var(--border-subtle);
+}
+
+/* Center nav hidden on mobile; MobileMenu component handles toggle visibility */
+@media (max-width: 1024px) {
+    .header-center {
+        display: none;
+    }
+}
+
+/* Larger screens breathe a bit more */
+@media (min-width: 1200px) {
+    .header {
+        padding: clamp(12px, 1.4vw, 18px) clamp(16px, 2.2vw, 28px);
+    }
+}

@@ -1,0 +1,119 @@
+/* =============================================
+   📱 Mobile Menu — Production
+   Chip toggle + compact, card-like drawer
+============================================= */
+
+/* Toggle (chip-style like other header controls) */
+.mobilemenu-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: clamp(36px, 3vw, 42px);
+    height: clamp(36px, 3vw, 42px);
+    border-radius: var(--radius-lg);
+    background: transparent;
+    border: 1px solid transparent;
+    color: var(--text-primary);
+    cursor: pointer;
+    padding: 0;
+    z-index: var(--z-index-high);
+    transition: transform var(--transition-standard),
+        color var(--transition-standard),
+        background-color var(--transition-standard),
+        border-color var(--transition-standard);
+}
+
+.mobilemenu-toggle:hover {
+    transform: translateY(-1px);
+    background-color: rgba(14, 175, 251, 0.08);
+    border-color: var(--border-subtle);
+}
+
+/* Hide toggle on tablet+ */
+@media (min-width: 768px) {
+    .mobilemenu-toggle {
+        display: none;
+    }
+}
+
+/* Backdrop */
+.mobilemenu-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, .6);
+    z-index: calc(var(--z-index-modal) - 1);
+}
+
+/* Drawer panel (card-like) */
+.mobilemenu {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: min(86vw, 360px);
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    background: var(--bg-elevated);
+    color: var(--text-primary);
+    border-left: 1px solid var(--border-subtle);
+    box-shadow: var(--shadow-md);
+    padding: clamp(16px, 3vw, 24px);
+    z-index: var(--z-index-modal);
+}
+
+/* Close button (icon) */
+.mobilemenu-close {
+    align-self: flex-end;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-lg);
+    background: transparent;
+    border: 1px solid transparent;
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: transform var(--transition-standard),
+        background-color var(--transition-standard),
+        border-color var(--transition-standard);
+}
+
+.mobilemenu-close:hover {
+    transform: translateY(-1px);
+    background-color: rgba(14, 175, 251, 0.08);
+    border-color: var(--border-subtle);
+}
+
+/* Nav links */
+.mobilemenu-nav {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(10px, 2.5vw, 16px);
+    margin-top: clamp(16px, 4vw, 28px);
+    text-align: center;
+}
+
+.mobilemenu-link {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--text-primary);
+    font-size: clamp(var(--font-size-body), 5vw, var(--font-size-h3));
+    padding: 6px 10px;
+    border-radius: var(--radius-md);
+    transition: color var(--transition-standard),
+        background-color var(--transition-standard);
+}
+
+.mobilemenu-link:hover {
+    color: var(--accent-primary);
+    background-color: rgba(14, 175, 251, 0.06);
+}
+
+/* Prevent body scroll when open */
+.no-scroll {
+    overflow: hidden;
+    height: 100dvh;
+}

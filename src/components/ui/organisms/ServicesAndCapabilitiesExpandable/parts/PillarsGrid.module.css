@@ -1,0 +1,69 @@
+.wrapper {
+    /* Section spacing mirrors your Services & Capabilities rhythm */
+    margin-top: var(--space-6, 2rem);
+    margin-bottom: var(--space-6, 2rem);
+}
+
+/* Responsive grid container */
+.grid {
+    display: grid;
+    gap: var(--grid-gap, 1.25rem);
+    align-items: stretch;
+    /* make cards equal height */
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* Column presets (desktop up). We reduce columns at smaller breakpoints below. */
+.cols2 .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.cols3 .grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.cols4 .grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+/* Tighter vertical spacing when dense */
+.dense {
+    margin-top: var(--space-4, 1rem);
+    margin-bottom: var(--space-4, 1rem);
+}
+
+.item {
+    /* Ensure each card fills its cell vertically */
+    display: flex;
+    min-width: 0;
+    /* fix overflow issues in grid children */
+}
+
+/* RESPONSIVE BEHAVIOR
+   - On tablets fall back to 2 columns
+   - On mobile stack to 1 column
+*/
+@media (max-width: 1024px) {
+
+    .cols4 .grid,
+    .cols3 .grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 640px) {
+
+    .cols4 .grid,
+    .cols3 .grid,
+    .cols2 .grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Optional: light separation from following sections when needed */
+.wrapper+* {
+    /* add a bit more breathing room after the grid if another block follows immediately */
+    margin-top: var(--space-6, 2rem);
+}

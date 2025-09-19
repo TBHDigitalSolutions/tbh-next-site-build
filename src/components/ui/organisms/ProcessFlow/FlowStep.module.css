@@ -1,0 +1,718 @@
+/* src/components/ui/organisms/ProcessFlow/FlowStep.module.css */
+
+/* ============================
+   BASE STYLES
+============================ */
+.flowStep {
+    position: relative;
+    background: var(--off-white);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid var(--border-grey);
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+.flowStep.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.flowStep.interactive {
+    cursor: pointer;
+}
+
+.flowStep.interactive:hover,
+.flowStep.hovered {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    border-color: var(--brand-blue);
+}
+
+/* ============================
+   STEP HEADER
+============================ */
+.stepHeader {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+}
+
+.stepHeaderContent {
+    flex: 1;
+}
+
+.stepTitleRow {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-xs);
+}
+
+.stepTitle {
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    color: var(--deep-navy);
+    margin: 0;
+    font-family: var(--font-heading);
+}
+
+.stepMeta {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    flex-wrap: wrap;
+}
+
+.expandIcon {
+    font-size: var(--font-size-lg);
+    color: var(--charcoal-grey);
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+}
+
+.flowStep:hover .expandIcon {
+    color: var(--brand-blue);
+}
+
+/* ============================
+   STEP INDICATOR
+============================ */
+.stepIndicator {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-full);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    font-size: var(--font-size-lg);
+    flex-shrink: 0;
+    transition: all 0.3s ease;
+    position: relative;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.stepIndicator.small {
+    width: 36px;
+    height: 36px;
+    font-size: var(--font-size-base);
+}
+
+.stepIndicator.large {
+    width: 56px;
+    height: 56px;
+    font-size: var(--font-size-xl);
+}
+
+.stepNumber {
+    font-family: var(--font-heading);
+}
+
+.stepDot {
+    width: 12px;
+    height: 12px;
+    border-radius: var(--radius-full);
+    background: currentColor;
+}
+
+/* Status-based indicator styles */
+.stepIndicator.completed {
+    background: #10b981;
+}
+
+.stepIndicator.active {
+    background: var(--brand-blue);
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
+}
+
+.stepIndicator.pending {
+    background: var(--charcoal-grey);
+}
+
+.stepIndicator.error {
+    background: #ef4444;
+}
+
+.stepIndicator.skipped {
+    background: #f59e0b;
+}
+
+/* ============================
+   STATUS BADGE
+============================ */
+.statusBadge {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-xs);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.statusBadge.completed {
+    background: rgba(16, 185, 129, 0.1);
+    color: #10b981;
+}
+
+.statusBadge.active {
+    background: rgba(59, 130, 246, 0.1);
+    color: var(--brand-blue);
+}
+
+.statusBadge.pending {
+    background: rgba(107, 114, 128, 0.1);
+    color: var(--charcoal-grey);
+}
+
+.statusBadge.error {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+}
+
+.statusBadge.skipped {
+    background: rgba(245, 158, 11, 0.1);
+    color: #f59e0b;
+}
+
+/* ============================
+   DURATION & DATE
+============================ */
+.duration,
+.date {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    font-size: var(--font-size-sm);
+    color: var(--light-grey);
+}
+
+.duration ion-icon,
+.date ion-icon {
+    font-size: var(--font-size-base);
+}
+
+/* ============================
+   STEP CONTENT
+============================ */
+.stepContent {
+    position: relative;
+}
+
+.stepDescription {
+    color: var(--charcoal-grey);
+    line-height: var(--line-height-relaxed);
+    margin: 0 0 var(--spacing-md) 0;
+}
+
+.stepDetails {
+    background: rgba(59, 130, 246, 0.05);
+    border-left: 3px solid var(--brand-blue);
+    padding: var(--spacing-md);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    margin-bottom: var(--spacing-md);
+}
+
+.stepDetails p {
+    margin: 0;
+    color: var(--charcoal-grey);
+    font-size: var(--font-size-sm);
+}
+
+/* ============================
+   PROGRESS BAR
+============================ */
+.progressContainer {
+    margin: var(--spacing-md) 0;
+}
+
+.progressLabel {
+    font-size: var(--font-size-sm);
+    color: var(--charcoal-grey);
+    margin-bottom: var(--spacing-xs);
+    font-weight: 500;
+}
+
+.progressBar {
+    width: 100%;
+    height: 8px;
+    background: var(--border-grey);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+}
+
+.progressFill {
+    height: 100%;
+    background: var(--brand-blue);
+    border-radius: var(--radius-sm);
+    transition: width 0.5s ease;
+    position: relative;
+}
+
+.progressFill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+    0% {
+        transform: translateX(-100%);
+    }
+
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+/* ============================
+   EXPANDABLE CONTENT
+============================ */
+.expandableContent {
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transition: all 0.4s ease;
+}
+
+.flowStep.expanded .expandableContent {
+    max-height: 1000px;
+    opacity: 1;
+    margin-top: var(--spacing-md);
+}
+
+.sectionTitle {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: var(--brand-blue);
+    margin: 0 0 var(--spacing-sm) 0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.sectionTitle ion-icon {
+    font-size: var(--font-size-base);
+}
+
+/* ============================
+   LISTS
+============================ */
+.list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 var(--spacing-md) 0;
+}
+
+.list li {
+    padding: var(--spacing-xs) 0;
+    padding-left: var(--spacing-lg);
+    position: relative;
+    font-size: var(--font-size-sm);
+    color: var(--charcoal-grey);
+    line-height: var(--line-height-relaxed);
+}
+
+.list li::before {
+    content: '•';
+    position: absolute;
+    left: 0;
+    color: var(--brand-blue);
+    font-weight: bold;
+}
+
+.deliverables .list li::before {
+    content: '✓';
+    color: #10b981;
+}
+
+.resources .list li::before {
+    content: '📚';
+}
+
+.dependencies .list li::before {
+    content: '⚡';
+    color: #f59e0b;
+}
+
+/* ============================
+   SUBSTEPS
+============================ */
+.substeps {
+    margin-bottom: var(--spacing-md);
+}
+
+.substepsList {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+.substep {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm);
+    background: rgba(59, 130, 246, 0.03);
+    border-radius: var(--radius-sm);
+    border-left: 2px solid var(--brand-blue);
+}
+
+.substepIndicator {
+    width: 24px;
+    height: 24px;
+    border-radius: var(--radius-full);
+    background: var(--brand-blue);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    flex-shrink: 0;
+}
+
+.substepContent {
+    flex: 1;
+}
+
+.substepTitle {
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: var(--deep-navy);
+    margin: 0 0 var(--spacing-xs) 0;
+}
+
+.substepDescription {
+    font-size: var(--font-size-xs);
+    color: var(--charcoal-grey);
+    line-height: var(--line-height-relaxed);
+    margin: 0;
+}
+
+/* ============================
+   VARIANTS
+============================ */
+
+/* Timeline Variant */
+.timeline {
+    border-left: 2px solid var(--border-grey);
+    border-radius: 0;
+    padding-left: var(--spacing-xl);
+    margin-left: 24px;
+    position: relative;
+}
+
+.timeline .stepIndicator {
+    position: absolute;
+    left: -25px;
+    top: 0;
+}
+
+/* Horizontal Variant */
+.horizontal {
+    display: inline-block;
+    width: 300px;
+    margin-right: var(--spacing-lg);
+}
+
+/* Cards Variant */
+.cards {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+    border: none;
+}
+
+.cards:hover {
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* Minimal Variant */
+.minimal {
+    background: transparent;
+    border: none;
+    padding: var(--spacing-md);
+    box-shadow: none;
+}
+
+.minimal:hover {
+    background: rgba(59, 130, 246, 0.03);
+    box-shadow: none;
+}
+
+/* Roadmap Variant */
+.roadmap {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.05), rgba(59, 130, 246, 0.02));
+    border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+/* ============================
+   SIZE VARIANTS
+============================ */
+.small {
+    padding: var(--spacing-md);
+}
+
+.small .stepTitle {
+    font-size: var(--font-size-base);
+}
+
+.small .stepDescription {
+    font-size: var(--font-size-sm);
+}
+
+.large {
+    padding: var(--spacing-xl);
+}
+
+.large .stepTitle {
+    font-size: var(--font-size-xl);
+}
+
+/* ============================
+   DARK THEME
+============================ */
+[data-theme="dark"] .flowStep {
+    background: var(--charcoal-navy);
+    border-color: var(--border-grey);
+}
+
+[data-theme="dark"] .stepTitle {
+    color: var(--off-white);
+}
+
+[data-theme="dark"] .stepDescription {
+    color: var(--light-grey);
+}
+
+[data-theme="dark"] .stepDetails {
+    background: rgba(59, 130, 246, 0.1);
+}
+
+[data-theme="dark"] .substep {
+    background: rgba(59, 130, 246, 0.05);
+}
+
+[data-theme="dark"] .substepTitle {
+    color: var(--off-white);
+}
+
+[data-theme="dark"] .minimal:hover {
+    background: rgba(59, 130, 246, 0.1);
+}
+
+/* ============================
+   RESPONSIVE DESIGN
+============================ */
+@media (max-width: 768px) {
+    .flowStep {
+        padding: var(--spacing-md);
+    }
+
+    .stepHeader {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-sm);
+    }
+
+    .stepIndicator {
+        width: 40px;
+        height: 40px;
+        font-size: var(--font-size-base);
+    }
+
+    .stepTitle {
+        font-size: var(--font-size-base);
+    }
+
+    .stepMeta {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-xs);
+    }
+
+    .horizontal {
+        width: 100%;
+        margin-right: 0;
+        margin-bottom: var(--spacing-md);
+    }
+
+    .timeline {
+        border-left: none;
+        padding-left: var(--spacing-md);
+        margin-left: 0;
+    }
+
+    .timeline .stepIndicator {
+        position: static;
+        margin-bottom: var(--spacing-sm);
+    }
+}
+
+@media (max-width: 480px) {
+
+    .stepIndicator.small,
+    .stepIndicator {
+        width: 32px;
+        height: 32px;
+        font-size: var(--font-size-sm);
+    }
+
+    .stepTitle {
+        font-size: var(--font-size-sm);
+    }
+
+    .stepDescription {
+        font-size: var(--font-size-xs);
+    }
+
+    .substep {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .substepIndicator {
+        width: 20px;
+        height: 20px;
+        font-size: var(--font-size-xs);
+    }
+}
+
+/* ============================
+   ACCESSIBILITY
+============================ */
+@media (prefers-reduced-motion: reduce) {
+    .flowStep {
+        animation: none;
+        transition: none;
+    }
+
+    .flowStep.visible {
+        opacity: 1;
+        transform: none;
+    }
+
+    .flowStep.interactive:hover {
+        transform: none;
+    }
+
+    .progressFill::after {
+        animation: none;
+    }
+
+    .expandableContent {
+        transition: none;
+    }
+}
+
+/* Focus states */
+.flowStep.interactive:focus {
+    outline: 2px solid var(--brand-blue);
+    outline-offset: 2px;
+}
+
+.flowStep.interactive:focus:not(:focus-visible) {
+    outline: none;
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+    .flowStep {
+        border-width: 2px;
+    }
+
+    .stepIndicator {
+        border: 2px solid;
+    }
+
+    .statusBadge {
+        border: 1px solid;
+    }
+}
+
+/* ============================
+   ANIMATION VARIANTS
+============================ */
+.fade {
+    animation: fadeIn 0.6s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.slide {
+    animation: slideIn 0.6s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.zoom {
+    animation: zoomIn 0.6s ease-out;
+}
+
+@keyframes zoomIn {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* ============================
+   PRINT STYLES
+============================ */
+@media print {
+    .flowStep {
+        break-inside: avoid;
+        box-shadow: none;
+        border: 1px solid #000;
+        background: white;
+    }
+
+    .expandableContent {
+        max-height: none;
+        opacity: 1;
+    }
+
+    .expandIcon {
+        display: none;
+    }
+
+    .interactive {
+        cursor: default;
+    }
+}

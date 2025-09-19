@@ -1,0 +1,335 @@
+/* ============================
+   🎯 TBH Digital Solutions - Contact Button Component
+   Aligned with Brand Guide & Root Variables
+============================ */
+
+/* ✅ Contact Button Container */
+.contactbutton-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: var(--spacing-md);
+    width: 100%;
+}
+
+/* ✅ Primary Contact Button - TBH Brand Aligned */
+.contactbutton {
+    /* TBH Typography */
+    font-family: var(--font-heading);
+    /* Aldrich font for buttons */
+    font-size: var(--font-size-small);
+    /* 16px */
+    font-weight: 600;
+    text-transform: uppercase;
+    text-decoration: none;
+    letter-spacing: 0.5px;
+
+    /* TBH Spacing & Sizing */
+    padding: var(--btn-padding);
+    /* 12px 25px */
+    border-radius: var(--btn-border-radius);
+    /* 8px */
+    min-width: 150px;
+    display: inline-block;
+    text-align: center;
+
+    /* TBH Brand Colors */
+    background-color: var(--accent-primary);
+    /* #0EAFFB Brand Blue */
+    color: var(--text-primary);
+    /* Off white text */
+    border: none;
+
+    /* TBH Shadow System */
+    box-shadow: var(--shadow-sm);
+    /* 0 3px 6px rgba(0, 0, 0, 0.2) */
+
+    /* TBH Transitions */
+    transition: var(--btn-transition);
+    /* Uses --transition-standard */
+    cursor: pointer;
+
+    /* Accessibility */
+    outline: none;
+    position: relative;
+    overflow: hidden;
+}
+
+/* 🖱️ Hover Effects - TBH Pattern */
+.contactbutton:hover {
+    background-color: var(--text-primary);
+    /* Color inversion on hover */
+    color: var(--text-inverse);
+    /* Dark text on light background */
+    transform: var(--btn-hover-lift);
+    /* translateY(-3px) */
+    box-shadow: var(--shadow-lg);
+    /* Enhanced shadow */
+}
+
+/* 🎯 Focus State - TBH Accessibility */
+.contactbutton:focus {
+    outline: 2px solid var(--accent-primary);
+    outline-offset: 2px;
+    background-color: var(--text-primary);
+    color: var(--text-inverse);
+    transform: var(--btn-hover-lift);
+}
+
+/* ⚡ Active State */
+.contactbutton:active {
+    transform: translateY(-1px);
+    /* Reduced lift when pressed */
+    box-shadow: var(--shadow-md);
+}
+
+/* 🌙 Dark Mode Compatibility */
+[data-theme="dark"] .contactbutton {
+    background-color: var(--accent-primary);
+    color: var(--text-primary);
+    box-shadow: var(--shadow-sm);
+}
+
+[data-theme="dark"] .contactbutton:hover {
+    background-color: var(--text-primary);
+    color: var(--text-inverse);
+    box-shadow: var(--shadow-lg);
+}
+
+/* ☀️ Light Mode Compatibility */
+[data-theme="light"] .contactbutton {
+    background-color: var(--accent-primary);
+    /* Brand blue maintained */
+    color: var(--text-inverse);
+    /* White text on blue */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    /* Lighter shadow */
+}
+
+[data-theme="light"] .contactbutton:hover {
+    background-color: var(--accent-hover);
+    /* Darker blue for hover */
+    color: var(--text-inverse);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* 🎨 Secondary Button Variant (Optional) */
+.contactbutton.secondary {
+    background-color: var(--bg-input);
+    /* #2D2D2F */
+    color: var(--accent-primary);
+    border: 1px solid var(--accent-primary);
+}
+
+.contactbutton.secondary:hover {
+    background-color: var(--accent-primary);
+    color: var(--text-primary);
+    border-color: var(--accent-primary);
+}
+
+/* 🔘 Small Button Variant */
+.contactbutton.small {
+    padding: var(--spacing-sm) var(--spacing-md);
+    /* 10px 20px */
+    font-size: var(--font-size-caption);
+    /* 14px */
+    min-width: 120px;
+}
+
+/* 🔘 Large Button Variant */
+.contactbutton.large {
+    padding: var(--spacing-md) var(--spacing-lg);
+    /* 20px 40px */
+    font-size: var(--font-size-body);
+    /* 18px */
+    min-width: 180px;
+}
+
+/* ✨ Loading State (Optional) */
+.contactbutton.loading {
+    cursor: not-allowed;
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+.contactbutton.loading::after {
+    content: "";
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    margin-left: var(--spacing-xs);
+    border: 2px solid transparent;
+    border-top: 2px solid currentColor;
+    border-radius: var(--radius-full);
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* 🚫 Disabled State */
+.contactbutton:disabled {
+    background-color: var(--border-grey);
+    /* #4a4a4a */
+    color: var(--text-secondary);
+    cursor: not-allowed;
+    opacity: 0.6;
+    transform: none;
+    box-shadow: none;
+}
+
+.contactbutton:disabled:hover {
+    background-color: var(--border-grey);
+    color: var(--text-secondary);
+    transform: none;
+    box-shadow: none;
+}
+
+/* 📱 Responsive Design - TBH Breakpoints */
+
+/* Tablet Adjustments */
+@media (max-width: 1024px) {
+    .contactbutton {
+        padding: var(--spacing-sm) var(--spacing-lg);
+        /* 10px 40px */
+        min-width: 140px;
+    }
+}
+
+/* Mobile Adjustments */
+@media (max-width: 768px) {
+    .contactbutton-container {
+        margin-top: var(--spacing-sm);
+    }
+
+    .contactbutton {
+        width: 100%;
+        max-width: 300px;
+        padding: var(--spacing-md);
+        /* 20px all around */
+        font-size: var(--font-size-body);
+        /* 18px for better tap target */
+        min-width: unset;
+    }
+
+    .contactbutton.small {
+        padding: var(--spacing-sm) var(--spacing-md);
+        font-size: var(--font-size-small);
+    }
+
+    .contactbutton.large {
+        padding: var(--spacing-lg);
+        font-size: var(--font-size-body);
+    }
+}
+
+/* Small Mobile Adjustments */
+@media (max-width: 480px) {
+    .contactbutton {
+        font-size: var(--font-size-small);
+        /* 16px */
+        padding: var(--spacing-sm) var(--spacing-md);
+        /* 10px 20px */
+    }
+}
+
+/* ============================
+   🎯 TBH Integration Classes
+============================ */
+
+/* Match with existing TBH components */
+.contactbutton.tbh-style {
+    /* Ensures perfect alignment with other TBH buttons */
+    font-family: var(--font-heading);
+    background-color: var(--accent-primary);
+    color: var(--text-primary);
+    transition: var(--transition-standard);
+}
+
+.contactbutton.tbh-style:hover {
+    background-color: var(--text-primary);
+    color: var(--text-inverse);
+    transform: var(--btn-hover-lift);
+}
+
+/* ============================
+   🔧 Utility Classes
+============================ */
+
+/* Full width option */
+.contactbutton.full-width {
+    width: 100%;
+    max-width: none;
+}
+
+/* Center alignment utility */
+.contactbutton.center {
+    margin: 0 auto;
+    display: block;
+}
+
+/* Icon support */
+.contactbutton .icon {
+    margin-right: var(--spacing-xs);
+    font-size: var(--icon-size-sm);
+    vertical-align: middle;
+}
+
+.contactbutton .icon-after {
+    margin-left: var(--spacing-xs);
+    margin-right: 0;
+}
+
+/* ============================
+   🎨 Animation Enhancements
+============================ */
+
+/* Subtle pulse animation for attention */
+.contactbutton.pulse {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: var(--shadow-sm);
+    }
+
+    50% {
+        box-shadow: 0 0 0 4px rgba(14, 175, 251, 0.3);
+    }
+
+    100% {
+        box-shadow: var(--shadow-sm);
+    }
+}
+
+/* Ripple effect on click */
+.contactbutton.ripple {
+    overflow: hidden;
+    position: relative;
+}
+
+.contactbutton.ripple::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: var(--radius-full);
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.contactbutton.ripple:active::before {
+    width: 300px;
+    height: 300px;
+}

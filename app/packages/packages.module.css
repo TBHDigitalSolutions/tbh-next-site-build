@@ -1,0 +1,589 @@
+/* app/packages/packages.module.css - Updated for PackageCarousel Integration */
+
+/* ===== HEADER SECTIONS ===== */
+.header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.title {
+    font-size: clamp(1.75rem, 1.5rem + 1.2vw, 2.5rem);
+    font-weight: 700;
+    margin: 0 0 1rem;
+    color: var(--foreground);
+    line-height: 1.2;
+}
+
+.subtitle {
+    color: var(--muted-foreground);
+    margin: 0 auto 2rem;
+    max-width: 60ch;
+    font-size: 1.125rem;
+    line-height: 1.6;
+}
+
+.h3 {
+    margin: 0 0 1rem;
+    font-weight: 600;
+    font-size: 1.25rem;
+    color: var(--foreground);
+}
+
+/* ===== INTEGRATED BUNDLES GRID ===== */
+.bundlesGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+@media (max-width: 768px) {
+    .bundlesGrid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+}
+
+/* ===== BUNDLE CARDS (for integrated packages) ===== */
+.bundleCard {
+    position: relative;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 1rem;
+    overflow: hidden;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.bundleCard:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    border-color: var(--ring);
+}
+
+.bundleLink {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    height: 100%;
+}
+
+.bundleImageWrapper {
+    aspect-ratio: 5/3;
+    overflow: hidden;
+    background: var(--muted);
+}
+
+.bundleImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.2s ease;
+}
+
+.bundleCard:hover .bundleImage {
+    transform: scale(1.05);
+}
+
+.bundleBody {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    min-height: 200px;
+}
+
+.bundleCategory {
+    font-size: 0.875rem;
+    color: var(--primary);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.bundleTitle {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--foreground);
+    line-height: 1.3;
+    margin: 0;
+}
+
+.bundleSubtitle {
+    font-size: 1rem;
+    color: var(--muted-foreground);
+    line-height: 1.4;
+    margin: 0;
+}
+
+.bundleSummary {
+    font-size: 0.875rem;
+    color: var(--muted-foreground);
+    line-height: 1.5;
+    flex-grow: 1;
+    margin: 0;
+}
+
+.bundlePricing {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: auto;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--border);
+}
+
+.bundleFooter {
+    margin-top: auto;
+    padding-top: 0.75rem;
+}
+
+.bundleCta {
+    color: var(--primary);
+    font-weight: 500;
+    font-size: 0.875rem;
+    transition: color 0.2s ease;
+}
+
+.bundleCard:hover .bundleCta {
+    color: var(--primary);
+    opacity: 0.8;
+}
+
+/* ===== SERVICE CAROUSELS SECTION ===== */
+.serviceCarousels {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+/* ===== LEGACY SUPPORT - Keep existing classes for backward compatibility ===== */
+.grid {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2rem;
+}
+
+@media (max-width: 768px) {
+    .grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+}
+
+.card {
+    position: relative;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 1rem;
+    overflow: hidden;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    border-color: var(--ring);
+}
+
+.cardLink {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    height: 100%;
+}
+
+.cardImageWrapper {
+    aspect-ratio: 5/3;
+    overflow: hidden;
+    background: var(--muted);
+}
+
+.cardImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.2s ease;
+}
+
+.card:hover .cardImage {
+    transform: scale(1.05);
+}
+
+.cardBody {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    min-height: 200px;
+}
+
+.cardCategory {
+    font-size: 0.875rem;
+    color: var(--primary);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.cardTitle {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--foreground);
+    line-height: 1.3;
+    margin: 0;
+}
+
+.cardSubtitle {
+    font-size: 1rem;
+    color: var(--muted-foreground);
+    line-height: 1.4;
+    margin: 0;
+}
+
+.cardSummary {
+    font-size: 0.875rem;
+    color: var(--muted-foreground);
+    line-height: 1.5;
+    flex-grow: 1;
+    margin: 0;
+}
+
+.cardPricing {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: auto;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--border);
+}
+
+.priceLabel {
+    font-size: 0.875rem;
+    color: var(--muted-foreground);
+}
+
+.priceValue {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--primary);
+}
+
+.cardFooter {
+    margin-top: auto;
+    padding-top: 0.75rem;
+}
+
+.cardCta {
+    color: var(--primary);
+    font-weight: 500;
+    font-size: 0.875rem;
+    transition: color 0.2s ease;
+}
+
+.card:hover .cardCta {
+    color: var(--primary);
+    opacity: 0.8;
+}
+
+/* ===== SPLIT LAYOUT ===== */
+.split {
+    display: grid;
+    gap: 2rem;
+    grid-template-columns: 1fr 1fr;
+}
+
+@media (max-width: 768px) {
+    .split {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+}
+
+.bullets {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.bullets li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: var(--foreground);
+}
+
+/* ===== ERROR STATES ===== */
+.notFound {
+    text-align: center;
+    padding: 3rem 0;
+}
+
+.notFound h1 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: var(--foreground);
+}
+
+.notFound p {
+    color: var(--muted-foreground);
+    margin-bottom: 2rem;
+}
+
+.backLink {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 500;
+    transition: opacity 0.2s ease;
+}
+
+.backLink:hover {
+    opacity: 0.8;
+}
+
+/* ===== PRICING SECTIONS ===== */
+.pricingGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+@media (max-width: 768px) {
+    .pricingGrid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+}
+
+.pricingCard {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 1rem;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.pricingCard:hover {
+    border-color: var(--primary);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.pricingCardHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+}
+
+.pricingCardTitle {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--foreground);
+    margin: 0;
+}
+
+.pricingCardBadge {
+    background: var(--primary);
+    color: var(--primary-foreground);
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.pricingCardPrice {
+    margin-bottom: 2rem;
+}
+
+.priceDisplay {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--foreground);
+}
+
+.pricePeriod {
+    font-size: 1rem;
+    color: var(--muted-foreground);
+    margin-left: 0.25rem;
+}
+
+.featureList {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 2rem 0;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.featureItem {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: var(--foreground);
+}
+
+.featureIcon {
+    color: var(--primary);
+    font-weight: 600;
+    flex-shrink: 0;
+    margin-top: 0.125rem;
+}
+
+.pricingCardFooter {
+    margin-top: auto;
+}
+
+.pricingCta {
+    display: block;
+    width: 100%;
+    text-align: center;
+    background: var(--primary);
+    color: var(--primary-foreground);
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    text-decoration: none;
+    font-weight: 600;
+    transition: opacity 0.2s ease;
+}
+
+.pricingCta:hover {
+    opacity: 0.9;
+}
+
+/* ===== SINGLE PRICING ===== */
+.singlePricing {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    padding: 2rem;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 1rem;
+}
+
+@media (max-width: 768px) {
+    .singlePricing {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1.5rem;
+    }
+}
+
+.priceInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.priceRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.priceRow:last-child {
+    border-bottom: none;
+}
+
+.singlePricingCta {
+    flex-shrink: 0;
+}
+
+.primaryButton {
+    display: inline-block;
+    background: var(--primary);
+    color: var(--primary-foreground);
+    padding: 0.75rem 2rem;
+    border-radius: 0.5rem;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: opacity 0.2s ease;
+    min-width: 150px;
+    text-align: center;
+}
+
+.primaryButton:hover {
+    opacity: 0.9;
+}
+
+/* ===== ACCESSIBILITY ===== */
+.bundleCard:focus-within,
+.card:focus-within {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+}
+
+.bundleLink:focus,
+.cardLink:focus {
+    outline: none;
+}
+
+.pricingCta:focus,
+.primaryButton:focus {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+}
+
+/* ===== LOADING STATES ===== */
+.bundleImage[loading],
+.cardImage[loading] {
+    background: var(--muted);
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+}
+
+/* ===== RESPONSIVE ADJUSTMENTS ===== */
+@media (max-width: 640px) {
+    .header {
+        margin-bottom: 2rem;
+    }
+
+    .bundleBody,
+    .cardBody {
+        padding: 1.25rem;
+        min-height: auto;
+    }
+
+    .pricingCard {
+        padding: 1.5rem;
+    }
+
+    .serviceCarousels {
+        gap: 0;
+    }
+}

@@ -1,0 +1,214 @@
+{
+  "seo": {
+    "title": "Terms and Conditions | TBH Digital Solutions",
+    "description": "Terms and conditions for using TBH Digital Solutions services. User agreements, service terms, intellectual property rights, and legal disclaimers.",
+    "keywords": ["terms and conditions", "user agreement", "service terms", "legal", "intellectual property"],
+    "robots": "noindex, follow",
+    "canonical": "https://tbhdigitalsolutions.com/terms-conditions",
+    "schema": {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "Terms and Conditions",
+      "description": "TBH Digital Solutions Terms and Conditions - User agreements and service terms",
+      "url": "https://tbhdigitalsolutions.com/terms-conditions",
+      "about": {
+        "@type": "Organization",
+        "name": "TBH Digital Solutions"
+      },
+      "mainEntity": {
+        "@type": "Article",
+        "headline": "Terms and Conditions",
+        "datePublished": "2024-11-02",
+        "dateModified": "2024-11-02",
+        "author": {
+          "@type": "Organization",
+          "name": "TBH Digital Solutions"
+        }
+      }
+    }
+  },
+  "hero": {
+    "title": "Terms and Conditions",
+    "subtitle": "Please read these terms and conditions carefully before using our services. By accessing our services, you agree to be bound by these terms.",
+    "lastUpdated": "November 2, 2024"
+  },
+  "tableOfContents": [
+    { "title": "Acceptance of Terms", "anchor": "acceptance-of-terms" },
+    { "title": "Changes to Terms", "anchor": "changes-to-terms" },
+    { "title": "Eligibility", "anchor": "eligibility" },
+    { "title": "Account Registration and Security", "anchor": "account-registration-and-security" },
+    { "title": "Use of Our Services", "anchor": "use-of-our-services" },
+    { "title": "Prohibited Activities", "anchor": "prohibited-activities" },
+    { "title": "Intellectual Property Rights", "anchor": "intellectual-property-rights" },
+    { "title": "Content Ownership and Use", "anchor": "content-ownership-and-use" },
+    { "title": "Third-Party Links and Services", "anchor": "third-party-links-and-services" },
+    { "title": "Payment and Billing", "anchor": "payment-and-billing" },
+    { "title": "Subscription and Cancellation", "anchor": "subscription-and-cancellation" },
+    { "title": "Disclaimers", "anchor": "disclaimers" },
+    { "title": "Limitation of Liability", "anchor": "limitation-of-liability" },
+    { "title": "Indemnification", "anchor": "indemnification" },
+    { "title": "Termination and Account Suspension", "anchor": "termination-and-account-suspension" },
+    { "title": "Governing Law and Jurisdiction", "anchor": "governing-law-and-jurisdiction" },
+    { "title": "Dispute Resolution", "anchor": "dispute-resolution" },
+    { "title": "Changes to Our Services", "anchor": "changes-to-our-services" },
+    { "title": "Contact Information", "anchor": "contact-information" }
+  ],
+  "sections": [
+    {
+      "id": "acceptance-of-terms",
+      "title": "1. Acceptance of Terms",
+      "content": "By accessing or using our Services, you confirm that you have read, understood, and agree to be bound by these Terms, including any additional terms and policies incorporated by reference."
+    },
+    {
+      "id": "changes-to-terms",
+      "title": "2. Changes to Terms",
+      "content": "TBH Digital Solutions reserves the right to update or modify these Terms at any time without prior notice. We will indicate the date of the latest revision at the top of these Terms. Your continued use of our Services after any changes constitutes acceptance of the revised Terms."
+    },
+    {
+      "id": "eligibility",
+      "title": "3. Eligibility",
+      "content": "You must be at least 18 years of age to use our Services. By using our Services, you represent that you are of legal age and have the authority to enter into these Terms."
+    },
+    {
+      "id": "account-registration-and-security",
+      "title": "4. Account Registration and Security",
+      "content": "To access certain features of our Services, you may need to register for an account. You agree to:",
+      "items": [
+        "Provide accurate and up-to-date information during registration.",
+        "Maintain the confidentiality of your account login credentials.",
+        "Notify us immediately of any unauthorized access to your account."
+      ],
+      "footer": "We are not liable for any loss or damage arising from unauthorized access or use of your account."
+    },
+    {
+      "id": "use-of-our-services",
+      "title": "5. Use of Our Services",
+      "content": "TBH Digital Solutions grants you a limited, non-exclusive, non-transferable, and revocable license to use our Services in accordance with these Terms. You agree to use the Services only for lawful purposes and in compliance with all applicable laws and regulations."
+    },
+    {
+      "id": "prohibited-activities",
+      "title": "6. Prohibited Activities",
+      "content": "You agree not to:",
+      "items": [
+        "Engage in any activity that violates these Terms or any applicable law.",
+        "Copy, modify, distribute, or sell any part of our Services without our prior written consent.",
+        "Access or tamper with our Services' security or user accounts.",
+        "Use automated systems or software to extract data from our Services for unauthorized purposes.",
+        "Engage in any activity that may damage, disrupt, or interfere with our Services."
+      ]
+    },
+    {
+      "id": "intellectual-property-rights",
+      "title": "7. Intellectual Property Rights",
+      "content": "All content, features, and functionality within our Services, including but not limited to text, graphics, logos, images, and software, are the property of TBH Digital Solutions or its licensors and are protected by copyright, trademark, patent, and other intellectual property rights. Unauthorized use of our intellectual property is strictly prohibited."
+    },
+    {
+      "id": "content-ownership-and-use",
+      "title": "8. Content Ownership and Use",
+      "subsections": [
+        {
+          "title": "User-Generated Content",
+          "content": "If you submit or upload any content to our Services, including but not limited to comments, suggestions, or feedback (\"User Content\"), you grant TBH Digital Solutions a worldwide, perpetual, royalty-free, and non-exclusive license to use, reproduce, modify, adapt, publish, and display such content in connection with our Services. You retain ownership of your User Content and warrant that it does not infringe any third-party rights."
+        },
+        {
+          "title": "Company Content",
+          "content": "All content provided by TBH Digital Solutions (\"Company Content\") is for personal and non-commercial use only. You may not reproduce, distribute, or create derivative works from Company Content without our prior written consent."
+        }
+      ]
+    },
+    {
+      "id": "third-party-links-and-services",
+      "title": "9. Third-Party Links and Services",
+      "content": "Our Services may contain links to third-party websites or services that are not owned or controlled by TBH Digital Solutions. We do not endorse or assume responsibility for any third-party content, products, services, or privacy practices. Your interactions with third parties are governed by their terms and policies."
+    },
+    {
+      "id": "payment-and-billing",
+      "title": "10. Payment and Billing",
+      "subsections": [
+        {
+          "title": "Fees and Charges",
+          "content": "Certain features or services may require payment of fees. You agree to provide accurate and complete billing information and authorize TBH Digital Solutions to charge all fees incurred using your payment method."
+        },
+        {
+          "title": "Billing Terms",
+          "content": "All payments are due in advance unless otherwise agreed upon. In the event of payment default, TBH Digital Solutions reserves the right to restrict or terminate your access to the Services."
+        }
+      ]
+    },
+    {
+      "id": "subscription-and-cancellation",
+      "title": "11. Subscription and Cancellation",
+      "subsections": [
+        {
+          "title": "Subscription Services",
+          "content": "Some of our Services may be offered as subscriptions. Subscription terms will be specified at the time of purchase. By subscribing, you agree to recurring billing for the specified subscription term."
+        },
+        {
+          "title": "Cancellation",
+          "content": "You may cancel your subscription according to the terms specified at the time of purchase. Cancellation requests should be submitted before the next billing cycle to avoid additional charges."
+        }
+      ]
+    },
+    {
+      "id": "disclaimers",
+      "title": "12. Disclaimers",
+      "content": "Our Services are provided on an \"AS IS\" and \"AS AVAILABLE\" basis without warranties of any kind, either express or implied. To the fullest extent permitted by law, TBH Digital Solutions disclaims all warranties, including but not limited to implied warranties of merchantability, fitness for a particular purpose, and non-infringement."
+    },
+    {
+      "id": "limitation-of-liability",
+      "title": "13. Limitation of Liability",
+      "content": "To the maximum extent permitted by law, TBH Digital Solutions and its affiliates shall not be liable for any indirect, incidental, special, or consequential damages arising from or in connection with your use of our Services, even if we have been advised of the possibility of such damages."
+    },
+    {
+      "id": "indemnification",
+      "title": "14. Indemnification",
+      "content": "You agree to indemnify, defend, and hold harmless TBH Digital Solutions, its affiliates, officers, directors, employees, and agents from any claims, liabilities, damages, losses, or expenses arising out of or related to your use of our Services or any violation of these Terms."
+    },
+    {
+      "id": "termination-and-account-suspension",
+      "title": "15. Termination and Account Suspension",
+      "content": "We reserve the right to suspend or terminate your access to our Services at our sole discretion, without notice, if we determine that you have violated these Terms or engaged in unlawful activity. Upon termination, your right to use the Services will cease immediately."
+    },
+    {
+      "id": "governing-law-and-jurisdiction",
+      "title": "16. Governing Law and Jurisdiction",
+      "content": "These Terms shall be governed by and construed in accordance with the laws of the State of Missouri, United States, without regard to its conflict of law principles. Any disputes arising from or relating to these Terms or your use of the Services will be subject to the exclusive jurisdiction of the courts located in Missouri, United States."
+    },
+    {
+      "id": "dispute-resolution",
+      "title": "17. Dispute Resolution",
+      "subsections": [
+        {
+          "title": "Informal Resolution",
+          "content": "In the event of a dispute, you agree to first attempt an informal resolution by contacting us at info@tbhdigitalsolutions.com. If the dispute is not resolved within 30 days, you may pursue other legal remedies as described below."
+        },
+        {
+          "title": "Arbitration",
+          "content": "Any disputes that cannot be resolved informally shall be settled through binding arbitration, in accordance with the rules of the American Arbitration Association. You agree to waive the right to a jury trial or to participate in a class action lawsuit."
+        }
+      ]
+    },
+    {
+      "id": "changes-to-our-services",
+      "title": "18. Changes to Our Services",
+      "content": "TBH Digital Solutions reserves the right to modify, suspend, or discontinue our Services at any time, without notice. We are not liable for any modifications, suspension, or discontinuance of the Services."
+    },
+    {
+      "id": "contact-information",
+      "title": "19. Contact Information",
+      "content": "For questions or concerns about these Terms, please contact us:",
+      "items": [
+        "**Email**: [info@tbhdigitalsolutions.com](mailto:info@tbhdigitalsolutions.com)",
+        "**Address**: TBH Digital Solutions, St. Louis, Mo"
+      ]
+    }
+  ],
+  "footer": {
+    "content": "By using TBH Digital Solutions' Services, you acknowledge that you have read, understood, and agree to these Terms and Conditions. Failure to comply with these Terms may result in the suspension or termination of your access to our Services.",
+    "thank_you": "**Thank you for choosing TBH Digital Solutions.**"
+  },
+  "contact": {
+    "email": "info@tbhdigitalsolutions.com",
+    "address": "TBH Digital Solutions, St. Louis, Mo"
+  }
+}

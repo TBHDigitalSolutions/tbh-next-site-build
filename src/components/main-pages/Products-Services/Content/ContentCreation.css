@@ -1,0 +1,106 @@
+/* ============================
+   ✍️ Content Creation — TBH Unified Theme
+   - Unified colors/spacing/containers
+   - Responsive grid (1 → 2 → 3 cols)
+   - Equal-height cards via track fill
+============================ */
+
+/* Section band */
+.content-creation-section {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    padding-block: var(--section-pad-block);
+    transition:
+        background-color var(--transition-standard),
+        color var(--transition-standard);
+}
+
+/* Max-width container */
+.content-creation-container {
+    width: min(calc(100% - 2 * var(--container-pad-inline)), var(--container-max));
+    margin-inline: auto;
+    padding-inline: var(--container-pad-inline);
+    text-align: center;
+    box-sizing: border-box;
+}
+
+/* Optional description text (if present) */
+.content-creation-description {
+    font-family: var(--font-body);
+    font-size: var(--font-size-body);
+    line-height: var(--line-height-body);
+    color: var(--text-secondary);
+    max-width: 70ch;
+    margin: 0 auto var(--spacing-xl);
+}
+
+/* Services grid */
+.content-creation-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    /* mobile-first */
+    gap: var(--spacing-xl);
+    align-items: stretch;
+    /* make items fill row height */
+    grid-auto-rows: 1fr;
+    /* equal-height tracks */
+    margin-top: var(--spacing-lg);
+}
+
+/* Ensure each child fills its grid track */
+.content-creation-grid>* {
+    height: 100%;
+    min-width: 0;
+    /* prevent overflow on long content */
+}
+
+/* If your card root uses this class, apply the card recipe */
+.content-creation-card {
+    background: var(--bg-surface);
+    color: var(--text-primary);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-xs);
+    height: 100%;
+    padding: var(--spacing-xl);
+    display: grid;
+    gap: var(--spacing-md);
+    text-align: left;
+
+    transition:
+        transform var(--transition-fast),
+        box-shadow var(--transition-fast),
+        border-color var(--transition-fast);
+}
+
+.content-creation-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--border-accent, var(--brand-blue));
+}
+
+/* Breakpoints */
+@media (min-width: 640px) {
+    .content-creation-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: var(--spacing-lg);
+    }
+}
+
+@media (min-width: 1024px) {
+    .content-creation-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: var(--spacing-xl);
+    }
+}
+
+/* Motion preferences */
+@media (prefers-reduced-motion: reduce) {
+
+    .content-creation-section,
+    .content-creation-card,
+    .content-creation-grid * {
+        transition: none !important;
+        animation: none !important;
+    }
+}

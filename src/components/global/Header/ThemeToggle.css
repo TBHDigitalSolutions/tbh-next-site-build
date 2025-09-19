@@ -1,0 +1,24 @@
+/* ============================
+   🌓 Theme Toggle (Header Control)
+============================ */
+.theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: clamp(36px, 3vw, 42px);
+    height: clamp(36px, 3vw, 42px);
+    border-radius: var(--radius-lg);
+    background: transparent;
+    border: 1px solid transparent;
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: transform var(--transition-standard), color var(--transition-standard), background-color var(--transition-standard), border-color var(--transition-standard);
+    padding: 0;
+    /* handled by size */
+}
+
+.theme-toggle:hover {
+    transform: translateY(-1px);
+    background-color: rgba(14, 175, 251, 0.08);
+    border-color: var(--border-subtle);
+}

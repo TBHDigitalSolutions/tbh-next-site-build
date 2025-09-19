@@ -1,0 +1,47 @@
+/* ====== Testimonials Section (global, unique class names) ====== */
+
+.tms-section {
+    padding-block: var(--section-vertical, 64px);
+    background: transparent;
+}
+
+.tms-container {
+    width: 100%;
+    max-width: var(--container-wide, 1200px);
+    margin-inline: auto;
+    padding-inline: var(--container-padding, 24px);
+}
+
+.tms-header {
+    text-align: center;
+    margin-bottom: var(--spacing-xl, 32px);
+}
+
+.tms-title {
+    font-size: clamp(1.5rem, 1.2rem + 1vw, 2rem);
+    line-height: 1.2;
+    color: var(--text-primary, #fff);
+    margin: 0 0 var(--spacing-sm, 10px);
+    font-weight: 700;
+    letter-spacing: 0.2px;
+}
+
+.tms-subtitle {
+    max-width: 72ch;
+    margin: 0 auto;
+    color: var(--text-secondary, rgba(255, 255, 255, .72));
+    font-size: var(--font-size-md, 1rem);
+    line-height: 1.6;
+}
+
+.tms-divider {
+    margin: var(--spacing-lg, 24px) auto 0;
+    width: min(680px, 90%);
+    border: 0;
+    height: 1px;
+    background: color-mix(in oklab, var(--border-subtle, rgba(255, 255, 255, .12)) 90%, transparent);
+}
+
+.tms-sliderWrap {
+    margin-top: var(--spacing-xl, 32px);
+}

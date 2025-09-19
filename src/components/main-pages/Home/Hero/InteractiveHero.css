@@ -1,0 +1,536 @@
+/* ============================
+   🎮 TBH Digital Solutions - Interactive Hero Styles
+   Advanced interactive hero with animations and particles
+============================ */
+
+/* ============================
+   MAIN CONTAINER
+============================ */
+
+.interactive-hero {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    background: linear-gradient(135deg, var(--deep-navy, #060512), var(--charcoal-navy, #0E1730));
+    color: var(--off-white, #f4f6f7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hero-min-height {
+    min-height: 60vh;
+}
+
+.hero-full-height {
+    min-height: 100vh;
+}
+
+.hero-medium-height {
+    min-height: 75vh;
+}
+
+/* ============================
+   BACKGROUND & MEDIA
+============================ */
+
+.interactive-hero-background {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+}
+
+.hero-video,
+.hero-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg,
+            rgba(6, 5, 18, 0.8),
+            rgba(14, 23, 48, 0.6),
+            rgba(11, 10, 24, 0.9));
+    z-index: 1;
+}
+
+/* ============================
+   PARTICLES SYSTEM
+============================ */
+
+.particles-container {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.particle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: var(--brand-blue, #0EAFFB);
+    border-radius: 50%;
+    opacity: 0;
+    animation: particleFloat 4s infinite ease-in-out;
+}
+
+@keyframes particleFloat {
+
+    0%,
+    100% {
+        opacity: 0;
+        transform: translateY(100vh) scale(0);
+    }
+
+    10% {
+        opacity: 1;
+        transform: translateY(90vh) scale(1);
+    }
+
+    90% {
+        opacity: 1;
+        transform: translateY(-10vh) scale(1);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translateY(-20vh) scale(0);
+    }
+}
+
+/* ============================
+   CONTENT LAYOUT
+============================ */
+
+.interactive-hero-content {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--spacing-xl, 60px) var(--spacing-md, 20px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.hero-text-content {
+    max-width: 800px;
+    margin-bottom: var(--spacing-lg, 40px);
+}
+
+/* ============================
+   TYPOGRAPHY
+============================ */
+
+.interactive-hero-title {
+    font-family: 'Aldrich', sans-serif;
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 600;
+    color: var(--brand-blue, #0EAFFB);
+    text-transform: uppercase;
+    margin-bottom: var(--spacing-md, 20px);
+    line-height: 1.2;
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    animation: titleSlideIn 1s ease-out;
+}
+
+.typing-cursor {
+    animation: blink 1s infinite;
+    color: var(--brand-blue, #0EAFFB);
+}
+
+@keyframes blink {
+
+    0%,
+    50% {
+        opacity: 1;
+    }
+
+    51%,
+    100% {
+        opacity: 0;
+    }
+}
+
+.interactive-hero-subtitle {
+    font-family: 'Newsreader', serif;
+    font-size: clamp(1.25rem, 3vw, 1.75rem);
+    color: var(--light-grey, #c9ced1);
+    margin-bottom: var(--spacing-md, 20px);
+    line-height: 1.4;
+    animation: subtitleSlideIn 1.2s ease-out 0.3s both;
+}
+
+.interactive-hero-description {
+    font-family: 'Newsreader', serif;
+    font-size: 1.125rem;
+    color: var(--light-grey, #c9ced1);
+    line-height: 1.6;
+    margin-bottom: var(--spacing-lg, 40px);
+    animation: descriptionSlideIn 1.4s ease-out 0.6s both;
+}
+
+/* ============================
+   INTERACTIVE BUTTONS
+============================ */
+
+.hero-cta-container {
+    display: flex;
+    gap: var(--spacing-md, 20px);
+    margin-bottom: var(--spacing-xl, 60px);
+    animation: ctaSlideIn 1.6s ease-out 0.9s both;
+}
+
+.interactive-btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 15px 30px;
+    font-family: 'Aldrich', sans-serif;
+    font-weight: 600;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    overflow: hidden;
+    min-width: 180px;
+    border: 2px solid var(--brand-blue, #0EAFFB);
+}
+
+.interactive-btn.primary {
+    background: var(--brand-blue, #0EAFFB);
+    color: var(--deep-navy, #060512);
+}
+
+.interactive-btn.secondary {
+    background: transparent;
+    color: var(--brand-blue, #0EAFFB);
+}
+
+.interactive-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(14, 175, 251, 0.3);
+}
+
+.interactive-btn.primary:hover {
+    background: var(--light-hover, #5AC8FA);
+}
+
+.interactive-btn.secondary:hover {
+    background: var(--brand-blue, #0EAFFB);
+    color: var(--deep-navy, #060512);
+}
+
+.btn-glow {
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg,
+            transparent,
+            rgba(255, 255, 255, 0.2),
+            transparent);
+    transition: left 0.5s;
+}
+
+.interactive-btn:hover .btn-glow {
+    left: 100%;
+}
+
+/* ============================
+   TRUST BADGES
+============================ */
+
+.trust-badges-container {
+    margin-bottom: var(--spacing-lg, 40px);
+    animation: trustBadgesSlideIn 1.8s ease-out 1.2s both;
+}
+
+.trust-text {
+    font-family: 'Newsreader', serif;
+    font-size: 0.875rem;
+    color: var(--light-grey, #c9ced1);
+    margin-bottom: var(--spacing-sm, 10px);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.trust-badges-grid {
+    display: flex;
+    gap: var(--spacing-md, 20px);
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.trust-badge {
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+    animation: trustBadgeFadeIn 0.6s ease-out both;
+}
+
+.trust-badge:hover {
+    opacity: 1;
+}
+
+.trust-logo {
+    filter: grayscale(100%) brightness(1.2);
+    transition: filter 0.3s ease;
+}
+
+.trust-badge:hover .trust-logo {
+    filter: grayscale(0%) brightness(1);
+}
+
+/* ============================
+   INTERACTIVE ELEMENTS
+============================ */
+
+.interactive-elements-container {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 5;
+}
+
+.interactive-element {
+    position: absolute;
+    pointer-events: all;
+    cursor: pointer;
+}
+
+.element-trigger {
+    position: relative;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.element-icon {
+    width: 24px;
+    height: 24px;
+    background: var(--element-color, var(--brand-blue, #0EAFFB));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    transition: transform 0.3s ease;
+}
+
+.element-pulse {
+    position: absolute;
+    inset: 0;
+    border: 2px solid var(--element-color, var(--brand-blue, #0EAFFB));
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(2);
+        opacity: 0;
+    }
+}
+
+.element-tooltip {
+    position: absolute;
+    bottom: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(6, 5, 18, 0.95);
+    border: 1px solid var(--brand-blue, #0EAFFB);
+    border-radius: 8px;
+    padding: var(--spacing-sm, 10px) var(--spacing-md, 20px);
+    min-width: 200px;
+    opacity: 0;
+    transform: translateX(-50%) translateY(10px);
+    transition: all 0.3s ease;
+    pointer-events: none;
+}
+
+.interactive-element.active .element-tooltip {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+.interactive-element:hover .element-icon {
+    transform: scale(1.2);
+}
+
+.element-title {
+    font-family: 'Aldrich', sans-serif;
+    font-size: 0.875rem;
+    color: var(--brand-blue, #0EAFFB);
+    margin-bottom: 5px;
+}
+
+.element-description {
+    font-family: 'Newsreader', serif;
+    font-size: 0.75rem;
+    color: var(--light-grey, #c9ced1);
+    line-height: 1.4;
+    margin: 0;
+}
+
+/* ============================
+   MOUSE FOLLOWER
+============================ */
+
+.mouse-follower {
+    position: fixed;
+    width: 20px;
+    height: 20px;
+    background: radial-gradient(circle,
+            rgba(14, 175, 251, 0.6) 0%,
+            rgba(14, 175, 251, 0.3) 50%,
+            transparent 100%);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: opacity 0.3s ease;
+}
+
+/* ============================
+   ANIMATIONS
+============================ */
+
+@keyframes titleSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(50px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes subtitleSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes descriptionSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes ctaSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes trustBadgesSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes trustBadgeFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+
+    to {
+        opacity: 0.7;
+        transform: scale(1);
+    }
+}
+
+/* ============================
+   RESPONSIVE DESIGN
+============================ */
+
+@media (max-width: 768px) {
+    .interactive-hero-content {
+        padding: var(--spacing-lg, 40px) var(--spacing-sm, 10px);
+    }
+
+    .hero-cta-container {
+        flex-direction: column;
+        align-items: center;
+        gap: var(--spacing-sm, 10px);
+    }
+
+    .interactive-btn {
+        width: 100%;
+        max-width: 280px;
+    }
+
+    .trust-badges-grid {
+        gap: var(--spacing-sm, 10px);
+    }
+
+    .interactive-elements-container {
+        display: none;
+        /* Hide on mobile for better UX */
+    }
+
+    .mouse-follower {
+        display: none;
+    }
+
+    .particles-container .particle {
+        display: none;
+        /* Reduce particles on mobile */
+    }
+}
+
+@media (max-width: 480px) {
+    .interactive-hero-title {
+        font-size: 2rem;
+    }
+
+    .interactive-hero-subtitle {
+        font-size: 1.125rem;
+    }
+
+    .interactive-hero-description {
+        font-size: 1rem;
+    }
+}
