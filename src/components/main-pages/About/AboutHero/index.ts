@@ -1,1 +1,2 @@
-export { default as AboutHero } from './AboutHero';
+export { default } from "./AboutHero";
+export type { AboutHeroProps } from "./AboutHero";

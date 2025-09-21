@@ -1,1 +1,2 @@
-export { default as CoreValues } from './CoreValues';
+export { default } from "./CoreValues";
+export type { CoreValuesProps } from "./CoreValues";

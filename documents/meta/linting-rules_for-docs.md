@@ -1,0 +1,1 @@
+# Docs Linting Rules\n

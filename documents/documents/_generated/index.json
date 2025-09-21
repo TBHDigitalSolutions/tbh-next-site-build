@@ -1,0 +1,91 @@
+{
+  "version": 1,
+  "generatedAt": "2025-09-21T12:00:00.000Z",
+  "root": "/documents/documents",
+  "docs": [
+    {
+      "path": "./project-documents_Handbook_2025-09-21.md",
+      "file": "project-documents_Handbook_2025-09-21.md",
+      "title": "Project Documents Handbook",
+      "domain": "project",
+      "main": "project-documents",
+      "qualifier": "Handbook",
+      "date": "2025-09-21",
+      "status": "Approved",
+      "owners": ["@conor"],
+      "tags": ["docs", "standards", "indexing"],
+      "links": {
+        "related": [
+          "./documents-indexing-linking_Standard_2025-09-21.md",
+          "./documents-directory_RefactorPlan_2025-09-21.md",
+          "./generated-index_BuildSpec_2025-09-21.md"
+        ]
+      }
+    },
+    {
+      "path": "./documents-indexing-linking_Standard_2025-09-21.md",
+      "file": "documents-indexing-linking_Standard_2025-09-21.md",
+      "title": "Documents Indexing & Linking Standard",
+      "domain": "project",
+      "main": "documents-indexing-linking",
+      "qualifier": "Standard",
+      "date": "2025-09-21",
+      "status": "Approved",
+      "owners": ["@conor"],
+      "tags": ["docs", "indexing", "links"],
+      "links": {
+        "related": [
+          "./generated-index_BuildSpec_2025-09-21.md"
+        ]
+      }
+    },
+    {
+      "path": "./documents-directory_RefactorPlan_2025-09-21.md",
+      "file": "documents-directory_RefactorPlan_2025-09-21.md",
+      "title": "Documents Directory – Refactor Plan & Ideal Structure",
+      "domain": "project",
+      "main": "documents-directory",
+      "qualifier": "RefactorPlan",
+      "date": "2025-09-21",
+      "status": "Approved",
+      "owners": ["@conor"],
+      "tags": ["docs", "structure", "refactor"],
+      "links": {
+        "related": [
+          "./generated-index_BuildSpec_2025-09-21.md"
+        ]
+      }
+    },
+    {
+      "path": "./generated-index_BuildSpec_2025-09-21.md",
+      "file": "generated-index_BuildSpec_2025-09-21.md",
+      "title": "Generated Index JSON – Build Specification & Usage Guide",
+      "domain": "documents",
+      "main": "generated-index",
+      "qualifier": "BuildSpec",
+      "date": "2025-09-21",
+      "status": "Approved",
+      "owners": ["@conor"],
+      "tags": ["docs", "generated-index", "spec", "build"],
+      "links": {
+        "related": [
+          "./project-documents_Handbook_2025-09-21.md",
+          "./documents-indexing-linking_Standard_2025-09-21.md",
+          "./documents-directory_RefactorPlan_2025-09-21.md"
+        ]
+      }
+    },
+    {
+      "path": "./README.md",
+      "file": "README.md",
+      "title": "Documents Directory",
+      "domain": "project",
+      "main": "readme",
+      "qualifier": "Overview",
+      "date": "Evergreen",
+      "status": "Approved",
+      "owners": ["@conor"],
+      "tags": ["docs", "index"]
+    }
+  ]
+}

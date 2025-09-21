@@ -15,7 +15,7 @@ import CTASection from "@/components/sections/section-layouts/CTASection/CTASect
 // Route-scoped UI (client)
 import ModernServicesSelector from "@/components/services/ModernServicesSelector";
 import SearchBanner from "@/components/services/SearchBanner";
-import GrowthPackagesCTA from "@/components/packages/GrowthPackagesCTA/GrowthPackagesCTA";
+import GrowthPackagesCTA from "@/packages/components/GrowthPackagesCTA/GrowthPackagesCTA"; 
 
 // Local data
 import pageData from "./page.data.json";

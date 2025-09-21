@@ -1,0 +1,48 @@
+.root {
+    display: block;
+    padding: 1.25rem 0;
+}
+
+.container {
+    margin: 0 auto;
+    padding: 0 1rem;
+    max-width: 1200px;
+}
+
+.header {
+    display: grid;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.title {
+    margin: 0;
+    font-size: 2rem;
+    line-height: 1.2;
+    font-weight: 800;
+    color: var(--color-text, #111827);
+}
+
+.subtitle {
+    margin: 0;
+    color: var(--color-text-muted, #6b7280);
+    font-size: 1rem;
+}
+
+.hr {
+    height: 1px;
+    background: var(--color-border, #e5e7eb);
+    margin: 12px 0;
+}
+
+.srOnly {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    border: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+}

@@ -1,76 +1,80 @@
 // /src/data/packages/_types/currency.ts
-// UI-friendly formatting helper; keeps currency logic out of data
+// UI-friendly currency formatting helpers for data presentation.
+// Keep runtime logic minimal and framework-agnostic.
+
+/** Uppercase a currency code and fall back to "USD" when invalid. */
+function normalizeCurrencyCode(code?: string): string {
+  const c = (code ?? "USD").trim().toUpperCase();
+  return /^[A-Z]{3,}$/.test(c) ? c : "USD";
+}
 
 /**
- * Format a numeric amount as currency string
- * @param amount - Dollar amount as number
- * @param currency - Currency code (default: USD)
- * @param locale - Locale for formatting (default: en-US)
- * @returns Formatted currency string
+ * Format a numeric amount as a localized currency string (0 fraction digits).
+ * Returns "Contact for pricing" when amount is nullish.
  */
 export function toMoney(
-  amount: number | undefined,
+  amount: number | null | undefined,
   currency: string = "USD",
-  locale: string = "en-US"
+  locale?: string
 ): string {
-  if (amount === undefined || amount === null) return "Contact for pricing";
-  
-  return new Intl.NumberFormat(locale, {
-    style: "currency",
-    currency,
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(amount);
+  if (amount == null || Number.isNaN(amount)) return "Contact for pricing";
+  try {
+    return new Intl.NumberFormat(locale, {
+      style: "currency",
+      currency: normalizeCurrencyCode(currency),
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(amount);
+  } catch {
+    // Very safe fallback
+    return `$${Math.round(amount)}`;
+  }
 }
 
 /**
- * Format starting price with "from" prefix
- * @param amount - Dollar amount as number
- * @param currency - Currency code (default: USD)
- * @returns Formatted string like "from $2,500"
+ * Format starting price with "from" prefix (e.g., "from $2,500").
  */
 export function toStartingPrice(
-  amount: number | undefined,
-  currency: string = "USD"
+  amount: number | null | undefined,
+  currency: string = "USD",
+  locale?: string
 ): string {
-  if (amount === undefined || amount === null) return "Contact for pricing";
-  return `from ${toMoney(amount, currency)}`;
+  if (amount == null || Number.isNaN(amount)) return "Contact for pricing";
+  return `from ${toMoney(amount, currency, locale)}`;
 }
 
 /**
- * Format monthly pricing
- * @param amount - Dollar amount as number
- * @param currency - Currency code (default: USD)
- * @returns Formatted string like "$2,500/month"
+ * Format monthly pricing (e.g., "$2,500/month").
  */
 export function toMonthlyPrice(
-  amount: number | undefined,
-  currency: string = "USD"
+  amount: number | null | undefined,
+  currency: string = "USD",
+  locale?: string
 ): string {
-  if (amount === undefined || amount === null) return "Contact for pricing";
-  return `${toMoney(amount, currency)}/month`;
+  if (amount == null || Number.isNaN(amount)) return "Contact for pricing";
+  return `${toMoney(amount, currency, locale)}/month`;
 }
 
 /**
- * Format setup + monthly pricing combination
- * @param setup - One-time setup cost
- * @param monthly - Monthly recurring cost
- * @param currency - Currency code (default: USD)
- * @returns Formatted string like "$5,000 setup + $2,500/month"
+ * Format setup + monthly combination:
+ * - "$5,000 setup + $2,500/month"
+ * - "$5,000 one-time"
+ * - "$2,500/month"
+ * - "Contact for pricing"
  */
 export function toCombinedPrice(
-  setup: number | undefined,
-  monthly: number | undefined,
-  currency: string = "USD"
+  setup: number | null | undefined,
+  monthly: number | null | undefined,
+  currency: string = "USD",
+  locale?: string
 ): string {
-  if (setup && monthly) {
-    return `${toMoney(setup, currency)} setup + ${toMonthlyPrice(monthly, currency)}`;
+  const hasSetup = setup != null && !Number.isNaN(setup);
+  const hasMonthly = monthly != null && !Number.isNaN(monthly);
+
+  if (hasSetup && hasMonthly) {
+    return `${toMoney(setup!, currency, locale)} setup + ${toMonthlyPrice(monthly!, currency, locale)}`;
   }
-  if (setup) {
-    return `${toMoney(setup, currency)} one-time`;
-  }
-  if (monthly) {
-    return toMonthlyPrice(monthly, currency);
-  }
+  if (hasSetup) return `${toMoney(setup!, currency, locale)} one-time`;
+  if (hasMonthly) return toMonthlyPrice(monthly!, currency, locale);
   return "Contact for pricing";
 }

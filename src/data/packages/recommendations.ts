@@ -632,3 +632,74 @@ export default {
   addons: ALL_ADDONS,
   bundles: INTEGRATED_GROWTH_BUNDLES
 };
+
+---
+
+// src/data/packages/recommendations.ts
+// “Recommended packages” feed for service pages or hubs.
+// Returns the UI-friendly GrowthPackage shape and also exports it as `Package`
+// to match legacy imports (e.g., components expecting `Package`).
+
+import {
+  BUNDLES,
+  FEATURED_BUNDLE_SLUGS,
+  getBundleBySlug,
+  toGrowthPackages,
+} from "./index";
+import { bundleToGrowthPackage, type GrowthPackage } from "@/src/packages/lib/bridge-growth";
+
+/** Backwards-compat alias for components that import `type Package` from here. */
+export type Package = GrowthPackage;
+
+/** Strategy: prefer curated FEATURED_BUNDLE_SLUGS; fallback to first N bundles. */
+export function getRecommendedPackages(n = 3): GrowthPackage[] {
+  const curated = FEATURED_BUNDLE_SLUGS
+    .map(getBundleBySlug)
+    .filter(Boolean) as NonNullable<ReturnType<typeof getBundleBySlug>>[];
+
+  const deduped = new Map<string, GrowthPackage>();
+  for (const b of curated) {
+    if (deduped.size >= n) break;
+    deduped.set(b.slug, bundleToGrowthPackage(b));
+  }
+  if (deduped.size < n) {
+    for (const b of BUNDLES) {
+      if (deduped.size >= n) break;
+      if (!deduped.has(b.slug)) deduped.set(b.slug, bundleToGrowthPackage(b));
+    }
+  }
+  return Array.from(deduped.values()).slice(0, n);
+}
+
+/** Recommendations constrained to a given service page slug (e.g., "seo-services"). */
+export function getRecommendedForService(serviceSlug: string, n = 3): GrowthPackage[] {
+  const curated = FEATURED_BUNDLE_SLUGS
+    .map(getBundleBySlug)
+    .filter((b): b is NonNullable<ReturnType<typeof getBundleBySlug>> => !!b && (b.services ?? []).includes(serviceSlug));
+
+  const deduped = new Map<string, GrowthPackage>();
+  for (const b of curated) {
+    if (deduped.size >= n) break;
+    deduped.set(b.slug, bundleToGrowthPackage(b));
+  }
+
+  if (deduped.size < n) {
+    for (const b of BUNDLES) {
+      if (deduped.size >= n) break;
+      if ((b.services ?? []).includes(serviceSlug) && !deduped.has(b.slug)) {
+        deduped.set(b.slug, bundleToGrowthPackage(b));
+      }
+    }
+  }
+
+  return Array.from(deduped.values()).slice(0, n);
+}
+
+/** Convenience: map a list of bundles to growth packages directly. */
+export function mapBundlesToGrowthPackages(slugs: string[]): GrowthPackage[] {
+  return toGrowthPackages(
+    slugs
+      .map(getBundleBySlug)
+      .filter(Boolean) as NonNullable<ReturnType<typeof getBundleBySlug>>[],
+  );
+}

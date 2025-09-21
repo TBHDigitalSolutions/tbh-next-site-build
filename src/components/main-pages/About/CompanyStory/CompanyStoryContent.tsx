@@ -1,51 +1,84 @@
 "use client";
 
 import React from "react";
-import { motion } from "framer-motion";
-import Button from "@/components/ui/atoms/Button/Button";
-import Divider from "@/components/core/layout/Divider/Divider";
 import "./CompanyStoryContent.css";
+import Divider from "@/components/ui/atoms/Divider/Divider";
+import Button from "@/components/ui/atoms/Button/Button";
+import type { CompanyStory } from "@/data/page/main-pages/about/types";
 
-interface CompanyStoryContentProps {
-  data: {
-    title: string;
-    description: string;
-    highlight: string;
-    cta?: { text: string; link: string };
-  };
-}
-
-const fadeIn = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
+export type CompanyStoryContentProps = {
+  data: CompanyStory;   // page-level data
+  className?: string;
 };
 
-const CompanyStoryContent: React.FC<CompanyStoryContentProps> = ({ data }) => {
+export default function CompanyStoryContent({ data, className }: CompanyStoryContentProps) {
+  const { heading, subheading, body, highlights } = data;
+
+  // Legacy compatibility: some older data used a single "highlight" string and inline CTA
+  const legacyHighlight = (data as any)?.highlight as string | undefined;
+  const legacyCta = (data as any)?.cta as
+    | { label?: string; text?: string; href?: string; link?: string }
+    | undefined;
+
+  const ctaLabel = legacyCta?.label ?? legacyCta?.text;
+  const ctaHref = legacyCta?.href ?? legacyCta?.link;
+
   return (
-    <motion.div
-      className="companystory-content-wrapper"
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true }}
-      variants={fadeIn}
-    >
+    <div className={`companystory-content-wrapper ${className ?? ""}`.trim()}>
       <div className="companystory-title-wrapper">
-        <h2 className="companystory-content-heading">{data.title}</h2>
+        {heading && <h2 className="companystory-content-heading">{heading}</h2>}
         <Divider className="companystory-content-divider" />
       </div>
 
-      <p className="companystory-content-description">{data.description}</p>
-      <p className="companystory-content-highlight">{data.highlight}</p>
+      {subheading && (
+        <p className="companystory-content-description">{subheading}</p>
+      )}
 
-      {data.cta?.text && data.cta?.link && (
+      {/* Body blocks (paragraphs/lists) */}
+      {Array.isArray(body) &&
+        body.map((block, idx) => {
+          if (block.type === "paragraph") {
+            return (
+              <p key={`cs-p-${idx}`} className="companystory-content-description">
+                {block.content}
+              </p>
+            );
+          }
+          if (block.type === "list") {
+            return (
+              <ul key={`cs-ul-${idx}`} className="companystory-content-list">
+                {block.items.map((item, i) => (
+                  <li key={`cs-li-${idx}-${i}`}>{item}</li>
+                ))}
+              </ul>
+            );
+          }
+          return null;
+        })}
+
+      {/* Legacy single highlight OR modern highlights[] */}
+      {legacyHighlight && (
+        <p className="companystory-content-highlight">{legacyHighlight}</p>
+      )}
+
+      {Array.isArray(highlights) && highlights.length > 0 && (
+        <ul className="companystory-content-highlights">
+          {highlights.map((h, i) => (
+            <li key={`cs-hl-${i}`} className="companystory-content-highlight">
+              {h}
+            </li>
+          ))}
+        </ul>
+      )}
+
+      {/* Legacy inline CTA (new data usually uses a separate JoinUsCTA section) */}
+      {ctaLabel && ctaHref && (
         <div className="companystory-content-cta">
-          <Button href={data.cta.link} variant="primary" size="md">
-            {data.cta.text}
+          <Button href={ctaHref} variant="primary" size="md">
+            {ctaLabel}
           </Button>
         </div>
       )}
-    </motion.div>
+    </div>
   );
-};
-
-export default CompanyStoryContent;
+}

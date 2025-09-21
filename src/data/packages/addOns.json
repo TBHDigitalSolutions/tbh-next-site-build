@@ -1,0 +1,29 @@
+[
+  {
+    "slug": "reputation-management",
+    "name": "Reputation Management",
+    "description": "Automate review requests and monitor responses.",
+    "price": { "monthly": 150, "currency": "USD" },
+    "category": "Reputation"
+  },
+  {
+    "slug": "email-crm-starter",
+    "name": "Email/CRM Starter",
+    "description": "Basic flows and CRM wiring for lead capture.",
+    "price": { "oneTime": 800, "currency": "USD" },
+    "category": "CRM"
+  },
+  {
+    "slug": "podcasting",
+    "name": "Podcasting Add-On",
+    "description": "Repurpose content into a monthly podcast.",
+    "category": "Content"
+  },
+  {
+    "slug": "social-lite",
+    "name": "Social Lite",
+    "description": "2 posts/week across 2 platforms.",
+    "price": { "monthly": 250, "currency": "USD" },
+    "category": "Social"
+  }
+]

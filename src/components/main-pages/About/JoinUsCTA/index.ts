@@ -1,1 +1,2 @@
-export { default as JoinUsCTA } from './JoinUsCTA';
+export { default } from "./JoinUsCTA";
+export type { JoinUsCTAProps } from "./JoinUsCTA";

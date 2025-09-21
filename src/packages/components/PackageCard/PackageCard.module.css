@@ -1,0 +1,152 @@
+.card {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--color-border, #e5e7eb);
+    border-radius: 16px;
+    background: var(--color-surface, #fff);
+    padding: 16px;
+    transition: box-shadow 0.2s ease, border-color 0.2s ease, transform 0.06s ease;
+}
+
+.card:hover {
+    border-color: var(--color-border-strong, #d1d5db);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+}
+
+.card[data-highlight="true"] {
+    border-color: var(--color-accent, #2563eb);
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+}
+
+.header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.75rem;
+}
+
+.title {
+    margin: 0;
+    font-size: 1.125rem;
+    /* 18px */
+    line-height: 1.35;
+    font-weight: 700;
+    color: var(--color-text, #111827);
+}
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
+    font-size: 0.75rem;
+    padding: 4px 8px;
+    border-radius: 9999px;
+    background: var(--badge-bg, #eef2ff);
+    color: var(--badge-fg, #3730a3);
+    border: 1px solid var(--badge-border, #c7d2fe);
+}
+
+.description {
+    margin-top: 8px;
+    color: var(--color-text-muted, #6b7280);
+    font-size: 0.94rem;
+}
+
+.prices {
+    margin-top: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.priceChip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    border-radius: 9999px;
+    border: 1px solid var(--color-border, #e5e7eb);
+    background: var(--chip-bg, #f9fafb);
+    color: var(--color-text, #111827);
+    font-size: 0.85rem;
+}
+
+.features {
+    margin-top: 12px;
+}
+
+.featureList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 6px;
+}
+
+.featureItem {
+    display: inline-flex;
+    align-items: flex-start;
+    gap: 8px;
+    color: var(--color-text-muted, #374151);
+    font-size: 0.92rem;
+}
+
+.featureItem::before {
+    content: "";
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    margin-top: 2px;
+    border-radius: 50%;
+    border: 2px solid var(--color-accent, #2563eb);
+}
+
+.more {
+    margin-top: 8px;
+    color: var(--color-text-muted, #6b7280);
+    font-size: 0.85rem;
+}
+
+.actions {
+    margin-top: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 38px;
+    padding: 0 14px;
+    border-radius: 10px;
+    border: 1px solid var(--color-border, #e5e7eb);
+    background: var(--btn-bg, #111827);
+    color: #fff;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btnSecondary {
+    background: #fff;
+    color: var(--color-text, #111827);
+}
+
+.btn[disabled] {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.card:focus-within {
+    outline: 2px solid var(--color-accent, #2563eb);
+    outline-offset: 2px;
+}
+
+.footerNote {
+    margin-top: 10px;
+    color: var(--color-text-muted, #6b7280);
+    font-size: 0.8rem;
+}

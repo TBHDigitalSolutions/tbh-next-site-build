@@ -2,7 +2,7 @@
 
 import React from "react";
 // ✅ Corrected import path for shared‑ui Divider
-import Divider from "@/components/core/layout/Divider/Divider";
+import Divider from "@/components/ui/atoms/Divider/Divider";
 import "./CoreValueCard.css";
 
 interface CoreValueCardProps {

@@ -1,8 +1,15 @@
 // /src/data/packages/_validators/packages.validate.ts
-// Runtime checks (ids, pricing, refs) - dev-only assertions
+// Dev-time validation: ids, pricing sanity, cross-references, and coverage.
 
-import type { Package, AddOn, FeaturedCard, IntegratedBundle } from "../_types/packages.types";
+import type {
+  Package,
+  AddOn,
+  FeaturedCard,
+  IntegratedBundle,
+  Tier,
+} from "../_types/packages.types";
 import { isValidPackageId, extractServiceFromId } from "../_utils/ids";
+import { SERVICE_SLUGS } from "../_utils/slugs";
 
 export interface ValidationError {
   type: "error" | "warning";
@@ -10,269 +17,273 @@ export interface ValidationError {
   context?: string;
 }
 
-/**
- * Validate that featured cards reference existing packages
- */
+const REQUIRED_TIERS: readonly Tier[] = ["Essential", "Professional", "Enterprise"] as const;
+
+/** Ensure featured cards reference existing packages. */
 export function validateFeaturedRefs(
-  packages: Package[], 
-  featured: FeaturedCard[]
+  packages: Package[],
+  featured: FeaturedCard[],
 ): ValidationError[] {
   const errors: ValidationError[] = [];
-  const packageIds = new Set(packages.map(p => p.id));
-  
-  featured.forEach(card => {
-    if (!packageIds.has(card.packageId)) {
+  const pkgIds = new Set(packages.map(p => p.id));
+
+  for (const card of featured) {
+    if (!pkgIds.has(card.packageId)) {
       errors.push({
         type: "error",
         message: `Featured card "${card.id}" references missing packageId "${card.packageId}"`,
-        context: `service: ${card.service}`
+        context: `service: ${card.service}`,
       });
     }
-  });
-  
+  }
   return errors;
 }
 
-/**
- * Validate pricing contains only numbers
- */
+/** Numeric pricing sanity checks (setup/monthly ≥ 0; warn when both missing). */
 export function validatePricingNumbers(item: Package | AddOn): ValidationError[] {
   const errors: ValidationError[] = [];
-  const { setup, monthly } = item.price || {};
-  
-  if (setup !== undefined && (typeof setup !== "number" || setup < 0)) {
+  const { setup, monthly } = item.price ?? {};
+
+  if (setup !== undefined && (typeof setup !== "number" || !Number.isFinite(setup) || setup < 0)) {
     errors.push({
       type: "error",
-      message: `${item.id}: setup price must be a positive number, got ${typeof setup}: ${setup}`,
-      context: `service: ${item.service}`
+      message: `${item.id}: setup must be a non-negative number`,
+      context: `service: ${item.service}`,
     });
   }
-  
-  if (monthly !== undefined && (typeof monthly !== "number" || monthly < 0)) {
+  if (monthly !== undefined && (typeof monthly !== "number" || !Number.isFinite(monthly) || monthly < 0)) {
     errors.push({
-      type: "error", 
-      message: `${item.id}: monthly price must be a positive number, got ${typeof monthly}: ${monthly}`,
-      context: `service: ${item.service}`
+      type: "error",
+      message: `${item.id}: monthly must be a non-negative number`,
+      context: `service: ${item.service}`,
     });
   }
-  
-  // Warn if no pricing set
-  if (!setup && !monthly) {
+  if ((setup == null) && (monthly == null)) {
     errors.push({
       type: "warning",
       message: `${item.id}: no pricing set (setup or monthly)`,
-      context: `service: ${item.service}`
+      context: `service: ${item.service}`,
     });
   }
-  
   return errors;
 }
 
-/**
- * Validate unique IDs across collections
- */
+/** Ensure ids are unique across collections. */
 export function validateUniqueIds(
-  packages: Package[], 
-  addOns: AddOn[], 
+  packages: Package[],
+  addOns: AddOn[],
   featured: FeaturedCard[],
-  bundles: IntegratedBundle[] = []
+  bundles: IntegratedBundle[] = [],
 ): ValidationError[] {
   const errors: ValidationError[] = [];
-  const allIds = new Set<string>();
-  
-  // Check packages
-  packages.forEach(pkg => {
-    if (allIds.has(pkg.id)) {
-      errors.push({
-        type: "error",
-        message: `Duplicate package ID: ${pkg.id}`,
-        context: `service: ${pkg.service}`
-      });
+  const seen = new Set<string>();
+
+  const check = (id: string, label: string, ctx?: string) => {
+    if (seen.has(id)) {
+      errors.push({ type: "error", message: `Duplicate ${label} ID: ${id}`, context: ctx });
+    } else {
+      seen.add(id);
     }
-    allIds.add(pkg.id);
-  });
-  
-  // Check add-ons
-  addOns.forEach(addon => {
-    if (allIds.has(addon.id)) {
-      errors.push({
-        type: "error",
-        message: `Duplicate add-on ID: ${addon.id}`,
-        context: `service: ${addon.service}`
-      });
+  };
+
+  packages.forEach(p => check(p.id, "package", `service: ${p.service}`));
+  addOns.forEach(a => check(a.id, "add-on", `service: ${a.service}`));
+
+  // Featured use separate namespace; still prevent internal dupes
+  const featuredSeen = new Set<string>();
+  featured.forEach(f => {
+    if (featuredSeen.has(f.id)) {
+      errors.push({ type: "error", message: `Duplicate featured card ID: ${f.id}`, context: `service: ${f.service}` });
+    } else {
+      featuredSeen.add(f.id);
     }
-    allIds.add(addon.id);
   });
-  
-  // Check featured (separate namespace, but check for internal dupes)
-  const featuredIds = new Set<string>();
-  featured.forEach(card => {
-    if (featuredIds.has(card.id)) {
-      errors.push({
-        type: "error",
-        message: `Duplicate featured card ID: ${card.id}`,
-        context: `service: ${card.service}`
-      });
+
+  const bundleSeen = new Set<string>();
+  bundles.forEach(b => {
+    if (bundleSeen.has(b.id)) {
+      errors.push({ type: "error", message: `Duplicate bundle ID: ${b.id}` });
+    } else {
+      bundleSeen.add(b.id);
     }
-    featuredIds.add(card.id);
   });
-  
-  // Check bundles
-  const bundleIds = new Set<string>();
-  bundles.forEach(bundle => {
-    if (bundleIds.has(bundle.id)) {
-      errors.push({
-        type: "error",
-        message: `Duplicate bundle ID: ${bundle.id}`
-      });
-    }
-    bundleIds.add(bundle.id);
-  });
-  
+
   return errors;
 }
 
-/**
- * Validate ID format follows conventions
- */
+/** Kebab-case id format + service prefix alignment. */
 export function validateIdFormats(items: (Package | AddOn | FeaturedCard)[]): ValidationError[] {
   const errors: ValidationError[] = [];
-  
-  items.forEach(item => {
-    const service = extractServiceFromId(item.id);
-    
-    if (!service) {
-      errors.push({
-        type: "error",
-        message: `Invalid ID format: ${item.id} (should start with service slug)`,
-        context: `expected service: ${item.service}`
-      });
-    } else if (service !== item.service) {
-      errors.push({
-        type: "error",
-        message: `ID service mismatch: ${item.id} starts with "${service}" but service is "${item.service}"`,
-        context: `item: ${item.id}`
-      });
-    }
-    
+
+  for (const item of items) {
+    const svcFromId = extractServiceFromId(item.id);
+
     if (!isValidPackageId(item.id)) {
       errors.push({
         type: "error",
         message: `Invalid ID format: ${item.id} (must be kebab-case)`,
-        context: `service: ${item.service}`
+        context: `service: ${item.service}`,
       });
     }
-  });
-  
-  return errors;
-}
-
-/**
- * Validate that each service has exactly 3 featured cards
- */
-export function validateFeaturedCount(featured: FeaturedCard[]): ValidationError[] {
-  const errors: ValidationError[] = [];
-  const serviceGroups = new Map<string, number>();
-  
-  featured.forEach(card => {
-    const count = serviceGroups.get(card.service) || 0;
-    serviceGroups.set(card.service, count + 1);
-  });
-  
-  serviceGroups.forEach((count, service) => {
-    if (count !== 3) {
+    if (!svcFromId) {
       errors.push({
         type: "error",
-        message: `Service "${service}" has ${count} featured cards, expected exactly 3`,
-        context: `service: ${service}`
+        message: `Invalid ID: ${item.id} (should start with a service slug)`,
+        context: `expected service: ${item.service}`,
+      });
+    } else if (svcFromId !== item.service) {
+      errors.push({
+        type: "error",
+        message: `ID service mismatch: ${item.id} starts with "${svcFromId}" but service is "${item.service}"`,
+        context: `item: ${item.id}`,
       });
     }
-  });
-  
+  }
   return errors;
 }
 
-/**
- * Validate that packages have required tiers
- */
+/** Each service should have exactly 3 featured cards (strict merchandising rule). */
+export function validateFeaturedCount(featured: FeaturedCard[]): ValidationError[] {
+  const errors: ValidationError[] = [];
+  const counts = new Map<string, number>();
+  for (const f of featured) counts.set(f.service, (counts.get(f.service) ?? 0) + 1);
+
+  for (const svc of SERVICE_SLUGS) {
+    const n = counts.get(svc) ?? 0;
+    if (n !== 3) {
+      errors.push({
+        type: "error",
+        message: `Service "${svc}" has ${n} featured cards; expected exactly 3`,
+        context: `service: ${svc}`,
+      });
+    }
+  }
+  return errors;
+}
+
+/** Warn when a service is missing any of the standard tiers. */
 export function validateTierCoverage(packages: Package[]): ValidationError[] {
   const errors: ValidationError[] = [];
-  const requiredTiers = ["Essential", "Professional", "Enterprise"];
-  const serviceGroups = new Map<string, Set<string>>();
-  
-  packages.forEach(pkg => {
-    if (!serviceGroups.has(pkg.service)) {
-      serviceGroups.set(pkg.service, new Set());
-    }
-    serviceGroups.get(pkg.service)!.add(pkg.tier);
-  });
-  
-  serviceGroups.forEach((tiers, service) => {
-    requiredTiers.forEach(tier => {
-      if (!tiers.has(tier)) {
+  const byService = new Map<string, Set<Tier>>();
+  for (const p of packages) {
+    const set = byService.get(p.service) ?? new Set<Tier>();
+    set.add(p.tier);
+    byService.set(p.service, set);
+  }
+  for (const [svc, tiers] of byService.entries()) {
+    for (const t of REQUIRED_TIERS) {
+      if (!tiers.has(t)) {
         errors.push({
           type: "warning",
-          message: `Service "${service}" missing ${tier} tier`,
-          context: `service: ${service}`
+          message: `Service "${svc}" missing ${t} tier`,
+          context: `service: ${svc}`,
         });
       }
-    });
-  });
-  
+    }
+  }
   return errors;
 }
 
-/**
- * Run all validations and return consolidated results
- */
+/** Add-on references: dependencies must exist (in packages or add-ons). */
+export function validateAddOnDependencies(packages: Package[], addOns: AddOn[]): ValidationError[] {
+  const errors: ValidationError[] = [];
+  const known = new Set<string>([...packages.map(p => p.id), ...addOns.map(a => a.id)]);
+  for (const a of addOns) {
+    for (const dep of a.dependencies ?? []) {
+      if (!known.has(dep)) {
+        errors.push({
+          type: "error",
+          message: `Add-on "${a.id}" depends on missing id "${dep}"`,
+          context: `service: ${a.service}`,
+        });
+      }
+    }
+  }
+  return errors;
+}
+
+/** Pairs-best-with tiers must be valid. (Schema enforces this, but double-check.) */
+export function validateAddOnPairs(addOns: AddOn[]): ValidationError[] {
+  const errors: ValidationError[] = [];
+  const valid = new Set<Tier>(REQUIRED_TIERS as unknown as Tier[]);
+  for (const a of addOns) {
+    for (const t of a.pairsBestWith ?? []) {
+      if (!valid.has(t)) {
+        errors.push({
+          type: "error",
+          message: `Add-on "${a.id}" has invalid pairsBestWith tier "${t}"`,
+          context: `service: ${a.service}`,
+        });
+      }
+    }
+  }
+  return errors;
+}
+
+/** Run all validations and return consolidated results. */
 export function validateAll(
   packages: Package[],
   addOns: AddOn[],
   featured: FeaturedCard[],
-  bundles: IntegratedBundle[] = []
+  bundles: IntegratedBundle[] = [],
 ): ValidationError[] {
   const errors: ValidationError[] = [];
-  
-  // Collect all validation errors
+
   errors.push(...validateUniqueIds(packages, addOns, featured, bundles));
   errors.push(...validateIdFormats([...packages, ...addOns, ...featured]));
   errors.push(...validateFeaturedRefs(packages, featured));
   errors.push(...validateFeaturedCount(featured));
   errors.push(...validateTierCoverage(packages));
-  
-  // Validate pricing for all items
-  [...packages, ...addOns].forEach(item => {
-    errors.push(...validatePricingNumbers(item));
-  });
-  
+  errors.push(...validateAddOnDependencies(packages, addOns));
+  errors.push(...validateAddOnPairs(addOns));
+
+  // Pricing checks for packages + add-ons
+  for (const it of [...packages, ...addOns]) {
+    errors.push(...validatePricingNumbers(it));
+  }
+
   return errors;
 }
 
-/**
- * Log validation results to console (dev-only)
- */
-export function logValidationResults(errors: ValidationError[]): void {
-  if (errors.length === 0) {
-    console.log("✅ Package validation passed");
+/** Utility: summarize counts (handy for CI logs). */
+export function summarize(results: ValidationError[]) {
+  const errorCount = results.filter(r => r.type === "error").length;
+  const warningCount = results.filter(r => r.type === "warning").length;
+  return { errorCount, warningCount, total: results.length };
+}
+
+/** Utility: throw on errors to fail CI. */
+export function assertValid(results: ValidationError[]) {
+  const { errorCount } = summarize(results);
+  if (errorCount > 0) {
+    const lines = results
+      .filter(r => r.type === "error")
+      .map(r => `• ${r.message}${r.context ? `\n    ↳ ${r.context}` : ""}`)
+      .join("\n");
+    throw new Error(`Packages data validation failed (${errorCount} error${errorCount === 1 ? "" : "s"})\n${lines}`);
+  }
+}
+
+/** Pretty console logging for local dev. */
+export function logValidationResults(results: ValidationError[]): void {
+  const { errorCount, warningCount } = summarize(results);
+  if (results.length === 0) {
+    // eslint-disable-next-line no-console
+    console.log("✅ Packages data validation passed (no issues)");
     return;
   }
-  
-  const errorCount = errors.filter(e => e.type === "error").length;
-  const warningCount = errors.filter(e => e.type === "warning").length;
-  
-  console.log(`\n📦 Package Validation Results:`);
-  console.log(`   Errors: ${errorCount}`);
+  // eslint-disable-next-line no-console
+  console.log("\n📦 Packages Data Validation");
+  // eslint-disable-next-line no-console
+  console.log(`   Errors:   ${errorCount}`);
+  // eslint-disable-next-line no-console
   console.log(`   Warnings: ${warningCount}\n`);
-  
-  errors.forEach(error => {
-    const icon = error.type === "error" ? "❌" : "⚠️";
-    console.log(`${icon} ${error.message}`);
-    if (error.context) {
-      console.log(`   Context: ${error.context}`);
-    }
-  });
-  
+  for (const r of results) {
+    // eslint-disable-next-line no-console
+    console.log(`${r.type === "error" ? "❌" : "⚠️"} ${r.message}${r.context ? `\n   • ${r.context}` : ""}`);
+  }
   if (errorCount > 0) {
-    console.log(`\n💡 Fix errors before deploying to production`);
+    // eslint-disable-next-line no-console
+    console.log("\n💡 Fix errors before deploying to production.");
   }
 }

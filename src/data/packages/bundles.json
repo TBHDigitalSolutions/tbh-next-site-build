@@ -1,0 +1,31 @@
+[
+  {
+    "slug": "local-lead-capture",
+    "name": "Local Lead Capture",
+    "description": "Essentials to convert local traffic into qualified leads.",
+    "price": { "oneTime": 1500, "monthly": 600, "currency": "USD" },
+    "services": ["seo-services", "marketing-services"],
+    "includes": [
+      { "section": "Setup", "items": ["Analytics baseline", "Lead forms", "Local SEO audit"] },
+      { "section": "Ongoing", "items": ["Listings cleanup", "Content updates", "Reporting"] }
+    ],
+    "addOnSlugs": ["reputation-management", "email-crm-starter"],
+    "idealFor": ["Local SMBs"],
+    "timeline": "3–6 weeks",
+    "isMostPopular": true
+  },
+  {
+    "slug": "content-growth",
+    "name": "Content Growth",
+    "description": "Compounding organic traffic with research-backed content.",
+    "price": { "monthly": 1200, "currency": "USD" },
+    "services": ["seo-services", "content-services"],
+    "includes": [
+      { "section": "Research", "items": ["Keyword map", "Editorial calendar"] },
+      { "section": "Production", "items": ["2 articles/mo", "On-page optimization"] }
+    ],
+    "addOnSlugs": ["podcasting", "social-lite"],
+    "idealFor": ["Startups", "SMBs"],
+    "timeline": "Month 1 onboarding"
+  }
+]

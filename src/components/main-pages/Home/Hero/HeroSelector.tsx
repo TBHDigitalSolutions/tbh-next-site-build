@@ -1,50 +1,59 @@
-// src/components/features/home/Hero/HeroSelector.tsx
-
+// src/components/main-pages/Home/Hero/HeroSelector.tsx
 "use client";
 
 import { usePathname } from "next/navigation";
 import dynamic from "next/dynamic";
- 
-// ✅ Import contact page mock data using correct path
-import contactPageData from "@/mock/contactPage";
 
-// ✅ Map routes to their respective Hero components using correct paths
-const heroComponents: Record<string, React.ComponentType | React.FC<any>> = {
-  // ✅ Home Hero - using correct path from your directory structure
-  "/": dynamic(() => import("@/components/main-pages/Home/Hero/Hero")),
-  
-  // ✅ About Hero - using correct path from your directory structure
-  "/about": dynamic(() => import("@/components/main-pages/About/AboutHero/AboutHero")),
-  
-  // ✅ Products/Services Hero - using correct path from your directory structure
-  "/products-services": dynamic(() => import("@/components/main-pages/Products-Services/ProductsHero/ProductsHero")),
-};
+// Page-level data (barrels)
+import aboutPageData from "@/data/page/main-pages/about";
+import contactPageData from "@/data/page/main-pages/contact";
 
-// ✅ Load ContactHero with no SSR (it needs DOM APIs) - using correct path
+// Dynamically-loaded hero components
+const HomeHero = dynamic(() => import("@/components/main-pages/Home/Hero/Hero"));
+const AboutHero = dynamic(
+  () => import("@/components/main-pages/About/AboutHero/AboutHero")
+);
+// ContactHero should not SSR (it may use DOM-only libs)
 const ContactHero = dynamic(
   () => import("@/components/main-pages/Contact/ContactHero/ContactHero"),
   { ssr: false }
 );
 
-const HeroSelector: React.FC = () => {
+/**
+ * Small adapter to map Contact page hero data into ContactHero props.
+ * Contact hero component expects: { title, description, backgroundImage, theme? }
+ */
+function toContactHeroProps(h: (typeof contactPageData)["hero"]) {
+  return {
+    title: h.title,
+    description: h.subtitle ?? "",
+    backgroundImage: h.background?.type === "image" ? h.background.src : undefined,
+    // Default theme; change if you add theme to your hero.ts
+    theme: "light" as const,
+  };
+}
+
+export default function HeroSelector() {
   const pathname = usePathname();
 
-  // ✅ Handle contact page specifically
-  if (pathname === "/contact") {
-    return (
-      <ContactHero
-        title={contactPageData.intro.title}
-        description={contactPageData.intro.description}
-        backgroundImage={contactPageData.intro.backgroundImage}
-        theme={contactPageData.intro.theme}
-      />
-    );
+  if (pathname === "/") {
+    return <HomeHero />;
   }
 
-  // ✅ Get the appropriate hero component for the current route
-  const HeroComponent = heroComponents[pathname] ?? null;
-  
-  return HeroComponent ? <HeroComponent /> : null;
-};
+  if (pathname === "/about") {
+    // AboutHero was refactored to accept data via props
+    if (aboutPageData.hero) {
+      return <AboutHero data={aboutPageData.hero} />;
+    }
+    return null;
+  }
 
-export default HeroSelector;
+  if (pathname === "/contact") {
+    const h = contactPageData.hero;
+    const props = toContactHeroProps(h);
+    return <ContactHero {...props} />;
+  }
+
+  // No route-specific hero
+  return null;
+}

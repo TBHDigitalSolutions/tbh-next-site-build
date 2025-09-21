@@ -1,0 +1,189 @@
+/* src/packages/components/PackageIncludesTable/PackageIncludesTable.module.css */
+
+.root {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.title {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-text, #111827);
+}
+
+.search {
+    position: relative;
+    flex: 1 1 280px;
+}
+
+.searchInput {
+    width: 100%;
+    height: 40px;
+    padding: 0 12px 0 36px;
+    border: 1px solid var(--color-border, #e5e7eb);
+    border-radius: 10px;
+    background: var(--color-surface, #fff);
+    color: var(--color-text, #111827);
+}
+
+.searchIcon {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 18px;
+    height: 18px;
+    opacity: 0.55;
+    pointer-events: none;
+}
+
+.controls {
+    display: inline-flex;
+    gap: 8px;
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 36px;
+    padding: 0 12px;
+    border-radius: 10px;
+    border: 1px solid var(--color-border, #e5e7eb);
+    background: var(--btn-bg, #111827);
+    color: #fff;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btnSecondary {
+    background: #fff;
+    color: var(--color-text, #111827);
+}
+
+.btn:focus-visible {
+    outline: 2px solid var(--color-accent, #2563eb);
+    outline-offset: 2px;
+}
+
+.sections {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+}
+
+.section {
+    border: 1px solid var(--color-border, #e5e7eb);
+    border-radius: 14px;
+    background: var(--color-surface, #fff);
+}
+
+.summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 14px;
+    cursor: pointer;
+}
+
+.summary:hover {
+    background: var(--row-hover, #f9fafb);
+}
+
+.sectionTitle {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-text, #111827);
+}
+
+.count {
+    font-size: 0.8rem;
+    color: var(--color-text-muted, #6b7280);
+    border: 1px solid var(--color-border, #e5e7eb);
+    background: var(--chip-bg, #f3f4f6);
+    padding: 2px 8px;
+    border-radius: 9999px;
+}
+
+.items {
+    padding: 0 14px 12px 14px;
+}
+
+.list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 8px;
+}
+
+.item {
+    display: inline-flex;
+    align-items: flex-start;
+    gap: 8px;
+    color: var(--color-text-muted, #374151);
+    font-size: 0.95rem;
+}
+
+/* check glyph */
+.item::before {
+    content: "";
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    margin-top: 2px;
+    border-radius: 50%;
+    border: 2px solid var(--color-accent, #2563eb);
+}
+
+.mark {
+    background: rgba(250, 204, 21, 0.35);
+    /* amber-300 */
+    padding: 0 2px;
+    border-radius: 4px;
+}
+
+.dense .summary {
+    padding: 10px 12px;
+}
+
+.dense .items {
+    padding: 0 12px 10px 12px;
+}
+
+/* Hide default markers when printing all sections open */
+.printAll details[open]>summary::marker,
+.printAll details>summary::marker {
+    display: none;
+    /* clean print */
+}
+
+@media print {
+    .toolbar {
+        display: none;
+    }
+
+    .section {
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+
+    /* PURE: scope element selectors under the local root */
+    .root details {
+        display: block;
+    }
+
+    .root details[open]>summary {
+        pointer-events: none;
+    }
+}
