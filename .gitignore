@@ -34,3 +34,6 @@ Thumbs.db
 EOF
 
 /src/data/packages/__generated__/
+# generated at build
+src/data/packages/__generated__/
+src/data/packages/packages.json

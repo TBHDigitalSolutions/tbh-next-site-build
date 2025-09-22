@@ -1,0 +1,101 @@
+{
+  "version": 1,
+  "generatedAt": "2025-09-21T00:00:00.000Z",
+  "root": "/documents/domains/packages/packages-build-plan",
+  "docs": [
+    {
+      "path": "./Packages-Domain_Authoring-Implementation-Guide_Guide_2025-09-21.md",
+      "file": "Packages-Domain_Authoring-Implementation-Guide_Guide_2025-09-21.md",
+      "title": "Packages Domain — Authoring & Implementation Guide",
+      "domain": "packages",
+      "main": "Packages-Domain_Authoring-Implementation-Guide",
+      "qualifier": "Guide",
+      "date": "2025-09-21",
+      "status": "Approved",
+      "owners": ["@conor"],
+      "tags": ["packages", "authoring", "implementation", "pricing-model", "build"],
+      "links": {
+        "related": [
+          "./Packages-Domain_App-Routing-Page-Layouts_Spec_2025-09-21.md",
+          "./Packages-Domain_Data-Content-Rules_Spec_2025-09-21.md",
+          "./packages-app-pages-layouts_Plan_2025-09-21.md",
+          "./data-conotent-pricing-rules.md"
+        ]
+      }
+    },
+    {
+      "path": "./Packages-Domain_App-Routing-Page-Layouts_Spec_2025-09-21.md",
+      "file": "Packages-Domain_App-Routing-Page-Layouts_Spec_2025-09-21.md",
+      "title": "Packages Domain — App Routing & Page Layouts (Spec)",
+      "domain": "packages",
+      "main": "Packages-Domain_App-Routing-Page-Layouts",
+      "qualifier": "Spec",
+      "date": "2025-09-21",
+      "status": "Approved",
+      "owners": ["@conor"],
+      "tags": ["packages", "routing", "layouts", "templates", "pages"],
+      "links": {
+        "related": [
+          "./packages-app-pages-layouts_Plan_2025-09-21.md",
+          "./Packages-Domain_Authoring-Implementation-Guide_Guide_2025-09-21.md",
+          "./Packages-Domain_Data-Content-Rules_Spec_2025-09-21.md"
+        ]
+      }
+    },
+    {
+      "path": "./packages-app-pages-layouts_Plan_2025-09-21.md",
+      "file": "packages-app-pages-layouts_Plan_2025-09-21.md",
+      "title": "Packages App Pages & Layouts — Plan",
+      "domain": "packages",
+      "main": "packages-app-pages-layouts",
+      "qualifier": "Plan",
+      "date": "2025-09-21",
+      "status": "Approved",
+      "owners": ["@conor"],
+      "tags": ["packages", "layouts", "hub", "bundle", "plan"],
+      "links": {
+        "related": [
+          "./Packages-Domain_App-Routing-Page-Layouts_Spec_2025-09-21.md",
+          "./Packages-Domain_Authoring-Implementation-Guide_Guide_2025-09-21.md",
+          "./Packages-Domain_Data-Content-Rules_Spec_2025-09-21.md"
+        ]
+      }
+    },
+    {
+      "path": "./Packages-Domain_Data-Content-Rules_Spec_2025-09-21.md",
+      "file": "Packages-Domain_Data-Content-Rules_Spec_2025-09-21.md",
+      "title": "Packages Domain — Data & Content Rules (Spec)",
+      "domain": "packages",
+      "main": "Packages-Domain_Data-Content-Rules",
+      "qualifier": "Spec",
+      "date": "2025-09-21",
+      "status": "Approved",
+      "owners": ["@conor"],
+      "tags": ["packages", "data", "content", "rules", "validation"],
+      "links": {
+        "related": [
+          "./Packages-Domain_Authoring-Implementation-Guide_Guide_2025-09-21.md",
+          "./data-conotent-pricing-rules.md"
+        ]
+      }
+    },
+    {
+      "path": "./data-conotent-pricing-rules.md",
+      "file": "data-conotent-pricing-rules.md",
+      "title": "Packages Domain — Data & Pricing Rules",
+      "domain": "packages",
+      "main": "data-conotent-pricing-rules",
+      "qualifier": "Spec",
+      "date": "Evergreen",
+      "status": "Approved",
+      "owners": ["@conor"],
+      "tags": ["packages", "pricing", "data", "rules"],
+      "links": {
+        "related": [
+          "./Packages-Domain_Authoring-Implementation-Guide_Guide_2025-09-21.md",
+          "./Packages-Domain_Data-Content-Rules_Spec_2025-09-21.md"
+        ]
+      }
+    }
+  ]
+}

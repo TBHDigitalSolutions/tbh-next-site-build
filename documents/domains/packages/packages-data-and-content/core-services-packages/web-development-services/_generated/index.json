@@ -1,0 +1,83 @@
+{
+  "version": 1,
+  "generatedAt": "2025-09-22T00:00:00.000Z",
+  "root": "/documents/domains/packages/packages-data-and-content/core-services-packages/web-development-services",
+  "docs": [
+    {
+      "path": "./web-development-services-packages.md",
+      "file": "web-development-services-packages.md",
+      "title": "Web Development Services — Packages Catalog",
+      "domain": "packages",
+      "main": "core-services-packages/web-development-services",
+      "qualifier": "PackagesCatalog",
+      "date": "2025-09-22",
+      "status": "Draft",
+      "owners": ["@conor"],
+      "tags": ["packages", "web", "catalog", "pricing", "authoring"],
+      "links": {
+        "related": [
+          "./web-development-services-featured-packages.md",
+          "./web-development-services-add-ons.md",
+          "./web-development-services-bundles.md"
+        ]
+      }
+    },
+    {
+      "path": "./web-development-services-featured-packages.md",
+      "file": "web-development-services-featured-packages.md",
+      "title": "Web Development Services — Featured Packages",
+      "domain": "packages",
+      "main": "core-services-packages/web-development-services",
+      "qualifier": "Featured",
+      "date": "2025-09-22",
+      "status": "Draft",
+      "owners": ["@conor"],
+      "tags": ["packages", "web", "featured", "promotions"],
+      "links": {
+        "related": [
+          "./web-development-services-packages.md",
+          "./web-development-services-add-ons.md",
+          "./web-development-services-bundles.md"
+        ]
+      }
+    },
+    {
+      "path": "./web-development-services-add-ons.md",
+      "file": "web-development-services-add-ons.md",
+      "title": "Web Development Services — Add-Ons Catalog",
+      "domain": "packages",
+      "main": "core-services-packages/web-development-services",
+      "qualifier": "AddOns",
+      "date": "2025-09-22",
+      "status": "Draft",
+      "owners": ["@conor"],
+      "tags": ["packages", "web", "addons", "pricing"],
+      "links": {
+        "related": [
+          "./web-development-services-packages.md",
+          "./web-development-services-featured-packages.md",
+          "./web-development-services-bundles.md"
+        ]
+      }
+    },
+    {
+      "path": "./web-development-services-bundles.md",
+      "file": "web-development-services-bundles.md",
+      "title": "Web Development Services — Recommended Bundles",
+      "domain": "packages",
+      "main": "core-services-packages/web-development-services",
+      "qualifier": "Bundles",
+      "date": "2025-09-22",
+      "status": "Draft",
+      "owners": ["@conor"],
+      "tags": ["packages", "web", "bundles", "solutions"],
+      "links": {
+        "related": [
+          "./web-development-services-packages.md",
+          "./web-development-services-add-ons.md",
+          "./web-development-services-featured-packages.md"
+        ]
+      }
+    }
+  ]
+}

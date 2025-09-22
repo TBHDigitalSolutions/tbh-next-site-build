@@ -1,0 +1,81 @@
+{
+  "version": 1,
+  "generatedAt": "2025-09-22T00:00:00.000Z",
+  "root": "/documents/domains/packages/packages-data-and-content/core-services-packages/marketing-services",
+  "docs": [
+    {
+      "path": "./marketing-services-packages.md",
+      "file": "marketing-services-packages.md",
+      "title": "Marketing Services — Packages Catalog",
+      "domain": "packages",
+      "main": "core-services-packages/marketing-services",
+      "qualifier": "PackagesCatalog",
+      "date": "2025-09-22",
+      "status": "Draft",
+      "owners": ["@conor"],
+      "tags": ["packages", "marketing", "catalog", "pricing", "authoring"],
+      "links": {
+        "related": [
+          "./marketing-services-featured-packages.md",
+          "./marketing-services-add-ons.md",
+          "./marketing-services-bundles.md"
+        ]
+      }
+    },
+    {
+      "path": "./marketing-services-featured-packages.md",
+      "file": "marketing-services-featured-packages.md",
+      "title": "Marketing Services — Featured Packages",
+      "domain": "packages",
+      "main": "core-services-packages/marketing-services",
+      "qualifier": "Featured",
+      "date": "2025-09-22",
+      "status": "Draft",
+      "owners": ["@conor"],
+      "tags": ["packages", "marketing", "featured", "promotions"],
+      "links": {
+        "related": [
+          "./marketing-services-packages.md",
+          "./marketing-services-add-ons.md"
+        ]
+      }
+    },
+    {
+      "path": "./marketing-services-add-ons.md",
+      "file": "marketing-services-add-ons.md",
+      "title": "Marketing Services — Add-Ons Catalog",
+      "domain": "packages",
+      "main": "core-services-packages/marketing-services",
+      "qualifier": "AddOns",
+      "date": "2025-09-22",
+      "status": "Draft",
+      "owners": ["@conor"],
+      "tags": ["packages", "marketing", "addons", "pricing"],
+      "links": {
+        "related": [
+          "./marketing-services-packages.md",
+          "./marketing-services-featured-packages.md"
+        ]
+      }
+    },
+    {
+      "path": "./marketing-services-bundles.md",
+      "file": "marketing-services-bundles.md",
+      "title": "Marketing Services — Recommended Bundles",
+      "domain": "packages",
+      "main": "core-services-packages/marketing-services",
+      "qualifier": "Bundles",
+      "date": "2025-09-22",
+      "status": "Draft",
+      "owners": ["@conor"],
+      "tags": ["packages", "marketing", "bundles", "solutions"],
+      "links": {
+        "related": [
+          "./marketing-services-packages.md",
+          "./marketing-services-add-ons.md",
+          "./marketing-services-featured-packages.md"
+        ]
+      }
+    }
+  ]
+}

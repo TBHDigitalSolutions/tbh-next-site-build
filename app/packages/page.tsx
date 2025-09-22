@@ -29,7 +29,7 @@ export const metadata: Metadata = {
 };
 
 export default function PackagesHubPage() {
-  // Pass the SSOT bundles directly to the hub template.
+  // Pass SSOT bundles to the hub template (template/adapters handle shaping).
   return (
     <div className={styles.page}>
       <PackagesHubTemplate

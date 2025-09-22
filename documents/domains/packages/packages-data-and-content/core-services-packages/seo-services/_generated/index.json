@@ -1,0 +1,81 @@
+{
+  "version": 1,
+  "generatedAt": "2025-09-22T00:00:00.000Z",
+  "root": "/documents/domains/packages/packages-data-and-content/core-services-packages/seo-services",
+  "docs": [
+    {
+      "path": "./seo-services-packages.md",
+      "file": "seo-services-packages.md",
+      "title": "SEO Services — Packages Catalog",
+      "domain": "packages",
+      "main": "core-services-packages/seo-services",
+      "qualifier": "PackagesCatalog",
+      "date": "2025-09-22",
+      "status": "Draft",
+      "owners": ["@conor"],
+      "tags": ["packages", "seo", "catalog", "pricing", "authoring"],
+      "links": {
+        "related": [
+          "./seo-services-featured-packages.md",
+          "./seo-services-add-ons.md",
+          "./seo-services-bundles.md"
+        ]
+      }
+    },
+    {
+      "path": "./seo-services-featured-packages.md",
+      "file": "seo-services-featured-packages.md",
+      "title": "SEO Services — Featured Packages",
+      "domain": "packages",
+      "main": "core-services-packages/seo-services",
+      "qualifier": "Featured",
+      "date": "2025-09-22",
+      "status": "Draft",
+      "owners": ["@conor"],
+      "tags": ["packages", "seo", "featured", "promotions"],
+      "links": {
+        "related": [
+          "./seo-services-packages.md",
+          "./seo-services-add-ons.md"
+        ]
+      }
+    },
+    {
+      "path": "./seo-services-add-ons.md",
+      "file": "seo-services-add-ons.md",
+      "title": "SEO Services — Add-Ons Catalog",
+      "domain": "packages",
+      "main": "core-services-packages/seo-services",
+      "qualifier": "AddOns",
+      "date": "2025-09-22",
+      "status": "Draft",
+      "owners": ["@conor"],
+      "tags": ["packages", "seo", "addons", "pricing"],
+      "links": {
+        "related": [
+          "./seo-services-packages.md",
+          "./seo-services-featured-packages.md"
+        ]
+      }
+    },
+    {
+      "path": "./seo-services-bundles.md",
+      "file": "seo-services-bundles.md",
+      "title": "SEO Services — Recommended Bundles",
+      "domain": "packages",
+      "main": "core-services-packages/seo-services",
+      "qualifier": "Bundles",
+      "date": "2025-09-22",
+      "status": "Draft",
+      "owners": ["@conor"],
+      "tags": ["packages", "seo", "bundles", "solutions"],
+      "links": {
+        "related": [
+          "./seo-services-packages.md",
+          "./seo-services-add-ons.md",
+          "./seo-services-featured-packages.md"
+        ]
+      }
+    }
+  ]
+}

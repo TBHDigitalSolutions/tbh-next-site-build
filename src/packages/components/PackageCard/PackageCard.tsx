@@ -1,3 +1,4 @@
+// src/packages/components/PackageCard/PackageCard.tsx
 "use client";
 
 import * as React from "react";
@@ -9,7 +10,7 @@ export type PackageCardProps = {
   slug: string;
   name: string;
   description: string;
-  price: Price;
+  price?: Price; // made optional
   /** One-line highlights; keep concise */
   features?: string[];
   /** Small badge, e.g., "Most Popular" */
@@ -36,15 +37,21 @@ export type PackageCardProps = {
 function formatMoney(v?: number, currency: string = "USD") {
   if (v === undefined) return undefined;
   try {
-    return new Intl.NumberFormat(undefined, { style: "currency", currency, maximumFractionDigits: 0 }).format(v);
+    return new Intl.NumberFormat(undefined, {
+      style: "currency",
+      currency,
+      maximumFractionDigits: 0,
+    }).format(v);
   } catch {
+    // Fallback if Intl or currency fails
     return `$${v}`;
   }
 }
 
-function PriceChips({ price }: { price: Price }) {
-  const setup = formatMoney(price.oneTime, price.currency);
-  const monthly = formatMoney(price.monthly, price.currency);
+function PriceChips({ price }: { price?: Price }) {
+  const setup = formatMoney(price?.oneTime, price?.currency);
+  const monthly = formatMoney(price?.monthly, price?.currency);
+
   if (!setup && !monthly) {
     return <div className={cls.priceChip}>Custom pricing</div>;
   }
@@ -74,11 +81,18 @@ export default function PackageCard({
 }: PackageCardProps) {
   const safeDetails = detailsHref ?? `/packages/${slug}`;
 
-  const fire = React.useCallback((action: string) => {
-    if (typeof window !== "undefined" && (window as any).gtag) {
-      (window as any).gtag("event", action, { category: analyticsCategory, package_slug: slug, package_name: name });
-    }
-  }, [analyticsCategory, slug, name]);
+  const fire = React.useCallback(
+    (action: string) => {
+      if (typeof window !== "undefined" && (window as any).gtag) {
+        (window as any).gtag("event", action, {
+          category: analyticsCategory,
+          package_slug: slug,
+          package_name: name,
+        });
+      }
+    },
+    [analyticsCategory, slug, name],
+  );
 
   const onPrimary = React.useCallback(() => {
     fire("package_primary_cta_click");
@@ -93,6 +107,10 @@ export default function PackageCard({
   const shown = features.slice(0, 5);
   const remaining = Math.max(0, features.length - shown.length);
 
+  // Safe locals for microdata
+  const monthlyRaw = price?.monthly;
+  const currency = price?.currency ?? "USD";
+
   return (
     <article
       className={[cls.card, className].filter(Boolean).join(" ")}
@@ -103,21 +121,29 @@ export default function PackageCard({
       aria-labelledby={`${slug}-title`}
     >
       <header className={cls.header}>
-        <h3 id={`${slug}-title`} className={cls.title} itemProp="name">{name}</h3>
-        {badge && <span className={cls.badge} aria-label={badge}>{badge}</span>}
+        <h3 id={`${slug}-title`} className={cls.title} itemProp="name">
+          {name}
+        </h3>
+        {badge && (
+          <span className={cls.badge} aria-label={badge}>
+            {badge}
+          </span>
+        )}
       </header>
 
-      <p className={cls.description} itemProp="description">{description}</p>
+      <p className={cls.description} itemProp="description">
+        {description}
+      </p>
 
       <div className={cls.prices}>
         <PriceChips price={price} />
         {/* Microdata for offers */}
         <meta itemProp="areaServed" content="US" />
         <div itemProp="offers" itemScope itemType="https://schema.org/Offer" hidden>
-          {price.monthly != null && (
+          {monthlyRaw != null && (
             <>
-              <meta itemProp="price" content={String(price.monthly)} />
-              <meta itemProp="priceCurrency" content={price.currency ?? "USD"} />
+              <meta itemProp="price" content={String(monthlyRaw)} />
+              <meta itemProp="priceCurrency" content={currency} />
               <meta itemProp="availability" content="https://schema.org/InStock" />
             </>
           )}
@@ -128,12 +154,12 @@ export default function PackageCard({
         <div className={cls.features}>
           <ul className={cls.featureList}>
             {shown.map((f, i) => (
-              <li key={i} className={cls.featureItem} itemProp="feature">{f}</li>
+              <li key={i} className={cls.featureItem} itemProp="feature">
+                {f}
+              </li>
             ))}
           </ul>
-          {remaining > 0 && (
-            <div className={cls.more} aria-live="polite">+{remaining} more</div>
-          )}
+          {remaining > 0 && <div className={cls.more} aria-live="polite">+{remaining} more</div>}
         </div>
       )}
 

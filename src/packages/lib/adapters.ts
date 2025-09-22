@@ -1,10 +1,7 @@
 // src/packages/lib/adapters.ts
-// src/packages/lib/adapters.ts
 // Production-ready adapters that map SSOT domain types → UI component props
 // NOTE: This file intentionally avoids importing from /components to keep
 // layering: app → templates → sections → components → lib (this file)
-// The adapter return types below mirror component prop shapes but live locally
-// to avoid cross-layer type imports.
 
 import type { PackageBundle, PackageInclude, Price } from "./types";
 
@@ -19,7 +16,7 @@ export type PackageCardAdapter = {
   slug: string;
   name: string;
   description: string;
-  price: Price;
+  price?: Price;
   features?: string[];
   badge?: string;
   highlight?: boolean;
@@ -34,7 +31,7 @@ export type PackageGridItemAdapter = PackageCardAdapter & { weight?: number };
 
 /** Mirrors PriceBlockProps (no handlers) */
 export type PriceBlockAdapter = {
-  price: Price & { yearly?: number };
+  price: Partial<Price> & { yearly?: number };
   enableBillingToggle?: boolean;
   annualDiscountPercent?: number;
   showSetup?: boolean;
@@ -62,7 +59,7 @@ export type AddOnAdapter = {
  * Helpers
  * ---------------------------------------------------------------------------- */
 
-const currencyOf = (p?: Price) => (p?.currency ?? "USD");
+const currencyOf = (p?: Price) => p?.currency ?? "USD";
 
 function fmt(n?: number, currency = "USD") {
   if (n == null) return undefined;
@@ -71,6 +68,51 @@ function fmt(n?: number, currency = "USD") {
   } catch {
     return `$${n}`;
   }
+}
+
+/** Extracts a human name/description from mixed bundle shapes. */
+function coerceMeta(b: any): { name: string; description: string } {
+  const name = b?.name ?? b?.title ?? "Package";
+  const description = b?.description ?? b?.summary ?? b?.subtitle ?? "";
+  return { name, description };
+}
+
+/** Parse a currency string like "$7,500" → 7500 (be tolerant). */
+function parseMoney(input?: unknown): number | undefined {
+  if (typeof input === "number") return input;
+  if (typeof input !== "string") return undefined;
+  const digits = input.replace(/[^\d.]/g, "");
+  if (!digits) return undefined;
+  const n = Number(digits);
+  return Number.isFinite(n) ? n : undefined;
+}
+
+/** Derive a simple price object from tiered `pricing` if `price` is absent. */
+function derivePriceFromPricing(b: any): Price | undefined {
+  const pricing = b?.pricing;
+  if (!pricing || !Array.isArray(pricing.tiers)) return undefined;
+
+  let monthly: number | undefined;
+  let oneTime: number | undefined;
+
+  for (const tier of pricing.tiers) {
+    const p = parseMoney(tier?.price);
+    if (!p) continue;
+    const period = String(tier?.period ?? "").toLowerCase();
+    if (period.includes("month")) monthly = monthly ?? p;
+    if (period.includes("one-time") || period.includes("one time") || period.includes("setup")) {
+      oneTime = oneTime ?? p;
+    }
+  }
+
+  if (monthly == null && oneTime == null) return undefined;
+  return { monthly, oneTime, currency: "USD" };
+}
+
+/** Prefer explicit bundle.price; otherwise derive from pricing. */
+function resolvePrice(b: any): Price | undefined {
+  if (b?.price) return b.price as Price;
+  return derivePriceFromPricing(b);
 }
 
 function flattenFeatures(b: PackageBundle, limit?: number) {
@@ -83,35 +125,25 @@ function flattenFeatures(b: PackageBundle, limit?: number) {
  * ---------------------------------------------------------------------------- */
 
 export type ToCardOptions = {
-  /** limit features rendered on the card */
   featureLimit?: number;
-  /** override details URL; default `/packages/${slug}` */
   detailsHref?: (slug: string) => string;
-  /** derive footnote from bundle timeline */
   footnoteFromTimeline?: boolean;
-  /** when true, set highlight from isMostPopular */
   highlightMostPopular?: boolean;
-  /** set badge from isMostPopular */
   badgeFromMostPopular?: boolean;
-  /** add default secondary CTA to book a call */
   withBookCall?: boolean;
-  /** custom primary CTA label */
   primaryLabel?: string;
-  /** custom secondary CTA label */
   secondaryLabel?: string;
 };
 
 export type ToGridOptions = ToCardOptions & {
-  /** order/boost and highlight these slugs */
   featuredSlugs?: string[];
-  /** set a numeric weight on items matched in featuredSlugs (higher first) */
   weightFeatured?: boolean;
 };
 
 export type ToPriceBlockOptions = {
-  title?: string; // plan name if shown standalone
+  title?: string;
   enableBillingToggle?: boolean;
-  annualDiscountPercent?: number; // compute yearly when missing
+  annualDiscountPercent?: number;
   showSetup?: boolean;
   unitLabel?: string;
   caption?: string;
@@ -141,20 +173,22 @@ export function toPackageCard(b: PackageBundle, opts: ToCardOptions = {}): Packa
 
   const details = detailsHref ? detailsHref(b.slug) : `/packages/${b.slug}`;
   const features = flattenFeatures(b, featureLimit);
+  const { name, description } = coerceMeta(b);
+  const price = resolvePrice(b);
 
   const card: PackageCardAdapter = {
     slug: b.slug,
-    name: b.name,
-    description: b.description,
-    price: b.price,
+    name,
+    description,
+    price,
     features,
     detailsHref: details,
   };
 
-  if (highlightMostPopular && b.isMostPopular) card.highlight = true;
-  if (badgeFromMostPopular && b.isMostPopular) card.badge = card.badge ?? "Most Popular";
+  if (highlightMostPopular && (b as any).isMostPopular) card.highlight = true;
+  if (badgeFromMostPopular && (b as any).isMostPopular) card.badge = card.badge ?? "Most Popular";
 
-  if (footnoteFromTimeline && b.timeline) card.footnote = `Typical onboarding ${b.timeline}`;
+  if (footnoteFromTimeline && (b as any).timeline) card.footnote = `Typical onboarding ${(b as any).timeline}`;
 
   // Primary CTA → Details
   card.primaryCta = { label: primaryLabel ?? "View details", href: details };
@@ -175,7 +209,6 @@ export function toPackageGridItems(bundles: PackageBundle[], opts: ToGridOptions
     const base = toPackageCard(b, opts);
     const item: PackageGridItemAdapter = { ...base };
     if (weightFeatured && featuredIndex.has(b.slug)) {
-      // Higher weight for earlier featured positions
       item.weight = 100 - (featuredIndex.get(b.slug) ?? 0);
       item.highlight = true;
     }
@@ -203,22 +236,25 @@ export function toPriceBlock(b: PackageBundle, opts: ToPriceBlockOptions = {}): 
     secondary,
   } = opts;
 
+  const { name } = coerceMeta(b);
+  const priceResolved = resolvePrice(b);
+
   const pb: PriceBlockAdapter = {
-    price: { ...b.price },
+    price: { ...(priceResolved ?? {}) },
     enableBillingToggle,
     annualDiscountPercent,
     showSetup,
     unitLabel,
     caption,
-    title: title ?? b.name,
+    title: title ?? name,
     jsonLd,
     primaryCta: primary ?? { label: "View details", href: `/packages/${b.slug}` },
     secondaryCta: secondary ?? { label: "Book a call", href: "/book" },
     note,
   };
 
-  if (badgeFromMostPopular && b.isMostPopular) pb.badge = pb.badge ?? "Most Popular";
-  if (highlightMostPopular && b.isMostPopular) pb.highlight = true;
+  if (badgeFromMostPopular && (b as any).isMostPopular) pb.badge = pb.badge ?? "Most Popular";
+  if (highlightMostPopular && (b as any).isMostPopular) pb.highlight = true;
 
   return pb;
 }
@@ -262,13 +298,11 @@ export function toIncludesTable(b: PackageBundle, opts: ToIncludesOptions = {}) 
  * ---------------------------------------------------------------------------- */
 
 export type ToAddOnsOptions = {
-  /** Only include these categories */
   categories?: string[];
-  /** Case-insensitive search across name/slug/description */
   query?: string;
 };
 
-export function toAddOnsGrid(addOns: AddOnAdapter[], opts: ToAddOnsOptions = {}): AddOnAdapter[] {
+export function toAddOnsGrid(addOns: AddOnAdapter[], opts: ToAddOnsOptions = {}) {
   const { categories, query } = opts;
   const q = query?.trim().toLowerCase();
 
@@ -302,33 +336,35 @@ export function toItemListJsonLd(items: Array<{ slug: string; name: string; deta
 }
 
 export function toServiceOfferJsonLd(bundle: PackageBundle) {
-  const currency = currencyOf(bundle.price);
+  const price = resolvePrice(bundle); // may be undefined
+  const currency = currencyOf(price);
   const offers: any[] = [];
-  if (bundle.price.monthly != null) {
+
+  if (price?.monthly != null) {
     offers.push({
       "@type": "Offer",
       priceCurrency: currency,
-      price: String(bundle.price.monthly),
+      price: String(price.monthly),
       availability: "https://schema.org/InStock",
-      description: `${bundle.name} — monthly`,
+      description: `${coerceMeta(bundle).name} — monthly`,
     });
   }
-  if (bundle.price.oneTime != null) {
+  if (price?.oneTime != null) {
     offers.push({
       "@type": "Offer",
       priceCurrency: currency,
-      price: String(bundle.price.oneTime),
+      price: String(price.oneTime),
       availability: "https://schema.org/InStock",
-      description: `${bundle.name} — setup`,
+      description: `${coerceMeta(bundle).name} — setup`,
     });
   }
 
   return {
     "@context": "https://schema.org",
     "@type": "Service",
-    name: bundle.name,
-    description: bundle.description,
-    offers,
+    name: coerceMeta(bundle).name,
+    description: coerceMeta(bundle).description,
+    ...(offers.length ? { offers } : {}),
   } as const;
 }
 
@@ -341,9 +377,14 @@ export type ToHubModel = {
   jsonLd?: ReturnType<typeof toItemListJsonLd>;
 };
 
-export function toHubModel(bundles: PackageBundle[], opts: ToGridOptions & { jsonLd?: boolean } = {}): ToHubModel {
+export function toHubModel(
+  bundles: PackageBundle[],
+  opts: ToGridOptions & { jsonLd?: boolean } = {},
+): ToHubModel {
   const grid = toPackageGridItems(bundles, opts);
-  const jsonLd = opts.jsonLd ? toItemListJsonLd(grid.map((g) => ({ slug: g.slug, name: g.name, detailsHref: g.detailsHref }))) : undefined;
+  const jsonLd = opts.jsonLd
+    ? toItemListJsonLd(grid.map((g) => ({ slug: g.slug, name: g.name, detailsHref: g.detailsHref })))
+    : undefined;
   return { grid, jsonLd };
 }
 
@@ -354,11 +395,13 @@ export type ToDetailModel = {
   jsonLd?: ReturnType<typeof toServiceOfferJsonLd>;
 };
 
-export function toDetailModel(bundle: PackageBundle, opts: { card?: ToCardOptions; price?: ToPriceBlockOptions; includes?: ToIncludesOptions; jsonLd?: boolean } = {}): ToDetailModel {
+export function toDetailModel(
+  bundle: PackageBundle,
+  opts: { card?: ToCardOptions; price?: ToPriceBlockOptions; includes?: ToIncludesOptions; jsonLd?: boolean } = {},
+): ToDetailModel {
   const card = toPackageCard(bundle, opts.card);
   const price = toPriceBlock(bundle, opts.price);
   const includes = toIncludesTable(bundle, opts.includes);
   const jsonLd = opts.jsonLd ? toServiceOfferJsonLd(bundle) : undefined;
   return { card, price, includes, jsonLd };
 }
-

@@ -1,0 +1,61 @@
+{
+  "version": 1,
+  "generatedAt": "2025-09-22T00:00:00.000Z",
+  "root": "/documents/domains/packages/packages-data-and-content/cross-service",
+  "docs": [
+    {
+      "path": "./cross-service-bundles.md",
+      "file": "cross-service-bundles.md",
+      "title": "Cross-Service — Recommended Bundles",
+      "domain": "packages",
+      "main": "cross-service",
+      "qualifier": "Bundles",
+      "date": "2025-09-22",
+      "status": "Draft",
+      "owners": ["@conor"],
+      "tags": ["cross-service", "bundles", "integrated", "solutions"],
+      "links": {
+        "related": [
+          "./cross-service-add-ons.md",
+          "./cross-service-featured-packages.md"
+        ]
+      }
+    },
+    {
+      "path": "./cross-service-add-ons.md",
+      "file": "cross-service-add-ons.md",
+      "title": "Cross-Service — Add-Ons Catalog",
+      "domain": "packages",
+      "main": "cross-service",
+      "qualifier": "AddOns",
+      "date": "2025-09-22",
+      "status": "Draft",
+      "owners": ["@conor"],
+      "tags": ["cross-service", "addons", "training", "workshops", "creative"],
+      "links": {
+        "related": [
+          "./cross-service-bundles.md",
+          "./cross-service-featured-packages.md"
+        ]
+      }
+    },
+    {
+      "path": "./cross-service-featured-packages.md",
+      "file": "cross-service-featured-packages.md",
+      "title": "Cross-Service — Featured Packages",
+      "domain": "packages",
+      "main": "cross-service",
+      "qualifier": "Featured",
+      "date": "2025-09-22",
+      "status": "Draft",
+      "owners": ["@conor"],
+      "tags": ["cross-service", "featured", "integrated", "growth"],
+      "links": {
+        "related": [
+          "./cross-service-bundles.md",
+          "./cross-service-add-ons.md"
+        ]
+      }
+    }
+  ]
+}

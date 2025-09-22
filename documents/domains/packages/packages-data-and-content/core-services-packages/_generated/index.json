@@ -1,0 +1,151 @@
+{
+  "version": 1,
+  "generatedAt": "2025-09-22T00:00:00.000Z",
+  "root": "/documents/domains/packages/packages-data-and-content/core-services-packages",
+  "docs": [
+    {
+      "path": "./content-production-services/_generated/index.json",
+      "file": "index.json",
+      "title": "Content Production Services",
+      "domain": "packages",
+      "main": "core-services-packages",
+      "qualifier": "ContentProduction",
+      "date": "2025-09-22",
+      "status": "Draft",
+      "owners": ["@conor"],
+      "tags": ["core-services", "content", "packages", "addons", "bundles", "featured"],
+      "kind": "collection",
+      "childrenIndex": "./content-production-services/_generated/index.json",
+      "links": {
+        "related": [
+          "../cross-service/../_generated/index.json",
+          "../lead-generation-services/_generated/index.json",
+          "../marketing-services/_generated/index.json",
+          "../seo-services/_generated/index.json",
+          "../video-production-services/_generated/index.json",
+          "../web-development-services/_generated/index.json"
+        ]
+      }
+    },
+    {
+      "path": "./lead-generation-services/_generated/index.json",
+      "file": "index.json",
+      "title": "Lead Generation Services",
+      "domain": "packages",
+      "main": "core-services-packages",
+      "qualifier": "LeadGeneration",
+      "date": "2025-09-22",
+      "status": "Draft",
+      "owners": ["@conor"],
+      "tags": ["core-services", "leadgen", "packages", "addons", "bundles", "featured"],
+      "kind": "collection",
+      "childrenIndex": "./lead-generation-services/_generated/index.json",
+      "links": {
+        "related": [
+          "../cross-service/../_generated/index.json",
+          "../content-production-services/_generated/index.json",
+          "../marketing-services/_generated/index.json",
+          "../seo-services/_generated/index.json",
+          "../video-production-services/_generated/index.json",
+          "../web-development-services/_generated/index.json"
+        ]
+      }
+    },
+    {
+      "path": "./marketing-services/_generated/index.json",
+      "file": "index.json",
+      "title": "Marketing Services",
+      "domain": "packages",
+      "main": "core-services-packages",
+      "qualifier": "Marketing",
+      "date": "2025-09-22",
+      "status": "Draft",
+      "owners": ["@conor"],
+      "tags": ["core-services", "marketing", "packages", "addons", "bundles", "featured"],
+      "kind": "collection",
+      "childrenIndex": "./marketing-services/_generated/index.json",
+      "links": {
+        "related": [
+          "../cross-service/../_generated/index.json",
+          "../content-production-services/_generated/index.json",
+          "../lead-generation-services/_generated/index.json",
+          "../seo-services/_generated/index.json",
+          "../video-production-services/_generated/index.json",
+          "../web-development-services/_generated/index.json"
+        ]
+      }
+    },
+    {
+      "path": "./seo-services/_generated/index.json",
+      "file": "index.json",
+      "title": "SEO Services",
+      "domain": "packages",
+      "main": "core-services-packages",
+      "qualifier": "SEO",
+      "date": "2025-09-22",
+      "status": "Draft",
+      "owners": ["@conor"],
+      "tags": ["core-services", "seo", "packages", "addons", "bundles", "featured"],
+      "kind": "collection",
+      "childrenIndex": "./seo-services/_generated/index.json",
+      "links": {
+        "related": [
+          "../cross-service/../_generated/index.json",
+          "../content-production-services/_generated/index.json",
+          "../lead-generation-services/_generated/index.json",
+          "../marketing-services/_generated/index.json",
+          "../video-production-services/_generated/index.json",
+          "../web-development-services/_generated/index.json"
+        ]
+      }
+    },
+    {
+      "path": "./video-production-services/_generated/index.json",
+      "file": "index.json",
+      "title": "Video Production Services",
+      "domain": "packages",
+      "main": "core-services-packages",
+      "qualifier": "VideoProduction",
+      "date": "2025-09-22",
+      "status": "Draft",
+      "owners": ["@conor"],
+      "tags": ["core-services", "video", "packages", "addons", "bundles", "featured"],
+      "kind": "collection",
+      "childrenIndex": "./video-production-services/_generated/index.json",
+      "links": {
+        "related": [
+          "../cross-service/../_generated/index.json",
+          "../content-production-services/_generated/index.json",
+          "../lead-generation-services/_generated/index.json",
+          "../marketing-services/_generated/index.json",
+          "../seo-services/_generated/index.json",
+          "../web-development-services/_generated/index.json"
+        ]
+      }
+    },
+    {
+      "path": "./web-development-services/_generated/index.json",
+      "file": "index.json",
+      "title": "Web Development Services",
+      "domain": "packages",
+      "main": "core-services-packages",
+      "qualifier": "WebDevelopment",
+      "date": "2025-09-22",
+      "status": "Draft",
+      "owners": ["@conor"],
+      "tags": ["core-services", "webdev", "packages", "addons", "bundles", "featured"],
+      "kind": "collection",
+      "childrenIndex": "./web-development-services/_generated/index.json",
+      "links": {
+        "related": [
+          "../cross-service/../_generated/index.json",
+          "../content-production-services/_generated/index.json",
+          "../lead-generation-services/_generated/index.json",
+          "../marketing-services/_generated/index.json",
+          "../seo-services/_generated/index.json",
+          "../video-production-services/_generated/index.json"
+        ]
+      }
+    }
+  ]
+}
