@@ -1,0 +1,906 @@
+[
+  {
+    "id": "content-essential",
+    "service": "content",
+    "name": "Essential Content Package",
+    "tier": "Essential",
+    "summary": "Get consistent, on-brand content shipped every month for growing businesses.",
+    "idealFor": "Small businesses getting started with content marketing",
+    "outcomes": [
+      "Consistent publishing cadence",
+      "Professional brand voice development",
+      "Improved search visibility",
+      "Social media content pipeline"
+    ],
+    "features": [
+      {
+        "label": "20 pieces of written content per month",
+        "detail": "Blog posts, social posts, web copy"
+      },
+      {
+        "label": "Basic graphic design",
+        "detail": "5 pieces per month"
+      },
+      {
+        "label": "Content calendar and publishing schedule",
+        "detail": "30-day rolling calendar"
+      },
+      {
+        "label": "Basic brand voice guidelines",
+        "detail": "Tone, style, messaging framework"
+      },
+      {
+        "label": "Monthly performance reporting",
+        "detail": "Engagement metrics and insights"
+      }
+    ],
+    "price": {
+      "monthly": 3500,
+      "notes": "Includes content strategy session"
+    },
+    "badges": [
+      "Most Popular"
+    ],
+    "sla": "Content delivered within 5 business days",
+    "popular": true
+  },
+  {
+    "id": "content-professional",
+    "service": "content",
+    "name": "Professional Content Package",
+    "tier": "Professional",
+    "summary": "Comprehensive content strategy with video, photography, and advanced optimization.",
+    "idealFor": "Growing businesses needing consistent, high-quality content across channels",
+    "outcomes": [
+      "40% increase in content engagement",
+      "Established thought leadership",
+      "Multi-channel content presence",
+      "SEO content optimization"
+    ],
+    "features": [
+      {
+        "label": "40 pieces of written content per month",
+        "detail": "Long-form, social, email, web copy"
+      },
+      {
+        "label": "Advanced graphic design",
+        "detail": "15 pieces per month with brand consistency"
+      },
+      {
+        "label": "Photography direction and basic editing",
+        "detail": "Monthly photo shoot coordination"
+      },
+      {
+        "label": "Content strategy and optimization",
+        "detail": "Quarterly strategy reviews"
+      },
+      {
+        "label": "Brand voice development and guidelines",
+        "detail": "Comprehensive brand book"
+      },
+      {
+        "label": "Basic video content",
+        "detail": "2 short videos per month"
+      },
+      {
+        "label": "SEO content optimization",
+        "detail": "Keyword research and on-page optimization"
+      }
+    ],
+    "price": {
+      "monthly": 6500,
+      "notes": "Includes quarterly strategy sessions"
+    },
+    "badges": [
+      "Best Value"
+    ],
+    "sla": "Content delivered within 3 business days"
+  },
+  {
+    "id": "content-enterprise",
+    "service": "content",
+    "name": "Enterprise Content Package",
+    "tier": "Enterprise",
+    "summary": "Unlimited content production with dedicated team and advanced governance.",
+    "idealFor": "Large organizations with complex content needs across multiple channels",
+    "outcomes": [
+      "Complete content ecosystem management",
+      "Brand consistency across all touchpoints",
+      "Advanced performance analytics",
+      "Dedicated content management team"
+    ],
+    "features": [
+      {
+        "label": "Unlimited written content",
+        "detail": "Full content team at your disposal"
+      },
+      {
+        "label": "Premium graphic design and brand materials",
+        "detail": "Dedicated design resources"
+      },
+      {
+        "label": "Professional photography and video direction",
+        "detail": "Monthly production coordination"
+      },
+      {
+        "label": "Complete editorial strategy and governance",
+        "detail": "Multi-team workflow management"
+      },
+      {
+        "label": "Multi-platform content optimization",
+        "detail": "Platform-specific content adaptation"
+      },
+      {
+        "label": "Dedicated content manager",
+        "detail": "Single point of contact for all content"
+      },
+      {
+        "label": "Performance analytics and optimization",
+        "detail": "Advanced reporting and insights"
+      },
+      {
+        "label": "Brand compliance monitoring",
+        "detail": "Quality assurance across all content"
+      }
+    ],
+    "price": {
+      "monthly": 12000,
+      "notes": "Custom pricing for enterprise volumes"
+    },
+    "badges": [
+      "Premium"
+    ],
+    "sla": "Content delivered within 24-48 hours"
+  },
+  {
+    "id": "leadgen-essential",
+    "service": "leadgen",
+    "name": "Starter Lead Gen Package",
+    "tier": "Essential",
+    "summary": "Systematic lead generation foundation for businesses starting their growth journey.",
+    "idealFor": "Small businesses new to lead generation seeking predictable lead flow",
+    "outcomes": [
+      "Consistent qualified lead pipeline",
+      "Automated lead capture and routing",
+      "Basic lead scoring and prioritization",
+      "Email nurturing that converts"
+    ],
+    "features": [
+      {
+        "label": "2-channel lead generation setup",
+        "detail": "Google Ads + Facebook/LinkedIn campaigns"
+      },
+      {
+        "label": "Basic landing page creation",
+        "detail": "3 high-converting landing pages"
+      },
+      {
+        "label": "Lead scoring system setup",
+        "detail": "Behavioral and demographic scoring"
+      },
+      {
+        "label": "Email nurture sequence",
+        "detail": "5-email automated follow-up"
+      },
+      {
+        "label": "Monthly lead gen reporting",
+        "detail": "Lead volume, quality, and cost metrics"
+      },
+      {
+        "label": "CRM integration and automation",
+        "detail": "Seamless lead routing and tracking"
+      }
+    ],
+    "price": {
+      "monthly": 4000,
+      "notes": "Includes initial setup and campaign launch"
+    },
+    "badges": [
+      "Most Popular"
+    ],
+    "sla": "Lead flow within 2 weeks of launch",
+    "popular": true
+  },
+  {
+    "id": "leadgen-professional",
+    "service": "leadgen",
+    "name": "Growth Lead Gen Package",
+    "tier": "Professional",
+    "summary": "Comprehensive multi-channel lead generation with advanced optimization and nurturing.",
+    "idealFor": "Growing businesses ready to scale lead acquisition across multiple channels",
+    "outcomes": [
+      "40-60% increase in qualified leads",
+      "Multi-channel attribution clarity",
+      "Advanced lead qualification",
+      "Automated sales-ready handoffs"
+    ],
+    "features": [
+      {
+        "label": "4-channel lead generation management",
+        "detail": "Google, Meta, LinkedIn, content marketing"
+      },
+      {
+        "label": "A/B testing and optimization",
+        "detail": "Continuous conversion rate improvements"
+      },
+      {
+        "label": "Advanced lead scoring and routing",
+        "detail": "Predictive scoring with sales alignment"
+      },
+      {
+        "label": "Multi-sequence email nurturing",
+        "detail": "Persona-based nurture tracks"
+      },
+      {
+        "label": "Remarketing campaign setup",
+        "detail": "Cross-platform visitor retargeting"
+      },
+      {
+        "label": "Webinar or event planning",
+        "detail": "Quarterly lead generation events"
+      },
+      {
+        "label": "Advanced analytics and attribution",
+        "detail": "Multi-touch conversion tracking"
+      }
+    ],
+    "price": {
+      "monthly": 7500,
+      "notes": "Includes quarterly strategy optimization"
+    },
+    "badges": [
+      "Best Value"
+    ],
+    "sla": "Weekly optimization and reporting"
+  },
+  {
+    "id": "leadgen-enterprise",
+    "service": "leadgen",
+    "name": "Enterprise Lead Gen Package",
+    "tier": "Enterprise",
+    "summary": "Complete lead generation ecosystem with dedicated team and custom attribution.",
+    "idealFor": "Large organizations with complex sales funnels and multiple product lines",
+    "outcomes": [
+      "Enterprise-scale lead qualification",
+      "Custom attribution modeling",
+      "Account-based marketing execution",
+      "Dedicated lead generation partnership"
+    ],
+    "features": [
+      {
+        "label": "Omnichannel lead generation strategy",
+        "detail": "Unlimited channels and campaigns"
+      },
+      {
+        "label": "Custom dashboard and reporting",
+        "detail": "Real-time lead intelligence platform"
+      },
+      {
+        "label": "Advanced attribution modeling",
+        "detail": "Multi-touch revenue attribution"
+      },
+      {
+        "label": "Complex nurture workflows",
+        "detail": "AI-powered personalization"
+      },
+      {
+        "label": "Account-based marketing campaigns",
+        "detail": "Enterprise account targeting"
+      },
+      {
+        "label": "Dedicated lead generation specialist",
+        "detail": "Senior strategist exclusively assigned"
+      },
+      {
+        "label": "Custom automation development",
+        "detail": "Bespoke workflow and integration build"
+      }
+    ],
+    "price": {
+      "monthly": 15000,
+      "notes": "Custom enterprise pricing based on scale"
+    },
+    "badges": [
+      "Premium"
+    ],
+    "sla": "Dedicated account management with weekly strategy calls"
+  },
+  {
+    "id": "marketing-essential",
+    "service": "marketing",
+    "name": "Digital Marketing Starter",
+    "tier": "Essential",
+    "summary": "Professional ad management and basic automation for small businesses entering digital marketing.",
+    "idealFor": "Small businesses needing professional ad management but with limited budget",
+    "outcomes": [
+      "Professional campaign setup and management",
+      "Clear performance tracking and reporting",
+      "Improved cost per acquisition",
+      "Basic marketing automation foundation"
+    ],
+    "features": [
+      {
+        "label": "Google Ads campaign management",
+        "detail": "Search and display campaigns with optimization"
+      },
+      {
+        "label": "Facebook/Instagram advertising",
+        "detail": "Social media ad campaigns and audience targeting"
+      },
+      {
+        "label": "Basic marketing automation setup",
+        "detail": "Email sequences and lead nurturing"
+      },
+      {
+        "label": "Monthly performance reporting",
+        "detail": "ROI tracking and optimization recommendations"
+      },
+      {
+        "label": "Up to $5K monthly ad spend management",
+        "detail": "Professional campaign oversight"
+      },
+      {
+        "label": "Conversion tracking setup",
+        "detail": "Goal tracking and attribution analysis"
+      }
+    ],
+    "price": {
+      "monthly": 3500,
+      "notes": "Ad spend billed separately to your accounts"
+    },
+    "badges": [
+      "Most Popular"
+    ],
+    "sla": "Campaign launch within 1 week, weekly optimization",
+    "popular": true
+  },
+  {
+    "id": "marketing-professional",
+    "service": "marketing",
+    "name": "Comprehensive Marketing Package",
+    "tier": "Professional",
+    "summary": "Multi-platform marketing with advanced automation, content, and analytics for growing businesses.",
+    "idealFor": "Growing businesses with diverse marketing needs across multiple channels",
+    "outcomes": [
+      "30-50% improvement in marketing efficiency",
+      "Multi-channel attribution clarity",
+      "Advanced automation and personalization",
+      "Comprehensive content and campaign strategy"
+    ],
+    "features": [
+      {
+        "label": "Multi-platform paid advertising",
+        "detail": "Google, Meta, LinkedIn with advanced targeting"
+      },
+      {
+        "label": "Content marketing and distribution",
+        "detail": "Blog content, social media, email campaigns"
+      },
+      {
+        "label": "Marketing automation and lead nurturing",
+        "detail": "Advanced workflows and personalization"
+      },
+      {
+        "label": "Influencer partnership coordination",
+        "detail": "Influencer identification and campaign management"
+      },
+      {
+        "label": "Advanced analytics and reporting",
+        "detail": "Multi-touch attribution and ROI analysis"
+      },
+      {
+        "label": "Up to $15K monthly ad spend management",
+        "detail": "Professional campaign optimization"
+      },
+      {
+        "label": "Bi-weekly strategy optimization",
+        "detail": "Regular performance reviews and adjustments"
+      }
+    ],
+    "price": {
+      "monthly": 7500,
+      "notes": "Includes quarterly strategy sessions and ad spend management"
+    },
+    "badges": [
+      "Best Value"
+    ],
+    "sla": "Same-day campaign adjustments, bi-weekly strategy calls"
+  },
+  {
+    "id": "marketing-enterprise",
+    "service": "marketing",
+    "name": "Enterprise Marketing Solutions",
+    "tier": "Enterprise",
+    "summary": "Complete marketing department capabilities with dedicated team and advanced technology stack.",
+    "idealFor": "Large organizations with complex marketing requirements across multiple markets",
+    "outcomes": [
+      "Full-funnel marketing optimization",
+      "Enterprise-scale campaign management",
+      "Advanced MarTech stack management",
+      "Dedicated marketing leadership"
+    ],
+    "features": [
+      {
+        "label": "Full-funnel marketing strategy",
+        "detail": "Awareness to retention across all channels"
+      },
+      {
+        "label": "Advanced programmatic advertising",
+        "detail": "Automated bidding and audience optimization"
+      },
+      {
+        "label": "Marketing technology stack management",
+        "detail": "Platform integration and optimization"
+      },
+      {
+        "label": "PR and communications strategy",
+        "detail": "Media relations and thought leadership"
+      },
+      {
+        "label": "Executive thought leadership campaigns",
+        "detail": "C-level positioning and content strategy"
+      },
+      {
+        "label": "Dedicated marketing team",
+        "detail": "Senior strategists exclusively assigned"
+      },
+      {
+        "label": "Custom attribution and analytics",
+        "detail": "Enterprise reporting and insights platform"
+      }
+    ],
+    "price": {
+      "monthly": 18000,
+      "notes": "Custom enterprise pricing based on scope and ad spend"
+    },
+    "badges": [
+      "Premium"
+    ],
+    "sla": "Dedicated account management with weekly strategy sessions"
+  },
+  {
+    "id": "seo-essential",
+    "service": "seo",
+    "name": "SEO Foundation Package",
+    "tier": "Essential",
+    "summary": "Essential technical SEO and local optimization for small businesses starting their search journey.",
+    "idealFor": "Small businesses starting with SEO and local search optimization",
+    "outcomes": [
+      "Improved local search visibility",
+      "Technical SEO foundation established",
+      "Basic keyword ranking improvements",
+      "Google Business Profile optimization"
+    ],
+    "features": [
+      {
+        "label": "Technical SEO audit and fixes",
+        "detail": "Comprehensive site health analysis"
+      },
+      {
+        "label": "Keyword research and strategy",
+        "detail": "Target keyword identification and mapping"
+      },
+      {
+        "label": "On-page optimization",
+        "detail": "Up to 20 pages optimized"
+      },
+      {
+        "label": "Local SEO setup and optimization",
+        "detail": "Google Business Profile and citations"
+      },
+      {
+        "label": "Monthly ranking and traffic reports",
+        "detail": "Performance tracking and insights"
+      }
+    ],
+    "price": {
+      "monthly": 2500,
+      "notes": "Includes initial technical audit"
+    },
+    "badges": [
+      "Great for Local"
+    ],
+    "sla": "Monthly reports delivered by 5th of each month",
+    "popular": true
+  },
+  {
+    "id": "seo-professional",
+    "service": "seo",
+    "name": "Advanced SEO Package",
+    "tier": "Professional",
+    "summary": "Comprehensive SEO with content optimization, link building, and competitive market focus.",
+    "idealFor": "Growing businesses competing in competitive markets for organic visibility",
+    "outcomes": [
+      "Top 3 rankings for target keywords",
+      "50-100% increase in organic traffic",
+      "Enhanced content SEO performance",
+      "Competitive advantage in search"
+    ],
+    "features": [
+      {
+        "label": "Comprehensive technical SEO",
+        "detail": "Advanced technical optimization and monitoring"
+      },
+      {
+        "label": "Content SEO and optimization",
+        "detail": "Content strategy aligned with search intent"
+      },
+      {
+        "label": "Link building and digital PR",
+        "detail": "Authority building through quality backlinks"
+      },
+      {
+        "label": "AI SEO and featured snippet optimization",
+        "detail": "Optimization for voice search and AI"
+      },
+      {
+        "label": "E-commerce or marketplace SEO",
+        "detail": "Product page and category optimization"
+      },
+      {
+        "label": "Advanced analytics and reporting",
+        "detail": "Custom dashboards and insights"
+      }
+    ],
+    "price": {
+      "monthly": 5500,
+      "notes": "Includes quarterly strategy sessions"
+    },
+    "badges": [
+      "Most Comprehensive"
+    ],
+    "sla": "Weekly progress reports, monthly strategy calls"
+  },
+  {
+    "id": "seo-enterprise",
+    "service": "seo",
+    "name": "Enterprise SEO Solutions",
+    "tier": "Enterprise",
+    "summary": "Enterprise-scale SEO with dedicated strategist and advanced international optimization.",
+    "idealFor": "Large organizations with complex SEO needs and international presence",
+    "outcomes": [
+      "Enterprise-scale organic visibility",
+      "International market penetration",
+      "Advanced technical SEO architecture",
+      "Dedicated SEO team and strategy"
+    ],
+    "features": [
+      {
+        "label": "Enterprise-level technical SEO",
+        "detail": "Large-scale technical optimization"
+      },
+      {
+        "label": "International and multi-site SEO",
+        "detail": "Global SEO strategy and implementation"
+      },
+      {
+        "label": "Advanced AI and schema optimization",
+        "detail": "Cutting-edge SEO technology implementation"
+      },
+      {
+        "label": "Large-scale content optimization",
+        "detail": "Content at scale with SEO focus"
+      },
+      {
+        "label": "Custom reporting and dashboards",
+        "detail": "Enterprise analytics and insights"
+      },
+      {
+        "label": "Dedicated SEO strategist",
+        "detail": "Senior strategist exclusively for your account"
+      }
+    ],
+    "price": {
+      "monthly": 12000,
+      "notes": "Custom enterprise pricing available"
+    },
+    "badges": [
+      "Enterprise"
+    ],
+    "sla": "Dedicated account management with weekly touchpoints"
+  },
+  {
+    "id": "video-essential",
+    "service": "video",
+    "name": "Brand Video Essentials",
+    "tier": "Essential",
+    "summary": "Professional video content foundation that tells your story and drives engagement.",
+    "idealFor": "Small businesses needing professional video content but with limited budget",
+    "outcomes": [
+      "Professional brand credibility through video",
+      "Increased engagement and conversion rates",
+      "Multi-platform video content library",
+      "Enhanced storytelling and messaging"
+    ],
+    "features": [
+      {
+        "label": "1 professional brand video",
+        "detail": "2-3 minutes, fully produced"
+      },
+      {
+        "label": "Script development & storyboarding",
+        "detail": "Professional pre-production planning"
+      },
+      {
+        "label": "Professional filming & editing",
+        "detail": "Single-camera setup with professional quality"
+      },
+      {
+        "label": "Social media cutdowns",
+        "detail": "5 versions optimized for different platforms"
+      },
+      {
+        "label": "Basic motion graphics",
+        "detail": "Titles, lower thirds, and simple animations"
+      },
+      {
+        "label": "Multiple format delivery",
+        "detail": "Web, social, and presentation formats"
+      }
+    ],
+    "price": {
+      "setup": 8500,
+      "notes": "Project-based pricing, additional videos available"
+    },
+    "badges": [
+      "Great for Startups"
+    ],
+    "sla": "2-3 week delivery from concept to final delivery",
+    "popular": true
+  },
+  {
+    "id": "video-professional",
+    "service": "video",
+    "name": "Content Video Library",
+    "tier": "Professional",
+    "summary": "Consistent video content production with multi-platform optimization and performance tracking.",
+    "idealFor": "Growing businesses needing consistent video content for marketing and sales",
+    "outcomes": [
+      "Consistent video content pipeline",
+      "Multi-platform audience engagement",
+      "Professional video marketing presence",
+      "Measurable video performance improvement"
+    ],
+    "features": [
+      {
+        "label": "4 videos per quarter",
+        "detail": "Testimonials, explainers, product demos"
+      },
+      {
+        "label": "Social media optimization",
+        "detail": "Platform-specific versions and formats"
+      },
+      {
+        "label": "Platform-specific formatting",
+        "detail": "YouTube, LinkedIn, Instagram, TikTok ready"
+      },
+      {
+        "label": "Basic analytics tracking",
+        "detail": "Performance monitoring across platforms"
+      },
+      {
+        "label": "Content calendar integration",
+        "detail": "Coordinated with overall marketing strategy"
+      },
+      {
+        "label": "Professional editing and motion graphics",
+        "detail": "Advanced post-production quality"
+      },
+      {
+        "label": "Quarterly strategy sessions",
+        "detail": "Video strategy alignment and optimization"
+      }
+    ],
+    "price": {
+      "setup": 5000,
+      "monthly": 6500,
+      "notes": "Includes quarterly planning and strategy sessions"
+    },
+    "badges": [
+      "Most Popular"
+    ],
+    "sla": "Video delivery within 2 weeks, monthly performance reviews"
+  },
+  {
+    "id": "video-enterprise",
+    "service": "video",
+    "name": "Video Marketing System",
+    "tier": "Enterprise",
+    "summary": "Unlimited video production with dedicated team and comprehensive distribution strategy.",
+    "idealFor": "Large organizations with comprehensive video needs across all marketing channels",
+    "outcomes": [
+      "Complete video marketing ecosystem",
+      "Unlimited professional video capability",
+      "Advanced distribution and optimization",
+      "Dedicated video marketing partnership"
+    ],
+    "features": [
+      {
+        "label": "Unlimited video production",
+        "detail": "Full video team at your disposal"
+      },
+      {
+        "label": "Multi-platform distribution strategy",
+        "detail": "Comprehensive channel optimization"
+      },
+      {
+        "label": "Advanced motion graphics & animation",
+        "detail": "Cinematic quality post-production"
+      },
+      {
+        "label": "Performance tracking & optimization",
+        "detail": "Advanced analytics and ROI measurement"
+      },
+      {
+        "label": "Dedicated video strategist",
+        "detail": "Senior video marketing specialist assigned"
+      },
+      {
+        "label": "Live streaming and event coverage",
+        "detail": "Real-time video production capabilities"
+      },
+      {
+        "label": "Custom video marketing automation",
+        "detail": "Integrated video distribution workflows"
+      }
+    ],
+    "price": {
+      "setup": 15000,
+      "monthly": 12500,
+      "notes": "Custom enterprise pricing based on volume and complexity"
+    },
+    "badges": [
+      "Premium"
+    ],
+    "sla": "Dedicated account management with weekly strategy calls"
+  },
+  {
+    "id": "webdev-essential",
+    "service": "webdev",
+    "name": "Website Essentials Package",
+    "tier": "Essential",
+    "summary": "Professional website foundation that converts visitors into customers.",
+    "idealFor": "Small businesses needing a professional web presence that drives results",
+    "outcomes": [
+      "Professional brand credibility online",
+      "Mobile-optimized user experience",
+      "SEO-ready technical foundation",
+      "Lead capture and conversion tracking"
+    ],
+    "features": [
+      {
+        "label": "Custom responsive website",
+        "detail": "Up to 10 pages, mobile-optimized"
+      },
+      {
+        "label": "Content management system setup",
+        "detail": "Easy-to-update CMS platform"
+      },
+      {
+        "label": "Basic SEO implementation",
+        "detail": "On-page optimization and site structure"
+      },
+      {
+        "label": "Contact forms and analytics",
+        "detail": "Lead capture and performance tracking"
+      },
+      {
+        "label": "SSL and security setup",
+        "detail": "Professional security implementation"
+      },
+      {
+        "label": "3 months of maintenance included",
+        "detail": "Updates, monitoring, and support"
+      }
+    ],
+    "price": {
+      "setup": 8500,
+      "monthly": 500,
+      "notes": "Includes hosting setup and domain configuration"
+    },
+    "badges": [
+      "Perfect for Small Business"
+    ],
+    "sla": "2-3 week delivery, 24-hour support response",
+    "popular": true
+  },
+  {
+    "id": "webdev-professional",
+    "service": "webdev",
+    "name": "Business Growth Website Package",
+    "tier": "Professional",
+    "summary": "Advanced website with e-commerce and integrations that scales with your business.",
+    "idealFor": "Growing businesses with advanced functionality and integration needs",
+    "outcomes": [
+      "Scalable platform architecture",
+      "Advanced conversion optimization",
+      "Multi-platform integrations",
+      "Enhanced user experience"
+    ],
+    "features": [
+      {
+        "label": "Custom website with advanced features",
+        "detail": "Up to 25 pages with complex functionality"
+      },
+      {
+        "label": "E-commerce functionality or advanced forms",
+        "detail": "Online sales or lead generation systems"
+      },
+      {
+        "label": "Performance optimization",
+        "detail": "Core Web Vitals optimization"
+      },
+      {
+        "label": "Advanced analytics and tracking",
+        "detail": "Conversion tracking and user behavior analysis"
+      },
+      {
+        "label": "Multi-language support option",
+        "detail": "International market expansion ready"
+      },
+      {
+        "label": "6 months of maintenance included",
+        "detail": "Priority support and updates"
+      }
+    ],
+    "price": {
+      "setup": 18000,
+      "monthly": 1200,
+      "notes": "Custom pricing for complex integrations"
+    },
+    "badges": [
+      "Most Popular"
+    ],
+    "sla": "3-4 week delivery, same-day support response",
+    "popular": true
+  },
+  {
+    "id": "webdev-enterprise",
+    "service": "webdev",
+    "name": "Enterprise Web Solutions Package",
+    "tier": "Enterprise",
+    "summary": "Custom web applications with enterprise security and dedicated development team.",
+    "idealFor": "Large organizations with complex requirements and custom application needs",
+    "outcomes": [
+      "Enterprise-grade security and compliance",
+      "Custom application development",
+      "Scalable architecture for growth",
+      "Dedicated development partnership"
+    ],
+    "features": [
+      {
+        "label": "Custom web application development",
+        "detail": "Tailored solutions for unique business needs"
+      },
+      {
+        "label": "Advanced integrations and APIs",
+        "detail": "Enterprise system connectivity"
+      },
+      {
+        "label": "Enterprise-level security and hosting",
+        "detail": "Bank-level security and uptime"
+      },
+      {
+        "label": "Custom dashboard and admin systems",
+        "detail": "Powerful management interfaces"
+      },
+      {
+        "label": "Ongoing development and optimization",
+        "detail": "Continuous improvement and feature development"
+      },
+      {
+        "label": "Dedicated development team",
+        "detail": "Senior developers exclusively for your project"
+      }
+    ],
+    "price": {
+      "setup": 45000,
+      "monthly": 3500,
+      "notes": "Custom enterprise pricing based on scope"
+    },
+    "badges": [
+      "Enterprise Grade"
+    ],
+    "sla": "4-6 week delivery, dedicated account management"
+  }
+]

@@ -1,1 +1,17 @@
-{ "slugs": ["local-lead-capture", "content-growth", "local-lead-capture"] }
+{
+  "slugs": [
+    "digital-transformation-starter",
+    "ecommerce-accelerator",
+    "event-launch-domination",
+    "local-business-growth",
+    "thought-leadership-authority"
+  ],
+  "serviceFeaturedSlugs": [
+    "content-production-featured",
+    "lead-generation-featured",
+    "marketing-featured",
+    "seo-services-featured",
+    "video-production-featured",
+    "web-development-featured"
+  ]
+}

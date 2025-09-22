@@ -1,29 +1,606 @@
 [
   {
     "slug": "reputation-management",
+    "service": "marketing",
     "name": "Reputation Management",
     "description": "Automate review requests and monitor responses.",
+    "billing": "monthly",
     "price": { "monthly": 150, "currency": "USD" },
     "category": "Reputation"
   },
   {
     "slug": "email-crm-starter",
+    "service": "leadgen",
     "name": "Email/CRM Starter",
     "description": "Basic flows and CRM wiring for lead capture.",
-    "price": { "oneTime": 800, "currency": "USD" },
+    "billing": "one-time",
+    "price": { "setup": 800, "currency": "USD" },
     "category": "CRM"
   },
   {
     "slug": "podcasting",
+    "service": "content",
     "name": "Podcasting Add-On",
     "description": "Repurpose content into a monthly podcast.",
+    "billing": "monthly",
+    "price": { "monthly": 1500, "currency": "USD" },
     "category": "Content"
   },
   {
     "slug": "social-lite",
+    "service": "content",
     "name": "Social Lite",
     "description": "2 posts/week across 2 platforms.",
+    "billing": "monthly",
     "price": { "monthly": 250, "currency": "USD" },
     "category": "Social"
+  },
+  {
+    "slug": "content-brand-identity-kit",
+    "service": "content",
+    "name": "Brand Identity Starter Kit",
+    "description": "Complete brand foundation with logo, guidelines, and asset library for consistent content creation.",
+    "deliverables": [
+      { "label": "Logo design and brand guidelines", "detail": "Primary logo, variations, usage rules" },
+      { "label": "Business card and letterhead design", "detail": "Professional stationery suite" },
+      { "label": "Brand color palette and typography", "detail": "Color codes, font specifications" },
+      { "label": "Basic brand asset library", "detail": "Templates and brand elements" }
+    ],
+    "billing": "one-time",
+    "price": { "setup": 4500, "currency": "USD" },
+    "pairsBestWith": ["Essential", "Professional"],
+    "popular": true
+  },
+  {
+    "slug": "content-professional-photography",
+    "service": "content",
+    "name": "Professional Photography Package",
+    "description": "High-quality photography for products, team, and brand storytelling content.",
+    "deliverables": [
+      { "label": "Full-day product or corporate photography", "detail": "8-hour professional shoot" },
+      { "label": "50+ edited images", "detail": "Professional editing and retouching" },
+      { "label": "Usage rights and licensing", "detail": "Commercial use license included" },
+      { "label": "Multiple format optimization", "detail": "Web, print, and social formats" }
+    ],
+    "billing": "one-time",
+    "price": { "setup": 3500, "currency": "USD" },
+    "pairsBestWith": ["Professional", "Enterprise"]
+  },
+  {
+    "slug": "content-audit-strategy",
+    "service": "content",
+    "name": "Content Audit & Strategy Package",
+    "description": "Comprehensive analysis of existing content with strategic roadmap for improvement.",
+    "deliverables": [
+      { "label": "Complete content audit", "detail": "Analysis of current content assets" },
+      { "label": "Competitive analysis", "detail": "Benchmark against industry leaders" },
+      { "label": "6-month strategy roadmap", "detail": "Detailed implementation plan" },
+      { "label": "Editorial calendar template", "detail": "Workflows and approval processes" }
+    ],
+    "billing": "one-time",
+    "price": { "setup": 2500, "currency": "USD" },
+    "pairsBestWith": ["Essential", "Professional", "Enterprise"]
+  },
+  {
+    "slug": "content-podcast-production",
+    "service": "content",
+    "name": "Podcast Production Add-On",
+    "description": "Complete podcast setup and ongoing production for thought leadership content.",
+    "deliverables": [
+      { "label": "Podcast branding and setup", "detail": "Logo, intro music, hosting platform" },
+      { "label": "Monthly episode production", "detail": "2 episodes per month, full editing" },
+      { "label": "Show notes and transcription", "detail": "SEO-optimized episode descriptions" },
+      { "label": "Distribution and promotion", "detail": "Multi-platform publishing and social promotion" }
+    ],
+    "billing": "hybrid",
+    "price": { "setup": 4000, "monthly": 1500, "currency": "USD" },
+    "pairsBestWith": ["Professional", "Enterprise"],
+    "popular": true
+  },
+  {
+    "slug": "content-social-management",
+    "service": "content",
+    "name": "Social Media Management Add-On",
+    "description": "Daily social media management with community engagement and performance optimization.",
+    "deliverables": [
+      { "label": "Daily social posting", "detail": "3-5 platforms with optimized content" },
+      { "label": "Community management", "detail": "2 hours daily engagement and response" },
+      { "label": "Strategy optimization", "detail": "Platform-specific best practices" },
+      { "label": "Monthly social analytics", "detail": "Performance tracking and insights" }
+    ],
+    "billing": "monthly",
+    "price": { "monthly": 2500, "currency": "USD" },
+    "pairsBestWith": ["Essential", "Professional"],
+    "popular": true
+  },
+  {
+    "slug": "content-video-production",
+    "service": "content",
+    "name": "Video Content Production Add-On",
+    "description": "Professional video content creation for enhanced storytelling and engagement.",
+    "deliverables": [
+      { "label": "Monthly video production", "detail": "4 videos per month (2–5 minutes each)" },
+      { "label": "Script & storyboard", "detail": "Professional pre-production planning" },
+      { "label": "Filming and editing", "detail": "Multi-camera setup with advanced editing" },
+      { "label": "Multi-platform optimization", "detail": "Versions for web, social, and presentations" }
+    ],
+    "billing": "monthly",
+    "price": { "monthly": 4500, "currency": "USD" },
+    "pairsBestWith": ["Professional", "Enterprise"]
+  },
+  {
+    "slug": "leadgen-lead-magnet-kit",
+    "service": "leadgen",
+    "name": "Lead Magnet Creation Package",
+    "description": "High-converting lead magnets with landing pages and email sequences to capture quality leads.",
+    "deliverables": [
+      { "label": "3 lead magnets", "detail": "Ebooks, guides, or tools for your audience" },
+      { "label": "Landing pages", "detail": "Conversion-optimized pages for each magnet" },
+      { "label": "Email automation", "detail": "5–7 message nurture per magnet" },
+      { "label": "Performance tracking", "detail": "Conversion and engagement analytics" }
+    ],
+    "billing": "one-time",
+    "price": { "setup": 3500, "currency": "USD" },
+    "pairsBestWith": ["Essential", "Professional"],
+    "popular": true
+  },
+  {
+    "slug": "leadgen-webinar-system",
+    "service": "leadgen",
+    "name": "Webinar Success Package",
+    "description": "Complete webinar planning and execution system for high-quality lead generation.",
+    "deliverables": [
+      { "label": "Planning & setup", "detail": "Platform, registration, technical setup" },
+      { "label": "Promotion", "detail": "Multi-channel campaign design" },
+      { "label": "Journey automation", "detail": "Registration & follow-up" },
+      { "label": "Post-event content", "detail": "Replay, highlights, nurture" }
+    ],
+    "billing": "one-time",
+    "price": { "setup": 5500, "currency": "USD" },
+    "pairsBestWith": ["Professional", "Enterprise"]
+  },
+  {
+    "slug": "leadgen-sales-funnel-audit",
+    "service": "leadgen",
+    "name": "Sales Funnel Optimization Audit",
+    "description": "Comprehensive analysis of your lead generation funnel with actionable improvement recommendations.",
+    "deliverables": [
+      { "label": "Funnel analysis", "detail": "End-to-end conversion path review" },
+      { "label": "CRO recommendations", "detail": "Prioritized fixes and experiments" },
+      { "label": "A/B testing plan", "detail": "Systematic testing roadmap" },
+      { "label": "Implementation roadmap", "detail": "Phased action plan" }
+    ],
+    "billing": "one-time",
+    "price": { "setup": 2500, "currency": "USD" },
+    "pairsBestWith": ["Essential", "Professional", "Enterprise"]
+  },
+  {
+    "slug": "leadgen-advanced-attribution",
+    "service": "leadgen",
+    "name": "Advanced Attribution Modeling",
+    "description": "Enterprise-level lead tracking and multi-touch attribution for complex sales cycles.",
+    "deliverables": [
+      { "label": "Attribution setup", "detail": "Multi-touch modeling and tracking" },
+      { "label": "Advanced analytics", "detail": "Custom dashboards and reports" },
+      { "label": "Cross-channel tracking", "detail": "Unified source-of-truth" },
+      { "label": "Reporting development", "detail": "Executive-level insights" }
+    ],
+    "billing": "hybrid",
+    "price": { "setup": 6500, "monthly": 2500, "currency": "USD" },
+    "dependencies": ["Requires access to all marketing platforms"],
+    "pairsBestWith": ["Professional", "Enterprise"]
+  },
+  {
+    "slug": "leadgen-account-based-marketing",
+    "service": "leadgen",
+    "name": "Account-Based Marketing (ABM) Add-On",
+    "description": "Targeted lead generation for enterprise accounts with personalized campaigns.",
+    "deliverables": [
+      { "label": "Target account research", "detail": "Strategic selection and profiling" },
+      { "label": "Personalized campaigns", "detail": "Account-specific messaging and content" },
+      { "label": "Multi-channel execution", "detail": "Coordinated outreach across channels" },
+      { "label": "Account-level tracking", "detail": "Performance analytics" }
+    ],
+    "billing": "monthly",
+    "price": { "monthly": 8500, "currency": "USD" },
+    "dependencies": ["Campaign costs billed separately"],
+    "pairsBestWith": ["Professional", "Enterprise"],
+    "popular": true
+  },
+  {
+    "slug": "leadgen-international-expansion",
+    "service": "leadgen",
+    "name": "International Lead Generation",
+    "description": "Multi-market lead generation expansion with localized campaigns and compliance.",
+    "deliverables": [
+      { "label": "Market research", "detail": "Regional opportunity analysis" },
+      { "label": "Localized campaigns", "detail": "Culture & language-specific" },
+      { "label": "Compliance", "detail": "GDPR and local regulations" },
+      { "label": "Multi-language nurture", "detail": "Localized sequences" }
+    ],
+    "billing": "hybrid",
+    "price": { "setup": 5500, "monthly": 2500, "currency": "USD" },
+    "dependencies": ["+$2,500/month per additional market"],
+    "pairsBestWith": ["Enterprise"]
+  },
+  {
+    "slug": "marketing-creative-ad-pack",
+    "service": "marketing",
+    "name": "Creative Ad Pack",
+    "description": "High-converting ad creative variations with A/B testing for improved campaign performance.",
+    "deliverables": [
+      { "label": "10 ad creatives + variations", "detail": "Copy and visuals for testing" },
+      { "label": "Platform optimization", "detail": "Google, Meta, LinkedIn" },
+      { "label": "A/B testing", "detail": "Systematic testing and analysis" },
+      { "label": "Creative reporting", "detail": "Insights and recommendations" }
+    ],
+    "billing": "one-time",
+    "price": { "setup": 2500, "currency": "USD" },
+    "pairsBestWith": ["Essential", "Professional"],
+    "popular": true
+  },
+  {
+    "slug": "marketing-martech-audit",
+    "service": "marketing",
+    "name": "Marketing Technology Audit",
+    "description": "Comprehensive evaluation of your marketing stack with optimization recommendations.",
+    "deliverables": [
+      { "label": "MarTech stack assessment", "detail": "Platform evaluation and gaps" },
+      { "label": "Integration optimization", "detail": "Data flow & workflow improvements" },
+      { "label": "ROI analysis", "detail": "Cost optimization opportunities" },
+      { "label": "Implementation roadmap", "detail": "Prioritized plan" }
+    ],
+    "billing": "one-time",
+    "price": { "setup": 4500, "currency": "USD" },
+    "pairsBestWith": ["Professional", "Enterprise"]
+  },
+  {
+    "slug": "marketing-competitive-intelligence",
+    "service": "marketing",
+    "name": "Competitive Intelligence Package",
+    "description": "Advanced competitor monitoring and analysis with strategic recommendations.",
+    "deliverables": [
+      { "label": "Competitor research", "detail": "Deep-dive analysis" },
+      { "label": "Positioning assessment", "detail": "Landscape and opportunities" },
+      { "label": "Campaign recommendations", "detail": "Tactical insights" },
+      { "label": "Quarterly reports", "detail": "Ongoing monitoring" }
+    ],
+    "billing": "hybrid",
+    "price": { "setup": 3500, "monthly": 1500, "currency": "USD" },
+    "pairsBestWith": ["Professional", "Enterprise"]
+  },
+  {
+    "slug": "marketing-international-expansion",
+    "service": "marketing",
+    "name": "International Marketing Expansion",
+    "description": "Multi-market marketing strategy and execution for global expansion.",
+    "deliverables": [
+      { "label": "Market entry strategy", "detail": "Regional planning" },
+      { "label": "Localized campaigns", "detail": "Culture/language-specific" },
+      { "label": "Compliance & adaptation", "detail": "Regional regulations" },
+      { "label": "Multi-language management", "detail": "Ongoing optimization" }
+    ],
+    "billing": "hybrid",
+    "price": { "setup": 8500, "monthly": 3500, "currency": "USD" },
+    "dependencies": ["+$3,500/month per additional market"],
+    "pairsBestWith": ["Enterprise"]
+  },
+  {
+    "slug": "marketing-rapid-campaign-launch",
+    "service": "marketing",
+    "name": "Rapid Campaign Launch",
+    "description": "Expedited campaign deployment for time-sensitive marketing opportunities.",
+    "deliverables": [
+      { "label": "2-week launch guarantee", "detail": "Accelerated setup and deployment" },
+      { "label": "Priority resources", "detail": "Expedited cross-channel setup" },
+      { "label": "Priority optimization", "detail": "Daily monitoring & adjustments" },
+      { "label": "Quick-win focus", "detail": "Immediate performance improvements" }
+    ],
+    "billing": "one-time",
+    "price": { "setup": 5000, "currency": "USD" },
+    "dependencies": ["+50% surcharge on base package rate during launch period"],
+    "pairsBestWith": ["Professional", "Enterprise"],
+    "popular": true
+  },
+  {
+    "slug": "marketing-crisis-communications",
+    "service": "marketing",
+    "name": "Crisis Communications Package",
+    "description": "24/7 crisis response and reputation management for brand protection.",
+    "deliverables": [
+      { "label": "Crisis plan development", "detail": "Response strategy and protocols" },
+      { "label": "Media relations", "detail": "Stakeholder communication" },
+      { "label": "24/7 response support", "detail": "Immediate team activation" },
+      { "label": "Reputation monitoring", "detail": "Real-time brand tracking" }
+    ],
+    "billing": "hybrid",
+    "price": { "setup": 6500, "monthly": 2500, "currency": "USD" },
+    "dependencies": ["Activated only during crisis periods"],
+    "pairsBestWith": ["Enterprise"]
+  },
+  {
+    "slug": "seo-migration-support",
+    "service": "seo",
+    "name": "SEO Migration Support",
+    "description": "Comprehensive migration planning and execution to preserve rankings.",
+    "deliverables": [
+      { "label": "Pre-migration audit", "detail": "Complete assessment" },
+      { "label": "Migration plan & execution", "detail": "End-to-end oversight" },
+      { "label": "Post-migration monitoring", "detail": "30-day fixes" },
+      { "label": "Traffic recovery optimization", "detail": "Ranking recovery strategies" }
+    ],
+    "billing": "one-time",
+    "price": { "setup": 4500, "currency": "USD" },
+    "pairsBestWith": ["Professional", "Enterprise"],
+    "popular": true
+  },
+  {
+    "slug": "seo-international-setup",
+    "service": "seo",
+    "name": "International SEO Setup",
+    "description": "Multi-language and geographic targeting optimization for global expansion.",
+    "deliverables": [
+      { "label": "Hreflang implementation", "detail": "International targeting" },
+      { "label": "Multi-language optimization", "detail": "Localized content" },
+      { "label": "Geo targeting", "detail": "Country-specific setup" },
+      { "label": "Local market research", "detail": "Keywords for target markets" }
+    ],
+    "billing": "hybrid",
+    "price": { "setup": 3500, "monthly": 2000, "currency": "USD" },
+    "pairsBestWith": ["Professional", "Enterprise"]
+  },
+  {
+    "slug": "seo-emergency-audit",
+    "service": "seo",
+    "name": "Technical SEO Emergency Audit",
+    "description": "Urgent technical issue identification and resolution for critical SEO problems.",
+    "deliverables": [
+      { "label": "48-hour technical audit", "detail": "Emergency deep-dive" },
+      { "label": "Priority fixes", "detail": "Ranked list of critical issues" },
+      { "label": "Turnaround plan", "detail": "Immediate response steps" },
+      { "label": "Implementation support", "detail": "Guidance for fixes" }
+    ],
+    "billing": "one-time",
+    "price": { "setup": 2500, "currency": "USD" },
+    "pairsBestWith": ["Essential", "Professional", "Enterprise"]
+  },
+  {
+    "slug": "seo-penalty-recovery",
+    "service": "seo",
+    "name": "Google Penalty Recovery Service",
+    "description": "Comprehensive penalty analysis and recovery strategy for penalized websites.",
+    "deliverables": [
+      { "label": "Penalty analysis", "detail": "Detailed assessment" },
+      { "label": "Recovery strategy", "detail": "Step-by-step plan" },
+      { "label": "Technical & content fixes", "detail": "Remediation execution" },
+      { "label": "Reconsideration support", "detail": "Google request assistance" }
+    ],
+    "billing": "hybrid",
+    "price": { "setup": 5500, "monthly": 2500, "currency": "USD" },
+    "dependencies": ["Requires Google Search Console access"],
+    "pairsBestWith": ["Professional", "Enterprise"]
+  },
+  {
+    "slug": "seo-competitive-intelligence",
+    "service": "seo",
+    "name": "SEO Competitive Intelligence",
+    "description": "Advanced competitor analysis and strategic insights for competitive advantage.",
+    "deliverables": [
+      { "label": "Competitor SEO analysis", "detail": "Deep-dive research" },
+      { "label": "Gap analysis", "detail": "Opportunities vs competitors" },
+      { "label": "Competitive keyword mapping", "detail": "Targeting plan" },
+      { "label": "Quarterly intelligence", "detail": "Ongoing monitoring" }
+    ],
+    "billing": "hybrid",
+    "price": { "setup": 3500, "monthly": 1500, "currency": "USD" },
+    "pairsBestWith": ["Professional", "Enterprise"],
+    "popular": true
+  },
+  {
+    "slug": "seo-voice-search-optimization",
+    "service": "seo",
+    "name": "Voice Search Optimization",
+    "description": "Optimization for voice search and conversational queries.",
+    "deliverables": [
+      { "label": "Voice search research", "detail": "Conversational queries" },
+      { "label": "Conversational content", "detail": "Voice-ready structure" },
+      { "label": "Featured snippet optimization", "detail": "Answer-box focus" },
+      { "label": "Local voice optimization", "detail": "Near-me queries" }
+    ],
+    "billing": "monthly",
+    "price": { "monthly": 3500, "currency": "USD" },
+    "pairsBestWith": ["Professional", "Enterprise"]
+  },
+  {
+    "slug": "video-social-content-pack",
+    "service": "video",
+    "name": "Social Media Content Pack",
+    "description": "Comprehensive social video set optimized for platform engagement.",
+    "deliverables": [
+      { "label": "10 × 30s posts", "detail": "Engaging short-form" },
+      { "label": "5 × 1-min features", "detail": "Longer social clips" },
+      { "label": "30 × 15s reels", "detail": "IG/TikTok/Shorts ready" },
+      { "label": "Cutdowns & ratios", "detail": "16:9, 9:16, 1:1" },
+      { "label": "Thumbnails & captions", "detail": "Optimized assets" }
+    ],
+    "billing": "monthly",
+    "price": { "monthly": 4500, "currency": "USD" },
+    "pairsBestWith": ["Essential", "Professional"],
+    "popular": true
+  },
+  {
+    "slug": "video-ads-campaign-pack",
+    "service": "video",
+    "name": "Video Ads Campaign Package",
+    "description": "Performance-optimized video ads designed for testing and scaling paid campaigns.",
+    "deliverables": [
+      { "label": "6 × 15–30s variations", "detail": "Different hooks & CTAs" },
+      { "label": "Multi-platform formatting", "detail": "FB/IG/TikTok/LinkedIn/YouTube" },
+      { "label": "A/B testing assets", "detail": "Headlines & thumbnails" },
+      { "label": "Ad compliance", "detail": "Guideline adherence" }
+    ],
+    "billing": "one-time",
+    "price": { "setup": 5500, "currency": "USD" },
+    "pairsBestWith": ["Professional", "Enterprise"]
+  },
+  {
+    "slug": "video-ecommerce-product-kit",
+    "service": "video",
+    "name": "E-Commerce Product Video Kit",
+    "description": "Conversion-focused product videos for online retailers.",
+    "deliverables": [
+      { "label": "3 × 60s demos", "detail": "Detailed showcases" },
+      { "label": "6 × 30s lifestyle cutdowns", "detail": "Ads & social" },
+      { "label": "10 × 15s teasers", "detail": "Quick conversion clips" },
+      { "label": "360° product views", "detail": "Interactive showcases" },
+      { "label": "Marketplace formats", "detail": "Amazon/Shopify/Walmart" }
+    ],
+    "billing": "one-time",
+    "price": { "setup": 6000, "currency": "USD" },
+    "dependencies": ["Per product line"],
+    "pairsBestWith": ["Professional", "Enterprise"]
+  },
+  {
+    "slug": "video-event-content-pack",
+    "service": "video",
+    "name": "Event Content Package",
+    "description": "Comprehensive event documentation and promotion package for maximum ROI.",
+    "deliverables": [
+      { "label": "Highlight reel", "detail": "2–3 minute recap" },
+      { "label": "Speaker/session edits", "detail": "Up to 5 sessions" },
+      { "label": "Social snippets", "detail": "10 key-moment clips" },
+      { "label": "Testimonials", "detail": "3–5 attendee videos" },
+      { "label": "Branded motion graphics", "detail": "Event titles & lower thirds" }
+    ],
+    "billing": "one-time",
+    "price": { "setup": 7500, "currency": "USD" },
+    "dependencies": ["Event filming costs billed separately"],
+    "pairsBestWith": ["Professional", "Enterprise"],
+    "popular": true
+  },
+  {
+    "slug": "video-thought-leadership-series",
+    "service": "video",
+    "name": "Thought Leadership Series",
+    "description": "Executive positioning content for authority building and recognition.",
+    "deliverables": [
+      { "label": "6 × 2–3 min expert videos", "detail": "Batch-filmed" },
+      { "label": "12 × social pull-out clips", "detail": "15–30s highlights" },
+      { "label": "Branded intros/outros", "detail": "Series branding" },
+      { "label": "YouTube/LinkedIn optimization", "detail": "Thumbnails & metadata" }
+    ],
+    "billing": "one-time",
+    "price": { "setup": 5000, "currency": "USD" },
+    "dependencies": ["Per 6-episode series"],
+    "pairsBestWith": ["Professional", "Enterprise"]
+  },
+  {
+    "slug": "video-training-modules",
+    "service": "video",
+    "name": "Training & Onboarding Module Pack",
+    "description": "Professional training content for employee, partner, or customer education.",
+    "deliverables": [
+      { "label": "5 × 3–5 min modules", "detail": "Structured learning" },
+      { "label": "Animated callouts", "detail": "Step-by-step visuals" },
+      { "label": "Voiceover narration", "detail": "Professional talent" },
+      { "label": "LMS-compatible formats", "detail": "SCORM, MP4, streaming" }
+    ],
+    "billing": "one-time",
+    "price": { "setup": 6500, "currency": "USD" },
+    "dependencies": ["Per training series"],
+    "pairsBestWith": ["Professional", "Enterprise"]
+  },
+  {
+    "slug": "webdev-ecommerce-integration",
+    "service": "webdev",
+    "name": "E-commerce Integration Package",
+    "description": "Complete online store setup with payment processing and inventory management.",
+    "deliverables": [
+      { "label": "Cart & checkout", "detail": "Secure payments" },
+      { "label": "Payment gateways", "detail": "Stripe, PayPal, etc." },
+      { "label": "Inventory management", "detail": "Catalog & stock" },
+      { "label": "Order automation", "detail": "Fulfillment workflows" }
+    ],
+    "billing": "one-time",
+    "price": { "setup": 6500, "currency": "USD" },
+    "pairsBestWith": ["Essential", "Professional"],
+    "popular": true
+  },
+  {
+    "slug": "webdev-performance-optimization",
+    "service": "webdev",
+    "name": "Performance Optimization Package",
+    "description": "Advanced speed work to achieve 90+ Core Web Vitals scores.",
+    "deliverables": [
+      { "label": "Core Web Vitals", "detail": "LCP, INP, CLS improvements" },
+      { "label": "Speed optimization", "detail": "Faster load times" },
+      { "label": "Image & asset optimization", "detail": "Compression and delivery" },
+      { "label": "CDN setup", "detail": "Global distribution" }
+    ],
+    "billing": "one-time",
+    "price": { "setup": 3500, "currency": "USD" },
+    "pairsBestWith": ["Essential", "Professional", "Enterprise"]
+  },
+  {
+    "slug": "webdev-security-hardening",
+    "service": "webdev",
+    "name": "Security Hardening Package",
+    "description": "Enterprise-level security implementation with monitoring and threat protection.",
+    "deliverables": [
+      { "label": "Advanced security", "detail": "Multi-layer protocols" },
+      { "label": "SSL & encryption", "detail": "Certificate management" },
+      { "label": "Backup & recovery", "detail": "Automated daily backups" },
+      { "label": "Monitoring & alerts", "detail": "24/7 threat detection" }
+    ],
+    "billing": "hybrid",
+    "price": { "setup": 2500, "monthly": 600, "currency": "USD" },
+    "pairsBestWith": ["Professional", "Enterprise"]
+  },
+  {
+    "slug": "webdev-api-integration",
+    "service": "webdev",
+    "name": "API Integration Package",
+    "description": "Custom API development and third-party service integrations.",
+    "deliverables": [
+      { "label": "Custom APIs", "detail": "RESTful services" },
+      { "label": "3rd-party integrations", "detail": "CRM, email, payments" },
+      { "label": "Data synchronization", "detail": "Real-time sync" },
+      { "label": "Docs & testing", "detail": "Complete documentation" }
+    ],
+    "billing": "one-time",
+    "price": { "setup": 4500, "currency": "USD" },
+    "dependencies": ["Requires access to third-party systems"],
+    "pairsBestWith": ["Professional", "Enterprise"]
+  },
+  {
+    "slug": "webdev-maintenance-plus",
+    "service": "webdev",
+    "name": "Priority Maintenance & Support",
+    "description": "Enhanced maintenance with priority support and proactive monitoring.",
+    "deliverables": [
+      { "label": "Priority support", "detail": "2-hour response SLA" },
+      { "label": "Proactive monitoring", "detail": "24/7 uptime" },
+      { "label": "Monthly reports", "detail": "Analytics & recommendations" },
+      { "label": "Security updates", "detail": "Immediate patches" }
+    ],
+    "billing": "monthly",
+    "price": { "monthly": 800, "currency": "USD" },
+    "pairsBestWith": ["Essential", "Professional", "Enterprise"],
+    "popular": true
+  },
+  {
+    "slug": "webdev-conversion-optimization",
+    "service": "webdev",
+    "name": "Conversion Rate Optimization Add-On",
+    "description": "Data-driven optimization to increase website conversions and sales.",
+    "deliverables": [
+      { "label": "Conversion audit", "detail": "Comprehensive funnel review" },
+      { "label": "A/B testing", "detail": "Split tests for key pages" },
+      { "label": "UX improvements", "detail": "Data-backed changes" },
+      { "label": "Monthly reports", "detail": "Performance tracking" }
+    ],
+    "billing": "monthly",
+    "price": { "setup": 2500, "monthly": 1500, "currency": "USD" },
+    "pairsBestWith": ["Professional", "Enterprise"]
   }
 ]
