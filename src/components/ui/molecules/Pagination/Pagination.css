@@ -1,0 +1,95 @@
+.pagination-container {
+    display: flex;
+    justify-content: center;
+    padding: var(--spacing-md) 0;
+}
+
+.pagination-list {
+    display: inline-flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: var(--spacing-xs);
+}
+
+.pagination-list li {
+    flex: none;
+}
+
+.pagination-button {
+    font-family: var(--font-body);
+    font-size: var(--font-size-small);
+    line-height: 1.2;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    background: var(--background-theme-1);
+    color: var(--primary-text);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: background var(--transition-fast),
+        color var(--transition-fast),
+        border-color var(--transition-fast);
+}
+
+.pagination-button:hover:not(:disabled) {
+    background: var(--color-accent);
+    color: var(--color-off-white);
+    border-color: var(--color-accent-hover);
+}
+
+.pagination-button:focus {
+    outline: 2px solid var(--color-accent-hover);
+    outline-offset: 2px;
+}
+
+.pagination-button[disabled] {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background: var(--background-light-2);
+    color: var(--color-text-muted);
+    border-color: var(--background-light-2);
+}
+
+.pagination-button.active,
+.pagination-button[aria-current="page"] {
+    background: var(--color-accent);
+    color: var(--color-off-white);
+    border-color: var(--color-accent);
+}
+
+.pagination-ellipsis {
+    display: inline-block;
+    font-family: var(--font-body);
+    font-size: var(--font-size-small);
+    color: var(--color-text-muted);
+    padding: var(--spacing-xs) var(--spacing-sm);
+}
+
+/* Dark theme overrides */
+.dark .pagination-button {
+    background: var(--background-theme-2);
+    color: var(--primary-text);
+    border-color: var(--color-border-dark);
+}
+
+.dark .pagination-button:hover:not(:disabled) {
+    background: var(--color-accent-hover);
+    border-color: var(--color-accent-hover);
+}
+
+.dark .pagination-button[disabled] {
+    background: var(--background-medium);
+    border-color: var(--background-medium);
+    color: var(--color-text-muted-dark);
+}
+
+.dark .pagination-button.active,
+.dark .pagination-button[aria-current="page"] {
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+    color: var(--color-off-white);
+}
+
+.dark .pagination-ellipsis {
+    color: var(--color-text-muted-dark);
+}

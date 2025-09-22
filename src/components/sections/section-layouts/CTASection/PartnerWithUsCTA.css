@@ -1,0 +1,215 @@
+
+/* ============================
+   🌟 Partner With Us CTA Wrapper (Main Card)
+============================ */
+.partner-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: var(--spacing-md);
+    padding: var(--spacing-lg);
+    box-shadow: var(--shadow-md);
+    background: var(--color-variant-1);
+    color: var(--color-soft-black);
+    max-width: 100%;
+    transition: var(--transition-default);
+    border-radius: var(--border-radius-lg);
+}
+
+/* ✅ Dark Mode Support */
+.dark .partner-wrapper {
+    background: var(--color-dark-charcoal);
+    color: var(--color-off-white);
+    box-shadow: var(--shadow-dark);
+}
+
+/* ============================
+   🌟 Title Wrapper (Controls Width)
+============================ */
+.partner-title-wrapper {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-sm);
+    width: fit-content;
+    max-width: 100%;
+}
+
+/* ✅ Section Divider */
+.partner-title-divider {
+    width: 100%;
+    max-width: 100%;
+}
+
+/* ============================
+   🌟 Title (Centered & Responsive)
+============================ */
+.partner-title {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-h2);
+    font-weight: bold;
+    line-height: 1.3;
+    margin: 0 auto;
+    color: inherit;
+    text-align: center;
+    white-space: nowrap;
+}
+
+/* ============================
+   🌟 Description (Optional)
+============================ */
+.partner-description {
+    font-family: var(--font-body);
+    font-size: var(--font-size-body);
+    max-width: 700px;
+    text-align: center;
+    margin: 0 auto;
+    padding: 0 var(--spacing-md);
+    line-height: 1.5;
+    opacity: 0.85;
+    color: var(--color-dark-charcoal);
+}
+
+/* ✅ Dark Mode for Description */
+.dark .partner-description {
+    color: var(--color-light-grey);
+}
+
+/* ============================
+   🌟 Highlights List
+============================ */
+.partner-highlights {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--spacing-sm);
+    margin-top: var(--spacing-sm);
+    list-style: none;
+    padding: 0;
+}
+
+.partner-highlight-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    font-family: var(--font-body);
+    font-size: var(--font-size-body);
+    color: var(--color-dark-charcoal);
+}
+
+/* ✅ Dark Mode Support for Highlights */
+.dark .partner-highlight-item {
+    color: var(--color-light-grey);
+}
+
+/* ✅ Partner Highlight Icon */
+.partner-highlight-icon {
+    color: var(--color-accent);
+    font-size: var(--icon-size-md);
+}
+
+/* ============================
+   🌟 Label Section
+============================ */
+.partner-label-wrapper {
+    margin-top: var(--spacing-md);
+}
+
+.partner-label {
+    font-size: var(--font-size-h3);
+    font-weight: bold;
+    text-align: center;
+    color: var(--color-soft-black);
+}
+
+/* ✅ Dark Mode */
+.dark .partner-label {
+    color: var(--color-off-white);
+}
+
+/* ✅ Label List */
+.partner-label-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--spacing-sm);
+    margin-top: var(--spacing-sm);
+    list-style: none;
+    padding: 0;
+}
+
+.partner-label-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    font-family: var(--font-body);
+    font-size: var(--font-size-body);
+    color: var(--color-dark-charcoal);
+}
+
+/* ✅ Dark Mode Support for Label Items */
+.dark .partner-label-item {
+    color: var(--color-light-grey);
+}
+
+/* ✅ Label Icons */
+.partner-label-icon {
+    color: var(--color-accent);
+    font-size: var(--icon-size-sm);
+}
+
+/* ============================
+   🌟 CTA Button Wrapper
+============================ */
+.partner-cta {
+    margin-top: var(--spacing-md);
+}
+
+/* ============================
+   🌟 Responsive Adjustments
+============================ */
+
+/* ✅ Tablet */
+@media (max-width: 768px) {
+    .partner-wrapper {
+        padding: var(--spacing-md);
+    }
+
+    .partner-title {
+        font-size: var(--font-size-h3);
+    }
+
+    .partner-description {
+        font-size: var(--font-size-body);
+    }
+
+    .partner-highlights,
+    .partner-label-list {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+/* ✅ Mobile */
+@media (max-width: 480px) {
+    .partner-wrapper {
+        padding: var(--spacing-md);
+    }
+
+    .partner-title {
+        font-size: var(--font-size-h4);
+    }
+
+    .partner-description {
+        font-size: var(--font-size-body);
+    }
+
+    .partner-highlights,
+    .partner-label-list {
+        flex-direction: column;
+        align-items: center;
+    }
+}

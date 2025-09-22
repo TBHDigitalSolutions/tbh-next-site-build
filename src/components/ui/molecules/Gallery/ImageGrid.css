@@ -1,0 +1,163 @@
+/* ============================
+   ✅ Outer Container (FULLY CONTAINED + RESPONSIVE)
+============================ */
+.image-grid__container {
+    width: 100%;
+    height: 100%;
+    /* Match TwoColumnSection height */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    padding: var(--spacing-sm);
+
+}
+
+/* ============================
+   ✅ Main Image Grid (Fully Responsive)
+============================ */
+.image-grid {
+    display: grid;
+    width: 100%;
+    height: 100%;
+    /* Fully contained inside parent */
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm);
+    justify-items: center;
+    align-items: center;
+    border-radius: var(--radius-lg);
+    background: transparent;
+    box-shadow: var(--shadow-light);
+    box-sizing: border-box;
+    overflow: hidden;
+    /* Prevent images from overflowing */
+    transition: var(--transition-default);
+}
+
+/* ✅ Light/Dark Theme Handling */
+.light .image-grid {
+    background: var(--background-light);
+    box-shadow: var(--shadow-light);
+}
+
+.dark .image-grid {
+    background: var(--background-dark);
+    box-shadow: var(--shadow-dark);
+}
+
+/* ============================
+   ✅ Image Items (Fully Responsive, Centered)
+============================ */
+.image-grid-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 100px;
+    /* Consistent max width */
+    height: auto;
+    padding: var(--spacing-xs);
+    box-sizing: border-box;
+    transition: transform var(--transition-default);
+}
+
+/* ✅ Hover Animation */
+.image-grid-item:hover {
+    transform: var(--scale-sm);
+}
+
+/* ============================
+   ✅ Image Styling (Square, Balanced)
+============================ */
+.image-grid-img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1 / 1;
+    /* Perfect square */
+    object-fit: contain;
+    /* Maintain aspect ratio, contain inside box */
+    border-radius: var(--radius-md);
+    max-width: 80px;
+    max-height: 80px;
+    /* Prevent oversizing */
+    transition: opacity var(--transition-default);
+}
+
+/* ============================
+   ✅ Optional Labels (Hidden by Default)
+============================ */
+.image-grid-label {
+    margin-top: var(--spacing-xs);
+    font-size: var(--font-size-caption);
+    color: var(--color-dark-charcoal);
+    opacity: 0;
+    /* Hidden by default */
+    line-height: 1.3;
+    text-align: center;
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Dark Mode Label */
+.dark .image-grid-label {
+    color: var(--color-light-grey);
+}
+
+/* ✅ Visible Label */
+.image-grid-label.visible {
+    opacity: 0.8;
+}
+
+/* ============================
+   ✅ Column Management (Auto Responsive)
+============================ */
+.image-grid--cols-2 {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.image-grid--cols-3 {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.image-grid--cols-auto {
+    grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+}
+
+/* ============================
+   ✅ Responsive Adjustments (Tablet & Mobile)
+============================ */
+
+/* Tablet */
+@media (max-width: var(--breakpoint-md)) {
+    .image-grid {
+        gap: var(--spacing-xs);
+    }
+
+    .image-grid--cols-3,
+    .image-grid--cols-2 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .image-grid-item {
+        max-width: 70px;
+    }
+}
+
+/* Mobile */
+@media (max-width: var(--breakpoint-sm)) {
+    .image-grid {
+        gap: var(--spacing-xs);
+        padding: var(--spacing-xs);
+    }
+
+    .image-grid--cols-3,
+    .image-grid--cols-2 {
+        grid-template-columns: 1fr;
+    }
+
+    .image-grid-item {
+        max-width: 50px;
+    }
+}

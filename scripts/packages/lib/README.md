@@ -306,3 +306,53 @@ npm run dev
 
 No. If you’ve been using **npm**, keep using it—this pipeline works perfectly with npm.
 If you later feel pain from install time or disk usage, consider **pnpm**; otherwise there’s no reason to switch.
+---
+
+```json
+{
+  "scripts": {
+    "packages:clean": "rm -rf src/data/packages/__generated__",
+    "packages:compile-mdx": "tsx scripts/packages/lib/compile-mdx.ts",
+    "packages:attach-content": "tsx scripts/packages/lib/attach-content.ts",
+    "packages:build-search": "tsx scripts/packages/lib/build-search-index.ts",
+    "packages:export-packages": "tsx scripts/packages/lib/build-packages-json.ts",
+    "packages:build": "npm run packages:compile-mdx && npm run packages:attach-content && npm run packages:build-search && npm run packages:export-packages",
+    "packages:rebuild": "npm run packages:clean && npm run packages:build",
+    "packages:dev": "chokidar 'src/content/packages/**/*.{md,mdx}' 'src/data/packages/{bundles.json,addOns.json,featured.json}' 'src/data/packages/**/*-packages.ts' -c 'npm run packages:build'"
+  }
+}
+```
+
+### Run it
+
+```bash
+npm run packages:export-packages
+```
+
+### (Optional) Script chain
+
+If you want `packages.json` included in your full build, update your script:
+
+```json
+"packages:build": "npm run packages:compile-mdx && npm run packages:attach-content && npm run packages:build-search && npm run packages:export-packages"
+```
+
+Everything else in your pipeline can stay as-is.
+
+Re-run the same sequence:
+
+```bash
+npm run packages:compile-mdx
+npm run packages:attach-content
+npm run packages:build-search
+npm run packages:export-packages
+```
+
+### Expected logs (happy path)
+
+* **Compile MDX:** no “Duplicated slugs”
+* **Attach content:** “Attached content: 7” and **no** “No content match”
+* **Build search:** “Content entries: 24” (all featured pages counted)
+* **Export packages:** “Written: 18” (unchanged), and no warnings
+
+If you want, I can also provide a tiny guard script to **fail the build on duplicate slugs** with file paths, so this never slips in again.

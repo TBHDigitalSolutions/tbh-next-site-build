@@ -4,20 +4,19 @@
 import React, { useState } from "react";
 
 // ✅ Route-based hero (Products/Services is handled by the selector)
-import HeroSelector from "@/components/features/home/Hero/HeroSelector";
+import HeroSelector from "@/components/main-pages/Home/Hero/HeroSelector";
 
 // ✅ Core layout components
-import Divider from "@/components/core/layout/Divider/Divider";
+import Divider from "@/components/ui/atoms/Divider/Divider";
 
 // ✅ Section templates
-import AutoFlexSection from "@/components/sections/layouts/Flexbox/AutoFlexSection";
-import TwoColumnSection from "@/components/sections/layouts/TwoColumn/TwoColumnSection";
-import FullWidthSection from "@/components/sections/layouts/FullWidth/FullWidthSection";
-import FullWidthSection2 from "@/components/sections/layouts/FullWidth/FullWidthSection2";
+import AutoFlexSection from "@/components/sections/section-layouts/AutoFlexSection/AutoFlexSection";
+import TwoColumnSection from "@/components/sections/section-layouts/TwoColumnSection/TwoColumnSection";
+import FullWidthSection from "@/components/sections/section-layouts/FullWidthSection/FullWidthSection";
 
 // ✅ Feature modules
-import Integrations from "@/components/features/products-services/Integrations/Integrations";
-import QuoteCTA from "@/components/features/products-services/QuoteCTA/QuoteCTA";
+import Integrations from "@/components/main-pages/Products-Services/Integrations/Integrations";
+import QuoteCTA from "@/components/main-pages/Products-Services/QuoteCTA/QuoteCTA";
 
 // ✅ UI molecules and atoms
 import ServiceCard from "@/components/ui/molecules/Card/ServiceCard";
@@ -28,11 +27,11 @@ import QuoteFormModal from "@/components/ui/molecules/Modal/QuoteFormModal";
 import TestimonialSlider from "@/components/ui/organisms/Testimonials/TestimonialSlider";
 
 // ✅ CTA sections
-import PartnerWithUsCTA from "@/components/sections/templates/CTASection/PartnerWithUsCTA";
-import MarketingCTA from "@/components/features/products-services/Marketing/MarketingCTA";
+import PartnerWithUsCTA from "@/components/sections/section-layouts/CTASection/PartnerWithUsCTA";
+import MarketingCTA from "@/components/main-pages/Products-Services/Marketing/MarketingCTA";
 
 // ✅ Legacy components
-import DynamicServiceSection from "@/components/legacy/DynamicServiceSection";
+import DynamicServiceSection from "@/components/sections/section-layouts/DynamicServiceSection/DynamicServiceSection";
 
 // ✅ Gallery components
 import ImageGrid from "@/components/ui/molecules/Gallery/ImageGrid";
@@ -134,19 +133,19 @@ const ProductsServicesPage: React.FC = () => {
       <Divider />
 
       {/* CTAs & Modal */}
-      <FullWidthSection2>
+      <FullWidthSection>
         <QuoteCTA onOpenModal={() => setIsQuoteModalOpen(true)} />
-      </FullWidthSection2>
+      </FullWidthSection>
       <Divider />
 
-      <FullWidthSection2>
+      <FullWidthSection>
         <PartnerWithUsCTA />
-      </FullWidthSection2>
+      </FullWidthSection>
       <Divider />
 
-      <FullWidthSection2>
+      <FullWidthSection>
         <MarketingCTA />
-      </FullWidthSection2>
+      </FullWidthSection>
       <Divider />
 
       <QuoteFormModal

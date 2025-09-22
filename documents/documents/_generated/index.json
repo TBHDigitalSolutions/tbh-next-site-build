@@ -1,24 +1,45 @@
 {
   "version": 1,
-  "generatedAt": "2025-09-21T12:00:00.000Z",
+  "generatedAt": "2025-09-22T12:00:00.000Z",
   "root": "/documents/documents",
   "docs": [
     {
-      "path": "./project-documents_Handbook_2025-09-21.md",
-      "file": "project-documents_Handbook_2025-09-21.md",
-      "title": "Project Documents Handbook",
+      "path": "./documents-directory_QuickReferenceGuide_2025-09-22.md",
+      "file": "documents-directory_QuickReferenceGuide_2025-09-22.md",
+      "title": "Documents Directory – Quick Reference Guide",
       "domain": "project",
-      "main": "project-documents",
-      "qualifier": "Handbook",
-      "date": "2025-09-21",
+      "main": "documents-directory",
+      "qualifier": "QuickReferenceGuide",
+      "date": "2025-09-22",
       "status": "Approved",
       "owners": ["@conor"],
-      "tags": ["docs", "standards", "indexing"],
+      "tags": ["docs", "standards", "quick-reference"],
       "links": {
         "related": [
+          "./project-documents_Handbook_2025-09-21.md",
           "./documents-indexing-linking_Standard_2025-09-21.md",
           "./documents-directory_RefactorPlan_2025-09-21.md",
           "./generated-index_BuildSpec_2025-09-21.md"
+        ]
+      },
+      "spotlight": "Unified quick-reference for handbook, indexing standard, refactor plan, and build spec.",
+      "summary": "A compact, prompt-style guide and checklist for creating, updating, and refactoring docs under /documents/**."
+    },
+    {
+      "path": "./documents-directory_RefactorPlan_2025-09-21.md",
+      "file": "documents-directory_RefactorPlan_2025-09-21.md",
+      "title": "Documents Directory – Refactor Plan & Ideal Structure",
+      "domain": "project",
+      "main": "documents-directory",
+      "qualifier": "RefactorPlan",
+      "date": "2025-09-21",
+      "status": "Approved",
+      "owners": ["@conor"],
+      "tags": ["docs", "structure", "refactor"],
+      "links": {
+        "related": [
+          "./generated-index_BuildSpec_2025-09-21.md",
+          "./documents-directory_QuickReferenceGuide_2025-09-22.md"
         ]
       }
     },
@@ -35,24 +56,8 @@
       "tags": ["docs", "indexing", "links"],
       "links": {
         "related": [
-          "./generated-index_BuildSpec_2025-09-21.md"
-        ]
-      }
-    },
-    {
-      "path": "./documents-directory_RefactorPlan_2025-09-21.md",
-      "file": "documents-directory_RefactorPlan_2025-09-21.md",
-      "title": "Documents Directory – Refactor Plan & Ideal Structure",
-      "domain": "project",
-      "main": "documents-directory",
-      "qualifier": "RefactorPlan",
-      "date": "2025-09-21",
-      "status": "Approved",
-      "owners": ["@conor"],
-      "tags": ["docs", "structure", "refactor"],
-      "links": {
-        "related": [
-          "./generated-index_BuildSpec_2025-09-21.md"
+          "./generated-index_BuildSpec_2025-09-21.md",
+          "./documents-directory_QuickReferenceGuide_2025-09-22.md"
         ]
       }
     },
@@ -71,7 +76,28 @@
         "related": [
           "./project-documents_Handbook_2025-09-21.md",
           "./documents-indexing-linking_Standard_2025-09-21.md",
-          "./documents-directory_RefactorPlan_2025-09-21.md"
+          "./documents-directory_RefactorPlan_2025-09-21.md",
+          "./documents-directory_QuickReferenceGuide_2025-09-22.md"
+        ]
+      }
+    },
+    {
+      "path": "./project-documents_Handbook_2025-09-21.md",
+      "file": "project-documents_Handbook_2025-09-21.md",
+      "title": "Project Documents Handbook",
+      "domain": "project",
+      "main": "project-documents",
+      "qualifier": "Handbook",
+      "date": "2025-09-21",
+      "status": "Approved",
+      "owners": ["@conor"],
+      "tags": ["docs", "standards", "indexing"],
+      "links": {
+        "related": [
+          "./documents-indexing-linking_Standard_2025-09-21.md",
+          "./documents-directory_RefactorPlan_2025-09-21.md",
+          "./generated-index_BuildSpec_2025-09-21.md",
+          "./documents-directory_QuickReferenceGuide_2025-09-22.md"
         ]
       }
     },

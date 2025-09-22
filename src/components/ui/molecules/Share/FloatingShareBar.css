@@ -1,0 +1,50 @@
+/* ============================
+   🔗 Floating Share Bar Styles
+============================ */
+
+.floating-share-bar {
+    display: flex;
+    gap: var(--spacing-sm);
+}
+
+.floating-share-icon {
+    color: inherit;
+    transition: color var(--transition-default);
+}
+
+.floating-share-icon:hover {
+    color: var(--color-accent);
+}
+
+/* 📱 Vertical Floating Position */
+.position-left,
+.position-right {
+    position: fixed;
+    top: 33%;
+    z-index: var(--z-index-high);
+    flex-direction: column;
+    display: none;
+}
+
+@media (min-width: 1024px) {
+
+    .position-left,
+    .position-right {
+        display: flex;
+    }
+
+    .position-left {
+        left: var(--spacing-sm);
+    }
+
+    .position-right {
+        right: var(--spacing-sm);
+    }
+}
+
+/* 🧷 Inline usage */
+.position-inline {
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+}
