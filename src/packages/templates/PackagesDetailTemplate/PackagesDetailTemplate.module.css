@@ -114,3 +114,41 @@
     clip: rect(0 0 0 0);
     white-space: nowrap;
 }
+/* existing styles above ... */
+
+.mdx {
+    /* minimal prose defaults without relying on external libraries */
+    color: var(--color-text, #111827);
+    line-height: 1.7;
+}
+
+.mdx h2,
+.mdx h3,
+.mdx h4 {
+    margin-top: 1.25rem;
+    margin-bottom: 0.5rem;
+    line-height: 1.25;
+}
+
+.mdx p {
+    margin: 0.75rem 0;
+}
+
+.mdx ul,
+.mdx ol {
+    padding-left: 1.25rem;
+    margin: 0.75rem 0;
+}
+
+.mdx a {
+    color: var(--color-primary, #0ea5e9);
+    text-decoration: underline;
+}
+
+.mdx img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 0.5rem;
+}
+
+/* keep the rest of your existing CSS */

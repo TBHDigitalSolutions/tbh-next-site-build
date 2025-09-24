@@ -2,32 +2,63 @@
   "compilerOptions": {
     "target": "ES2020",
     "lib": ["dom", "dom.iterable", "esnext"],
-    "allowJs": false,
-    "skipLibCheck": true,
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "jsx": "preserve",
+
     "strict": true,
     "noEmit": true,
+    "skipLibCheck": true,
+    "allowJs": false,
     "esModuleInterop": true,
-    "module": "esnext",
-    "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "preserve",
+
+    /* Hardening / correctness */
+    "verbatimModuleSyntax": true,
+    "moduleDetection": "force",
+    "forceConsistentCasingInFileNames": true,
+    "useUnknownInCatchVariables": true,
     "incremental": true,
+
+    /* Path aliases */
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],
-      "@/app/*": ["app/*"],          // ← change this (or remove)
+
       "@/components/*": ["src/components/*"],
       "@/sections/*": ["src/components/sections/*"],
       "@/ui/*": ["src/components/ui/*"],
+
       "@/data/*": ["src/data/*"],
+      "@/packages/*": ["src/packages/*"],
+      "@/content/*": ["src/content/*"],
       "@/lib/*": ["src/lib/*"],
       "@/styles/*": ["src/styles/*"],
       "@/templates/*": ["src/templates/*"],
-      "@/types/*": ["src/types/*"]
+      "@/types/*": ["src/types/*"],
+      "@/hooks/*": ["src/hooks/*"],
+      "@/providers/*": ["src/providers/*"],
+      "@/search/*": ["src/search/*"],
+      "@/portfolio/*": ["src/portfolio/*"],
+      "@/booking/*": ["src/booking/*"],
+      "@/contexts/*": ["src/contexts/*"],
+      "@/mock/*": ["src/mock/*"]
+
+      /* Intentionally NO alias for "@/src/*" and NO "@/app/*"
+         to prevent future alias drift and catch bad imports. */
     },
+
     "plugins": [{ "name": "next" }]
   },
-  "include": ["next-env.d.ts", ".next/types/**/*.ts", "**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules"]
+  "include": [
+    "next-env.d.ts",
+    ".next/types/**/*.ts",
+    "**/*.ts",
+    "**/*.tsx"
+  ],
+  "exclude": [
+    "node_modules",
+    "**/__generated__/**"
+  ]
 }

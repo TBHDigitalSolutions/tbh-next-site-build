@@ -1,5 +1,6 @@
 // app/packages/[bundles]/page.tsx
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import styles from "../packages.module.css";
 
 // Data (SSOT)
@@ -13,9 +14,9 @@ export function generateStaticParams() {
   return BUNDLES.map((b) => ({ bundles: b.slug }));
 }
 
-// ---- Metadata ---------------------------------------------------------------
 type Params = { bundles: string };
 
+// ---- Metadata ---------------------------------------------------------------
 export function generateMetadata({ params }: { params: Params }): Metadata {
   const bundle = getBundleBySlug(params.bundles);
 
@@ -27,30 +28,35 @@ export function generateMetadata({ params }: { params: Params }): Metadata {
     };
   }
 
-  const absolute = (src: string) =>
+  // Prefer MDX-derived SEO when present
+  const anyBundle = bundle as any;
+  const title =
+    anyBundle?.seo?.title ??
+    `${anyBundle.title ?? bundle.name} • Integrated Growth Package`;
+
+  const description =
+    anyBundle?.seo?.description ??
+    anyBundle.subtitle ??
+    anyBundle.summary ??
+    bundle.description;
+
+  const image = anyBundle?.image ?? anyBundle?.cardImage;
+
+  const absolute = (src?: string) =>
     src?.startsWith?.("http")
       ? src
-      : `${process.env.NEXT_PUBLIC_SITE_URL ?? ""}${src}`;
+      : `${process.env.NEXT_PUBLIC_SITE_URL ?? ""}${src ?? ""}`;
 
   return {
-    title: `${bundle.name} • Integrated Growth Package`,
-    description:
-      (bundle as any).subtitle ||
-      (bundle as any).summary ||
-      bundle.description ||
-      `Complete ${bundle.name} solution with integrated services.`,
+    title,
+    description,
     alternates: { canonical: `/packages/${bundle.slug}` },
     openGraph: {
-      title: bundle.name,
-      description: (bundle as any).subtitle || (bundle as any).summary || bundle.description,
+      title,
+      description,
       type: "website",
-      ...(bundle.cardImage?.src && {
-        images: [
-          {
-            url: absolute(bundle.cardImage.src),
-            alt: bundle.cardImage.alt || bundle.name,
-          },
-        ],
+      ...(image?.src && {
+        images: [{ url: absolute(image.src), alt: image.alt || bundle.name }],
       }),
     },
   };
@@ -59,20 +65,7 @@ export function generateMetadata({ params }: { params: Params }): Metadata {
 // ---- Page -------------------------------------------------------------------
 export default function PackageDetailPage({ params }: { params: Params }) {
   const bundle = getBundleBySlug(params.bundles);
-
-  if (!bundle) {
-    return (
-      <main className={styles.page}>
-        <div className={styles.notFound}>
-          <h1>Package Not Found</h1>
-          <p>The package “{params.bundles}” could not be found.</p>
-          <a className={styles.backLink} href="/packages">
-            ← Back to Packages
-          </a>
-        </div>
-      </main>
-    );
-  }
+  if (!bundle) return notFound();
 
   return (
     <main className={styles.page}>

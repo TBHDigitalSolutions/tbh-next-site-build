@@ -13,35 +13,17 @@ import { serviceHref, normalizeServiceSlug } from "../../lib/registry";
 // Domain UI
 import { PriceBlock, PackageIncludesTable, AddOnsGrid } from "../../components";
 
-// Site UI (for parity with app/pages)
+// Site UI
 import ServiceHero from "@/components/sections/section-layouts/ServiceHero/ServiceHero";
 import CTASection from "@/components/sections/section-layouts/CTASection/CTASection";
 import FAQAccordion from "@/components/ui/organisms/FAQAccordion";
 import { StatsStrip } from "@/components/ui/organisms/StatsStrip/StatsStrip";
 
-/** Union: classic PackageBundle + extended fields used by app/pages */
 type MarketingBundleExtras = {
-  hero?: {
-    content?: {
-      title?: string;
-      subtitle?: string;
-      primaryCta?: { label: string; href: string };
-      secondaryCta?: { label: string; href: string };
-    };
-    background?: { type?: "image"; src?: string; alt?: string };
-  };
-  includedServices?: string[];
-  highlights?: string[];
-  outcomes?: { title?: string; variant?: "stats"; items?: Array<{ label: string; value: string }> };
-  pricing?: any; // may be { kind: "tiers", tiers: [...] } or { setup, monthly }
-  faq?: { title?: string; faqs?: Array<{ id: string; question: string; answer: string }> };
-  cta?: { title: string; subtitle?: string; primaryCta: { label: string; href: string }; secondaryCta?: { label: string; href: string }; layout?: "centered" | string };
-  cardImage?: { src?: string; alt?: string };
-  title?: string;  // some “integrated” bundles use title/subtitle/summary naming
-  subtitle?: string;
-  summary?: string;
-  category?: string;
+  // ... (unchanged)
+  content?: { html?: string }; // <-- allow MDX HTML attachment
 };
+
 export type PackagesDetailTemplateProps = {
   bundle: PackageBundle & MarketingBundleExtras;
   addOns?: AddOn[];
@@ -76,7 +58,6 @@ export default function PackagesDetailTemplate({
   className,
   id,
 }: PackagesDetailTemplateProps) {
-  // Classic model (price/includes/jsonLd) for old shape
   const classic = React.useMemo(
     () =>
       toDetailModel(bundle as PackageBundle, {
@@ -88,15 +69,14 @@ export default function PackagesDetailTemplate({
   );
 
   React.useEffect(() => {
-    gtagSafe("package_detail_view", { slug: bundle.slug, name: bundle.name });
-  }, [bundle.slug, bundle.name]);
+    gtagSafe("package_detail_view", { slug: bundle.slug, name: (bundle as any).name ?? (bundle as any).title });
+  }, [bundle.slug, (bundle as any).name, (bundle as any).title]);
 
   const primaryService = bundle.services?.[0] ? String(normalizeServiceSlug(bundle.services[0])) : undefined;
   const primaryServiceHref = primaryService ? serviceHref(primaryService) : undefined;
 
-  // Prefer new “marketing” naming for title/description when present
-  const title = bundle.title || bundle.name;
-  const subtitle = bundle.subtitle || bundle.summary || bundle.description;
+  const title = (bundle as any).title || (bundle as any).name;
+  const subtitle = (bundle as any).subtitle || (bundle as any).summary || (bundle as any).description;
 
   return (
     <main className={[styles.root, className].filter(Boolean).join(" ")} id={id}>
@@ -119,33 +99,43 @@ export default function PackagesDetailTemplate({
           </nav>
         )}
 
-        {/* HERO (new shape) */}
-        {bundle.hero ? (
+        {/* HERO */}
+        { (bundle as any).hero ? (
           <header className={styles.hero}>
             <ServiceHero
               {...{
                 content: {
-                  title: bundle.hero?.content?.title || title,
-                  subtitle: bundle.hero?.content?.subtitle || subtitle,
-                  primaryCta: bundle.hero?.content?.primaryCta,
-                  secondaryCta: bundle.hero?.content?.secondaryCta,
+                  title: (bundle as any).hero?.content?.title || title,
+                  subtitle: (bundle as any).hero?.content?.subtitle || subtitle,
+                  primaryCta: (bundle as any).hero?.content?.primaryCta,
+                  secondaryCta: (bundle as any).hero?.content?.secondaryCta,
                 },
-                background: bundle.hero?.background,
+                background: (bundle as any).hero?.background,
               }}
             />
           </header>
         ) : (
-          // Fallback header (old shape)
           <header className={styles.header}>
             <h1 className={styles.title}>{title}</h1>
             {subtitle && <p className={styles.subtitle}>{subtitle}</p>}
-            {bundle.timeline && <p className={styles.meta}>Typical onboarding: {bundle.timeline}</p>}
+            {(bundle as any).timeline && <p className={styles.meta}>Typical onboarding: {(bundle as any).timeline}</p>}
           </header>
         )}
 
         {/* Split layout: content + pricing */}
         <div className={styles.layout}>
           <div>
+            {/* MDX Narrative (single controlled injection point) */}
+            {(bundle as any).content?.html ? (
+              <section className={styles.section} aria-labelledby="overview">
+                <h2 id="overview" className={styles.sectionTitle}>Overview</h2>
+                <article
+                  className={styles.mdx}
+                  dangerouslySetInnerHTML={{ __html: (bundle as any).content.html }}
+                />
+              </section>
+            ) : null}
+
             {/* Old shape: rich includes table */}
             {!!classic?.includes?.sections?.length && (
               <section className={styles.section} aria-labelledby="includes-title">
@@ -155,23 +145,23 @@ export default function PackagesDetailTemplate({
             )}
 
             {/* New shape: Included services + highlights */}
-            {(bundle.includedServices?.length || bundle.highlights?.length) && (
+            {( (bundle as any).includedServices?.length || (bundle as any).highlights?.length) && (
               <section className={styles.section} aria-labelledby="whats-included">
                 <h2 id="whats-included" className={styles.sectionTitle}>What's Included</h2>
                 <div className={styles.split}>
-                  {bundle.includedServices?.length ? (
+                  {(bundle as any).includedServices?.length ? (
                     <div>
                       <h3 className={styles.h3}>Core Services</h3>
                       <ul className={styles.bullets} role="list">
-                        {bundle.includedServices.map((s, i) => (<li key={i}>✓ {s}</li>))}
+                        {(bundle as any).includedServices.map((s: string, i: number) => (<li key={i}>✓ {s}</li>))}
                       </ul>
                     </div>
                   ) : null}
-                  {bundle.highlights?.length ? (
+                  {(bundle as any).highlights?.length ? (
                     <div>
                       <h3 className={styles.h3}>Key Highlights</h3>
                       <ul className={styles.bullets} role="list">
-                        {bundle.highlights.map((h, i) => (<li key={i}>⭐ {h}</li>))}
+                        {(bundle as any).highlights.map((h: string, i: number) => (<li key={i}>⭐ {h}</li>))}
                       </ul>
                     </div>
                   ) : null}
@@ -179,7 +169,7 @@ export default function PackagesDetailTemplate({
               </section>
             )}
 
-            {/* Recommended add-ons (unchanged) */}
+            {/* Add-ons */}
             {addOns?.length ? (
               <section className={[styles.section, styles.addOns].join(" ")} aria-labelledby="addons-title">
                 <h2 id="addons-title" className={styles.sectionTitle}>Recommended add-ons</h2>
@@ -187,13 +177,13 @@ export default function PackagesDetailTemplate({
               </section>
             ) : null}
 
-            {/* Outcomes / proof (new shape) */}
-            {bundle.outcomes?.items?.length ? (
+            {/* Outcomes / proof */}
+            {(bundle as any).outcomes?.items?.length ? (
               <section className={styles.section} aria-labelledby="outcomes-title">
                 <h2 id="outcomes-title" className={styles.sectionTitle}>
-                  {bundle.outcomes.title || "Expected Results"}
+                  {(bundle as any).outcomes.title || "Expected Results"}
                 </h2>
-                <StatsStrip {...(bundle.outcomes as any)} />
+                <StatsStrip {...((bundle as any).outcomes as any)} />
               </section>
             ) : null}
           </div>
@@ -201,9 +191,8 @@ export default function PackagesDetailTemplate({
           {/* Pricing aside */}
           <aside className={styles.aside} aria-label="Pricing">
             {isTieredPricing(bundle) ? (
-              // Render tiered pricing inline (new shape)
               <div className={styles.pricingGrid}>
-                {bundle.pricing.tiers.map((tier: any) => (
+                {(bundle as any).pricing.tiers.map((tier: any) => (
                   <article key={tier.id || tier.name} className={styles.pricingCard}>
                     <div className={styles.pricingCardHeader}>
                       <h3 className={styles.pricingCardTitle}>{tier.name}</h3>
@@ -232,34 +221,33 @@ export default function PackagesDetailTemplate({
                 ))}
               </div>
             ) : (
-              // Classic single-price block
               <PriceBlock {...classic.price} />
             )}
           </aside>
         </div>
 
-        {/* FAQ (new shape) */}
-        {bundle.faq?.faqs?.length ? (
+        {/* FAQ */}
+        {(bundle as any).faq?.faqs?.length ? (
           <>
             <div className={styles.hr} />
             <section className={styles.section} aria-labelledby="faq-title">
               <h2 id="faq-title" className={styles.sectionTitle}>
-                {bundle.faq.title || "Frequently Asked Questions"}
+                {(bundle as any).faq.title || "Frequently Asked Questions"}
               </h2>
-              <FAQAccordion faqs={bundle.faq.faqs} variant="default" enableSearch={bundle.faq.faqs.length > 5} />
+              <FAQAccordion faqs={(bundle as any).faq.faqs} variant="default" enableSearch={(bundle as any).faq.faqs.length > 5} />
             </section>
           </>
         ) : null}
 
-        {/* CTA (new shape) */}
-        {bundle.cta ? (
+        {/* CTA */}
+        {(bundle as any).cta ? (
           <section className={styles.section} aria-labelledby="cta-title">
             <CTASection
-              title={bundle.cta.title}
-              description={bundle.cta.subtitle}
-              primaryCta={bundle.cta.primaryCta}
-              secondaryCta={bundle.cta.secondaryCta}
-              style={bundle.cta.layout || "centered"}
+              title={(bundle as any).cta.title}
+              description={(bundle as any).cta.subtitle}
+              primaryCta={(bundle as any).cta.primaryCta}
+              secondaryCta={(bundle as any).cta.secondaryCta}
+              style={(bundle as any).cta.layout || "centered"}
             />
           </section>
         ) : null}
@@ -270,7 +258,7 @@ export default function PackagesDetailTemplate({
         </p>
       </div>
 
-      {/* JSON-LD (classic adapter keeps this working for old shape) */}
+      {/* JSON-LD */}
       {classic.jsonLd && (
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(classic.jsonLd) }} />
       )}

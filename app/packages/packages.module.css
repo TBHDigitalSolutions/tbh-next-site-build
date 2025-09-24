@@ -636,3 +636,66 @@
 .backLink:hover {
     text-decoration: underline;
 }
+/* app/packages/packages.module.css */
+
+.page {
+    display: block;
+    padding: 1.25rem 0;
+}
+
+/* Header (hub) */
+.header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.title {
+    font-size: clamp(1.75rem, 1.5rem + 1.2vw, 2.5rem);
+    font-weight: 700;
+    margin: 0 0 1rem;
+    color: var(--foreground);
+    line-height: 1.2;
+}
+
+.subtitle {
+    color: var(--muted-foreground);
+    margin: 0 auto 2rem;
+    max-width: 60ch;
+    font-size: 1.125rem;
+    line-height: 1.6;
+}
+
+/* Not found (detail page miss) */
+.notFound {
+    text-align: center;
+    padding: 3rem 0;
+}
+
+.notFound h1 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: var(--foreground);
+}
+
+.notFound p {
+    color: var(--muted-foreground);
+    margin-bottom: 2rem;
+}
+
+.backLink {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 500;
+    transition: opacity 0.2s ease;
+}
+
+.backLink:hover {
+    opacity: 0.8;
+}
+
+/* Responsive tweaks */
+@media (max-width: 640px) {
+    .header {
+        margin-bottom: 2rem;
+    }
+}

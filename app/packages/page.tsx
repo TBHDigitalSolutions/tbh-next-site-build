@@ -2,11 +2,13 @@
 import type { Metadata } from "next";
 import styles from "./packages.module.css";
 
-// Data (SSOT)
+// Data (SSOT façade)
 import { BUNDLES, FEATURED_BUNDLE_SLUGS } from "@/data/packages";
 
 // Presentation templates (domain layer)
 import { PackagesHubTemplate } from "@/packages/templates";
+
+export const dynamic = "force-static"; // SSG-friendly
 
 export const metadata: Metadata = {
   title: "Integrated Growth Packages",
@@ -29,7 +31,6 @@ export const metadata: Metadata = {
 };
 
 export default function PackagesHubPage() {
-  // Pass SSOT bundles to the hub template (template/adapters handle shaping).
   return (
     <div className={styles.page}>
       <PackagesHubTemplate
