@@ -1,8 +1,10 @@
 // /src/data/packages/_types/packages.types.ts
-// SSOT type definitions for packages, add-ons, featured cards, and bundles.
-// These types are for the data layer only — keep them framework-agnostic.
+// SSOT type definitions for packages, add-ons, featured, and bundles.
+// Framework-agnostic: no React/Next imports. These are the *authoring* shapes.
 
-/** Canonical service slugs for data classification. */
+// ===== Shared primitives =====================================================
+
+/** Canonical service slugs used across the domain. */
 export type ServiceSlug =
   | "content"
   | "leadgen"
@@ -11,133 +13,176 @@ export type ServiceSlug =
   | "webdev"
   | "video";
 
-/** Standard merchandising tiers. */
+/** Standard merchandising tiers (per service). */
 export type Tier = "Essential" | "Professional" | "Enterprise";
 
-/** Billing model taxonomy for add-ons and modules. */
-export type BillingModel = "one-time" | "monthly" | "hourly" | "hybrid";
-
-/** Numeric price primitives; format in UI with currency helpers. */
-export interface Price {
-  /** One-time/setup charge (numeric; UI formats it). */
-  setup?: number;
-  /** Monthly recurring charge (numeric; UI formats it). */
+/** Canonical money model (replaces legacy `setup`). */
+export type Money = {
+  /** One-time charge (AKA setup/project). */
+  oneTime?: number;
+  /** Monthly recurring charge (retainer). */
   monthly?: number;
-  /** Optional clarifying note (e.g., “per location”). */
-  notes?: string;
-}
+  /** ISO code; defaults to "USD" in consumers when omitted. */
+  currency?: "USD";
+};
 
-/** A feature/deliverable row, optionally with a short detail. */
+/** Optional display/contract metadata shown near prices. */
+export type PriceMeta = {
+  /** Short note near price: "+ ad spend", "starting at", etc. */
+  note?: string;
+  /** Minimum commitment in months (e.g., 3, 6, 12). */
+  minTermMonths?: number;
+  /** Display hint when setup is waived after N months. */
+  setupWaivedAfterMonths?: number;
+  /** Optional internal discount (%); never auto-applied in UI. */
+  discountPercent?: number;
+};
+
+/** Simple deliverable/feature row. */
 export interface FeatureItem {
   label: string;
   detail?: string;
 }
 
-/** Core package definition used across services. */
-export interface Package {
-  /** Stable id, e.g., "seo-essential". */
+// ===== Core authoring entities ==============================================
+
+/** Per-service package (tiered offering). */
+export interface ServicePackage {
+  /** Stable id, kebab-case, service-prefixed; e.g., "seo-professional". */
   id: string;
   service: ServiceSlug;
   name: string;
-  tier: Tier;
-  /** Short, scannable summary for cards. */
-  summary: string;
-  /** Optional ICP hint (e.g., “single-location”). */
-  idealFor?: string;
-  /** Expected outcomes/value statements. */
-  outcomes: string[];
-  /** What’s included. */
-  features: FeatureItem[];
-  /** Pricing for this package (setup/monthly). */
-  price: Price;
-  /** Visual or merchandising badges. */
+  /** Tier is common but not strictly required for specialized packs. */
+  tier?: Tier;
+  /** One-liner for cards/search. */
+  summary?: string;
+  /** Bulleted deliverables/specs. */
+  features?: FeatureItem[];
+  /** Pricing is optional (custom/enterprise packages may omit it). */
+  price?: Money;
+  /** Optional pricing display/meta. */
+  priceMeta?: PriceMeta;
+  /** Merchandising aids. */
   badges?: string[];
-  /** Optional timeline/SLA copy. */
+  tags?: string[];
+  /** Optional grouping/category key. */
+  category?: string;
+  /** Optional SLA/timeline string. */
   sla?: string;
-  /** Emphasize as popular in UI. */
+  /** Weigh as “Popular” in rails/search. */
   popular?: boolean;
 }
 
-/** Add-on (attachable to packages). */
+/** Add-on (a-la-carte, attachable to ServicePackages). */
 export interface AddOn {
-  id: string; // e.g., "video-ugc-kit"
+  /** e.g., "video-ugc-kit". */
+  id: string;
   service: ServiceSlug;
   name: string;
   description: string;
   /** Deliverables list. */
   deliverables: FeatureItem[];
-  /** Billing model taxonomy. */
-  billing: BillingModel;
-  /** Pricing (can be partial for custom quotes). */
-  price: Price;
-  /** Other add-ons/packages required first. */
+  /** Optional price (custom add-ons can omit). */
+  price?: Money;
+  /** Optional pricing display/meta. */
+  priceMeta?: PriceMeta;
+  /** Dependencies by id (package/add-on). */
   dependencies?: string[];
-  /** Suggested package tiers to pair with. */
+  /** Suggested package tiers this pairs best with. */
   pairsBestWith?: Tier[];
-  /** Emphasize as popular in UI. */
+  /** Merchandising */
+  badges?: string[];
   popular?: boolean;
+  tags?: string[];
 }
 
-/** Featured card used for home/section highlights. */
+/** Lightweight featured card used across service hubs/rails. */
 export interface FeaturedCard {
   id: string;
   service: ServiceSlug;
-  /** Must reference an existing Package.id. */
+  /** Must reference an existing `ServicePackage.id`. */
   packageId: string;
-  /** Short headline (card title). */
+  /** Card headline. */
   headline: string;
-  /** 3–6 concise bullets. */
+  /** 3–6 bullets. */
   highlights: string[];
   /** Optional “starting at” amount (numeric). */
   startingAt?: number;
-  /** Optional badge label (e.g., “Most Popular”). */
+  /** Optional label like “Most Popular”. */
   badge?: string;
-  /** Optional CTA label override. */
+  /** CTA label override. */
   ctaLabel?: string;
 }
 
-/** A module within an integrated bundle. */
-export interface BundleModule {
-  service: ServiceSlug;
-  /** Short description of what the module covers. */
-  scopeSummary: string;
-}
+// ===== Bundles (cross-service solutions) ====================================
 
-/** A multi-service integrated bundle (solution). */
-export interface IntegratedBundle {
+/** Optional grouped “what’s included” section. */
+export type IncludeGroup = { title?: string; items: string[] };
+
+/** A multi-service integrated bundle resolved at build-time into the façade. */
+export interface Bundle {
+  /** Page slug; e.g., "local-business-growth". */
+  slug: string;
+  /** Internal id (may mirror slug). */
   id: string;
-  name: string;
-  /** Ideal customer profile descriptor. */
-  icp: string;
-  /** Problem statement the bundle solves. */
-  problem: string;
-  outcomes: string[];
-  modules: BundleModule[];
-  /** Estimated timeline (weeks). */
-  timelineWeeks?: number;
-  price: Price;
-  /** KPIs to track for this bundle. */
-  kpis: string[];
-  /** Optional FAQs. */
-  faq?: { q: string; a: string }[];
-  /** Bundle-level CTA. */
-  cta?: { label: string; href?: string };
-  /** Merchandising flag. */
+
+  // Hero/card basics
+  title: string;
+  subtitle?: string;
+  summary?: string;
+  tags?: string[];
+  category?: "startup" | "local" | "ecommerce" | "b2b" | "custom";
+
+  // Pricing (optional)
+  price?: Money;
+  priceMeta?: PriceMeta;
+
+  // Composition & presentation
+  /** Optional “what’s included” prose groups for quick scan. */
+  includes?: IncludeGroup[];
+  /** IDs of service packages included in the bundle. */
+  components?: string[];
+  /** IDs of recommended add-ons to pair with this bundle. */
+  addOnRecommendations?: string[];
+
+  // Outcomes & timeline
+  outcomes?: Array<{ label: string; value: string }>;
+  timeline?: string;
+
+  // FAQ (page-ready)
+  faq?: { title?: string; faqs: Array<{ id: string; question: string; answer: string }> };
+
+  // Optional media for hero/card; MDX may also supply this via front-matter.
+  hero?: {
+    content?: {
+      title?: string;
+      subtitle?: string;
+      primaryCta?: { label: string; href: string };
+      secondaryCta?: { label: string; href: string };
+    };
+    background?: { type: "image" | "video"; src: string; alt?: string };
+  };
+  cardImage?: { src: string; alt?: string };
+
+  /** Merchandising hint used by rails/search. */
   popular?: boolean;
 }
 
-/** A tier row for service pricing tables. */
+// ===== Presentation-only (kept for existing pages) ==========================
+
+/** A tier row for on-page pricing tables (preformatted strings). */
 export interface BundleTier {
   id: string;
   name: string;
-  price: string;   // preformatted string for display (e.g., "$2,500/mo")
-  period: string;  // e.g., "Monthly", "One-time"
+  /** Preformatted “$X/month” or “$Y one-time” string for UI. */
+  price: string;
+  period: string; // e.g., "Monthly", "One-time"
   features: string[];
   badge?: string;
   cta: { label: string; href: string };
 }
 
-/** Pricing model container (can be extended with future kinds) */
+/** Pricing presentation model for bundle page templates. */
 export interface ServicePricing {
   kind: "tiers";
   title: string;
@@ -145,23 +190,17 @@ export interface ServicePricing {
   tiers: BundleTier[];
 }
 
-/**
- * Rich, page-ready bundle for marketing pages.
- * This is separate from app/lib types and used by data-driven pages.
- */
+/** Legacy/lib-compatible marketing bundle for page templates. */
 export interface PackageBundle {
-  slug: string;        // URL slug for the bundle
-  id: string;          // internal id (can mirror slug)
-  title: string;       // hero/card title
-  subtitle: string;    // hero subtitle
-  summary: string;     // short card summary
+  slug: string;
+  id: string;
+  title: string;
+  subtitle: string;
+  summary: string;
   category: "startup" | "local" | "ecommerce" | "b2b" | "custom";
-  tags: string[];      // freeform tags for filtering
-  icon: string;        // icon key/name
-  cardImage: {
-    src: string;
-    alt: string;
-  };
+  tags: string[];
+  icon: string;
+  cardImage: { src: string; alt: string };
   hero: {
     content: {
       title: string;
@@ -171,28 +210,18 @@ export interface PackageBundle {
     };
     background: { type: "image"; src: string; alt: string };
   };
-  /** Human-readable list of services involved. */
   includedServices: string[];
-  /** 3–6 bullets for quick scan. */
   highlights: string[];
-  /** Stats-style outcomes block. */
   outcomes: {
     title: string;
     variant: "stats";
     items: Array<{ label: string; value: string }>;
   };
-  /** Pricing presentation model (tiers, etc.). */
   pricing: ServicePricing;
-  /** FAQs for the package page. */
   faq: {
     title: string;
-    faqs: Array<{
-      id: string;
-      question: string;
-      answer: string;
-    }>;
+    faqs: Array<{ id: string; question: string; answer: string }>;
   };
-  /** Page CTA section config. */
   cta: {
     title: string;
     subtitle?: string;

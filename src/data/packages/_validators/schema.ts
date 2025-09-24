@@ -1,47 +1,63 @@
 // /src/data/packages/_validators/schema.ts
-// Zod schemas for the data-layer SSOT types.
-// These validate shape only; deeper cross-refs live in packages.validate.ts
+// Zod schemas for SSOT types — validates authoring shape only.
+// Deeper cross-refs (e.g., featured → packageId, components[]) live in packages.validate.ts
 
 import { z } from "zod";
-import { SERVICE_SLUGS } from "../_utils/slugs";
 
 // --- Primitives / enums ------------------------------------------------------
 
-export const ServiceSlugSchema = z.enum(SERVICE_SLUGS as unknown as [string, ...string[]]);
+export const ServiceSlugSchema = z.enum([
+  "content",
+  "leadgen",
+  "marketing",
+  "seo",
+  "webdev",
+  "video",
+] as const);
 
-export const TierSchema = z.enum(["Essential", "Professional", "Enterprise"]);
+export const TierSchema = z.enum(["Essential", "Professional", "Enterprise"] as const);
 
-export const BillingModelSchema = z.enum(["one-time", "monthly", "hourly", "hybrid"]);
+// --- Money (canonical) -------------------------------------------------------
+
+export const MoneySchema = z
+  .object({
+    oneTime: z.number().nonnegative().optional(),
+    monthly: z.number().nonnegative().optional(),
+    currency: z.literal("USD").optional(),
+  })
+  .refine((p) => p.oneTime != null || p.monthly != null, {
+    message: "Money requires at least one of {oneTime, monthly}",
+    path: ["oneTime"],
+  });
+
+export const PriceMetaSchema = z.object({
+  note: z.string().min(1).max(40).optional(),
+  minTermMonths: z.number().int().positive().optional(),
+  setupWaivedAfterMonths: z.number().int().positive().optional(),
+  discountPercent: z.number().min(0).max(100).optional(),
+});
 
 // --- Shared primitives -------------------------------------------------------
 
-export const PriceSchema = z.object({
-  setup: z.number().nonnegative().optional(),
-  monthly: z.number().nonnegative().optional(),
-  notes: z.string().min(1).optional(),
-}).refine(p => p.setup != null || p.monthly != null, {
-  message: "Price requires at least one of {setup, monthly}",
-  path: ["setup"],
-});
-
 export const FeatureItemSchema = z.object({
-  label: z.string().min(1, "feature label is required"),
+  label: z.string().min(1),
   detail: z.string().min(1).optional(),
 });
 
 // --- Core entities -----------------------------------------------------------
 
-export const PackageSchema = z.object({
+export const ServicePackageSchema = z.object({
   id: z.string().min(1),
   service: ServiceSlugSchema,
   name: z.string().min(1),
-  tier: TierSchema,
-  summary: z.string().min(1),
-  idealFor: z.string().min(1).optional(),
-  outcomes: z.array(z.string().min(1)).min(1),
-  features: z.array(FeatureItemSchema).min(1),
-  price: PriceSchema,
+  tier: TierSchema.optional(),
+  summary: z.string().min(1).optional(),
+  features: z.array(FeatureItemSchema).min(1).optional(),
+  price: MoneySchema.optional(),
+  priceMeta: PriceMetaSchema.optional(),
   badges: z.array(z.string().min(1)).optional(),
+  tags: z.array(z.string().min(1)).optional(),
+  category: z.string().min(1).optional(),
   sla: z.string().min(1).optional(),
   popular: z.boolean().optional(),
 });
@@ -52,11 +68,13 @@ export const AddOnSchema = z.object({
   name: z.string().min(1),
   description: z.string().min(1),
   deliverables: z.array(FeatureItemSchema).min(1),
-  billing: BillingModelSchema,
-  price: PriceSchema.optional(), // allow custom-quoted add-ons
+  price: MoneySchema.optional(),
+  priceMeta: PriceMetaSchema.optional(),
   dependencies: z.array(z.string().min(1)).optional(),
   pairsBestWith: z.array(TierSchema).optional(),
+  badges: z.array(z.string().min(1)).optional(),
   popular: z.boolean().optional(),
+  tags: z.array(z.string().min(1)).optional(),
 });
 
 export const FeaturedCardSchema = z.object({
@@ -70,38 +88,70 @@ export const FeaturedCardSchema = z.object({
   ctaLabel: z.string().min(1).optional(),
 });
 
-export const BundleModuleSchema = z.object({
-  service: ServiceSlugSchema,
-  scopeSummary: z.string().min(1),
+export const IncludeGroupSchema = z.object({
+  title: z.string().min(1).optional(),
+  items: z.array(z.string().min(1)).min(1),
 });
 
-export const IntegratedBundleSchema = z.object({
+export const BundleSchema = z.object({
+  slug: z.string().min(1),
   id: z.string().min(1),
-  name: z.string().min(1),
-  icp: z.string().min(1),
-  problem: z.string().min(1),
-  outcomes: z.array(z.string().min(1)).min(1),
-  modules: z.array(BundleModuleSchema).min(1),
-  timelineWeeks: z.number().int().positive().optional(),
-  price: PriceSchema,
-  kpis: z.array(z.string().min(1)).min(1),
-  faq: z.array(z.object({ q: z.string().min(1), a: z.string().min(1) })).optional(),
-  cta: z.object({ label: z.string().min(1), href: z.string().min(1).optional() }).optional(),
+  title: z.string().min(1),
+  subtitle: z.string().optional(),
+  summary: z.string().optional(),
+  tags: z.array(z.string().min(1)).optional(),
+  category: z.enum(["startup", "local", "ecommerce", "b2b", "custom"]).optional(),
+  price: MoneySchema.optional(),
+  priceMeta: PriceMetaSchema.optional(),
+  includes: z.array(IncludeGroupSchema).optional(),
+  components: z.array(z.string().min(1)).optional(),
+  addOnRecommendations: z.array(z.string().min(1)).optional(),
+  outcomes: z.array(z.object({ label: z.string().min(1), value: z.string().min(1) })).optional(),
+  timeline: z.string().optional(),
+  faq: z
+    .object({
+      title: z.string().optional(),
+      faqs: z.array(
+        z.object({
+          id: z.string().min(1),
+          question: z.string().min(1),
+          answer: z.string().min(1),
+        }),
+      ),
+    })
+    .optional(),
+  hero: z
+    .object({
+      content: z
+        .object({
+          title: z.string().optional(),
+          subtitle: z.string().optional(),
+          primaryCta: z.object({ label: z.string().min(1), href: z.string().min(1) }).optional(),
+          secondaryCta: z.object({ label: z.string().min(1), href: z.string().min(1) }).optional(),
+        })
+        .optional(),
+      background: z
+        .object({
+          type: z.enum(["image", "video"]),
+          src: z.string().min(1),
+          alt: z.string().optional(),
+        })
+        .optional(),
+    })
+    .optional(),
+  cardImage: z.object({ src: z.string().min(1), alt: z.string().optional() }).optional(),
   popular: z.boolean().optional(),
 });
 
+// Presentation-only schemas (kept for existing page templates)
 export const BundleTierSchema = z.object({
   id: z.string().min(1),
   name: z.string().min(1),
-  // Preformatted (e.g., "$2,500/mo"); keep as string to avoid locale coupling
-  price: z.string().min(1),
+  price: z.string().min(1), // preformatted "$x/mo" or "$y one-time"
   period: z.string().min(1),
   features: z.array(z.string().min(1)).min(1),
   badge: z.string().min(1).optional(),
-  cta: z.object({
-    label: z.string().min(1),
-    href: z.string().min(1),
-  }),
+  cta: z.object({ label: z.string().min(1), href: z.string().min(1) }),
 });
 
 export const ServicePricingSchema = z.object({
@@ -111,70 +161,13 @@ export const ServicePricingSchema = z.object({
   tiers: z.array(BundleTierSchema).min(1),
 });
 
-// Data-layer marketing bundle used by pages (NOT the lib PackageBundle)
-export const DataPackageBundleSchema = z.object({
-  slug: z.string().min(1),
-  id: z.string().min(1),
-  title: z.string().min(1),
-  subtitle: z.string().min(1),
-  summary: z.string().min(1),
-  category: z.enum(["startup", "local", "ecommerce", "b2b", "custom"]),
-  tags: z.array(z.string().min(1)).default([]),
-  icon: z.string().min(1),
-  cardImage: z.object({ src: z.string().min(1), alt: z.string().min(1) }),
-  hero: z.object({
-    content: z.object({
-      title: z.string().min(1),
-      subtitle: z.string().min(1),
-      primaryCta: z.object({ label: z.string().min(1), href: z.string().min(1) }),
-      secondaryCta: z.object({ label: z.string().min(1), href: z.string().min(1) }),
-    }),
-    background: z.object({ type: z.literal("image"), src: z.string().min(1), alt: z.string().min(1) }),
-  }),
-  includedServices: z.array(z.string().min(1)).min(1),
-  highlights: z.array(z.string().min(1)).min(3).max(8),
-  outcomes: z.object({
-    title: z.string().min(1),
-    variant: z.literal("stats"),
-    items: z.array(z.object({ label: z.string().min(1), value: z.string().min(1) })).min(1),
-  }),
-  pricing: ServicePricingSchema,
-  faq: z.object({
-    title: z.string().min(1),
-    faqs: z.array(z.object({ id: z.string().min(1), question: z.string().min(1), answer: z.string().min(1) })).min(1),
-  }),
-  cta: z.object({
-    title: z.string().min(1),
-    subtitle: z.string().optional(),
-    primaryCta: z.object({ label: z.string().min(1), href: z.string().min(1) }),
-    secondaryCta: z.object({ label: z.string().min(1), href: z.string().min(1) }),
-    layout: z.literal("centered"),
-    backgroundType: z.literal("gradient"),
-  }),
-});
-
-// --- Collections -------------------------------------------------------------
-
-export const PackagesSchema = z.array(PackageSchema);
+// Collections + convenience parsers
+export const ServicePackagesSchema = z.array(ServicePackageSchema);
 export const AddOnsSchema = z.array(AddOnSchema);
 export const FeaturedCardsSchema = z.array(FeaturedCardSchema);
-export const IntegratedBundlesSchema = z.array(IntegratedBundleSchema);
-export const DataPackageBundlesSchema = z.array(DataPackageBundleSchema);
+export const BundlesSchema = z.array(BundleSchema);
 
-// --- Convenience parsers -----------------------------------------------------
-
-export function parsePackages(json: unknown) {
-  return PackagesSchema.parse(json);
-}
-export function parseAddOns(json: unknown) {
-  return AddOnsSchema.parse(json);
-}
-export function parseFeatured(json: unknown) {
-  return FeaturedCardsSchema.parse(json);
-}
-export function parseBundles(json: unknown) {
-  return IntegratedBundlesSchema.parse(json);
-}
-export function parseDataPackageBundles(json: unknown) {
-  return DataPackageBundlesSchema.parse(json);
-}
+export function parseServicePackages(json: unknown) { return ServicePackagesSchema.parse(json); }
+export function parseAddOns(json: unknown) { return AddOnsSchema.parse(json); }
+export function parseFeatured(json: unknown) { return FeaturedCardsSchema.parse(json); }
+export function parseBundles(json: unknown) { return BundlesSchema.parse(json); }
