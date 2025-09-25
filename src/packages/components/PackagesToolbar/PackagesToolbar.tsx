@@ -4,73 +4,43 @@
 import * as React from "react";
 import clsx from "clsx";
 import styles from "./PackagesToolbar.module.css";
-
-/**
- * (Light) integration with your search UI component.
- * We keep typing permissive to avoid tight coupling.
- */
-import type { ComponentProps } from "react";
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const SearchBar: React.ComponentType<Partial<ComponentProps<"input">> & {
-  value?: string;
-  onChange?: (v: string) => void;
-  placeholder?: string;
-  className?: string;
-  inputProps?: React.InputHTMLAttributes<HTMLInputElement>;
-}> = (await import("@/search/ui/SearchBar").catch(() => ({ default: undefined as any }))).default ?? ((
-  props: any,
-) => {
-  // Safe fallback if search/ui/SearchBar is unavailable:
-  const { value, onChange, placeholder, className, inputProps } = props || {};
-  return (
-    <input
-      className={clsx(styles.searchInput, className)}
-      type="search"
-      placeholder={placeholder ?? "Search packages"}
-      value={value ?? ""}
-      onChange={(e) => onChange?.(e.target.value)}
-      {...(inputProps ?? {})}
-    />
-  );
-});
+import SearchBarSafe from "./SearchBarSafe";
 
 /* ------------------------------------------------------------------------- */
 /* Types                                                                     */
 /* ------------------------------------------------------------------------- */
 
 export type PackagesToolbarProps = {
+  /** Controlled search query */
   query: string;
   onQueryChange: (v: string) => void;
 
+  /** Type chip filter */
   type: "all" | "bundles" | "packages" | "addons";
   onTypeChange: (v: PackagesToolbarProps["type"]) => void;
 
-  service?: string; // "content" | "seo" | ...
+  /** Service select (service slug or undefined for 'all') */
+  service?: string;
   onServiceChange: (v?: string) => void;
 
+  /** Sort select */
   sort: "recommended" | "az" | "price-asc" | "price-desc";
   onSortChange: (v: PackagesToolbarProps["sort"]) => void;
 
-  /** Optional service options to render in the Service select */
+  /** Optional lists for UI */
   serviceOptions?: Array<{ value: string; label: string }>;
-  /**
-   * Optional counts by type for chips: { all, bundles, packages, addons }
-   * purely cosmetic; not required.
-   */
   countsByType?: Partial<Record<PackagesToolbarProps["type"], number>>;
 
-  /** Optional UX toggles */
+  /** Feature toggles */
   showTypeFilter?: boolean;
   showServiceFilter?: boolean;
   showSort?: boolean;
   showSearch?: boolean;
 
-  /** Visuals */
+  /** Visual/A11y */
   className?: string;
   id?: string;
   compact?: boolean;
-
-  /** A11y labels (for i18n) */
   labels?: {
     searchPlaceholder?: string;
     searchAriaLabel?: string;
@@ -84,7 +54,7 @@ export type PackagesToolbarProps = {
 };
 
 /* ------------------------------------------------------------------------- */
-/* Component                                                                  */
+/* Component                                                                 */
 /* ------------------------------------------------------------------------- */
 
 export default function PackagesToolbar({
@@ -111,6 +81,7 @@ export default function PackagesToolbar({
 
   labels = {},
 }: PackagesToolbarProps) {
+  // Safe labels (i18n-friendly)
   const {
     searchPlaceholder = "Search packages, bundles, add-ons",
     searchAriaLabel = "Search packages",
@@ -122,38 +93,57 @@ export default function PackagesToolbar({
     sortLabel = "Sort",
   } = labels;
 
-  // Ensure "all" option is present exactly once.
+  // Ensure a single 'all' option exists
   const mergedServices = React.useMemo(() => {
     const hasAll = serviceOptions.some((o) => o.value === "all");
-    return hasAll ? serviceOptions : [{ value: "all", label: "All services" }, ...serviceOptions];
+    const withAll = hasAll ? serviceOptions : [{ value: "all", label: "All services" }, ...serviceOptions];
+    // De-dupe any accidental repeats of 'all'
+    const seen = new Set<string>();
+    return withAll.filter((o) => (seen.has(o.value) ? false : (seen.add(o.value), true)));
   }, [serviceOptions]);
 
-  // Render a single filter chip button
-  const TypeChip = (props: {
+  // Normalize counts (purely cosmetic)
+  const counts = React.useMemo(
+    () => ({
+      all: countsByType?.all ?? 0,
+      bundles: countsByType?.bundles ?? 0,
+      packages: countsByType?.packages ?? 0,
+      addons: countsByType?.addons ?? 0,
+    }),
+    [countsByType],
+  );
+
+  // Single chip button
+  function TypeChip({
+    value,
+    label,
+    count,
+    testId,
+  }: {
     value: PackagesToolbarProps["type"];
     label: string;
     count?: number;
-    "data-testid"?: string;
-  }) => {
-    const active = type === props.value;
+    testId?: string;
+  }) {
+    const active = type === value;
     return (
       <button
         type="button"
         className={clsx(styles.typeChip, active && styles.typeChipActive)}
         aria-pressed={active}
-        onClick={() => onTypeChange(props.value)}
-        data-type={props.value}
-        data-testid={props["data-testid"]}
+        onClick={() => onTypeChange(value)}
+        data-type={value}
+        data-testid={testId}
       >
-        <span className={styles.typeChipLabel}>{props.label}</span>
-        {typeof props.count === "number" ? (
+        <span className={styles.typeChipLabel}>{label}</span>
+        {typeof count === "number" ? (
           <span className={styles.typeChipCount} aria-hidden="true">
-            {props.count}
+            {count}
           </span>
         ) : null}
       </button>
     );
-  };
+  }
 
   return (
     <section
@@ -166,42 +156,25 @@ export default function PackagesToolbar({
       <div className={styles.row}>
         {showSearch && (
           <div className={styles.search}>
-            <SearchBar
+            <SearchBarSafe
               value={query}
               onChange={onQueryChange}
               placeholder={searchPlaceholder}
-              className={styles.searchInput}
-              inputProps={{ "aria-label": searchAriaLabel }}
+              className={styles.searchBar}
+              inputClassName={styles.searchInput}
             />
+            <span className={styles.srOnly} aria-live="polite">
+              {searchAriaLabel}
+            </span>
           </div>
         )}
 
         {showTypeFilter && (
           <div className={styles.types} role="group" aria-label="Filter by type">
-            <TypeChip
-              value="all"
-              label={typeAll}
-              count={countsByType?.all}
-              data-testid="toolbar-type-all"
-            />
-            <TypeChip
-              value="bundles"
-              label={typeBundles}
-              count={countsByType?.bundles}
-              data-testid="toolbar-type-bundles"
-            />
-            <TypeChip
-              value="packages"
-              label={typePackages}
-              count={countsByType?.packages}
-              data-testid="toolbar-type-packages"
-            />
-            <TypeChip
-              value="addons"
-              label={typeAddons}
-              count={countsByType?.addons}
-              data-testid="toolbar-type-addons"
-            />
+            <TypeChip value="all" label={typeAll} count={counts.all} testId="toolbar-type-all" />
+            <TypeChip value="bundles" label={typeBundles} count={counts.bundles} testId="toolbar-type-bundles" />
+            <TypeChip value="packages" label={typePackages} count={counts.packages} testId="toolbar-type-packages" />
+            <TypeChip value="addons" label={typeAddons} count={counts.addons} testId="toolbar-type-addons" />
           </div>
         )}
       </div>

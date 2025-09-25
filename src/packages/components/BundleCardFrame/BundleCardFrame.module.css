@@ -1,0 +1,112 @@
+/* Bundle-specific tokens (indigo/violet accent) */
+:root {
+    --bcf-radius: 18px;
+    --bcf-border: 1px;
+    --bcf-shadow: 0 8px 22px rgba(2, 6, 23, 0.07);
+    --bcf-shadow-hover: 0 12px 28px rgba(2, 6, 23, 0.14);
+
+    --bcf-bg: #ffffff;
+    --bcf-fg: #0f172a;
+    --bcf-border-color: #e2e8f0;
+
+    --bcf-pad-sm: 0.75rem;
+    --bcf-pad-md: 1rem;
+    --bcf-pad-lg: 1.25rem;
+
+    /* Accent & focus */
+    --bcf-ring: rgba(99, 102, 241, .45);
+    /* indigo-500 */
+    --bcf-select: #7c3aed;
+    /* violet-600 */
+}
+
+/* Root */
+.root {
+    width: 100%;
+    background: var(--bcf-bg);
+    color: var(--bcf-fg);
+    border-radius: var(--bcf-radius);
+    transition: box-shadow 140ms ease, transform 140ms ease, border-color 140ms ease, background 140ms ease;
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+
+    border: var(--bcf-border) solid transparent;
+    min-height: 0;
+}
+
+/* Variants */
+.elevated {
+    box-shadow: var(--bcf-shadow);
+    border-color: transparent;
+}
+
+.outlined {
+    border-color: var(--bcf-border-color);
+}
+
+.ghost {
+    background: transparent;
+    border-color: transparent;
+}
+
+/* Padding scales */
+.pad-none {
+    padding: 0;
+}
+
+.pad-sm {
+    padding: var(--bcf-pad-sm);
+}
+
+.pad-md {
+    padding: var(--bcf-pad-md);
+}
+
+.pad-lg {
+    padding: var(--bcf-pad-lg);
+}
+
+/* Height lock */
+.stretch {
+    height: 100%;
+}
+
+/* Hover effect for interactive wrappers */
+.hoverLift:is(a, button):not(:disabled):hover {
+    transform: translateY(-1px);
+    box-shadow: var(--bcf-shadow-hover);
+}
+
+.hoverLift:is(a, button):active {
+    transform: translateY(0);
+}
+
+/* Focus ring */
+.root:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px var(--bcf-ring);
+}
+
+/* Selected emphasis (e.g., “Best value”) */
+.selected {
+    border-color: var(--bcf-select);
+    box-shadow: 0 0 0 1px var(--bcf-select) inset, var(--bcf-shadow);
+}
+
+/* Disabled/muted */
+.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Dark mode defaults */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bcf-bg: #0b1220;
+        --bcf-fg: #e2e8f0;
+        --bcf-border-color: #334155;
+        --bcf-shadow: 0 8px 22px rgba(0, 0, 0, 0.40);
+        --bcf-shadow-hover: 0 12px 28px rgba(0, 0, 0, 0.55);
+    }
+}

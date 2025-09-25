@@ -1,0 +1,112 @@
+/* Base tokens for Add-on cards (slightly tighter than package cards) */
+:root {
+    --aof-radius: 14px;
+    --aof-border: 1px;
+    --aof-shadow: 0 4px 14px rgba(2, 6, 23, 0.06);
+    --aof-shadow-hover: 0 8px 22px rgba(2, 6, 23, 0.12);
+    --aof-bg: #ffffff;
+    --aof-fg: #0f172a;
+    --aof-border-color: #e5e7eb;
+
+    /* denser padding defaults */
+    --aof-pad-sm: 0.625rem;
+    --aof-pad-md: 0.875rem;
+    --aof-pad-lg: 1.125rem;
+
+    /* add-on accent (cyan) */
+    --aof-ring: rgba(6, 182, 212, .45);
+    --aof-select: #06b6d4;
+    --aof-muted: #64748b;
+}
+
+/* Root card */
+.root {
+    width: 100%;
+    background: var(--aof-bg);
+    color: var(--aof-fg);
+    border-radius: var(--aof-radius);
+    transition: box-shadow 140ms ease, transform 140ms ease, border-color 140ms ease, background 140ms ease;
+    text-align: left;
+
+    display: flex;
+    flex-direction: column;
+
+    min-height: 0;
+    border: var(--aof-border) solid transparent;
+}
+
+/* Variants */
+.elevated {
+    box-shadow: var(--aof-shadow);
+    border-color: transparent;
+}
+
+.outlined {
+    border-color: var(--aof-border-color);
+}
+
+.ghost {
+    background: transparent;
+    border-color: transparent;
+}
+
+/* Padding scales */
+.pad-none {
+    padding: 0;
+}
+
+.pad-sm {
+    padding: var(--aof-pad-sm);
+}
+
+.pad-md {
+    padding: var(--aof-pad-md);
+}
+
+.pad-lg {
+    padding: var(--aof-pad-lg);
+}
+
+/* Height lock */
+.stretch {
+    height: 100%;
+}
+
+/* Hover/active effects (for links/buttons only) */
+.hoverLift:is(a, button):not(:disabled):hover {
+    transform: translateY(-1px);
+    box-shadow: var(--aof-shadow-hover);
+}
+
+.hoverLift:is(a, button):active {
+    transform: translateY(0);
+}
+
+/* Focus ring */
+.root:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px var(--aof-ring);
+}
+
+/* Selected (e.g., “Popular add-on”) */
+.selected {
+    border-color: var(--aof-select);
+    box-shadow: 0 0 0 1px var(--aof-select) inset, var(--aof-shadow);
+}
+
+/* Disabled */
+.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Dark mode defaults */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --aof-bg: #0b1220;
+        --aof-fg: #e2e8f0;
+        --aof-border-color: #334155;
+        --aof-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+        --aof-shadow-hover: 0 8px 22px rgba(0, 0, 0, 0.5);
+    }
+}

@@ -1,0 +1,113 @@
+/* Base tokens (override via :root or section scope) */
+:root {
+    --pcf-radius: 16px;
+    --pcf-border: 1px;
+    --pcf-shadow: 0 6px 16px rgba(2, 6, 23, 0.06);
+    --pcf-shadow-hover: 0 10px 24px rgba(2, 6, 23, 0.12);
+    --pcf-bg: #ffffff;
+    --pcf-fg: #0f172a;
+    --pcf-border-color: #e2e8f0;
+
+    --pcf-pad-sm: 0.75rem;
+    --pcf-pad-md: 1rem;
+    --pcf-pad-lg: 1.25rem;
+
+    --pcf-ring: rgba(59, 130, 246, .45);
+    /* focus ring */
+    --pcf-select: #3b82f6;
+    /* selected border */
+    --pcf-muted: #64748b;
+}
+
+/* Root card */
+.root {
+    width: 100%;
+    background: var(--pcf-bg);
+    color: var(--pcf-fg);
+    border-radius: var(--pcf-radius);
+    transition: box-shadow 140ms ease, transform 140ms ease, border-color 140ms ease, background 140ms ease;
+    text-align: left;
+
+    display: flex;
+    flex-direction: column;
+
+    /* allow equal-height in grid parents via .stretch */
+    min-height: 0;
+    border: var(--pcf-border) solid transparent;
+}
+
+/* Variants */
+.elevated {
+    box-shadow: var(--pcf-shadow);
+    border-color: transparent;
+}
+
+.outlined {
+    border-color: var(--pcf-border-color);
+}
+
+.ghost {
+    background: transparent;
+    border-color: transparent;
+}
+
+/* Padding scales */
+.pad-none {
+    padding: 0;
+}
+
+.pad-sm {
+    padding: var(--pcf-pad-sm);
+}
+
+.pad-md {
+    padding: var(--pcf-pad-md);
+}
+
+.pad-lg {
+    padding: var(--pcf-pad-lg);
+}
+
+/* Height lock */
+.stretch {
+    height: 100%;
+}
+
+/* Hover/active effects (only meaningful for links/buttons) */
+.hoverLift:is(a, button):not(:disabled):hover {
+    transform: translateY(-1px);
+    box-shadow: var(--pcf-shadow-hover);
+}
+
+.hoverLift:is(a, button):active {
+    transform: translateY(0);
+}
+
+/* Focus ring */
+.root:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px var(--pcf-ring);
+}
+
+/* Selected state (e.g., “Most popular”) */
+.selected {
+    border-color: var(--pcf-select);
+    box-shadow: 0 0 0 1px var(--pcf-select) inset, var(--pcf-shadow);
+}
+
+/* Disabled */
+.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Dark mode defaults */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --pcf-bg: #0b1220;
+        --pcf-fg: #e2e8f0;
+        --pcf-border-color: #334155;
+        --pcf-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
+        --pcf-shadow-hover: 0 10px 24px rgba(0, 0, 0, 0.5);
+    }
+}

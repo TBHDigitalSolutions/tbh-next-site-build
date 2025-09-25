@@ -1,0 +1,66 @@
+.chips {
+    --chip-bg: var(--muted, rgba(0, 0, 0, 0.06));
+    --chip-fg: var(--muted-foreground, #475569);
+    --chip-border: var(--border, rgba(0, 0, 0, 0.12));
+    --chip-bg-service: var(--accent, #eef2ff);
+    --chip-fg-service: var(--accent-foreground, #3730a3);
+    --chip-bg-category: var(--secondary, #ecfeff);
+    --chip-fg-category: var(--secondary-foreground, #0e7490);
+
+    display: inline-flex;
+    gap: 6px;
+    padding: 0;
+    margin: 6px 0 0;
+    list-style: none;
+}
+
+.wrap {
+    flex-wrap: wrap;
+}
+
+.nowrap {
+    flex-wrap: nowrap;
+    overflow: hidden;
+}
+
+.sm .chip {
+    height: 22px;
+    padding: 0 8px;
+    font-size: 11px;
+}
+
+.md .chip {
+    height: 26px;
+    padding: 0 10px;
+    font-size: 12px;
+}
+
+.chip {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 999px;
+    background: var(--chip-bg);
+    color: var(--chip-fg);
+    border: 1px solid var(--chip-border);
+    line-height: 1;
+    white-space: nowrap;
+}
+
+.serviceChip {
+    background: var(--chip-bg-service);
+    color: var(--chip-fg-service);
+    border-color: color-mix(in oklab, var(--chip-fg-service) 20%, #ffffff);
+    font-weight: 600;
+}
+
+.categoryChip {
+    background: var(--chip-bg-category);
+    color: var(--chip-fg-category);
+    border-color: color-mix(in oklab, var(--chip-fg-category) 24%, #ffffff);
+    font-weight: 600;
+}
+
+.text {
+    display: inline-block;
+    transform: translateY(0.5px);
+}

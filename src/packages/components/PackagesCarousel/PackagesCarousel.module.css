@@ -1,0 +1,26 @@
+.section {
+    width: 100%;
+}
+
+.header {
+    display: grid;
+    gap: 0.25rem;
+    margin: 0 0 0.75rem;
+    text-align: left;
+}
+
+.title {
+    margin: 0;
+    font-weight: 800;
+    font-size: clamp(1.125rem, 1vw + 1rem, 1.5rem);
+    letter-spacing: .2px;
+}
+
+.subtitle {
+    margin: 0;
+    color: var(--text-secondary, #475569);
+}
+
+.carouselWrap {
+    position: relative;
+}

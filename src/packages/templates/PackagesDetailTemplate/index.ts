@@ -1,2 +1,3 @@
 //src/packages/templates/PackagesDetailTemplate/index.ts
-export { PackagesDetailTemplate } from "./PackagesDetailTemplate";
+export { default } from "./PackagesDetailTemplate";
+export type { PackagesDetailTemplateProps } from "./PackagesDetailTemplate";

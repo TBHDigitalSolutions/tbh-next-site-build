@@ -1,0 +1,178 @@
+/* Base */
+.chip {
+    --chip-bg: #f1f5f9;
+    /* default bg (subtle) */
+    --chip-fg: #0f172a;
+    /* default text */
+    --chip-ring: rgba(59, 130, 246, .4);
+
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+
+    border-radius: 999px;
+    border: 1px solid transparent;
+    background: var(--chip-bg);
+    color: var(--chip-fg);
+
+    white-space: nowrap;
+    text-decoration: none;
+    line-height: 1;
+
+    transition: background-color 140ms ease, border-color 140ms ease, color 140ms ease, box-shadow 140ms ease;
+}
+
+/* Sizes */
+.sm {
+    padding: 0.25rem 0.55rem;
+    font-size: 0.8125rem;
+}
+
+.md {
+    padding: 0.35rem 0.7rem;
+    font-size: 0.9rem;
+}
+
+.iconWrap {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.icon {
+    width: 1em;
+    height: 1em;
+}
+
+.fallbackDot {
+    width: 0.5em;
+    height: 0.5em;
+    border-radius: 999px;
+    background: currentColor;
+    display: inline-block;
+}
+
+.text {
+    font-weight: 600;
+}
+
+/* Variants */
+.subtle {
+    border-color: transparent;
+}
+
+.solid {
+    color: #0b1220;
+    border-color: transparent;
+    /* solid bg comes from service class variable overrides */
+}
+
+.outline {
+    background: transparent;
+    border-color: currentColor;
+}
+
+/* Interactions */
+.interactive {
+    cursor: pointer;
+}
+
+.interactive:hover {
+    filter: brightness(0.98);
+}
+
+.interactive:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px var(--chip-ring);
+}
+
+.selected {
+    box-shadow: 0 0 0 2px var(--chip-fg) inset;
+}
+
+/* -------------------- Service themes (override CSS vars) -------------------- */
+
+/* Web Development: indigo */
+.svcWebdev {
+    --chip-bg: #eef2ff;
+    --chip-fg: #3730a3;
+}
+
+.svcWebdev.solid {
+    --chip-bg: #4f46e5;
+    --chip-fg: #eef2ff;
+}
+
+/* SEO: emerald */
+.svcSeo {
+    --chip-bg: #ecfdf5;
+    --chip-fg: #047857;
+}
+
+.svcSeo.solid {
+    --chip-bg: #10b981;
+    --chip-fg: #052e21;
+}
+
+/* Video: violet */
+.svcVideo {
+    --chip-bg: #f5f3ff;
+    --chip-fg: #6d28d9;
+}
+
+.svcVideo.solid {
+    --chip-bg: #8b5cf6;
+    --chip-fg: #1c0f38;
+}
+
+/* Content: cyan */
+.svcContent {
+    --chip-bg: #ecfeff;
+    --chip-fg: #0e7490;
+}
+
+.svcContent.solid {
+    --chip-bg: #06b6d4;
+    --chip-fg: #042c33;
+}
+
+/* Marketing: amber */
+.svcMarketing {
+    --chip-bg: #fffbeb;
+    --chip-fg: #b45309;
+}
+
+.svcMarketing.solid {
+    --chip-bg: #f59e0b;
+    --chip-fg: #3e2500;
+}
+
+/* Lead Generation: rose */
+.svcLeadgen {
+    --chip-bg: #fff1f2;
+    --chip-fg: #be123c;
+}
+
+.svcLeadgen.solid {
+    --chip-bg: #f43f5e;
+    --chip-fg: #3a0a14;
+}
+
+/* Custom/fallback: uses parent-set variables or defaults */
+.svcCustom {
+    /* Consumers can set:
+     --chip-bg, --chip-fg, --chip-ring
+  */
+}
+
+/* Dark mode tuning */
+@media (prefers-color-scheme: dark) {
+    .chip {
+        --chip-bg: #0b1220;
+        --chip-fg: #e2e8f0;
+    }
+
+    .outline {
+        border-color: var(--chip-fg);
+    }
+}

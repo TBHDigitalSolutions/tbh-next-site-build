@@ -1,0 +1,157 @@
+.wrap {
+    width: 100%;
+    background: var(--surface, #fff);
+    border-radius: 20px;
+    border: 1px solid color-mix(in oklab, var(--surface, #fff) 85%, #0b1220);
+    box-shadow: 0 10px 30px rgba(2, 6, 23, 0.06);
+    padding: clamp(1rem, 2vw, 1.5rem);
+}
+
+/* 2-col responsive grid: content | pinned card */
+.grid {
+    display: grid;
+    grid-template-columns: 1fr min(380px, 32vw);
+    gap: clamp(1rem, 2vw, 1.5rem);
+}
+
+.left {
+    min-width: 0;
+}
+
+/* allow wrapping content */
+.right {
+    min-width: 0;
+}
+
+/* Sticky pinned card */
+.sticky {
+    position: sticky;
+    top: var(--sticky-top, 1rem);
+    /* adjust for your site header */
+}
+
+/* Header (hero-ish) */
+.header {
+    display: grid;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.metaRow {
+    display: flex;
+    gap: 0.5rem 0.75rem;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.title {
+    margin: 0;
+    font-weight: 900;
+    letter-spacing: .2px;
+    line-height: 1.15;
+    font-size: clamp(1.5rem, 2.4vw, 2rem);
+    color: var(--text-primary, #0f172a);
+}
+
+.valueProp {
+    margin: 0;
+    color: var(--text-secondary, #334155);
+    font-size: clamp(1rem, 1.2vw, 1.125rem);
+}
+
+.icp {
+    margin: 0.25rem 0 0;
+    color: var(--text-tertiary, #475569);
+}
+
+/* Teaser price & notes */
+.teaser {
+    display: flex;
+    gap: 0.5rem;
+    align-items: baseline;
+    flex-wrap: wrap;
+    margin-top: 0.5rem;
+}
+
+.teaserLabel {
+    font-weight: 700;
+    color: var(--text-primary, #0f172a);
+}
+
+.teaserNotes {
+    opacity: 0.8;
+    font-size: 0.9rem;
+}
+
+/* CTAs */
+.ctaRow {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 0.75rem;
+}
+
+.btnPrimary,
+.btnSecondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.6rem 0.9rem;
+    border-radius: 10px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: filter 120ms ease, transform 120ms ease;
+}
+
+.btnPrimary {
+    background: #0ea5e9;
+    color: #041017;
+}
+
+.btnSecondary {
+    background: color-mix(in oklab, #0ea5e9 10%, white);
+    color: #0f172a;
+    border: 1px solid color-mix(in oklab, #0ea5e9 20%, white);
+}
+
+.btnPrimary:hover,
+.btnSecondary:hover {
+    filter: brightness(0.98);
+}
+
+.btnPrimary:active,
+.btnSecondary:active {
+    transform: translateY(1px);
+}
+
+/* Outcomes */
+.outcomes {
+    margin-top: 1rem;
+}
+
+/* Includes table */
+.includes {
+    margin-top: 1rem;
+}
+
+.subhead {
+    margin: 0 0 0.5rem;
+    font-size: clamp(1.125rem, 1.4vw, 1.375rem);
+    font-weight: 800;
+}
+
+.notes {
+    margin-top: 0.5rem;
+    color: var(--text-tertiary, #475569);
+    font-size: 0.95rem;
+}
+
+/* Responsive: stack columns on narrow viewports */
+@media (max-width: 980px) {
+    .grid {
+        grid-template-columns: 1fr;
+    }
+
+    .sticky {
+        position: static;
+    }
+}

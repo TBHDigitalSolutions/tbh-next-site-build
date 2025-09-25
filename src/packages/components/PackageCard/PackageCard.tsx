@@ -1,126 +1,83 @@
 // src/packages/components/PackageCard/PackageCard.tsx
-// src/packages/components/PackageCard/PackageCard.tsx
 "use client";
 
 import * as React from "react";
 import Link from "next/link";
+
+import PackageCardFrame from "@/packages/components/PackageCardFrame";
 import cls from "./PackageCard.module.css";
-import {
-  formatCurrency,
-  toMonthlyPrice,
-  toOneTimePrice,
-  toStartingPrice,
-} from "@/data/packages/_types/currency";
+
+import PriceLabel, { formatMoney, type Money as PriceMoney } from "@/components/ui/molecules/PriceLabel";
+import { FeatureList } from "@/components/ui/molecules/FeatureList";
+import ServiceChip, { type ServiceSlug as ChipService } from "@/components/ui/molecules/ServiceChip";
+import TagChips from "@/components/ui/molecules/TagChips";
 
 /* ---------------------------------- Types --------------------------------- */
 
-// Service universe used by cards & filters
-export type ServiceSlug = "webdev" | "seo" | "marketing" | "leadgen" | "content" | "video";
+export type ServiceSlug = ChipService;
 
-// Money (domain-preferred) — UI accepts this OR the legacy {setup, monthly}
-export type Money = { oneTime?: number; monthly?: number; currency?: string };
-
-// Legacy shape accepted by carousel callers
 export type LegacyPrice = { setup?: number; monthly?: number; currency?: string };
 
-// Shared card props (merged, superset of both implementations)
 export type PackageCardProps = {
   // identity / routing
-  id?: string;               // optional DOM/test id
-  slug?: string;             // used to construct default href
-  href?: string;             // explicit link target
+  id?: string;
+  slug?: string;
+  href?: string;
   testId?: string;
 
   // naming/content
-  name?: string;             // preferred (domain)
-  title?: string;            // alt name (carousel)
-  description?: string;      // preferred (domain)
-  summary?: string;          // alt description (carousel)
-  features?: string[];       // domain highlights list
-  highlights?: string[];     // alt highlights (carousel)
+  name?: string;
+  title?: string;
+  description?: string;
+  summary?: string;
+  features?: string[];
+  highlights?: string[];
 
   // service + tier context
   service?: ServiceSlug;
   tier?: "Essential" | "Professional" | "Enterprise";
   popular?: boolean;
-  badge?: string;            // custom badge text
+  badge?: string;
 
   // art
   image?: { src: string; alt?: string } | null;
 
   // pricing (either shape is fine)
-  price?: Money | LegacyPrice;
-  startingAt?: number;       // optional “from $X” chip
-  savingsPct?: number;       // optional “Save N%” badge
+  price?: PriceMoney | LegacyPrice;
+  startingAt?: number;
+  savingsPct?: number;
+
+  // taxonomy
+  tags?: string[];
 
   // CTA (optional overrides)
-  detailsHref?: string;      // legacy alias for href
+  detailsHref?: string;
   primaryCta?: { label: string; href?: string; onClick?: (slug?: string) => void };
   secondaryCta?: { label: string; href?: string; onClick?: (slug?: string) => void };
   footnote?: string;
 
   // presentation
   className?: string;
-  highlight?: boolean;       // accent border
-  variant?: "default" | "rail"; // layout hint for CSS
+  highlight?: boolean;
+  variant?: "default" | "rail";
 
   // ux
   isLoading?: boolean;
 
   // analytics
-  analyticsCategory?: string; // gtag category
-};
-
-/* ---------------------------- Local dictionaries -------------------------- */
-
-const SERVICE_ICONS: Partial<Record<ServiceSlug, string>> = {
-  webdev: "🌐",
-  seo: "🔍",
-  marketing: "📈",
-  leadgen: "🎯",
-  content: "✏️",
-  video: "🎬",
-};
-
-const SERVICE_NAMES: Partial<Record<ServiceSlug, string>> = {
-  webdev: "Web Development",
-  seo: "SEO Services",
-  marketing: "Marketing",
-  leadgen: "Lead Generation",
-  content: "Content Production",
-  video: "Video Production",
+  analyticsCategory?: string;
 };
 
 /* --------------------------------- Utils ---------------------------------- */
 
-// Normalize any price shape → Money
-function normalizeMoney(price?: Money | LegacyPrice): Money | undefined {
+function normalizeMoney(price?: PriceMoney | LegacyPrice): PriceMoney | undefined {
   if (!price) return undefined;
-  // If it already looks like Money, keep as-is
   if ("oneTime" in price || "monthly" in price) {
-    return { oneTime: (price as Money).oneTime, monthly: price.monthly, currency: price.currency ?? "USD" };
+    const p = price as PriceMoney;
+    return { oneTime: p.oneTime, monthly: p.monthly, currency: p.currency ?? "USD" };
   }
-  // Legacy -> Money mapping
   const legacy = price as LegacyPrice;
   return { oneTime: legacy.setup, monthly: legacy.monthly, currency: legacy.currency ?? "USD" };
-}
-
-// Render price chips (setup, monthly, or custom)
-function PriceChips({ money }: { money?: Money }) {
-  const one = money?.oneTime;
-  const mon = money?.monthly;
-  const cur = money?.currency ?? "USD";
-
-  if (one == null && mon == null) {
-    return <div className={cls.priceChip}>Contact for pricing</div>;
-  }
-
-  return (
-    <>
-      {one != null && <div className={cls.priceChip}>Setup {formatCurrency(one, cur)}</div>}
-      {mon != null && <div className={cls.priceChip}>{toMonthlyPrice(mon, cur)}</div>}
-    </>
-  );
 }
 
 function cx(...parts: Array<string | false | null | undefined>) {
@@ -154,6 +111,8 @@ export default function PackageCard(props: PackageCardProps) {
     startingAt,
     savingsPct,
 
+    tags,
+
     detailsHref,
     primaryCta,
     secondaryCta,
@@ -180,10 +139,10 @@ export default function PackageCard(props: PackageCardProps) {
   const primaryHref = primaryCta?.href ?? defaultHref;
   const secondaryHref = secondaryCta?.href ?? "/book";
 
-  // Normalize money
+  // Normalize money & labels
   const money = normalizeMoney(price);
   const currency = money?.currency ?? "USD";
-  const startingLabel = startingAt != null ? toStartingPrice(startingAt, currency) : null;
+  const startingLabel = typeof startingAt === "number" ? `From ${formatMoney(startingAt, currency)}` : null;
 
   // Badge logic: custom > popular > tier
   const displayBadge = badge ?? (popular ? "Most Popular" : tier ?? undefined);
@@ -212,28 +171,21 @@ export default function PackageCard(props: PackageCardProps) {
     secondaryCta?.onClick?.(slug);
   }, [fire, secondaryCta, slug]);
 
-  const serviceIcon = service ? SERVICE_ICONS[service] : undefined;
-  const serviceName = service ? SERVICE_NAMES[service] : undefined;
-
-  // Microdata (only include Offer price fields when we actually have numeric price)
-  const monthlyRaw = money?.monthly;
-
   return (
-    <article
-      id={id}
-      data-testid={testId}
+    <PackageCardFrame
       className={cx(
-        cls.card,
+        cls.card,               // keep existing inner spacing tokens
         highlight && cls.cardHighlight,
         variant === "rail" && cls.cardRail,
         className,
       )}
+      height="stretch"
+      padding="lg"
+      hoverLift
+      ariaLabel={`${displayTitle} package`}
       data-service={service ?? ""}
       data-tier={tier ?? ""}
       data-popular={popular ? "true" : "false"}
-      itemScope
-      itemType="https://schema.org/Service"
-      aria-labelledby={`${(slug ?? displayTitle).replace(/\s+/g, "-")}-title`}
     >
       {/* Media/Header */}
       <header className={cls.header}>
@@ -247,54 +199,41 @@ export default function PackageCard(props: PackageCardProps) {
               loading="lazy"
               decoding="async"
             />
-          ) : serviceIcon ? (
-            <div className={cls.iconFallback} aria-hidden="true" title={serviceName}>
-              <span className={cls.serviceIcon} role="img" aria-label={serviceName}>
-                {serviceIcon}
-              </span>
+          ) : service ? (
+            <div className={cls.iconFallback} aria-hidden="true">
+              <ServiceChip service={service} variant="solid" size="sm" />
             </div>
           ) : null}
+
           {displayBadge && <span className={cls.badge}>{displayBadge}</span>}
           {savingsPct != null && savingsPct > 0 && (
             <span className={cls.savingsBadge}>Save {savingsPct}%</span>
           )}
         </div>
 
-        <h3
-          className={cls.title}
-          id={`${(slug ?? displayTitle).replace(/\s+/g, "-")}-title`}
-          itemProp="name"
-        >
+        <h3 className={cls.title} id={`${(slug ?? displayTitle).replace(/\s+/g, "-")}-title`}>
           {displayTitle}
         </h3>
       </header>
 
       {/* Description */}
-      {displayDesc && (
-        <p className={cls.description} itemProp="description">
-          {displayDesc}
-        </p>
-      )}
+      {displayDesc && <p className={cls.description}>{displayDesc}</p>}
 
       {/* Value section (starting price + quick highlights) */}
       <div className={cls.value}>
         {startingLabel && (
           <div className={cls.priceDisplay}>
             <span className={cls.priceLabel}>Starting at</span>
-            <span className={cls.priceValue}>{startingLabel.replace(/^from\s*/i, "")}</span>
+            <span className={cls.priceValue}>{startingLabel.replace(/^From\s+/i, "")}</span>
           </div>
         )}
 
         {shown.length > 0 && (
           <div className={cls.features}>
-            <ul className={cls.featureList}>
-              {shown.map((f, i) => (
-                <li key={i} className={cls.featureItem} itemProp="feature">
-                  <span className={cls.check} aria-hidden="true">✓</span>
-                  <span>{f}</span>
-                </li>
-              ))}
-            </ul>
+            <FeatureList
+              items={shown.map((f, i) => ({ id: `f-${i}`, label: f }))}
+              size="sm"
+            />
             {remaining > 0 && (
               <div className={cls.more} aria-live="polite">
                 +{remaining} more
@@ -304,22 +243,21 @@ export default function PackageCard(props: PackageCardProps) {
         )}
       </div>
 
-      {/* Detailed price chips */}
+      {/* Detailed price */}
       <div className={cls.prices}>
-        <PriceChips money={money} />
-        <meta itemProp="areaServed" content="US" />
-        <div itemProp="offers" itemScope itemType="https://schema.org/Offer" hidden>
-          {typeof monthlyRaw === "number" && !Number.isNaN(monthlyRaw) && (
-            <>
-              <meta itemProp="price" content={String(monthlyRaw)} />
-              <meta itemProp="priceCurrency" content={currency} />
-              <meta itemProp="availability" content="https://schema.org/InStock" />
-            </>
-          )}
+        <div className={cls.priceChip}>
+          <PriceLabel price={money} />
         </div>
       </div>
 
-      {/* Actions (Next.js Link for prefetch) */}
+      {/* Tags (optional) */}
+      {tags && tags.length > 0 ? (
+        <div style={{ marginTop: 8 }}>
+          <TagChips tags={tags} />
+        </div>
+      ) : null}
+
+      {/* Actions */}
       <div className={cls.actions}>
         <Link
           href={primaryHref}
@@ -348,6 +286,6 @@ export default function PackageCard(props: PackageCardProps) {
 
       {/* Optional footnote */}
       {footnote && <div className={cls.footerNote}>{footnote}</div>}
-    </article>
+    </PackageCardFrame>
   );
 }

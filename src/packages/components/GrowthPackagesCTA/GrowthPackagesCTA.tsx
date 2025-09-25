@@ -1,5 +1,7 @@
 // src/components/services/GrowthPackagesCTA/GrowthPackagesCTA.tsx
-import React from "react";
+"use client";
+
+import * as React from "react";
 import Button from "@/components/ui/atoms/Button/Button";
 import styles from "./GrowthPackagesCTA.module.css";
 

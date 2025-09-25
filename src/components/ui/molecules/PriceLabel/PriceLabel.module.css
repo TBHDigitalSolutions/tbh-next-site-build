@@ -1,0 +1,60 @@
+.root {
+    display: inline-flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    font-variant-numeric: tabular-nums;
+    color: var(--price-fg, var(--foreground, #0f172a));
+}
+
+/* Variants */
+.inline {
+    gap: 0.25rem;
+}
+
+.block {
+    display: inline-grid;
+    gap: 0.25rem;
+}
+
+/* Parts */
+.group {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.25rem;
+}
+
+.amount {
+    font-weight: 700;
+    line-height: 1.1;
+    /* Scales nicely inside cards and tables */
+    font-size: var(--price-font-size, 1.125rem);
+}
+
+.suffix {
+    opacity: 0.8;
+    font-weight: 500;
+    font-size: 0.875rem;
+}
+
+.separator {
+    opacity: 0.6;
+    padding: 0 0.125rem;
+}
+
+.notes {
+    margin-left: 0.25rem;
+    opacity: 0.75;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.contact {
+    font-weight: 600;
+}
+
+/* Optional: dark mode token hook */
+@media (prefers-color-scheme: dark) {
+    .root {
+        color: var(--price-fg-dark, var(--foreground, #e2e8f0));
+    }
+}

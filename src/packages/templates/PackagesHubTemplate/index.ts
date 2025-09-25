@@ -1,2 +1,3 @@
 // src/packages/templates/PackagesHubTemplate/index.ts
-export { PackagesHubTemplate } from "./PackagesHubTemplate";
+export { default } from "./PackagesHubTemplate";
+export type { PackagesHubTemplateProps } from "./PackagesHubTemplate";

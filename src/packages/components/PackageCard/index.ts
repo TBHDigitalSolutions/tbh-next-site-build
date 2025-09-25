@@ -1,3 +1,3 @@
 // src/packages/components/PackageCard/index.ts
-export { default } from "./PackageCard";
-export type { PackageCardProps, Price } from "./PackageCard";
+export { default as PackageCard } from "./PackageCard";
+export type { PackageCardProps } from "./PackageCard";
