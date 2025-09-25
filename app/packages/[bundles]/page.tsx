@@ -6,8 +6,8 @@ import styles from "../packages.module.css";
 // Data (SSOT)
 import { BUNDLES, getBundleBySlug } from "@/data/packages";
 
-// Presentation template
-import { PackagesDetailTemplate } from "@/packages/templates";
+// Template
+import PackagesDetailTemplate from "@/packages/templates/PackagesDetailTemplate";
 
 // ---- Static params for SSG/ISR ---------------------------------------------
 export function generateStaticParams() {
@@ -17,8 +17,11 @@ export function generateStaticParams() {
 type Params = { bundles: string };
 
 // ---- Metadata ---------------------------------------------------------------
-export function generateMetadata({ params }: { params: Params }): Metadata {
-  const bundle = getBundleBySlug(params.bundles);
+export async function generateMetadata(
+  { params }: { params: Promise<Params> },
+): Promise<Metadata> {
+  const { bundles } = await params;
+  const bundle = getBundleBySlug(bundles);
 
   if (!bundle) {
     return {
@@ -28,7 +31,6 @@ export function generateMetadata({ params }: { params: Params }): Metadata {
     };
   }
 
-  // Prefer MDX-derived SEO when present
   const anyBundle = bundle as any;
   const title =
     anyBundle?.seo?.title ??
@@ -41,7 +43,6 @@ export function generateMetadata({ params }: { params: Params }): Metadata {
     bundle.description;
 
   const image = anyBundle?.image ?? anyBundle?.cardImage;
-
   const absolute = (src?: string) =>
     src?.startsWith?.("http")
       ? src
@@ -63,8 +64,11 @@ export function generateMetadata({ params }: { params: Params }): Metadata {
 }
 
 // ---- Page -------------------------------------------------------------------
-export default function PackageDetailPage({ params }: { params: Params }) {
-  const bundle = getBundleBySlug(params.bundles);
+export default async function PackageDetailPage(
+  { params }: { params: Promise<Params> },
+) {
+  const { bundles } = await params;
+  const bundle = getBundleBySlug(bundles);
   if (!bundle) return notFound();
 
   return (

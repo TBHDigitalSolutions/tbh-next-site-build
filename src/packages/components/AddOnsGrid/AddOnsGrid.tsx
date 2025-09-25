@@ -1,238 +1,390 @@
+// src/packages/components/AddOnsGrid/AddOnsGrid.tsx
 "use client";
 
 import * as React from "react";
 import cls from "./AddOnsGrid.module.css";
+import AddOnCard from "@/packages/components/AddOnCard/AddOnCard";
+import {
+  toCombinedPrice,
+  toStartingPrice,
+  formatCurrency,
+} from "@/data/packages/_types/currency";
 
-export type Price = { oneTime?: number; monthly?: number; currency?: "USD" };
+/* -------------------------------------------------------------------------- */
+/* Types                                                                      */
+/* -------------------------------------------------------------------------- */
 
+// Canonical Money (SSOT)
+export type Price = { oneTime?: number; monthly?: number; currency?: string };
+
+// Domain add-on (SSOT-ish)
 export type AddOn = {
   slug: string;
   name: string;
-  description: string;
-  price?: Price; // optional in SSOT
+  description?: string;
+  price?: Price; // optional by design
   category?: string;
+  popular?: boolean;
+};
+
+// Card item expected by AddOnCard
+export type AddOnCardItem = {
+  id: string;
+  title: string;
+  description?: string;
+  bullets?: string[];
+  priceLabel: string; // "from $X,XXX" | "$X,XXX one-time" | "$X,XXX/mo" | "Contact for pricing"
+  badge?: string;
+  href?: string;
+  category?: string;
+  popular?: boolean;
+};
+
+// Legacy carousel item support (back-compat)
+export type LegacyCarouselItem = {
+  id: string;
+  name: string;
+  description?: string;
+  startingAt?: string | number;
+  href?: string;
+  category?: string;
+  popular?: boolean;
 };
 
 export type AddOnsGridProps = {
-  /** Full list of add-ons from SSOT */
-  addOns: AddOn[];
-  /** Selected slugs (controlled). If omitted, component manages its own state. */
-  selectedSlugs?: string[];
-  /** Controlled selection change handler. */
+  /* Data inputs (prefer passing `items` after adapting externally) */
+  items?: AddOnCardItem[];
+  addOns?: AddOn[];                // raw domain add-ons (adapter runs internally)
+  legacyItems?: LegacyCarouselItem[]; // deprecated; mapped internally for compatibility
+
+  /* Optional header */
+  title?: string;
+  subtitle?: string;
+
+  /* Selection (controlled or uncontrolled) */
+  selectedSlugs?: string[];             // controlled
+  defaultSelectedSlugs?: string[];      // uncontrolled initial
   onChangeSelected?: (slugs: string[]) => void;
-  /** Per-item hooks for analytics or side effects. */
-  onAdd?: (addOn: AddOn) => void;
-  onRemove?: (addOn: AddOn) => void;
-  /** UI toggles */
+  onAdd?: (addOnId: string) => void;
+  onRemove?: (addOnId: string) => void;
+
+  /* Filters / search */
   showSearch?: boolean;
   showCategoryFilter?: boolean;
-  /** Optional: start on a specific category */
-  initialCategory?: string;
-  /** Minimum card width in the grid; defaults to 260px. */
-  minCardWidthPx?: number;
-  /** Button labels */
-  ctaAddLabel?: string;
-  ctaRemoveLabel?: string;
-  /** Render when no items after filters */
-  emptyState?: React.ReactNode;
-  /** Extra className on root */
+  initialCategory?: string | "All";
+
+  /* Layout */
+  minCardWidthPx?: number; // default 260
   className?: string;
-  /** Optional id for aria relationships */
   id?: string;
+  testId?: string;
+
+  /* States / copy */
+  isLoading?: boolean;
+  emptyMessage?: string;
+
+  /* CTA labels for the selection buttons */
+  ctaAddLabel?: string;       // default "Add"
+  ctaRemoveLabel?: string;    // default "Remove"
 };
 
-function formatMoney(v?: number, currency: string = "USD") {
-  if (v === undefined) return undefined;
-  try {
-    return new Intl.NumberFormat(undefined, { style: "currency", currency, maximumFractionDigits: 0 }).format(v);
-  } catch {
-    return `$${v}`;
+/* -------------------------------------------------------------------------- */
+/* Adapters                                                                   */
+/* -------------------------------------------------------------------------- */
+
+// Convert SSOT add-on → card item (used when `addOns` prop is provided)
+export function adaptAddOnToCardItem(a: AddOn): AddOnCardItem {
+  return {
+    id: a.slug,
+    title: a.name,
+    description: a.description,
+    priceLabel: toCombinedPrice(a.price), // tolerant: "Contact for pricing" when empty
+    badge: a.popular ? "Popular" : undefined,
+    href: undefined, // provide if you have deep links for add-ons
+    category: a.category,
+    popular: a.popular,
+  };
+}
+
+// Convert legacy carousel items → card items (for back-compat)
+function adaptLegacyToCardItem(x: LegacyCarouselItem): AddOnCardItem {
+  let priceLabel = "Contact for pricing";
+  if (typeof x.startingAt === "number") {
+    priceLabel = toStartingPrice(x.startingAt);
+  } else if (typeof x.startingAt === "string" && x.startingAt.trim()) {
+    // Keep existing label if it already contains currency text
+    priceLabel = x.startingAt.startsWith("$") ? `from ${x.startingAt}` : `from ${x.startingAt}`;
   }
+  return {
+    id: x.id,
+    title: x.name,
+    description: x.description,
+    priceLabel,
+    href: x.href,
+    category: x.category,
+    popular: x.popular,
+  };
 }
 
-function priceLabel(p?: Price): string {
-  if (!p || (p.oneTime == null && p.monthly == null)) return "Custom";
-  const parts: string[] = [];
-  if (p.oneTime != null) parts.push(`Setup ${formatMoney(p.oneTime, p.currency)}`);
-  if (p.monthly != null) parts.push(`${formatMoney(p.monthly, p.currency)}/mo`);
-  return parts.join(" • ");
+/* -------------------------------------------------------------------------- */
+/* Internal utils                                                             */
+/* -------------------------------------------------------------------------- */
+
+function cx(...parts: Array<string | false | null | undefined>) {
+  return parts.filter(Boolean).join(" ");
 }
 
-function useControlledSelection(initial: string[] | undefined, controlled: string[] | undefined, onChange?: (s: string[]) => void) {
-  const [internal, setInternal] = React.useState<Set<string>>(new Set(initial ?? controlled ?? []));
-  const isControlled = controlled !== undefined;
-  const set = React.useMemo(() => (isControlled ? new Set(controlled) : internal), [isControlled, controlled, internal]);
+function useControlledSet(
+  controlled?: string[],
+  defaultValue?: string[],
+  onChange?: (next: string[]) => void,
+) {
+  const controlledMode = Array.isArray(controlled);
+  const [internal, setInternal] = React.useState<Set<string>>(
+    () => new Set(controlled ?? defaultValue ?? []),
+  );
+
+  // Keep internal in sync if consumer controls it
+  React.useEffect(() => {
+    if (controlledMode) setInternal(new Set(controlled));
+  }, [controlledMode, controlled]);
 
   const update = React.useCallback(
     (next: Set<string>) => {
-      if (isControlled) {
-        onChange?.(Array.from(next));
-      } else {
-        setInternal(new Set(next));
-        onChange?.(Array.from(next));
-      }
+      if (!controlledMode) setInternal(next);
+      onChange?.(Array.from(next));
     },
-    [isControlled, onChange]
+    [controlledMode, onChange],
   );
 
   const toggle = React.useCallback(
-    (slug: string) => {
-      const next = new Set(set);
-      if (next.has(slug)) next.delete(slug); else next.add(slug);
+    (id: string) => {
+      const next = new Set(internal);
+      next.has(id) ? next.delete(id) : next.add(id);
       update(next);
     },
-    [set, update]
+    [internal, update],
   );
 
-  return { selected: set, toggle } as const;
+  return { selected: internal, toggle };
 }
 
+/* -------------------------------------------------------------------------- */
+/* Component                                                                   */
+/* -------------------------------------------------------------------------- */
+
 export default function AddOnsGrid({
+  items,
   addOns,
+  legacyItems,
+
+  title = "Add-On Services",
+  subtitle = "Enhance your package with targeted capabilities",
+
   selectedSlugs,
+  defaultSelectedSlugs,
   onChangeSelected,
   onAdd,
   onRemove,
+
   showSearch = true,
   showCategoryFilter = true,
-  initialCategory,
+  initialCategory = "All",
+
   minCardWidthPx = 260,
-  ctaAddLabel = "Add",
-  ctaRemoveLabel = "Remove",
-  emptyState,
   className,
   id,
+  testId = "addons-grid",
+
+  isLoading = false,
+  emptyMessage = "No add-ons available at this time.",
+
+  ctaAddLabel = "Add",
+  ctaRemoveLabel = "Remove",
 }: AddOnsGridProps) {
-  const { selected, toggle } = useControlledSelection(undefined, selectedSlugs, onChangeSelected);
+  // 1) Normalize source → card items
+  const cardItems = React.useMemo<AddOnCardItem[]>(() => {
+    if (items && items.length) return items;
+    if (addOns && addOns.length) return addOns.map(adaptAddOnToCardItem);
+    if (legacyItems && legacyItems.length) return legacyItems.map(adaptLegacyToCardItem);
+    return [];
+  }, [items, addOns, legacyItems]);
+
+  // 2) Selection (by card item id)
+  const { selected, toggle } = useControlledSet(
+    selectedSlugs,
+    defaultSelectedSlugs,
+    onChangeSelected,
+  );
+
+  const handleToggle = React.useCallback(
+    (id: string) => {
+      const wasSelected = selected.has(id);
+      toggle(id);
+
+      // analytics (best-effort)
+      if (typeof window !== "undefined" && (window as any).gtag) {
+        (window as any).gtag("event", wasSelected ? "addon_remove" : "addon_add", { addon_id: id });
+      }
+
+      if (wasSelected) onRemove?.(id);
+      else onAdd?.(id);
+    },
+    [selected, toggle, onAdd, onRemove],
+  );
+
+  // 3) Search + categories
   const [query, setQuery] = React.useState("");
-  const [category, setCategory] = React.useState<string | "All">(initialCategory ?? "All");
+  const [category, setCategory] = React.useState<string | "All">(initialCategory);
 
   const categories = React.useMemo(() => {
-    const set = new Set<string>();
-    for (const a of addOns) if (a.category) set.add(a.category);
-    return ["All", ...Array.from(set).sort((a, b) => a.localeCompare(b))] as const;
-  }, [addOns]);
+    const s = new Set<string>();
+    for (const it of cardItems) if (it.category) s.add(it.category);
+    return ["All", ...Array.from(s).sort((a, b) => a.localeCompare(b))] as const;
+  }, [cardItems]);
 
   const filtered = React.useMemo(() => {
     const q = query.trim().toLowerCase();
-    return addOns.filter((a) => {
-      if (category !== "All" && (a.category ?? "") !== category) return false;
+    return cardItems.filter((it) => {
+      if (category !== "All" && (it.category ?? "") !== category) return false;
       if (!q) return true;
       return (
-        a.name.toLowerCase().includes(q) ||
-        a.slug.toLowerCase().includes(q) ||
-        a.description.toLowerCase().includes(q)
+        it.title.toLowerCase().includes(q) ||
+        it.id.toLowerCase().includes(q) ||
+        (it.description ?? "").toLowerCase().includes(q)
       );
     });
-  }, [addOns, category, query]);
+  }, [cardItems, category, query]);
 
-  const onToggle = React.useCallback(
-    (addon: AddOn) => {
-      const wasSelected = selected.has(addon.slug);
-      toggle(addon.slug);
-      // Optional analytics hook
-      if (typeof window !== "undefined" && (window as any).gtag) {
-        (window as any).gtag("event", wasSelected ? "addon_remove" : "addon_add", {
-          addon_slug: addon.slug,
-          addon_name: addon.name,
-          addon_category: addon.category ?? null,
-        });
-      }
-      if (wasSelected) onRemove?.(addon); else onAdd?.(addon);
-    },
-    [selected, toggle, onAdd, onRemove]
+  // 4) Loading placeholders
+  const displayItems: AddOnCardItem[] =
+    isLoading && filtered.length === 0
+      ? Array.from({ length: 3 }, (_, i) => ({
+          id: `loading-${i}`,
+          title: "Loading…",
+          description: "Loading add-on information…",
+          priceLabel: "Contact for pricing",
+        }))
+      : filtered;
+
+  // 5) Grid style
+  const gridStyle = React.useMemo(
+    () => ({ gridTemplateColumns: `repeat(auto-fill, minmax(${minCardWidthPx}px, 1fr))` }) as React.CSSProperties,
+    [minCardWidthPx],
   );
 
-  const gridStyle = React.useMemo(() => ({
-    gridTemplateColumns: `repeat(auto-fill, minmax(${minCardWidthPx}px, 1fr))`,
-  }) as React.CSSProperties, [minCardWidthPx]);
-
-  const empty = (
-    <div className={cls.empty} role="status" aria-live="polite">
-      {emptyState ?? "No add-ons match your filters."}
-    </div>
-  );
+  // Early exit (hide section entirely) if no data and not loading
+  if (!isLoading && cardItems.length === 0) {
+    return null;
+  }
 
   return (
-    <section className={[cls.root, className].filter(Boolean).join(" ")} id={id}>
-      {(showSearch || showCategoryFilter) && (
-        <div className={cls.toolbar}>
-          {showSearch && (
-            <div className={cls.search}>
-              <svg className={cls.searchIcon} viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <path d="M21 21l-4.35-4.35M10.5 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-              </svg>
-              <input
-                className={cls.searchInput}
-                type="search"
-                placeholder="Search add-ons"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                aria-label="Search add-ons"
-              />
+    <section
+      className={cx(cls.root, className)}
+      id={id}
+      data-testid={testId}
+      aria-busy={isLoading || undefined}
+    >
+      {/* Header / toolbar */}
+      {(title || subtitle || showSearch || showCategoryFilter) && (
+        <header className={cls.toolbar}>
+          {(title || subtitle) && (
+            <div className={cls.headerText}>
+              {title && <h3 className={cls.headerTitle}>{title}</h3>}
+              {subtitle && <p className={cls.headerSubtitle}>{subtitle}</p>}
             </div>
           )}
-          {showCategoryFilter && (
-            <div className={cls.chips} role="toolbar" aria-label="Filter by category">
-              {categories.map((c) => (
-                <button
-                  key={c}
-                  type="button"
-                  className={cls.chip}
-                  aria-pressed={category === c}
-                  onClick={() => setCategory(c as any)}
-                >
-                  {c}
-                  <span aria-hidden>· {c === "All" ? addOns.length : addOns.filter(a => (a.category ?? "") === c).length}</span>
-                </button>
-              ))}
+
+          {(showSearch || showCategoryFilter) && (
+            <div className={cls.controls}>
+              {showSearch && (
+                <label className={cls.search}>
+                  <span className={cls.visuallyHidden}>Search add-ons</span>
+                  <input
+                    className={cls.searchInput}
+                    type="search"
+                    placeholder="Search add-ons"
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                    aria-label="Search add-ons"
+                  />
+                </label>
+              )}
+
+              {showCategoryFilter && categories.length > 1 && (
+                <div className={cls.chips} role="toolbar" aria-label="Filter by category">
+                  {categories.map((c) => {
+                    const count =
+                      c === "All"
+                        ? cardItems.length
+                        : cardItems.filter((x) => (x.category ?? "") === c).length;
+                    return (
+                      <button
+                        key={c}
+                        type="button"
+                        className={cx(cls.chip, category === c && cls.chipActive)}
+                        aria-pressed={category === c}
+                        onClick={() => setCategory(c as any)}
+                      >
+                        {c} <span className={cls.chipCount}>· {count}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
             </div>
           )}
-        </div>
+        </header>
       )}
 
-      <div className={cls.grid} style={gridStyle}>
-        {filtered.length === 0 ? (
-          empty
+      {/* Grid */}
+      <div className={cls.grid} style={gridStyle} role="region" aria-label="Available add-on services">
+        {displayItems.length === 0 && !isLoading ? (
+          <div className={cls.empty} role="status" aria-live="polite">
+            {emptyMessage}
+          </div>
         ) : (
-          filtered.map((a) => {
-            const selectedFlag = selected.has(a.slug);
-            const label = selectedFlag ? ctaRemoveLabel : ctaAddLabel;
+          displayItems.map((it) => {
+            const selectedFlag = selected.has(it.id);
+
             return (
-              <article key={a.slug} className={cls.card} data-selected={selectedFlag} aria-labelledby={`addon-${a.slug}-title`}>
-                <header className={cls.header}>
-                  <h3 id={`addon-${a.slug}-title`} className={cls.title}>{a.name}</h3>
-                  {a.category && <span className={cls.category}>{a.category}</span>}
-                </header>
-                <div className={cls.body}>{a.description}</div>
-                <div className={cls.priceRow}>
-                  <span className={cls.priceChip}>{priceLabel(a.price)}</span>
-                </div>
-                <div className={cls.actions}>
-                  <button
-                    type="button"
-                    className={cls.btn}
-                    aria-pressed={selectedFlag}
-                    aria-label={`${label} ${a.name}`}
-                    onClick={() => onToggle(a)}
-                  >
-                    {label}
-                  </button>
-                  {selectedFlag && (
+              <div key={it.id} className={cx(cls.cell)} data-selected={selectedFlag}>
+                <AddOnCard
+                  id={it.id}
+                  title={it.title}
+                  description={it.description}
+                  bullets={it.bullets}
+                  priceLabel={it.priceLabel}
+                  badge={it.badge ?? (it.popular ? "Popular" : undefined)}
+                  href={it.href}
+                />
+
+                {/* Optional selection controls */}
+                {(onAdd || onRemove || selectedSlugs || defaultSelectedSlugs) && (
+                  <div className={cls.actions}>
                     <button
                       type="button"
-                      className={[cls.btn, cls.btnSecondary].join(" ")}
-                      onClick={() => onToggle(a)}
+                      className={cx(cls.btn, selectedFlag && cls.btnSelected)}
+                      aria-pressed={selectedFlag}
+                      aria-label={`${selectedFlag ? ctaRemoveLabel : ctaAddLabel} ${it.title}`}
+                      onClick={() => handleToggle(it.id)}
                     >
-                      Deselect
+                      {selectedFlag ? ctaRemoveLabel : ctaAddLabel}
                     </button>
-                  )}
-                </div>
-              </article>
+                  </div>
+                )}
+              </div>
             );
           })
         )}
       </div>
+
+      {/* SR-only live region for loading */}
+      {isLoading && (
+        <div className={cls.visuallyHidden} aria-live="polite" aria-atomic="true">
+          Loading add-on services…
+        </div>
+      )}
     </section>
   );
 }

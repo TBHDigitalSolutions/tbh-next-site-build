@@ -1,19 +1,20 @@
 // ============================================================================
-// /src/data/packages/index.ts  (production-ready, combined & SSOT-aligned)
+// /src/data/packages/index.ts  (production-ready facade + enriched access)
 // ----------------------------------------------------------------------------
 // Requirements:
 // - tsconfig.json: "resolveJsonModule": true
 // - Path aliases:
 //    "@/data/*"     -> "src/data/*"
 //    "@/packages/*" -> "src/packages/*"
-// Authoring JSON files (co-located):
+// Authoring JSON (co-located):
 //    ./addOns.json, ./bundles.json, ./featured.json
-// ----------------------------------------------------------------------------
-// This module:
+//
+// This module is the ONLY import point for bundle/add-on/featured data.
 // 1) Reads authored JSON
-// 2) Normalizes to canonical domain-like headers
-// 3) Exposes a presentation view (`PackageBundle`) for templates
-// 4) Preserves legacy helpers & provides safe search/curation utilities
+// 2) Normalizes to canonical headers
+// 3) Exposes presentation view (`PackageBundle`) for templates
+// 4) Prefers __generated__ enriched artifacts (no runtime MDX parsing)
+// 5) Provides safe search/curation utilities + Growth bridge
 // ============================================================================
 
 import addOnsJson from "./addOns.json";
@@ -24,13 +25,13 @@ import type { PackageBundle } from "@/packages/lib/types";
 import { bundleToGrowthPackage, type GrowthPackage } from "@/packages/lib/bridge-growth";
 
 // ============================================================================
-// Raw authoring shapes (tolerant to optional fields)
+// Raw authoring shapes (internal only; tolerant to optional fields)
 // ============================================================================
 
 type Tier = "Essential" | "Professional" | "Enterprise";
 type ServiceSlug = "content" | "leadgen" | "marketing" | "seo" | "webdev" | "video";
 
-export type RawAddOnJson = {
+type RawAddOnJson = {
   slug: string;
   service?: ServiceSlug;
   name: string;
@@ -44,7 +45,7 @@ export type RawAddOnJson = {
   category?: string;
 };
 
-export type RawBundleJson = {
+type RawBundleJson = {
   slug: string;
   // Presentation
   title?: string;
@@ -52,7 +53,7 @@ export type RawBundleJson = {
   summary?: string;
   category?: "startup" | "local" | "ecommerce" | "b2b" | "custom";
   tags?: string[];
-  // Optional richer shape (when present from generated/enriched data)
+  // Optional richer shape (enriched build may add these)
   icon?: string;
   cardImage?: { src: string; alt?: string };
   hero?: {
@@ -65,14 +66,14 @@ export type RawBundleJson = {
     background?: { type?: "image"; src?: string; alt?: string };
   };
   services?: string[];            // e.g., ["seo-services"]
-  includedServices?: string[];    // human readable
+  includedServices?: string[];    // human-readable labels
   highlights?: string[];
   outcomes?: {
     title?: string;
     variant?: "stats";
     items?: Array<{ label: string; value: string }>;
   };
-  pricing?: any;                  // left loose; templates handle variants
+  pricing?: any;                  // leave loose; templates own variants
   faq?: { title?: string; faqs?: Array<{ id?: string; question: string; answer: string }> };
   cta?: {
     title?: string;
@@ -86,14 +87,14 @@ export type RawBundleJson = {
   addOnSlugs?: string[];          // optional linkage for guards
 };
 
-export type RawFeaturedJson = {
+type RawFeaturedJson = {
   slugs?: string[];                 // curated bundle slugs (rails / homepage)
   serviceFeaturedSlugs?: string[];  // curated per service
 };
 
 // ============================================================================
-// Local canonical headers (lightweight) + in-file normalizers
-// (Kept internal; we output PackageBundle for presentation)
+// Canonical headers (internal) + in-file normalizers
+// (We export Presentation `PackageBundle` for templates)
 // ============================================================================
 
 type CanonicalAddOn = {
@@ -130,7 +131,7 @@ type CanonicalBundleHeader = {
   pricing?: RawBundleJson["pricing"];
   faq?: RawBundleJson["faq"];
   cta?: RawBundleJson["cta"];
-  content?: RawBundleJson["content"];
+  content?: RawBundleJson["content"]; // compiled MDX html (controlled render)
   addOnSlugs?: string[];
 };
 
@@ -171,7 +172,7 @@ function normalizeBundleHeader(raw: RawBundleJson): CanonicalBundleHeader {
   const title = trimOr(raw.title ?? raw.hero?.content?.title, raw.slug);
   const subtitle = trimOr(raw.subtitle ?? raw.hero?.content?.subtitle);
   const summary = trimOr(raw.summary);
-  const tags = Array.isArray(raw.tags) ? raw.tags.filter(Boolean) as string[] : [];
+  const tags = Array.isArray(raw.tags) ? (raw.tags.filter(Boolean) as string[]) : [];
   return {
     id: raw.slug,
     slug: raw.slug,
@@ -196,9 +197,8 @@ function normalizeBundleHeader(raw: RawBundleJson): CanonicalBundleHeader {
 }
 
 /** Map canonical header → presentation model expected by templates. */
-function toPackageBundle(header: CanonicalBundleHeader): PackageBundle {
-  // Note: Your `PackageBundle` interface supports many optional fields.
-  // We populate what we can, with safe fallbacks for visuals.
+function headerToPackageBundle(header: CanonicalBundleHeader): PackageBundle {
+  // Visual fallbacks for robust cards/heroes
   const fallbackCard: PackageBundle["cardImage"] = {
     src: header.cardImage?.src ?? "/images/packages/placeholder-card.jpg",
     alt: header.cardImage?.alt ?? header.title,
@@ -223,7 +223,11 @@ function toPackageBundle(header: CanonicalBundleHeader): PackageBundle {
     cardImage: fallbackCard,
     hero: {
       content: heroContent,
-      background: header.hero?.background ?? { type: "image", src: fallbackCard.src, alt: fallbackCard.alt },
+      background: header.hero?.background ?? {
+        type: "image",
+        src: fallbackCard.src,
+        alt: fallbackCard.alt,
+      },
     },
     includedServices: header.includedServices ?? [],
     highlights: header.highlights ?? [],
@@ -243,9 +247,9 @@ function toPackageBundle(header: CanonicalBundleHeader): PackageBundle {
       layout: "centered",
       backgroundType: "gradient",
     },
-    // Pass-through compiled MDX if present
+    // Pass-through compiled MDX html (rendered once in template via controlled injection)
     ...(header.content ? { content: header.content } : {}),
-    // Non-spec extras used by some templates/guards
+    // Extras used by guards/templates
     ...(header.addOnSlugs ? { addOnSlugs: header.addOnSlugs } : {}),
     ...(header.services ? { services: header.services } : {}),
   } as PackageBundle;
@@ -259,34 +263,53 @@ function normalizeFeatured(raw: RawFeaturedJson) {
 }
 
 // ============================================================================
-// Canonical data (normalized from raw authoring JSON)
+// Canonical data from authored JSON (fallback baseline)
 // ============================================================================
 
-/** All add-ons as canonical domain-like entities (slug → id, setup→oneTime). */
 const ADD_ONS_CANONICAL: CanonicalAddOn[] = (addOnsJson as RawAddOnJson[]).map(normalizeAddOn);
-
-/** Bundle headers (presentation headers; enrichment happens in build scripts). */
 const BUNDLE_HEADERS: CanonicalBundleHeader[] = (bundlesJson as RawBundleJson[]).map(normalizeBundleHeader);
-
-/** Curated slugs (featured rails, service rails). */
 const featured = normalizeFeatured(featuredJson as RawFeaturedJson);
+
 export const FEATURED_BUNDLE_SLUGS: string[] = featured.featuredBundleSlugs;
 export const SERVICE_FEATURED_SLUGS: string[] = featured.serviceFeaturedSlugs;
 
-/**
- * Presentation mapping for existing components expecting `PackageBundle`.
- * (This is a lightweight view; full enrichment may emit __generated__/bundles.enriched.json.)
- */
-export const BUNDLES: PackageBundle[] = BUNDLE_HEADERS.map(toPackageBundle);
+// Presentation mapping from headers (fallback when no enriched bundles are available)
+const FALLBACK_BUNDLES: PackageBundle[] = BUNDLE_HEADERS.map(headerToPackageBundle);
 
-/**
- * Back-compat raw exports (for any legacy consumers still reading raw JSON directly).
- * Prefer the canonical/presentation exports above.
- */
-export const ADD_ONS_RAW = addOnsJson as RawAddOnJson[];
+// ============================================================================
+// Prefer __generated__ enriched artifacts (optional)
+// - bundles.enriched.json: fully enriched PackageBundle[] (with content.html)
+// - packages.search.json: index for hub live search/filters
+// ============================================================================
 
-/** Prefer this canonical list in new code. */
-export const ADD_ONS = ADD_ONS_CANONICAL;
+let ENRICHED_BUNDLES: PackageBundle[] | undefined;
+let PACKAGES_SEARCH_INDEX: unknown | null = null;
+
+try {
+  // Top-level await is supported in Next.js build pipeline
+  const mod = await import("./__generated__/bundles.enriched.json");
+  ENRICHED_BUNDLES = (mod.default as PackageBundle[])?.filter(Boolean);
+} catch {
+  // no-op: fall back to authored headers
+}
+
+try {
+  const mod = await import("./__generated__/packages.search.json");
+  PACKAGES_SEARCH_INDEX = mod.default ?? null;
+} catch {
+  // no-op: search falls back to header-level filter
+}
+
+/** Bundles exported to the app (enriched preferred). */
+export const BUNDLES: PackageBundle[] = ENRICHED_BUNDLES ?? FALLBACK_BUNDLES;
+
+/** Canonical add-ons (normalized). */
+export const ADD_ONS: CanonicalAddOn[] = ADD_ONS_CANONICAL;
+
+/** Optional: expose generated search index to hub when available. */
+export function getPackagesSearchIndex(): unknown | null {
+  return PACKAGES_SEARCH_INDEX;
+}
 
 // ============================================================================
 // Lookups & search
@@ -328,7 +351,7 @@ export function getBundlesByService(serviceSlug: string): PackageBundle[] {
   });
 }
 
-/** Header-level text search across title/subtitle/summary. */
+/** Header-level text search across title/subtitle/summary (fallback when no index). */
 export function searchBundles(query: string): PackageBundle[] {
   const q = query.trim().toLowerCase();
   if (!q) return BUNDLES;
@@ -370,20 +393,21 @@ export function topNForService(serviceSlug: string, n = 3): GrowthPackage[] {
 
 /** True if an add-on slug is referenced by at least one bundle (when linkage exists). */
 export function isAddOnUsed(slug: string): boolean {
+  // Use authored headers because enrichment may omit linkage metadata
   return BUNDLE_HEADERS.some((b) => Array.isArray(b.addOnSlugs) && b.addOnSlugs.includes(slug));
 }
 
 // ============================================================================
-// Growth bridge (compat with components expecting GrowthPackage)
+// Growth bridge (compat with Growth components)
 // ============================================================================
 
-/** Convert presentation bundles → GrowthPackage (bridge for Growth components). */
+/** Convert presentation bundles → GrowthPackage. */
 export function toGrowthPackages(bundles: PackageBundle[]): GrowthPackage[] {
   return bundles.map(bundleToGrowthPackage);
 }
 
 // ============================================================================
-// Exposed types (QoL re-exports)
+// Exposed types (QoL re-exports only; keep raw/canonical types internal)
 // ============================================================================
 
 export type { PackageBundle } from "@/packages/lib/types";

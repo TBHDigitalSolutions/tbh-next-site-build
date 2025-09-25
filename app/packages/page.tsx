@@ -5,10 +5,11 @@ import styles from "./packages.module.css";
 // Data (SSOT façade)
 import { BUNDLES, FEATURED_BUNDLE_SLUGS } from "@/data/packages";
 
-// Presentation templates (domain layer)
+// app/packages/page.tsx
+// Templates (domain layer)
 import { PackagesHubTemplate } from "@/packages/templates";
 
-export const dynamic = "force-static"; // SSG-friendly
+export const dynamic = "force-static";
 
 export const metadata: Metadata = {
   title: "Integrated Growth Packages",
@@ -34,6 +35,8 @@ export default function PackagesHubPage() {
   return (
     <div className={styles.page}>
       <PackagesHubTemplate
+        title="Integrated Growth Packages"
+        subtitle="Proven playbooks bundled into simple plans — faster time to value, repeatable results."
         bundles={BUNDLES}
         featuredSlugs={FEATURED_BUNDLE_SLUGS}
         showServiceFilter
@@ -42,8 +45,6 @@ export default function PackagesHubPage() {
         defaultSort="recommended"
         minCardWidthPx={300}
         jsonLd
-        title="Integrated Growth Packages"
-        subtitle="Proven playbooks bundled into simple plans — faster time to value, repeatable results."
       />
     </div>
   );

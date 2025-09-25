@@ -1,48 +1,213 @@
-.root {
-    display: block;
-    padding: 1.25rem 0;
-}
+/* ==========================================================================
+   PackagesHubTemplate.module.css
+   Production-ready styles for Packages Hub (CSS Modules safe)
+   - No global selectors
+   - Fallback tokens are scoped to `.wrap`
+   ========================================================================== */
 
-.container {
+/* ---- Layout wrapper + local design tokens -------------------------------- */
+.wrap {
+    /* Fallback tokens for this section (override upstream app tokens if present) */
+    --hub-max-width: 1200px;
+
+    --bg: var(--background, #0b0b0c);
+    --fg: var(--foreground, #0b0b0c);
+    --muted: var(--muted, #f2f4f7);
+    --muted-foreground: var(--muted-foreground, #667085);
+    --card: var(--card, #ffffff);
+    --card-foreground: var(--card-foreground, #0b0b0c);
+    --border: var(--border, #e5e7eb);
+    --ring: var(--ring, #94a3b8);
+
+    --primary: var(--primary, #3b82f6);
+    --primary-foreground: var(--primary-foreground, #ffffff);
+    --accent: var(--accent, #f4f4f5);
+    --accent-foreground: var(--accent-foreground, #111827);
+
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, .06);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, .08);
+    --radius-sm: .375rem;
+    --radius-md: .5rem;
+    --radius-lg: .75rem;
+
+    padding: 2rem 1rem;
     margin: 0 auto;
-    padding: 0 1rem;
-    max-width: 1200px;
+    max-width: var(--hub-max-width);
+    color: var(--card-foreground);
 }
 
+/* ---- Header -------------------------------------------------------------- */
 .header {
-    display: grid;
-    gap: 0.5rem;
-    margin-bottom: 0.5rem;
+    margin-bottom: 1rem;
 }
 
 .title {
-    margin: 0;
-    font-size: 2rem;
+    font-size: clamp(1.5rem, 1.2rem + 1.5vw, 2rem);
     line-height: 1.2;
-    font-weight: 800;
-    color: var(--color-text, #111827);
+    margin: 0 0 .25rem;
+    color: var(--card-foreground);
 }
 
 .subtitle {
     margin: 0;
-    color: var(--color-text-muted, #6b7280);
-    font-size: 1rem;
+    color: var(--muted-foreground);
+    font-size: .975rem;
 }
 
-.hr {
+/* ---- Controls (toolbar) -------------------------------------------------- */
+.controls {
+    display: flex;
+    gap: .75rem;
+    flex-wrap: wrap;
+    margin: 1rem 0 1.25rem;
+    align-items: center;
+}
+
+.control {
+    display: inline-flex;
+    flex-direction: column;
+    gap: .25rem;
+}
+
+.search {
+    flex: 1 1 280px;
+    min-width: 220px;
+    height: 2.5rem;
+    padding: .5rem .75rem;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--card-foreground);
+    outline: none;
+    box-shadow: var(--shadow-sm);
+    transition: border-color .15s ease, box-shadow .15s ease;
+}
+
+.search::placeholder {
+    color: var(--muted-foreground);
+}
+
+.search:focus {
+    border-color: color-mix(in srgb, var(--primary) 60%, #0000);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 18%, #0000);
+}
+
+.select {
+    height: 2.5rem;
+    padding: .5rem .75rem;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--card-foreground);
+    outline: none;
+    box-shadow: var(--shadow-sm);
+    transition: border-color .15s ease, box-shadow .15s ease;
+}
+
+.select:focus {
+    border-color: color-mix(in srgb, var(--primary) 60%, #0000);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 18%, #0000);
+}
+
+/* ---- Visually hidden utility -------------------------------------------- */
+.visuallyHidden {
+    position: absolute !important;
     height: 1px;
-    background: var(--color-border, #e5e7eb);
-    margin: 12px 0;
-}
-
-.srOnly {
-    position: absolute;
     width: 1px;
-    height: 1px;
-    margin: -1px;
-    padding: 0;
-    border: 0;
     overflow: hidden;
-    clip: rect(0 0 0 0);
+    clip: rect(1px, 1px, 1px, 1px);
     white-space: nowrap;
+    clip-path: inset(50%);
+    border: 0;
+    padding: 0;
+    margin: -1px;
+}
+
+/* ---- Grid (cards area) --------------------------------------------------- */
+.grid {
+    display: grid;
+    gap: 1rem;
+    align-items: start;
+    /* Column sizes provided inline via style prop (minmax(...)) */
+}
+
+/* Wrapper around each PackageCard for hover/featured affordances */
+.cardWrap {
+    position: relative;
+    border-radius: var(--radius-lg);
+    transition: transform .18s ease, box-shadow .18s ease, outline-color .18s ease;
+    outline: 1px solid var(--border);
+    background: transparent;
+}
+
+.cardWrap:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.cardWrap:focus-within {
+    outline-color: color-mix(in srgb, var(--primary) 60%, var(--border));
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--primary) 16%, #0000);
+}
+
+/* Featured state */
+.featured {
+    outline: 2px solid color-mix(in srgb, var(--primary) 62%, var(--border));
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--primary) 14%, #0000);
+}
+
+/* ---- Empty state --------------------------------------------------------- */
+.empty {
+    grid-column: 1 / -1;
+    padding: 2.25rem 1rem;
+    border: 1px dashed var(--border);
+    border-radius: var(--radius-lg);
+    color: var(--muted-foreground);
+    text-align: center;
+    background:
+        repeating-linear-gradient(135deg,
+            color-mix(in srgb, var(--muted) 60%, #0000),
+            color-mix(in srgb, var(--muted) 60%, #0000) 10px,
+            transparent 10px,
+            transparent 20px);
+}
+
+/* ---- Responsive tweaks --------------------------------------------------- */
+@media (max-width: 720px) {
+    .wrap {
+        padding: 1.5rem .75rem;
+    }
+
+    .controls {
+        gap: .5rem;
+    }
+
+    .search {
+        flex-basis: 100%;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .cardWrap,
+    .search,
+    .select {
+        transition: none !important;
+    }
+}
+
+/* ---- Print-friendly ------------------------------------------------------ */
+@media print {
+    .controls {
+        display: none !important;
+    }
+
+    .wrap {
+        padding: 0;
+    }
+
+    .cardWrap {
+        box-shadow: none !important;
+        transform: none !important;
+    }
 }

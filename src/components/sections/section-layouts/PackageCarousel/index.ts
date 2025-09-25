@@ -1,16 +1,19 @@
 // src/components/sections/section-layouts/PackageCarousel/index.ts
+// Thin barrel for the section-level PackageCarousel + compatibility re-exports.
+// We intentionally re-export PackageCard/AddOnsGrid from the packages domain
+// to avoid duplicate components drifting out of sync.
 
-// Main components
+export { default } from "./PackageCarousel";
 export { default as PackageCarousel } from "./PackageCarousel";
-export { default as PackageCard } from "./PackageCard";
-export { default as PackageComparisonCard } from "./PackageComparisonCard";
-export { default as AddOnsGrid } from "./AddOnsGrid";
 
-// Type exports
-export type { PackageCarouselProps } from "./PackageCarousel";
-export type { PackageCardProps } from "./PackageCard";
-export type { PackageComparisonCardProps } from "./PackageComparisonCard";
-export type { AddOnsGridProps, AddOnItem } from "./AddOnsGrid";
+export { default as PackageComparisonCard } from "./PackageComparisonCard";
+
+// ⬇️ Re-export stable, domain-owned components (single source of truth)
+export { default as PackageCard } from "@/packages/components/PackageCard";
+export type { PackageCardProps } from "@/packages/components/PackageCard";
+
+export { default as AddOnsGrid } from "@/packages/components/AddOnsGrid";
+
 
 // Helper utilities
 export * from "./helpers";

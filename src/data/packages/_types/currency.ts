@@ -1,9 +1,13 @@
 // ============================================================================
-// /src/data/packages/_types/currency.ts  (formatters)
-// UI-friendly currency formatting for Money. Minimal, framework-agnostic.
+// /src/data/packages/_types/currency.ts
+// ----------------------------------------------------------------------------
+// UI-friendly currency formatting for Money. Minimal, framework-agnostic,
+// and tolerant of missing/invalid data (falls back to "Contact for pricing").
 // ============================================================================
 
 import type { Money } from "./primitives";
+
+const MISSING_LABEL = "Contact for pricing";
 
 /** Normalize to ISO-4217 3-letter code (defaults to USD). */
 function norm(code?: string): string {
@@ -11,7 +15,14 @@ function norm(code?: string): string {
   return /^[A-Z]{3}$/.test(c) ? c : "USD";
 }
 
-/** Format a numeric amount as currency (0 fraction digits). Safe fallback on Intl errors. */
+function isValidAmount(v: unknown): v is number {
+  return typeof v === "number" && Number.isFinite(v) && !Number.isNaN(v);
+}
+
+/**
+ * Format a numeric amount as currency (0 fraction digits).
+ * If Intl or the currency code fails, falls back to a very safe `$<rounded>`.
+ */
 export function formatCurrency(amount: number, currency?: string, locale?: string): string {
   try {
     return new Intl.NumberFormat(locale, {
@@ -21,21 +32,21 @@ export function formatCurrency(amount: number, currency?: string, locale?: strin
       maximumFractionDigits: 0,
     }).format(amount);
   } catch {
-    // Very safe fallback if Intl or currency code fails
-    return `$${Math.round(amount)}`;
+    const fallback = isValidAmount(amount) ? Math.round(amount) : 0;
+    return `$${fallback}`;
   }
 }
 
-/** "$X,XXX/month" or "Contact for pricing" when missing. */
+/** Returns `"$X,XXX/month"` or `"Contact for pricing"` when missing/invalid. */
 export function toMonthlyPrice(amount?: number | null, currency?: string, locale?: string): string {
-  if (amount == null || Number.isNaN(amount)) return "Contact for pricing";
-  return `${formatCurrency(amount, currency, locale)}/month`;
+  if (!isValidAmount(amount ?? NaN)) return MISSING_LABEL;
+  return `${formatCurrency(amount as number, currency, locale)}/month`;
 }
 
-/** "$Y,YYY one-time" or "Contact for pricing" when missing. */
+/** Returns `"$Y,YYY one-time"` or `"Contact for pricing"` when missing/invalid. */
 export function toOneTimePrice(amount?: number | null, currency?: string, locale?: string): string {
-  if (amount == null || Number.isNaN(amount)) return "Contact for pricing";
-  return `${formatCurrency(amount, currency, locale)} one-time`;
+  if (!isValidAmount(amount ?? NaN)) return MISSING_LABEL;
+  return `${formatCurrency(amount as number, currency, locale)} one-time`;
 }
 
 /**
@@ -46,17 +57,28 @@ export function toOneTimePrice(amount?: number | null, currency?: string, locale
  * - "Contact for pricing"
  */
 export function toCombinedPrice(m?: Money, locale?: string): string {
-  if (!m || (m.oneTime == null && m.monthly == null)) return "Contact for pricing";
+  if (!m || (m.oneTime == null && m.monthly == null)) return MISSING_LABEL;
+
   const { oneTime, monthly, currency } = m;
-  if (oneTime != null && monthly != null) {
-    return `${formatCurrency(oneTime, currency, locale)} setup + ${toMonthlyPrice(monthly, currency, locale)}`;
+
+  const hasOneTime = isValidAmount(oneTime ?? NaN);
+  const hasMonthly = isValidAmount(monthly ?? NaN);
+
+  if (hasOneTime && hasMonthly) {
+    return `${formatCurrency(oneTime as number, currency, locale)} setup + ${toMonthlyPrice(
+      monthly as number,
+      currency,
+      locale,
+    )}`;
   }
-  if (oneTime != null) return toOneTimePrice(oneTime, currency, locale);
-  return toMonthlyPrice(monthly!, currency, locale);
+  if (hasOneTime) return toOneTimePrice(oneTime as number, currency, locale);
+  if (hasMonthly) return toMonthlyPrice(monthly as number, currency, locale);
+
+  return MISSING_LABEL;
 }
 
-/** “from $X,XXX” card chip or “Contact for pricing” when amount missing. */
+/** For “from $X,XXX” chips on cards; falls back to “Contact for pricing”. */
 export function toStartingPrice(amount?: number | null, currency?: string, locale?: string): string {
-  if (amount == null || Number.isNaN(amount)) return "Contact for pricing";
-  return `from ${formatCurrency(amount, currency, locale)}`;
+  if (!isValidAmount(amount ?? NaN)) return MISSING_LABEL;
+  return `from ${formatCurrency(amount as number, currency, locale)}`;
 }

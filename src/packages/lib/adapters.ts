@@ -1,17 +1,23 @@
 // src/packages/lib/adapters.ts
-// Production-ready adapters that map SSOT domain types → UI component props
-// NOTE: This file intentionally avoids importing from /components to keep
-// layering: app → templates → sections → components → lib (this file)
+// Production-ready adapters that map SSOT domain types → UI-friendly props.
+// Layering rule: no *runtime* imports from /components. Importing component
+// *types* is OK (erased at compile time).
 
 import type { PackageBundle, PackageInclude, Price } from "./types";
+import type { AddOnCardProps } from "@/packages/components/AddOnCard"; // type-only; safe
+import {
+  toStartingPrice,
+  toOneTimePrice,
+  toMonthlyPrice,
+} from "@/data/packages/_types/currency";
 
 /* ----------------------------------------------------------------------------
- * Local adapter output types (mirror component prop shapes)
+ * Local adapter output types (mirror component prop shapes without coupling)
  * ---------------------------------------------------------------------------- */
 
 export type CardCTA = { label: string; href?: string; onClick?: (slug: string) => void };
 
-/** Mirrors PackageCardProps (without depending on component types) */
+/** Mirrors PackageCardProps (without depending on component runtime) */
 export type PackageCardAdapter = {
   slug: string;
   name: string;
@@ -46,12 +52,26 @@ export type PriceBlockAdapter = {
   jsonLd?: boolean;
 };
 
-/** Mirrors AddOnsGrid AddOn */
+/** Thin add-on domain view (used by grid filters) */
 export type AddOnAdapter = {
   slug: string;
   name: string;
   description: string;
   price?: Price;
+  category?: string;
+  popular?: boolean;
+};
+
+/** Canonical Add-on domain model (from facade normalization) */
+export type AddOnDomain = {
+  id: string;
+  slug?: string;
+  service?: string;
+  name: string;
+  description?: string;
+  price?: { oneTime?: number; monthly?: number; currency?: string };
+  deliverables?: Array<{ label: string; detail?: string }>;
+  popular?: boolean;
   category?: string;
 };
 
@@ -64,7 +84,11 @@ const currencyOf = (p?: Price) => p?.currency ?? "USD";
 function fmt(n?: number, currency = "USD") {
   if (n == null) return undefined;
   try {
-    return new Intl.NumberFormat(undefined, { style: "currency", currency, maximumFractionDigits: 0 }).format(n);
+    return new Intl.NumberFormat(undefined, {
+      style: "currency",
+      currency,
+      maximumFractionDigits: 0,
+    }).format(n);
   } catch {
     return `$${n}`;
   }
@@ -77,7 +101,7 @@ function coerceMeta(b: any): { name: string; description: string } {
   return { name, description };
 }
 
-/** Parse a currency string like "$7,500" → 7500 (be tolerant). */
+/** Parse a currency string like "$7,500" → 7500 (tolerant). */
 function parseMoney(input?: unknown): number | undefined {
   if (typeof input === "number") return input;
   if (typeof input !== "string") return undefined;
@@ -121,7 +145,7 @@ function flattenFeatures(b: PackageBundle, limit?: number) {
 }
 
 /* ----------------------------------------------------------------------------
- * Options
+ * Package → Card / Grid options
  * ---------------------------------------------------------------------------- */
 
 export type ToCardOptions = {
@@ -156,7 +180,7 @@ export type ToPriceBlockOptions = {
 };
 
 /* ----------------------------------------------------------------------------
- * Adapters → Card / Grid
+ * Adapters → PackageCard / Grid
  * ---------------------------------------------------------------------------- */
 
 export function toPackageCard(b: PackageBundle, opts: ToCardOptions = {}): PackageCardAdapter {
@@ -294,14 +318,44 @@ export function toIncludesTable(b: PackageBundle, opts: ToIncludesOptions = {}) 
 }
 
 /* ----------------------------------------------------------------------------
- * Adapter → AddOnsGrid (thin pass-through with optional filters)
+ * Adapter → Add-ons (cards, grids, filters)
  * ---------------------------------------------------------------------------- */
 
+/**
+ * Map canonical add-on domain → AddOnCardProps (component props).
+ * Uses tolerant currency helpers; chooses Monthly > One-time > Contact for pricing.
+ */
+export function toAddOnCardProps(a: AddOnDomain, locale?: string): AddOnCardProps {
+  const priceLabel =
+    a.price?.monthly != null
+      ? toMonthlyPrice(a.price.monthly, a.price.currency, locale)
+      : a.price?.oneTime != null
+      ? toOneTimePrice(a.price.oneTime, a.price.currency, locale)
+      : "Contact for pricing";
+
+  return {
+    id: a.id,
+    title: a.name,
+    description: a.description,
+    bullets: a.deliverables?.map((d) => d.label),
+    priceLabel,
+    badge: a.popular ? "Popular" : undefined,
+    href: a.service ? `/services/${a.service}#${a.slug ?? a.id}` : undefined,
+  };
+}
+
+/** Bulk mapping for convenience */
+export function toAddOnCardList(addOns: AddOnDomain[], locale?: string): AddOnCardProps[] {
+  return addOns.map((a) => toAddOnCardProps(a, locale));
+}
+
+/** Thin pass-through with optional filters for grid usage */
 export type ToAddOnsOptions = {
   categories?: string[];
   query?: string;
 };
 
+/** Keep for grids that still work with a minimal add-on view. */
 export function toAddOnsGrid(addOns: AddOnAdapter[], opts: ToAddOnsOptions = {}) {
   const { categories, query } = opts;
   const q = query?.trim().toLowerCase();
@@ -369,7 +423,7 @@ export function toServiceOfferJsonLd(bundle: PackageBundle) {
 }
 
 /* ----------------------------------------------------------------------------
- * Convenience bundles → everything
+ * Convenience: bundles → hub/detail view models
  * ---------------------------------------------------------------------------- */
 
 export type ToHubModel = {

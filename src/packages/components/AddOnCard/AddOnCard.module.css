@@ -1,0 +1,180 @@
+/* AddOnCard.module.css
+   - CSS Modules friendly (no :root / :global)
+   - Theme variables are scoped to .card for safe inheritance
+*/
+
+.card {
+    /* Theme tokens (override by redefining on a parent if needed) */
+    --addon-card-bg: #ffffff;
+    --addon-card-border: rgba(0, 0, 0, 0.08);
+    --addon-card-border-hover: rgba(0, 0, 0, 0.16);
+    --addon-card-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+    --addon-card-shadow-hover: 0 6px 22px rgba(0, 0, 0, 0.08);
+    --addon-card-radius: 16px;
+    --addon-card-gap: 12px;
+
+    --addon-title: #0f172a;
+    /* slate-900 */
+    --addon-subtle: #475569;
+    /* slate-600 */
+    --addon-badge-bg: #eef2ff;
+    /* indigo-50 */
+    --addon-badge-text: #3730a3;
+    /* indigo-800 */
+    --addon-chip-bg: #0f172a;
+    /* slate-900 */
+    --addon-chip-text: #ffffff;
+    --addon-divider: rgba(15, 23, 42, 0.08);
+
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background: var(--addon-card-bg);
+    border: 1px solid var(--addon-card-border);
+    border-radius: var(--addon-card-radius);
+    box-shadow: var(--addon-card-shadow);
+    transition: box-shadow 160ms ease, transform 160ms ease, border-color 160ms ease;
+    overflow: hidden;
+}
+
+/* Apply this class alongside .card when the whole card is a link target */
+.clickable:hover,
+.clickable:focus-within {
+    border-color: var(--addon-card-border-hover);
+    box-shadow: var(--addon-card-shadow-hover);
+    transform: translateY(-1px);
+}
+
+.linkOverlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+}
+
+.inner {
+    position: relative;
+    display: grid;
+    gap: var(--addon-card-gap);
+    padding: 16px;
+}
+
+.headerRow {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: start;
+    gap: 8px;
+}
+
+.title {
+    color: var(--addon-title);
+    font-size: 1rem;
+    /* 16px */
+    line-height: 1.3;
+    font-weight: 700;
+    margin: 0;
+}
+
+.badge {
+    align-self: start;
+    justify-self: end;
+    background: var(--addon-badge-bg);
+    color: var(--addon-badge-text);
+    font-weight: 600;
+    font-size: 0.75rem;
+    padding: 4px 8px;
+    border-radius: 999px;
+    white-space: nowrap;
+}
+
+.description {
+    color: var(--addon-subtle);
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    /* clamp to 3 lines */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.divider {
+    height: 1px;
+    width: 100%;
+    background: var(--addon-divider);
+    border: 0;
+    margin: 4px 0 0;
+}
+
+.bullets {
+    display: grid;
+    gap: 6px;
+    padding-left: 18px;
+    margin: 0;
+}
+
+.bullets li {
+    color: var(--addon-subtle);
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+.footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-top: 4px;
+}
+
+.priceChip {
+    background: var(--addon-chip-bg);
+    color: var(--addon-chip-text);
+    font-weight: 700;
+    font-size: 0.85rem;
+    padding: 6px 10px;
+    border-radius: 999px;
+}
+
+.cta {
+    position: relative;
+    z-index: 2;
+    /* above .linkOverlay */
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--addon-title);
+    opacity: 0.9;
+    text-decoration: none;
+    outline: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.cta:focus-visible {
+    outline: 2px solid #6366f1;
+    /* indigo-500 */
+    outline-offset: 2px;
+    border-radius: 6px;
+}
+
+.arrow {
+    display: inline-block;
+    transition: transform 160ms ease;
+}
+
+.clickable:hover .arrow,
+.clickable:focus-within .arrow {
+    transform: translateX(2px);
+}
+
+/* Responsive polish */
+@media (min-width: 768px) {
+    .inner {
+        padding: 18px;
+    }
+
+    .title {
+        font-size: 1.05rem;
+    }
+}

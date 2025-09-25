@@ -1,225 +1,211 @@
 // src/components/sections/section-layouts/PackageCarousel/adapters/featuredDataAdapter.ts
-import type { PackageCardProps } from "../PackageCard";
-import type { ServiceSlug } from "../helpers";
+// Normalizes "featured" data (and GrowthPackage) → domain PackageCardProps.
+// Keeps this adapter UI-agnostic (no component imports), but it guarantees
+// the final props shape required by the domain PackageCard.
 
-/**
- * Shape that matches your existing featured data files
- */
+import type { PackageCardProps } from "@/packages/components/PackageCard";
+import type { GrowthPackage } from "@/packages/lib/bridge-growth";
+import { toStartingPrice } from "@/data/packages/_types/currency";
+
+/* ----------------------------------------------------------------------------
+ * Featured authoring shape (service rails / curated)
+ * ---------------------------------------------------------------------------- */
+
+export type ServiceSlug = "webdev" | "seo" | "marketing" | "leadgen" | "content" | "video";
+
 export interface FeaturedCard {
   id: string;
   service: ServiceSlug;
-  packageId?: string;
-  name?: string;
-  headline: string;
-  summary?: string;
+  packageId?: string; // preferred per-service id/anchor
+  name?: string;      // optional explicit name
+  headline: string;   // marketing headline (used as fallback name)
+  summary?: string;   // short description
   tier?: "Essential" | "Professional" | "Enterprise";
   popular?: boolean;
-  href?: string;
-  image?: { src: string; alt?: string } | null;
+  href?: string;      // optional explicit deep link
+  image?: { src: string; alt?: string } | null; // ignored by PackageCardProps (no image prop)
   price?: { setup?: number; monthly?: number } | null;
-  ctaLabel?: string;
-  highlights: string[];
-  startingAt: number;
-  badge?: string;
-  savingsPct?: number;
+  ctaLabel?: string;      // not required; PackageCard defaults label
+  highlights?: string[];  // mapped → features
+  startingAt?: number;    // optional, used for footnote if no price
+  badge?: string;         // "Most Popular", etc.
+  savingsPct?: number;    // ignored at card level
 }
 
-/**
- * Type guard to check if data is FeaturedCard format
- */
-export function isFeaturedCard(data: any): data is FeaturedCard {
+/* ----------------------------------------------------------------------------
+ * Type guards
+ * ---------------------------------------------------------------------------- */
+
+export function isFeaturedCard(data: unknown): data is FeaturedCard {
+  if (!data || typeof data !== "object") return false;
+  const obj = data as Record<string, unknown>;
   return (
-    data &&
-    typeof data === "object" &&
-    typeof data.id === "string" &&
-    typeof data.service === "string" &&
-    typeof data.headline === "string" &&
-    Array.isArray(data.highlights) &&
-    typeof data.startingAt === "number"
+    typeof obj.id === "string" &&
+    typeof obj.service === "string" &&
+    typeof obj.headline === "string"
   );
 }
 
-/**
- * Type guard to check if data is FeaturedCard array
- */
-export function isFeaturedCardArray(data: any): data is FeaturedCard[] {
+export function isFeaturedCardArray(data: unknown): data is FeaturedCard[] {
   return Array.isArray(data) && data.every(isFeaturedCard);
 }
 
-/**
- * Determines tier from badge text
- */
-function determineTierFromBadge(badge?: string): "Essential" | "Professional" | "Enterprise" {
-  if (!badge) return "Essential";
-  
-  const lowerBadge = badge.toLowerCase();
-  
-  if (lowerBadge.includes("enterprise") || lowerBadge.includes("premium")) {
-    return "Enterprise";
-  }
-  
-  if (
-    lowerBadge.includes("professional") || 
-    lowerBadge.includes("pro") ||
-    lowerBadge.includes("growth") || 
-    lowerBadge.includes("best") ||
-    lowerBadge.includes("popular")
-  ) {
-    return "Professional";
-  }
-  
-  return "Essential";
+/* ----------------------------------------------------------------------------
+ * Internals
+ * ---------------------------------------------------------------------------- */
+
+function determineSlug(card: FeaturedCard): string {
+  return card.packageId ?? card.id;
 }
 
-/**
- * Generates href from FeaturedCard data
- */
-function generateHref(featuredCard: FeaturedCard): string {
-  if (featuredCard.href) {
-    return featuredCard.href;
-  }
-  
-  const packageId = featuredCard.packageId || featuredCard.id;
-  return `/services/${featuredCard.service}/packages#${packageId}`;
+function determineName(card: FeaturedCard): string {
+  return card.name ?? card.headline ?? "Package";
 }
 
-/**
- * Adapts FeaturedCard data to PackageCardProps format
- * Transforms your existing featured data files to work with the enhanced PackageCard
- */
-export function adaptFeaturedCardToPackageCard(
-  featuredCard: FeaturedCard
-): Omit<PackageCardProps, "className"> {
+function determineHref(card: FeaturedCard): string {
+  if (card.href) return card.href;
+  // Prefer a clean package route; fall back to service anchor if needed
+  const slug = determineSlug(card);
+  return `/packages/${slug}`;
+}
+
+function toPrice(card: FeaturedCard): PackageCardProps["price"] | undefined {
+  if (card.price && (card.price.setup != null || card.price.monthly != null)) {
+    return {
+      oneTime: card.price.setup ?? undefined,
+      monthly: card.price.monthly ?? undefined,
+      currency: "USD",
+    };
+  }
+  // No explicit price; if we have startingAt, surface as a footnote (not a chip)
+  return undefined;
+}
+
+function toBadge(card: FeaturedCard): string | undefined {
+  if (card.badge) return card.badge;
+  return card.popular ? "Most Popular" : undefined;
+}
+
+function toFootnote(card: FeaturedCard): string | undefined {
+  if (card.startingAt != null && (card.price == null || (card.price.setup == null && card.price.monthly == null))) {
+    // We only show a "from" note when explicit price chips are absent
+    return toStartingPrice(card.startingAt);
+  }
+  return undefined;
+}
+
+/* ----------------------------------------------------------------------------
+ * Featured → PackageCardProps
+ * ---------------------------------------------------------------------------- */
+
+export function adaptFeaturedCardToPackageCard(card: FeaturedCard): PackageCardProps {
+  const slug = determineSlug(card);
+  const name = determineName(card);
+  const description = card.summary ?? "";
+  const price = toPrice(card);
+  const badge = toBadge(card);
+  const detailsHref = determineHref(card);
+  const features = (card.highlights ?? []).slice(0, 8);
+
   return {
-    id: featuredCard.id,
-    service: featuredCard.service,
-    name: featuredCard.name || featuredCard.headline,
-    summary: featuredCard.summary,
-    tier: featuredCard.tier || determineTierFromBadge(featuredCard.badge),
-    popular: featuredCard.popular || featuredCard.badge === "Most Popular",
-    href: generateHref(featuredCard),
-    image: featuredCard.image ?? null,
-    price: featuredCard.price ?? undefined,
-    ctaLabel: featuredCard.ctaLabel || "View Details",
-    highlights: featuredCard.highlights || [],
-    startingAt: featuredCard.startingAt,
-    badge: featuredCard.badge,
-    savingsPct: featuredCard.savingsPct,
+    slug,
+    name,
+    description,
+    price,
+    features,
+    badge,
+    detailsHref,
+    // Let PackageCard generate primary/secondary CTAs if not provided.
+    // If you want to override labels:
+    // primaryCta: { label: card.ctaLabel ?? "View details", href: detailsHref },
+    // secondaryCta: { label: "Book a call", href: "/book" },
+    highlight: card.popular === true || /popular/i.test(card.badge ?? ""),
+    footnote: toFootnote(card),
   };
 }
 
-/**
- * Converts multiple featured cards to package cards, limiting to 3
- */
-export function adaptFeaturedCardsToPackageCards(
-  featuredCards: FeaturedCard[]
-): Omit<PackageCardProps, "className">[] {
-  if (!Array.isArray(featuredCards)) {
-    console.warn("adaptFeaturedCardsToPackageCards: Expected array, got:", typeof featuredCards);
-    return [];
-  }
-
-  return featuredCards
-    .filter(isFeaturedCard) // Ensure all items are valid
-    .slice(0, 3) // Ensure exactly 3 cards max
-    .map(adaptFeaturedCardToPackageCard);
+export function adaptFeaturedCardsToPackageCards(cards: FeaturedCard[]): PackageCardProps[] {
+  if (!Array.isArray(cards)) return [];
+  return cards.filter(isFeaturedCard).map(adaptFeaturedCardToPackageCard);
 }
 
-/**
- * Service-specific adapters for your existing data files
- */
+/* ----------------------------------------------------------------------------
+ * GrowthPackage → PackageCardProps (optional convenience)
+ * ---------------------------------------------------------------------------- */
+
+export function toPackageCardItems(pkgs: GrowthPackage[]): PackageCardProps[] {
+  return (pkgs ?? []).map((p) => {
+    const price = p.price
+      ? {
+          oneTime: p.price.oneTime ?? undefined,
+          monthly: p.price.monthly ?? undefined,
+          currency: p.price.currency ?? "USD",
+        }
+      : undefined;
+
+    return {
+      slug: p.slug,
+      name: p.title,
+      description: p.subtitle ?? p.summary ?? "",
+      price,
+      features: (p.highlights ?? []).slice(0, 8),
+      badge: p.badge,
+      detailsHref: `/packages/${p.slug}`,
+      highlight: p.badge ? /popular|best|recommended/i.test(p.badge) : false,
+      // Keep footnote empty here; GrowthPackage already has explicit price fields if applicable
+    };
+  });
+}
+
+/* ----------------------------------------------------------------------------
+ * Utilities
+ * ---------------------------------------------------------------------------- */
+
+export function validateFeaturedCardData(data: unknown, context = "featured"): FeaturedCard[] {
+  if (!Array.isArray(data)) return [];
+  const valid: FeaturedCard[] = [];
+  for (let i = 0; i < data.length; i++) {
+    if (isFeaturedCard(data[i])) valid.push(data[i]);
+    else if (typeof console !== "undefined") {
+      // eslint-disable-next-line no-console
+      console.warn(`[${context}] invalid FeaturedCard at index ${i}`, data[i]);
+    }
+  }
+  return valid;
+}
+
+export function mergeFeaturedData(...sources: Array<FeaturedCard[] | undefined>): FeaturedCard[] {
+  const out: FeaturedCard[] = [];
+  const seen = new Set<string>();
+  for (const src of sources) {
+    if (!src) continue;
+    for (const card of src) {
+      if (!isFeaturedCard(card)) continue;
+      if (seen.has(card.id)) continue;
+      out.push(card);
+      seen.add(card.id);
+    }
+  }
+  return out;
+}
+
+/* ----------------------------------------------------------------------------
+ * Service-scoped helpers (optional)
+ * ---------------------------------------------------------------------------- */
+
 export const serviceAdapters = {
-  /**
-   * Adapter for SEO services featured data
-   */
-  seo: (seoFeatured: FeaturedCard[]) => adaptFeaturedCardsToPackageCards(seoFeatured),
-  
-  /**
-   * Adapter for Web Development featured data  
-   */
-  webdev: (webdevFeatured: FeaturedCard[]) => adaptFeaturedCardsToPackageCards(webdevFeatured),
-  
-  /**
-   * Adapter for Marketing featured data
-   */
-  marketing: (marketingFeatured: FeaturedCard[]) => adaptFeaturedCardsToPackageCards(marketingFeatured),
-  
-  /**
-   * Adapter for Lead Generation featured data
-   */
-  leadgen: (leadgenFeatured: FeaturedCard[]) => adaptFeaturedCardsToPackageCards(leadgenFeatured),
-  
-  /**
-   * Adapter for Video Production featured data
-   */
-  video: (videoFeatured: FeaturedCard[]) => adaptFeaturedCardsToPackageCards(videoFeatured),
-  
-  /**
-   * Adapter for Content Production featured data
-   */
-  content: (contentFeatured: FeaturedCard[]) => adaptFeaturedCardsToPackageCards(contentFeatured),
+  seo: (arr: FeaturedCard[]) => adaptFeaturedCardsToPackageCards(arr),
+  webdev: (arr: FeaturedCard[]) => adaptFeaturedCardsToPackageCards(arr),
+  marketing: (arr: FeaturedCard[]) => adaptFeaturedCardsToPackageCards(arr),
+  leadgen: (arr: FeaturedCard[]) => adaptFeaturedCardsToPackageCards(arr),
+  video: (arr: FeaturedCard[]) => adaptFeaturedCardsToPackageCards(arr),
+  content: (arr: FeaturedCard[]) => adaptFeaturedCardsToPackageCards(arr),
 } as const;
 
-/**
- * Universal adapter that works with any service
- */
 export function adaptServiceFeaturedData(
   serviceSlug: ServiceSlug,
-  featuredData: FeaturedCard[]
-): Omit<PackageCardProps, "className">[] {
-  const adapter = serviceAdapters[serviceSlug];
-  if (adapter) {
-    return adapter(featuredData);
-  }
-  
-  // Fallback to generic adapter
-  return adaptFeaturedCardsToPackageCards(featuredData);
-}
-
-/**
- * Validation helper to ensure data integrity
- */
-export function validateFeaturedCardData(data: any, context: string = "unknown"): FeaturedCard[] {
-  if (!Array.isArray(data)) {
-    console.warn(`${context}: Featured data is not an array:`, data);
-    return [];
-  }
-
-  const validCards: FeaturedCard[] = [];
-  const invalidCards: any[] = [];
-
-  data.forEach((item, index) => {
-    if (isFeaturedCard(item)) {
-      validCards.push(item);
-    } else {
-      invalidCards.push({ index, item });
-    }
-  });
-
-  if (invalidCards.length > 0) {
-    console.warn(`${context}: Found ${invalidCards.length} invalid featured cards:`, invalidCards);
-  }
-
-  return validCards;
-}
-
-/**
- * Helper to merge featured data from multiple sources
- */
-export function mergeFeaturedData(...sources: (FeaturedCard[] | undefined)[]): FeaturedCard[] {
-  const merged: FeaturedCard[] = [];
-  const seenIds = new Set<string>();
-
-  sources.forEach(source => {
-    if (Array.isArray(source)) {
-      source.forEach(card => {
-        if (isFeaturedCard(card) && !seenIds.has(card.id)) {
-          merged.push(card);
-          seenIds.add(card.id);
-        }
-      });
-    }
-  });
-
-  return merged;
+  featuredData: FeaturedCard[],
+): PackageCardProps[] {
+  const fn = (serviceAdapters as any)[serviceSlug] as ((d: FeaturedCard[]) => PackageCardProps[]) | undefined;
+  return fn ? fn(featuredData) : adaptFeaturedCardsToPackageCards(featuredData);
 }
