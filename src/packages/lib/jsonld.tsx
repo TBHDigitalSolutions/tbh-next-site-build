@@ -69,23 +69,31 @@ function parseMoneyLike(input?: unknown): number | undefined {
  * - or `pricing.tiers[].price` + `pricing.tiers[].period` ("month" / "one-time" / "setup")
  * Picks the MIN value for each dimension as the “starting price”.
  */
-function derivePriceFromTiers(bundle: any): SimplePrice | undefined {
-  const tiers = bundle?.pricing?.tiers;
-  if (!Array.isArray(tiers)) return undefined;
+function derivePriceFromTiers(bundle: PackageBundle): SimplePrice | undefined {
+  const pricing = bundle.pricing;
+  if (!pricing || pricing.kind !== "tiers" || !Array.isArray(pricing.tiers)) return undefined;
+  const tiers = pricing.tiers;
 
   let monthly: number | undefined;
   let oneTime: number | undefined;
 
   for (const t of tiers) {
     // Case A: structured price object
-    const pm = parseMoneyLike(t?.price?.monthly);
-    const po = parseMoneyLike(t?.price?.setup ?? t?.price?.oneTime);
+    const tierPrice = (t as { price?: unknown }).price;
+    const priceObj =
+      tierPrice && typeof tierPrice === "object"
+        ? (tierPrice as { monthly?: unknown; setup?: unknown; oneTime?: unknown })
+        : undefined;
+    const pm = priceObj ? parseMoneyLike(priceObj.monthly) : undefined;
+    const po = priceObj
+      ? parseMoneyLike(priceObj.setup ?? priceObj.oneTime)
+      : undefined;
     if (pm != null) monthly = monthly == null ? pm : Math.min(monthly, pm);
     if (po != null) oneTime = oneTime == null ? po : Math.min(oneTime, po);
 
     // Case B: flat price + period
-    const flat = parseMoneyLike(t?.price);
-    const period = String(t?.period ?? "").toLowerCase();
+    const flat = parseMoneyLike(tierPrice);
+    const period = typeof t?.period === "string" ? t.period.toLowerCase() : "";
     if (flat != null) {
       if (period.includes("month")) {
         monthly = monthly == null ? flat : Math.min(monthly, flat);
@@ -101,8 +109,8 @@ function derivePriceFromTiers(bundle: any): SimplePrice | undefined {
 }
 
 /** Resolve a normalized price from a bundle (explicit price wins). */
-function resolvePrice(bundle: any): SimplePrice | undefined {
-  if (bundle?.price && (bundle.price.monthly != null || bundle.price.oneTime != null)) {
+function resolvePrice(bundle: PackageBundle): SimplePrice | undefined {
+  if (bundle.price && (bundle.price.monthly != null || bundle.price.oneTime != null)) {
     return {
       monthly: typeof bundle.price.monthly === "number" ? bundle.price.monthly : parseMoneyLike(bundle.price.monthly),
       oneTime: typeof bundle.price.oneTime === "number" ? bundle.price.oneTime : parseMoneyLike(bundle.price.oneTime),
@@ -113,17 +121,22 @@ function resolvePrice(bundle: any): SimplePrice | undefined {
 }
 
 /** Extract best-available name/description from mixed bundle shapes. */
-function coerceMeta(b: any): { name: string; description: string; url?: string } {
-  const name = b?.name ?? b?.title ?? b?.hero?.content?.title ?? "Package";
+function coerceMeta(b: PackageBundle): { name: string; description: string; url?: string } {
+  const name = b.name ?? b.title ?? b.hero?.content?.title ?? "Package";
   const description =
-    b?.description ?? b?.summary ?? b?.subtitle ?? b?.hero?.content?.subtitle ?? "";
-  const url = b?.slug ? `/packages/${b.slug}` : undefined;
+    b.description ??
+    b.summary ??
+    b.subtitle ??
+    b.valueProp ??
+    b.hero?.content?.subtitle ??
+    "";
+  const url = b.slug ? `/packages/${b.slug}` : undefined;
   return { name, description, url };
 }
 
 /** Build the Service JSON-LD object. Only include `offers` when pricing exists. */
 export function buildServiceJsonLd(bundle: PackageBundle) {
-  const meta = coerceMeta(bundle as any);
+  const meta = coerceMeta(bundle);
   const price = resolvePrice(bundle);
   const currency = (price?.currency ?? "USD") as string;
 

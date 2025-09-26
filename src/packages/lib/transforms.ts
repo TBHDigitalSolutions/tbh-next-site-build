@@ -66,10 +66,16 @@ export function featureCount(bundle: PackageBundle): number {
 
 export function dedupeFeatures(bundle: PackageBundle): PackageBundle {
   const next = { ...bundle } as PackageBundle;
-  next.includes = (bundle.includes ?? []).map((sec) => ({
-    section: sec.section,
-    items: Array.from(new Set((sec.items ?? []).map((s) => s.trim()).filter(Boolean))),
-  }));
+  next.includes = (bundle.includes ?? []).map((sec) => {
+    const label = sec.section ?? sec.title;
+    const items = Array.from(new Set((sec.items ?? []).map((s) => s.trim()).filter(Boolean)));
+    return {
+      ...sec,
+      section: label ?? sec.section,
+      title: label ?? sec.title,
+      items,
+    };
+  });
   return next;
 }
 
@@ -251,20 +257,25 @@ export function pickBySlugs(bundles: PackageBundle[], slugs: string[]): PackageB
  * ---------------------------------------------------------------------------- */
 
 export function withUpdatedPrice(bundle: PackageBundle, price: Partial<Price>): PackageBundle {
-  return { ...bundle, price: { ...bundle.price, ...price } } as PackageBundle;
+  return { ...bundle, price: { ...(bundle.price ?? {}), ...price } } as PackageBundle;
 }
 
 export function withAddedFeatures(bundle: PackageBundle, section: string, items: string[]): PackageBundle {
   const next = { ...bundle } as PackageBundle;
   const includes = (next.includes ?? []);
-  const idx = includes.findIndex((s) => s.section === section);
+  const idx = includes.findIndex((s) => s.section === section || s.title === section);
   if (idx === -1) {
-    next.includes = [...includes, { section, items }];
+    next.includes = [...includes, { section, title: section, items }];
   } else {
     const existing = includes[idx];
     next.includes = [
       ...includes.slice(0, idx),
-      { section: existing.section, items: [...existing.items, ...items] },
+      {
+        ...existing,
+        section: existing.section ?? existing.title ?? section,
+        title: existing.title ?? existing.section ?? section,
+        items: [...(existing.items ?? []), ...items],
+      },
       ...includes.slice(idx + 1),
     ];
   }

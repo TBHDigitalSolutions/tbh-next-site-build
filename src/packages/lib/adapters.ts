@@ -95,9 +95,15 @@ function fmt(n?: number, currency = "USD") {
 }
 
 /** Extracts a human name/description from mixed bundle shapes. */
-function coerceMeta(b: any): { name: string; description: string } {
-  const name = b?.name ?? b?.title ?? "Package";
-  const description = b?.description ?? b?.summary ?? b?.subtitle ?? "";
+function coerceMeta(b: PackageBundle): { name: string; description: string } {
+  const name = b.name ?? b.title ?? b.hero?.content?.title ?? "Package";
+  const description =
+    b.description ??
+    b.summary ??
+    b.subtitle ??
+    b.valueProp ??
+    b.hero?.content?.subtitle ??
+    "";
   return { name, description };
 }
 
@@ -112,15 +118,16 @@ function parseMoney(input?: unknown): number | undefined {
 }
 
 /** Derive a simple price object from tiered `pricing` if `price` is absent. */
-function derivePriceFromPricing(b: any): Price | undefined {
-  const pricing = b?.pricing;
-  if (!pricing || !Array.isArray(pricing.tiers)) return undefined;
+function derivePriceFromPricing(b: PackageBundle): Price | undefined {
+  const pricing = b.pricing;
+  if (!pricing || pricing.kind !== "tiers" || !Array.isArray(pricing.tiers)) return undefined;
 
   let monthly: number | undefined;
   let oneTime: number | undefined;
 
   for (const tier of pricing.tiers) {
-    const p = parseMoney(tier?.price);
+    const tierPrice = tier?.price as unknown;
+    const p = parseMoney(tierPrice);
     if (!p) continue;
     const period = String(tier?.period ?? "").toLowerCase();
     if (period.includes("month")) monthly = monthly ?? p;
@@ -134,13 +141,13 @@ function derivePriceFromPricing(b: any): Price | undefined {
 }
 
 /** Prefer explicit bundle.price; otherwise derive from pricing. */
-function resolvePrice(b: any): Price | undefined {
-  if (b?.price) return b.price as Price;
+function resolvePrice(b: PackageBundle): Price | undefined {
+  if (b?.price) return b.price;
   return derivePriceFromPricing(b);
 }
 
 function flattenFeatures(b: PackageBundle, limit?: number) {
-  const all = (b.includes ?? []).flatMap((s) => s.items);
+  const all = (b.includes ?? []).flatMap((s) => s.items ?? []);
   return typeof limit === "number" ? all.slice(0, Math.max(0, limit)) : all;
 }
 
@@ -209,10 +216,10 @@ export function toPackageCard(b: PackageBundle, opts: ToCardOptions = {}): Packa
     detailsHref: details,
   };
 
-  if (highlightMostPopular && (b as any).isMostPopular) card.highlight = true;
-  if (badgeFromMostPopular && (b as any).isMostPopular) card.badge = card.badge ?? "Most Popular";
+  if (highlightMostPopular && b.isMostPopular) card.highlight = true;
+  if (badgeFromMostPopular && b.isMostPopular) card.badge = card.badge ?? "Most Popular";
 
-  if (footnoteFromTimeline && (b as any).timeline) card.footnote = `Typical onboarding ${(b as any).timeline}`;
+  if (footnoteFromTimeline && b.timeline) card.footnote = `Typical onboarding ${b.timeline}`;
 
   // Primary CTA → Details
   card.primaryCta = { label: primaryLabel ?? "View details", href: details };
@@ -277,8 +284,8 @@ export function toPriceBlock(b: PackageBundle, opts: ToPriceBlockOptions = {}): 
     note,
   };
 
-  if (badgeFromMostPopular && (b as any).isMostPopular) pb.badge = pb.badge ?? "Most Popular";
-  if (highlightMostPopular && (b as any).isMostPopular) pb.highlight = true;
+  if (badgeFromMostPopular && b.isMostPopular) pb.badge = pb.badge ?? "Most Popular";
+  if (highlightMostPopular && b.isMostPopular) pb.highlight = true;
 
   return pb;
 }

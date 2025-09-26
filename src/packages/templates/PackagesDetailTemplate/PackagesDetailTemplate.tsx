@@ -22,6 +22,68 @@ import PackagePricingMatrix, {
 } from "@/packages/components/PackagePricingMatrix";
 import AddOnSection from "@/packages/sections/AddOnSection";
 import RelatedItemsRail from "@/packages/components/RelatedItemsRail";
+import type { OutcomeItem } from "@/components/ui/molecules/OutcomeList/OutcomeList";
+
+const DEFAULT_PRIMARY_CTA = { label: "Request proposal", href: "/contact" } as const;
+const DEFAULT_SECONDARY_CTA = { label: "Book a call", href: "/book" } as const;
+
+type BundleFaqItem = NonNullable<PackageBundle["faq"]>["faqs"][number];
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null;
+}
+
+function isCellValue(value: unknown): boolean {
+  if (typeof value === "boolean") return true;
+  if (value === "limit" || value === "add-on") return true;
+  if (typeof value === "number" || typeof value === "string") return true;
+  if (isRecord(value) && ("money" in value || "note" in value)) return true;
+  return false;
+}
+
+function isMatrixColumn(value: unknown): value is PackagePricingMatrixProps["columns"][number] {
+  if (!isRecord(value)) return false;
+  if (typeof value.id !== "string" || typeof value.label !== "string") return false;
+  if ("note" in value && value.note != null && typeof value.note !== "string") return false;
+  return true;
+}
+
+function isMatrixRow(value: unknown): value is PackagePricingMatrixProps["groups"][number]["rows"][number] {
+  if (!isRecord(value)) return false;
+  if (typeof value.id !== "string" || typeof value.label !== "string") return false;
+  if ("note" in value && value.note != null && typeof value.note !== "string") return false;
+  if (!isRecord(value.values)) return false;
+  return Object.values(value.values).every(isCellValue);
+}
+
+function isMatrixGroup(value: unknown): value is PackagePricingMatrixProps["groups"][number] {
+  if (!isRecord(value)) return false;
+  if (typeof value.id !== "string" || typeof value.label !== "string") return false;
+  if ("note" in value && value.note != null && typeof value.note !== "string") return false;
+  if (!Array.isArray(value.rows)) return false;
+  return value.rows.every(isMatrixRow);
+}
+
+function isPackagePricingMatrix(
+  value: PackageBundle["pricingMatrix"],
+): value is PackagePricingMatrixProps {
+  if (!value) return false;
+  if (!Array.isArray(value.columns) || !Array.isArray(value.groups)) return false;
+  return value.columns.every(isMatrixColumn) && value.groups.every(isMatrixGroup);
+}
+
+function toOutcomeList(outcomes: PackageBundle["outcomes"]): Array<string | OutcomeItem> {
+  if (!outcomes) return [];
+  if (Array.isArray(outcomes)) return [...outcomes];
+  if (isRecord(outcomes) && Array.isArray((outcomes as { items?: unknown }).items)) {
+    return (outcomes.items as Array<{ label: string; value?: string }>).map((item, index) => ({
+      id: item.label ? `outcome-${index}` : `outcome-${index}`,
+      label: item.label,
+      note: item.value,
+    }));
+  }
+  return [];
+}
 
 export type PackagesDetailTemplateProps = {
   /** The bundle/package to render */
@@ -43,17 +105,35 @@ export default function PackagesDetailTemplate({
   // --------------------------
   // Hero content (safe defaults)
   // --------------------------
-  const heroTitle = bundle.title ?? (bundle as any).name ?? "Package";
+  const heroTitle =
+    bundle.hero?.content?.title ?? bundle.title ?? bundle.name ?? "Package";
   const heroSubtitle =
-    bundle.summary ?? (bundle as any).valueProp ?? (bundle as any).subtitle;
+    bundle.hero?.content?.subtitle ??
+    bundle.summary ??
+    bundle.valueProp ??
+    bundle.subtitle ??
+    bundle.description ??
+    "";
+  const heroPrimaryCta = bundle.hero?.content?.primaryCta ?? DEFAULT_PRIMARY_CTA;
+  const heroSecondaryCta =
+    bundle.hero?.content?.secondaryCta ?? DEFAULT_SECONDARY_CTA;
+  const heroButton = { text: heroPrimaryCta.label, href: heroPrimaryCta.href };
+  const heroMedia =
+    bundle.hero?.background?.type === "image"
+      ? {
+          type: "image" as const,
+          src: bundle.hero.background.src,
+          alt: bundle.hero.background.alt,
+        }
+      : undefined;
 
   // --------------------------
   // Derived booleans
   // --------------------------
   const hasAddOns = (addOns?.length ?? 0) > 0;
   const hasRelated = (related?.length ?? 0) > 0;
-  const bundleFaqItems = (bundle as any)?.faq?.faqs ?? [];
-  const hasFaq = (bundleFaqItems.length ?? 0) > 0 || (faqs?.length ?? 0) > 0;
+  const bundleFaqItems: BundleFaqItem[] = bundle.faq?.faqs ?? [];
+  const hasFaq = bundleFaqItems.length > 0 || faqs.length > 0;
 
   // --------------------------
   // Adapters / models
@@ -61,19 +141,24 @@ export default function PackagesDetailTemplate({
   const overviewIncludes = toIncludesTable(bundle);
   const overviewPinnedCard = toPackageCard(bundle);
   const priceBlockModel = toPriceBlock(bundle);
+  const overviewOutcomes = React.useMemo<Array<string | OutcomeItem>>(
+    () => toOutcomeList(bundle.outcomes),
+    [bundle.outcomes],
+  );
+  const normalizedFaqItems = React.useMemo(
+    () =>
+      (bundleFaqItems.length ? bundleFaqItems : faqs).map((faq, index) => ({
+        id: String(("id" in faq && faq.id != null ? faq.id : index)),
+        question: faq.question,
+        answer: faq.answer,
+      })),
+    [bundleFaqItems, faqs],
+  );
 
   // Pricing Matrix: accept an in-object model if provided; otherwise omit
   const pricingMatrixModel = React.useMemo<PackagePricingMatrixProps | null>(() => {
-    const m =
-      (bundle as any)?.pricingMatrix ??
-      (bundle as any)?.matrix ??
-      (bundle as any)?.pricing?.matrix;
-
-    if (m && Array.isArray(m.columns) && Array.isArray(m.groups)) {
-      return m as PackagePricingMatrixProps;
-    }
-    return null;
-  }, [bundle]);
+    return isPackagePricingMatrix(bundle.pricingMatrix) ? bundle.pricingMatrix : null;
+  }, [bundle.pricingMatrix]);
 
   // Related rail items — pass the adapted cards (the rail handles presentation)
   const relatedRailItems = related.map((b) => toPackageCard(b));
@@ -89,13 +174,7 @@ export default function PackagesDetailTemplate({
       {/* =========================================================
           PAGE HERO — ServiceHero
          ========================================================= */}
-      <ServiceHero
-        title={heroTitle}
-        subtitle={heroSubtitle}
-        tags={(bundle as any)?.services ?? (bundle as any)?.tags ?? []}
-        primaryCta={{ label: "Request proposal", href: "/contact" }}
-        secondaryCta={{ label: "Book a call", href: "/book" }}
-      />
+      <ServiceHero title={heroTitle} subtitle={heroSubtitle} media={heroMedia} button={heroButton} />
 
       {/* =========================================================
           SUPER CARD (AT A GLANCE) — PackageDetailOverview
@@ -104,16 +183,16 @@ export default function PackagesDetailTemplate({
         id={bundle.slug}
         title={heroTitle}
         valueProp={heroSubtitle}
-        icp={(bundle as any).icp}
-        service={(bundle as any).primaryService ?? (bundle as any).services?.[0]}
-        tags={(bundle as any).services ?? []}
-        packagePrice={(bundle as any).price}
-        ctaPrimary={{ label: "Request proposal", href: "/contact" }}
-        ctaSecondary={{ label: "Book a call", href: "/book" }}
-        outcomes={(bundle as any).outcomes}
+        icp={bundle.icp}
+        service={bundle.primaryService ?? bundle.service ?? bundle.services?.[0]}
+        tags={bundle.tags?.length ? bundle.tags : bundle.services ?? []}
+        packagePrice={bundle.price}
+        ctaPrimary={heroPrimaryCta}
+        ctaSecondary={heroSecondaryCta}
+        outcomes={overviewOutcomes}
         includesTable={overviewIncludes as any}
         pinnedPackageCard={overviewPinnedCard as any}
-        notes={(bundle as any).assumptionsNote}
+        notes={bundle.assumptionsNote}
       />
 
       {/* =========================================================
@@ -127,10 +206,10 @@ export default function PackagesDetailTemplate({
       {/* =========================================================
           NARRATIVE — compiled HTML from MDX
          ========================================================= */}
-      {(bundle as any)?.content?.html && (
+      {bundle.content?.html && (
         <section className={styles.section} aria-label="Narrative">
           {/* eslint-disable-next-line react/no-danger */}
-          <article dangerouslySetInnerHTML={{ __html: (bundle as any).content.html }} />
+          <article dangerouslySetInnerHTML={{ __html: bundle.content.html }} />
         </section>
       )}
 
@@ -161,12 +240,37 @@ export default function PackagesDetailTemplate({
           CTA BAND — closing call to action
          ========================================================= */}
       <section className={styles.section} aria-label="Get started">
-        <CTASection
-          title="Let’s shape your growth plan"
-          description="We’ll scope your package and timeline in a quick call."
-          primaryCta={{ label: "Request proposal", href: "/contact" }}
-          secondaryCta={{ label: "Book a call", href: "/book" }}
-        />
+        {(() => {
+          const ctaContent =
+            bundle.cta ?? {
+              title: "Let’s shape your growth plan",
+              subtitle: "We’ll scope your package and timeline in a quick call.",
+              primaryCta: DEFAULT_PRIMARY_CTA,
+              secondaryCta: DEFAULT_SECONDARY_CTA,
+              layout: "centered" as const,
+            };
+          const ctaPrimary = ctaContent.primaryCta ?? DEFAULT_PRIMARY_CTA;
+          const ctaSecondary = ctaContent.secondaryCta ?? DEFAULT_SECONDARY_CTA;
+          const ctaStyle =
+            ctaContent.layout === "centered" ||
+            ctaContent.layout === "split" ||
+            ctaContent.layout === "fullwidth"
+              ? ctaContent.layout
+              : "centered";
+          const ctaTitle = ctaContent.title ?? "Let’s shape your growth plan";
+          const ctaDescription =
+            ctaContent.subtitle ?? "We’ll scope your package and timeline in a quick call.";
+
+          return (
+            <CTASection
+              title={ctaTitle}
+              description={ctaDescription}
+              primaryCta={ctaPrimary}
+              secondaryCta={ctaSecondary}
+              style={ctaStyle}
+            />
+          );
+        })()}
       </section>
 
       {/* =========================================================
@@ -175,12 +279,8 @@ export default function PackagesDetailTemplate({
       {hasFaq && (
         <FAQSection
           id="bundle-faq"
-          title={(bundle as any)?.faq?.title ?? "Frequently asked questions"}
-          items={(bundleFaqItems.length ? bundleFaqItems : faqs).map((f: any, i: number) => ({
-            id: String(f?.id ?? i),
-            question: f.question,
-            answer: f.answer,
-          }))}
+          title={bundle.faq?.title ?? "Frequently asked questions"}
+          items={normalizedFaqItems}
         />
       )}
     </article>
