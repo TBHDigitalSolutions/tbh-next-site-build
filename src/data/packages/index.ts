@@ -1,414 +1,258 @@
 // ============================================================================
-// /src/data/packages/index.ts  (production-ready facade + enriched access)
+// src/data/packages/index.ts
 // ----------------------------------------------------------------------------
-// Requirements:
-// - tsconfig.json: "resolveJsonModule": true
-// - Path aliases:
-//    "@/data/*"     -> "src/data/*"
-//    "@/packages/*" -> "src/packages/*"
-// Authoring JSON (co-located):
-//    ./addOns.json, ./bundles.json, ./featured.json
-//
-// This module is the ONLY import point for bundle/add-on/featured data.
-// 1) Reads authored JSON
-// 2) Normalizes to canonical headers
-// 3) Exposes presentation view (`PackageBundle`) for templates
-// 4) Prefers __generated__ enriched artifacts (no runtime MDX parsing)
-// 5) Provides safe search/curation utilities + Growth bridge
+// Production SSOT façade for the Packages domain.
+// Defensive against inconsistent module exports (default/named/mixed).
 // ============================================================================
 
-import addOnsJson from "./addOns.json";
-import bundlesJson from "./bundles.json";
-import featuredJson from "./featured.json";
+import type { PackageBundle, ServicePackage, AddOn } from "./_types/packages.types";
 
-import type { PackageBundle } from "@/packages/lib/types";
-import { bundleToGrowthPackage, type GrowthPackage } from "@/packages/lib/bridge-growth";
+// ----------------------------------------------------------------------------
+// Helpers
+// ----------------------------------------------------------------------------
 
-// ============================================================================
-// Raw authoring shapes (internal only; tolerant to optional fields)
-// ============================================================================
+/** Coerce any imported module or value into a flat array<T>. */
+function toArray<T = unknown>(modOrVal: unknown): T[] {
+  // Direct array export
+  if (Array.isArray(modOrVal)) return modOrVal as T[];
 
-type Tier = "Essential" | "Professional" | "Enterprise";
-type ServiceSlug = "content" | "leadgen" | "marketing" | "seo" | "webdev" | "video";
-
-type RawAddOnJson = {
-  slug: string;
-  service?: ServiceSlug;
-  name: string;
-  description?: string;
-  billing?: "one-time" | "monthly" | "hybrid" | "hourly";
-  price?: { setup?: number; monthly?: number; currency?: string };
-  deliverables?: Array<{ label: string; detail?: string }>;
-  pairsBestWith?: Tier[];
-  dependencies?: string[] | string;
-  popular?: boolean;
-  category?: string;
-};
-
-type RawBundleJson = {
-  slug: string;
-  // Presentation
-  title?: string;
-  subtitle?: string;
-  summary?: string;
-  category?: "startup" | "local" | "ecommerce" | "b2b" | "custom";
-  tags?: string[];
-  // Optional richer shape (enriched build may add these)
-  icon?: string;
-  cardImage?: { src: string; alt?: string };
-  hero?: {
-    content?: {
-      title?: string;
-      subtitle?: string;
-      primaryCta?: { label: string; href?: string };
-      secondaryCta?: { label: string; href?: string };
-    };
-    background?: { type?: "image"; src?: string; alt?: string };
-  };
-  services?: string[];            // e.g., ["seo-services"]
-  includedServices?: string[];    // human-readable labels
-  highlights?: string[];
-  outcomes?: {
-    title?: string;
-    variant?: "stats";
-    items?: Array<{ label: string; value: string }>;
-  };
-  pricing?: any;                  // leave loose; templates own variants
-  faq?: { title?: string; faqs?: Array<{ id?: string; question: string; answer: string }> };
-  cta?: {
-    title?: string;
-    subtitle?: string;
-    primaryCta?: { label: string; href?: string };
-    secondaryCta?: { label: string; href?: string };
-    layout?: "centered";
-    backgroundType?: "gradient";
-  };
-  content?: { html?: string };    // compiled MDX attachment (build step)
-  addOnSlugs?: string[];          // optional linkage for guards
-};
-
-type RawFeaturedJson = {
-  slugs?: string[];                 // curated bundle slugs (rails / homepage)
-  serviceFeaturedSlugs?: string[];  // curated per service
-};
-
-// ============================================================================
-// Canonical headers (internal) + in-file normalizers
-// (We export Presentation `PackageBundle` for templates)
-// ============================================================================
-
-type CanonicalAddOn = {
-  id: string;                       // normalized from slug
-  slug: string;
-  service?: ServiceSlug;
-  name: string;
-  description?: string;
-  billing?: "one-time" | "monthly" | "hybrid" | "hourly";
-  price?: { oneTime?: number; monthly?: number; currency?: string; notes?: string };
-  deliverables?: Array<{ label: string; detail?: string }>;
-  pairsBestWith?: Tier[];
-  dependencies?: string[];
-  popular?: boolean;
-  category?: string;
-};
-
-type CanonicalBundleHeader = {
-  id: string;                       // normalized from slug
-  slug: string;
-  title: string;
-  subtitle?: string;
-  summary?: string;
-  category?: RawBundleJson["category"];
-  tags: string[];
-  // Optional richer fields (pass-through when present)
-  icon?: string;
-  cardImage?: { src: string; alt?: string };
-  hero?: RawBundleJson["hero"];
-  services?: string[];
-  includedServices?: string[];
-  highlights?: string[];
-  outcomes?: RawBundleJson["outcomes"];
-  pricing?: RawBundleJson["pricing"];
-  faq?: RawBundleJson["faq"];
-  cta?: RawBundleJson["cta"];
-  content?: RawBundleJson["content"]; // compiled MDX html (controlled render)
-  addOnSlugs?: string[];
-};
-
-// --- helpers -----------------------------------------------------------------
-
-const nonEmpty = <T,>(x: T | null | undefined): x is T => x != null;
-const trimOr = (s: string | undefined, fallback = "") =>
-  (s ?? "").toString().trim() || fallback;
-
-function normalizeAddOn(raw: RawAddOnJson): CanonicalAddOn {
-  const price = raw.price ?? {};
-  const currency = (price.currency ?? "USD").toUpperCase();
-  return {
-    id: raw.slug,
-    slug: raw.slug,
-    service: raw.service,
-    name: trimOr(raw.name, raw.slug),
-    description: raw.description?.trim(),
-    billing: raw.billing,
-    price: {
-      oneTime: nonEmpty(price.setup) ? Number(price.setup) : undefined,
-      monthly: nonEmpty(price.monthly) ? Number(price.monthly) : undefined,
-      currency,
-    },
-    deliverables: raw.deliverables,
-    pairsBestWith: raw.pairsBestWith,
-    dependencies: Array.isArray(raw.dependencies)
-      ? raw.dependencies
-      : raw.dependencies
-      ? [raw.dependencies]
-      : undefined,
-    popular: !!raw.popular,
-    category: raw.category,
-  };
-}
-
-function normalizeBundleHeader(raw: RawBundleJson): CanonicalBundleHeader {
-  const title = trimOr(raw.title ?? raw.hero?.content?.title, raw.slug);
-  const subtitle = trimOr(raw.subtitle ?? raw.hero?.content?.subtitle);
-  const summary = trimOr(raw.summary);
-  const tags = Array.isArray(raw.tags) ? (raw.tags.filter(Boolean) as string[]) : [];
-  return {
-    id: raw.slug,
-    slug: raw.slug,
-    title,
-    subtitle: subtitle || undefined,
-    summary: summary || undefined,
-    category: raw.category,
-    tags,
-    icon: raw.icon,
-    cardImage: raw.cardImage,
-    hero: raw.hero,
-    services: raw.services,
-    includedServices: raw.includedServices,
-    highlights: raw.highlights,
-    outcomes: raw.outcomes,
-    pricing: raw.pricing,
-    faq: raw.faq,
-    cta: raw.cta,
-    content: raw.content,
-    addOnSlugs: raw.addOnSlugs,
-  };
-}
-
-/** Map canonical header → presentation model expected by templates. */
-function headerToPackageBundle(header: CanonicalBundleHeader): PackageBundle {
-  // Visual fallbacks for robust cards/heroes
-  const fallbackCard: PackageBundle["cardImage"] = {
-    src: header.cardImage?.src ?? "/images/packages/placeholder-card.jpg",
-    alt: header.cardImage?.alt ?? header.title,
-  };
-
-  const heroContent = {
-    title: header.hero?.content?.title ?? header.title,
-    subtitle: header.hero?.content?.subtitle ?? header.subtitle ?? header.summary,
-    primaryCta: header.hero?.content?.primaryCta ?? { label: "Book a call", href: "/contact" },
-    secondaryCta: header.hero?.content?.secondaryCta ?? { label: "See all packages", href: "/packages" },
-  };
-
-  return {
-    slug: header.slug,
-    id: header.id,
-    title: header.title,
-    subtitle: header.subtitle ?? header.summary ?? "",
-    summary: header.summary ?? header.subtitle ?? "",
-    category: (header.category as any) ?? "custom",
-    tags: header.tags ?? [],
-    icon: header.icon ?? "Package",
-    cardImage: fallbackCard,
-    hero: {
-      content: heroContent,
-      background: header.hero?.background ?? {
-        type: "image",
-        src: fallbackCard.src,
-        alt: fallbackCard.alt,
-      },
-    },
-    includedServices: header.includedServices ?? [],
-    highlights: header.highlights ?? [],
-    outcomes: header.outcomes ?? { title: "Expected results", variant: "stats", items: [] },
-    pricing: header.pricing ?? {
-      kind: "tiers",
-      title: "Plans",
-      subtitle: "Choose what fits your team",
-      tiers: [],
-    },
-    faq: header.faq ?? { title: "Frequently Asked Questions", faqs: [] },
-    cta: header.cta ?? {
-      title: "Ready to get started?",
-      subtitle: "Talk to our team and tailor this package to your goals.",
-      primaryCta: { label: "Book a call", href: "/contact" },
-      secondaryCta: { label: "See all packages", href: "/packages" },
-      layout: "centered",
-      backgroundType: "gradient",
-    },
-    // Pass-through compiled MDX html (rendered once in template via controlled injection)
-    ...(header.content ? { content: header.content } : {}),
-    // Extras used by guards/templates
-    ...(header.addOnSlugs ? { addOnSlugs: header.addOnSlugs } : {}),
-    ...(header.services ? { services: header.services } : {}),
-  } as PackageBundle;
-}
-
-function normalizeFeatured(raw: RawFeaturedJson) {
-  return {
-    featuredBundleSlugs: Array.from(new Set(raw.slugs ?? [])),
-    serviceFeaturedSlugs: Array.from(new Set(raw.serviceFeaturedSlugs ?? [])),
-  };
-}
-
-// ============================================================================
-// Canonical data from authored JSON (fallback baseline)
-// ============================================================================
-
-const ADD_ONS_CANONICAL: CanonicalAddOn[] = (addOnsJson as RawAddOnJson[]).map(normalizeAddOn);
-const BUNDLE_HEADERS: CanonicalBundleHeader[] = (bundlesJson as RawBundleJson[]).map(normalizeBundleHeader);
-const featured = normalizeFeatured(featuredJson as RawFeaturedJson);
-
-export const FEATURED_BUNDLE_SLUGS: string[] = featured.featuredBundleSlugs;
-export const SERVICE_FEATURED_SLUGS: string[] = featured.serviceFeaturedSlugs;
-
-// Presentation mapping from headers (fallback when no enriched bundles are available)
-const FALLBACK_BUNDLES: PackageBundle[] = BUNDLE_HEADERS.map(headerToPackageBundle);
-
-// ============================================================================
-// Prefer __generated__ enriched artifacts (optional)
-// - bundles.enriched.json: fully enriched PackageBundle[] (with content.html)
-// - packages.search.json: index for hub live search/filters
-// ============================================================================
-
-let ENRICHED_BUNDLES: PackageBundle[] | undefined;
-let PACKAGES_SEARCH_INDEX: unknown | null = null;
-
-try {
-  // Top-level await is supported in Next.js build pipeline
-  const mod = await import("./__generated__/bundles.enriched.json");
-  ENRICHED_BUNDLES = (mod.default as PackageBundle[])?.filter(Boolean);
-} catch {
-  // no-op: fall back to authored headers
-}
-
-try {
-  const mod = await import("./__generated__/packages.search.json");
-  PACKAGES_SEARCH_INDEX = mod.default ?? null;
-} catch {
-  // no-op: search falls back to header-level filter
-}
-
-/** Bundles exported to the app (enriched preferred). */
-export const BUNDLES: PackageBundle[] = ENRICHED_BUNDLES ?? FALLBACK_BUNDLES;
-
-/** Canonical add-ons (normalized). */
-export const ADD_ONS: CanonicalAddOn[] = ADD_ONS_CANONICAL;
-
-/** Optional: expose generated search index to hub when available. */
-export function getPackagesSearchIndex(): unknown | null {
-  return PACKAGES_SEARCH_INDEX;
-}
-
-// ============================================================================
-// Lookups & search
-// ============================================================================
-
-/** Find a bundle by slug (presentation model). */
-export function getBundleBySlug(slug: string): PackageBundle | undefined {
-  return BUNDLES.find((b) => b.slug === slug);
-}
-
-/** Back-compat: find an add-on by authored slug (returns canonical). */
-export function getAddOnBySlug(slug: string): CanonicalAddOn | undefined {
-  return ADD_ONS.find((a) => a.slug === slug || a.id === slug);
-}
-
-/** Canonical ID lookup for add-ons. */
-export function getAddOnById(id: string): CanonicalAddOn | undefined {
-  return ADD_ONS.find((a) => a.id === id);
-}
-
-/** Get bundles by a service page slug (e.g., "seo-services"). */
-export function getBundlesByService(serviceSlug: string): PackageBundle[] {
-  const slug = serviceSlug.toLowerCase();
-
-  return BUNDLES.filter((b: any) => {
-    // Preferred: explicit services array on bundle
-    if (Array.isArray(b.services) && b.services.some((s: string) => s?.toLowerCase() === slug)) {
-      return true;
-    }
-    // Fallback: includedServices (human labels) loose match
-    if (Array.isArray(b.includedServices) && b.includedServices.some((s) => s.toLowerCase().includes(slug))) {
-      return true;
-    }
-    // Heuristic: tags may include a service keyword
-    if (Array.isArray(b.tags) && b.tags.some((t) => t.toLowerCase().includes(slug))) {
-      return true;
-    }
-    return false;
-  });
-}
-
-/** Header-level text search across title/subtitle/summary (fallback when no index). */
-export function searchBundles(query: string): PackageBundle[] {
-  const q = query.trim().toLowerCase();
-  if (!q) return BUNDLES;
-  return BUNDLES.filter((b: any) =>
-    [b.title, b.subtitle, b.summary].filter(Boolean).join(" ").toLowerCase().includes(q),
-  );
-}
-
-// ============================================================================
-// Curation utilities
-// ============================================================================
-
-/** Top-N bundles prioritizing curated FEATURED_BUNDLE_SLUGS, then filling from all. */
-export function topN(n = 3): PackageBundle[] {
-  const curated = FEATURED_BUNDLE_SLUGS.map(getBundleBySlug).filter(Boolean) as PackageBundle[];
-  const out: PackageBundle[] = [];
-  for (const b of curated) {
-    if (out.length >= n) break;
-    if (!out.find((x) => x.slug === b.slug)) out.push(b);
+  // ESM/CJS default export that is an array
+  if (
+    modOrVal &&
+    typeof modOrVal === "object" &&
+    Array.isArray((modOrVal as any).default)
+  ) {
+    return (modOrVal as any).default as T[];
   }
-  if (out.length < n) {
-    for (const b of BUNDLES) {
-      if (out.length >= n) break;
-      if (!out.find((x) => x.slug === b.slug)) out.push(b);
-    }
+
+  // If it's an object with multiple named array exports, flatten them
+  if (modOrVal && typeof modOrVal === "object") {
+    const arrays = Object.values(modOrVal as Record<string, unknown>).filter(Array.isArray) as T[][];
+    if (arrays.length > 0) return arrays.flat();
   }
-  return out.slice(0, n);
+
+  return [];
 }
 
-/** Convenience: top-N growth packages for a service page slug. */
-export function topNForService(serviceSlug: string, n = 3): GrowthPackage[] {
-  const subset = getBundlesByService(serviceSlug).slice(0, n);
-  return toGrowthPackages(subset);
-}
+/** Ensure `slug` exists on bundles/packages without mutating originals. */
+const withSlugBundle = (b: PackageBundle): PackageBundle => ({
+  slug: (b as any).slug ?? b.id,
+  ...b,
+});
 
-// ============================================================================
-// Guards
-// ============================================================================
+const withSlugPackage = (p: ServicePackage): ServicePackage => ({
+  slug: (p as any).slug ?? p.id,
+  ...p,
+});
 
-/** True if an add-on slug is referenced by at least one bundle (when linkage exists). */
-export function isAddOnUsed(slug: string): boolean {
-  // Use authored headers because enrichment may omit linkage metadata
-  return BUNDLE_HEADERS.some((b) => Array.isArray(b.addOnSlugs) && b.addOnSlugs.includes(slug));
-}
+// ----------------------------------------------------------------------------
+// Bundles — by service
+// (Each folder can export: default PackageBundle[], or named arrays, or both.)
+// ----------------------------------------------------------------------------
+import * as ContentBundlesMod from "./bundles/content-production-bundles";
+import * as LeadgenBundlesMod from "./bundles/lead-generation-bundles";
+import * as MarketingBundlesMod from "./bundles/marketing-bundles";
+import * as SeoBundlesMod from "./bundles/seo-bundles";
+import * as VideoBundlesMod from "./bundles/video-production-bundles";
+import * as WebdevBundlesMod from "./bundles/web-development-bundles";
 
-// ============================================================================
-// Growth bridge (compat with Growth components)
-// ============================================================================
+// Cross-service (Growth) bundles — directory exports PackageBundle[] (any shape)
+import * as CrossServiceMod from "./CrossService";
 
-/** Convert presentation bundles → GrowthPackage. */
-export function toGrowthPackages(bundles: PackageBundle[]): GrowthPackage[] {
-  return bundles.map(bundleToGrowthPackage);
-}
+// Coerce everything to arrays and normalize slugs
+const contentBundles = toArray<PackageBundle>(ContentBundlesMod).map(withSlugBundle);
+const leadgenBundles = toArray<PackageBundle>(LeadgenBundlesMod).map(withSlugBundle);
+const marketingBundles = toArray<PackageBundle>(MarketingBundlesMod).map(withSlugBundle);
+const seoBundles = toArray<PackageBundle>(SeoBundlesMod).map(withSlugBundle);
+const videoBundles = toArray<PackageBundle>(VideoBundlesMod).map(withSlugBundle);
+const webdevBundles = toArray<PackageBundle>(WebdevBundlesMod).map(withSlugBundle);
+const CROSS_SERVICE_BUNDLES = toArray<PackageBundle>(CrossServiceMod).map(withSlugBundle);
 
-// ============================================================================
-// Exposed types (QoL re-exports only; keep raw/canonical types internal)
-// ============================================================================
+export const SERVICE_BUNDLES: Record<
+  "content" | "leadgen" | "marketing" | "seo" | "video" | "webdev",
+  PackageBundle[]
+> = {
+  content: contentBundles,
+  leadgen: leadgenBundles,
+  marketing: marketingBundles,
+  seo: seoBundles,
+  video: videoBundles,
+  webdev: webdevBundles,
+};
 
-export type { PackageBundle } from "@/packages/lib/types";
-export type { GrowthPackage } from "@/packages/lib/bridge-growth";
+export const GROWTH_BUNDLES: PackageBundle[] = CROSS_SERVICE_BUNDLES;
+
+export const ALL_BUNDLES: PackageBundle[] = [
+  ...SERVICE_BUNDLES.content,
+  ...SERVICE_BUNDLES.leadgen,
+  ...SERVICE_BUNDLES.marketing,
+  ...SERVICE_BUNDLES.seo,
+  ...SERVICE_BUNDLES.video,
+  ...SERVICE_BUNDLES.webdev,
+  ...GROWTH_BUNDLES,
+];
+
+export const BUNDLES_BY_ID: Record<string, PackageBundle> =
+  Object.fromEntries(ALL_BUNDLES.map((b) => [b.id, b]));
+
+export const BUNDLES_BY_SLUG: Record<string, PackageBundle> =
+  Object.fromEntries(ALL_BUNDLES.map((b) => [b.slug!, b]));
+
+export const getBundleBySlug = (slug: string) => BUNDLES_BY_SLUG[slug];
+export const getBundleById = (id: string) => BUNDLES_BY_ID[id];
+
+// ----------------------------------------------------------------------------
+// Packages — by service
+// (Each folder can export: default ServicePackage[], or named arrays, or both.)
+// ----------------------------------------------------------------------------
+import * as ContentPackagesMod from "./Services/content-production";
+import * as LeadgenPackagesMod from "./Services/lead-generation";
+import * as MarketingPackagesMod from "./Services/marketing-services";
+import * as SeoPackagesMod from "./Services/seo-services";
+import * as VideoPackagesMod from "./Services/video-production";
+import * as WebdevPackagesMod from "./Services/web-development";
+
+const contentPackages = toArray<ServicePackage>(ContentPackagesMod).map(withSlugPackage);
+const leadgenPackages = toArray<ServicePackage>(LeadgenPackagesMod).map(withSlugPackage);
+const marketingPackages = toArray<ServicePackage>(MarketingPackagesMod).map(withSlugPackage);
+const seoPackages = toArray<ServicePackage>(SeoPackagesMod).map(withSlugPackage);
+const videoPackages = toArray<ServicePackage>(VideoPackagesMod).map(withSlugPackage);
+const webdevPackages = toArray<ServicePackage>(WebdevPackagesMod).map(withSlugPackage);
+
+export const SERVICE_PACKAGES: Record<
+  "content" | "leadgen" | "marketing" | "seo" | "video" | "webdev",
+  ServicePackage[]
+> = {
+  content: contentPackages,
+  leadgen: leadgenPackages,
+  marketing: marketingPackages,
+  seo: seoPackages,
+  video: videoPackages,
+  webdev: webdevPackages,
+};
+
+export const ALL_PACKAGES: ServicePackage[] = [
+  ...SERVICE_PACKAGES.content,
+  ...SERVICE_PACKAGES.leadgen,
+  ...SERVICE_PACKAGES.marketing,
+  ...SERVICE_PACKAGES.seo,
+  ...SERVICE_PACKAGES.video,
+  ...SERVICE_PACKAGES.webdev,
+];
+
+export const PACKAGES_BY_ID: Record<string, ServicePackage> =
+  Object.fromEntries(ALL_PACKAGES.map((p) => [p.id, p]));
+
+export const getPackageById = (id: string) => PACKAGES_BY_ID[id];
+
+// ----------------------------------------------------------------------------
+// Add-Ons — by service
+// (Each folder can export: default AddOn[], or named arrays, or both.)
+// ----------------------------------------------------------------------------
+import * as ContentAddOnsMod from "./add-ons/content-production-add-ons";
+import * as LeadgenAddOnsMod from "./add-ons/lead-generation-add-ons";
+import * as MarketingAddOnsMod from "./add-ons/marketing-add-ons";
+import * as SeoAddOnsMod from "./add-ons/seo-add-ons";
+import * as VideoAddOnsMod from "./add-ons/video-production-add-ons";
+import * as WebdevAddOnsMod from "./add-ons/web-development-add-ons";
+
+const contentAddOns = toArray<AddOn>(ContentAddOnsMod);
+const leadgenAddOns = toArray<AddOn>(LeadgenAddOnsMod);
+const marketingAddOns = toArray<AddOn>(MarketingAddOnsMod);
+const seoAddOns = toArray<AddOn>(SeoAddOnsMod);
+const videoAddOns = toArray<AddOn>(VideoAddOnsMod);
+const webdevAddOns = toArray<AddOn>(WebdevAddOnsMod);
+
+export const SERVICE_ADDONS: Record<
+  "content" | "leadgen" | "marketing" | "seo" | "video" | "webdev",
+  AddOn[]
+> = {
+  content: contentAddOns,
+  leadgen: leadgenAddOns,
+  marketing: marketingAddOns,
+  seo: seoAddOns,
+  video: videoAddOns,
+  webdev: webdevAddOns,
+};
+
+export const ALL_ADDONS: AddOn[] = [
+  ...SERVICE_ADDONS.content,
+  ...SERVICE_ADDONS.leadgen,
+  ...SERVICE_ADDONS.marketing,
+  ...SERVICE_ADDONS.seo,
+  ...SERVICE_ADDONS.video,
+  ...SERVICE_ADDONS.webdev,
+];
+
+export const ADDONS_BY_ID: Record<string, AddOn> =
+  Object.fromEntries(ALL_ADDONS.map((a) => [a.id, a]));
+
+export const getAddOnById = (id: string) => ADDONS_BY_ID[id];
+
+// ----------------------------------------------------------------------------
+// Featured — curated bundle slugs per service
+// (Each folder can export: default string[], or named arrays, or both.)
+// ----------------------------------------------------------------------------
+import * as ContentFeaturedMod from "./Featured/content-production-featured";
+import * as LeadgenFeaturedMod from "./Featured/lead-generation-featured";
+import * as MarketingFeaturedMod from "./Featured/marketing-featured";
+import * as SeoFeaturedMod from "./Featured/seo-featured";
+import * as VideoFeaturedMod from "./Featured/video-production-featured";
+import * as WebdevFeaturedMod from "./Featured/web-development-featured";
+
+const contentFeatured = toArray<string>(ContentFeaturedMod);
+const leadgenFeatured = toArray<string>(LeadgenFeaturedMod);
+const marketingFeatured = toArray<string>(MarketingFeaturedMod);
+const seoFeatured = toArray<string>(SeoFeaturedMod);
+const videoFeatured = toArray<string>(VideoFeaturedMod);
+const webdevFeatured = toArray<string>(WebdevFeaturedMod);
+
+export const FEATURED_BUNDLE_SLUGS: string[] = [
+  ...contentFeatured,
+  ...leadgenFeatured,
+  ...marketingFeatured,
+  ...seoFeatured,
+  ...videoFeatured,
+  ...webdevFeatured,
+];
+
+// ----------------------------------------------------------------------------
+// Under-$1K SKUs — derived slice from ALL_PACKAGES
+// ----------------------------------------------------------------------------
+export const UNDER_1K_PACKAGE_IDS: string[] = ALL_PACKAGES
+  .filter((p) => {
+    const m = p.price?.monthly ?? Number.POSITIVE_INFINITY;
+    const o = p.price?.oneTime ?? Number.POSITIVE_INFINITY;
+    return m <= 1000 || o <= 1000 || p.tags?.includes?.("under-1k");
+  })
+  .map((p) => p.id);
+
+export const UNDER_1K_PACKAGES: ServicePackage[] = UNDER_1K_PACKAGE_IDS
+  .map((id) => PACKAGES_BY_ID[id])
+  .filter(Boolean) as ServicePackage[];
+
+// ----------------------------------------------------------------------------
+// Catalog helpers (optional)
+// ----------------------------------------------------------------------------
+export type CatalogItem =
+  | ({ kind: "bundle" } & PackageBundle)
+  | ({ kind: "package" } & ServicePackage);
+
+export const CATALOG_ITEMS: CatalogItem[] = [
+  ...ALL_BUNDLES.map((b) => ({ kind: "bundle", ...b })),
+  ...ALL_PACKAGES.map((p) => ({ kind: "package", ...p })),
+];
+
+export const getItemBySlug = (slug: string): CatalogItem | undefined =>
+  (BUNDLES_BY_SLUG[slug] && ({ kind: "bundle", ...BUNDLES_BY_SLUG[slug] } as const)) ||
+  (PACKAGES_BY_ID[slug] && ({ kind: "package", ...PACKAGES_BY_ID[slug] } as const)) ||
+  undefined;
+
+// ----------------------------------------------------------------------------
+// Back-compat generic names
+// ----------------------------------------------------------------------------
+export const BUNDLES = ALL_BUNDLES;
+export const PACKAGES = ALL_PACKAGES;
+
+// Default export (common grid/card imports use this)
+export default ALL_BUNDLES;

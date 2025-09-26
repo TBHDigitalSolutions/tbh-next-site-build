@@ -1,289 +1,404 @@
+// ============================================================================
 // /src/data/packages/_validators/packages.validate.ts
-// Dev-time validation: ids, pricing sanity, cross-references, and coverage.
+// ----------------------------------------------------------------------------
+// Production-ready validation helpers for the Packages domain.
+// - Uses Zod schemas from ./schema for structural validation
+// - Adds opinionated business rules (IDs, slugs, pricing sanity, refs)
+// - Framework-agnostic; safe to run in build/CI
+// ============================================================================
+
+import {
+  ServicePackage as ZServicePackage,
+  PackageBundle as ZPackageBundle,
+} from "./schema";
 
 import type {
-  Package,
-  AddOn,
-  FeaturedCard,
-  IntegratedBundle,
-  Tier,
+  ServicePackage as PkgT,
+  PackageBundle as BunT,
 } from "../_types/packages.types";
-import { isValidPackageId, extractServiceFromId } from "../_utils/ids";
-import { SERVICE_SLUGS } from "../_utils/slugs";
 
-export interface ValidationError {
-  type: "error" | "warning";
+import { coerceSlug } from "../_utils/slugs";
+import {
+  isKebabId,
+  indexById,
+} from "../_utils/ids";
+
+// ----------------------------------------------------------------------------
+// Types
+// ----------------------------------------------------------------------------
+
+export type IssueLevel = "error" | "warning";
+
+export interface ValidationIssue {
+  level: IssueLevel;
+  kind:
+    | "schema"
+    | "id-format"
+    | "id-duplicate"
+    | "slug-duplicate"
+    | "slug-empty"
+    | "slug-mismatch"
+    | "pricing"
+    | "bundle-components";
+  id?: string;
+  field?: string;
   message: string;
   context?: string;
 }
 
-const REQUIRED_TIERS: readonly Tier[] = ["Essential", "Professional", "Enterprise"] as const;
-
-/** Ensure featured cards reference existing packages. */
-export function validateFeaturedRefs(
-  packages: Package[],
-  featured: FeaturedCard[],
-): ValidationError[] {
-  const errors: ValidationError[] = [];
-  const pkgIds = new Set(packages.map(p => p.id));
-
-  for (const card of featured) {
-    if (!pkgIds.has(card.packageId)) {
-      errors.push({
-        type: "error",
-        message: `Featured card "${card.id}" references missing packageId "${card.packageId}"`,
-        context: `service: ${card.service}`,
-      });
-    }
-  }
-  return errors;
+export interface ValidationReport {
+  issues: ValidationIssue[];
+  errors: number;
+  warnings: number;
 }
 
-/** Numeric pricing sanity checks (setup/monthly ≥ 0; warn when both missing). */
-export function validatePricingNumbers(item: Package | AddOn): ValidationError[] {
-  const errors: ValidationError[] = [];
-  const { setup, monthly } = item.price ?? {};
+// ----------------------------------------------------------------------------
+// Internal utils
+// ----------------------------------------------------------------------------
 
-  if (setup !== undefined && (typeof setup !== "number" || !Number.isFinite(setup) || setup < 0)) {
-    errors.push({
-      type: "error",
-      message: `${item.id}: setup must be a non-negative number`,
-      context: `service: ${item.service}`,
-    });
-  }
-  if (monthly !== undefined && (typeof monthly !== "number" || !Number.isFinite(monthly) || monthly < 0)) {
-    errors.push({
-      type: "error",
-      message: `${item.id}: monthly must be a non-negative number`,
-      context: `service: ${item.service}`,
-    });
-  }
-  if ((setup == null) && (monthly == null)) {
-    errors.push({
-      type: "warning",
-      message: `${item.id}: no pricing set (setup or monthly)`,
-      context: `service: ${item.service}`,
-    });
-  }
-  return errors;
+function makeReport(issues: ValidationIssue[]): ValidationReport {
+  const errors = issues.filter((i) => i.level === "error").length;
+  const warnings = issues.filter((i) => i.level === "warning").length;
+  return { issues, errors, warnings };
 }
 
-/** Ensure ids are unique across collections. */
-export function validateUniqueIds(
-  packages: Package[],
-  addOns: AddOn[],
-  featured: FeaturedCard[],
-  bundles: IntegratedBundle[] = [],
-): ValidationError[] {
-  const errors: ValidationError[] = [];
-  const seen = new Set<string>();
-
-  const check = (id: string, label: string, ctx?: string) => {
-    if (seen.has(id)) {
-      errors.push({ type: "error", message: `Duplicate ${label} ID: ${id}`, context: ctx });
-    } else {
-      seen.add(id);
-    }
-  };
-
-  packages.forEach(p => check(p.id, "package", `service: ${p.service}`));
-  addOns.forEach(a => check(a.id, "add-on", `service: ${a.service}`));
-
-  // Featured use separate namespace; still prevent internal dupes
-  const featuredSeen = new Set<string>();
-  featured.forEach(f => {
-    if (featuredSeen.has(f.id)) {
-      errors.push({ type: "error", message: `Duplicate featured card ID: ${f.id}`, context: `service: ${f.service}` });
-    } else {
-      featuredSeen.add(f.id);
-    }
-  });
-
-  const bundleSeen = new Set<string>();
-  bundles.forEach(b => {
-    if (bundleSeen.has(b.id)) {
-      errors.push({ type: "error", message: `Duplicate bundle ID: ${b.id}` });
-    } else {
-      bundleSeen.add(b.id);
-    }
-  });
-
-  return errors;
+function pushIssues(
+  store: ValidationIssue[],
+  items: ValidationIssue[] | undefined,
+) {
+  if (items?.length) store.push(...items);
 }
 
-/** Kebab-case id format + service prefix alignment. */
-export function validateIdFormats(items: (Package | AddOn | FeaturedCard)[]): ValidationError[] {
-  const errors: ValidationError[] = [];
-
-  for (const item of items) {
-    const svcFromId = extractServiceFromId(item.id);
-
-    if (!isValidPackageId(item.id)) {
-      errors.push({
-        type: "error",
-        message: `Invalid ID format: ${item.id} (must be kebab-case)`,
-        context: `service: ${item.service}`,
-      });
-    }
-    if (!svcFromId) {
-      errors.push({
-        type: "error",
-        message: `Invalid ID: ${item.id} (should start with a service slug)`,
-        context: `expected service: ${item.service}`,
-      });
-    } else if (svcFromId !== item.service) {
-      errors.push({
-        type: "error",
-        message: `ID service mismatch: ${item.id} starts with "${svcFromId}" but service is "${item.service}"`,
-        context: `item: ${item.id}`,
-      });
-    }
-  }
-  return errors;
+function nonNeg(n: unknown) {
+  return typeof n === "number" && Number.isFinite(n) && n >= 0;
 }
 
-/** Each service should have exactly 3 featured cards (strict merchandising rule). */
-export function validateFeaturedCount(featured: FeaturedCard[]): ValidationError[] {
-  const errors: ValidationError[] = [];
-  const counts = new Map<string, number>();
-  for (const f of featured) counts.set(f.service, (counts.get(f.service) ?? 0) + 1);
+// ----------------------------------------------------------------------------
+// Package validation
+// ----------------------------------------------------------------------------
 
-  for (const svc of SERVICE_SLUGS) {
-    const n = counts.get(svc) ?? 0;
-    if (n !== 3) {
-      errors.push({
-        type: "error",
-        message: `Service "${svc}" has ${n} featured cards; expected exactly 3`,
-        context: `service: ${svc}`,
-      });
-    }
-  }
-  return errors;
-}
+/**
+ * Validate package objects against schema + business rules.
+ * - Zod schema (shape)
+ * - id format (kebab-case)
+ * - duplicate ids
+ * - pricing sanity (non-negative)
+ */
+export function validatePackages(packages: PkgT[]): ValidationReport {
+  const issues: ValidationIssue[] = [];
 
-/** Warn when a service is missing any of the standard tiers. */
-export function validateTierCoverage(packages: Package[]): ValidationError[] {
-  const errors: ValidationError[] = [];
-  const byService = new Map<string, Set<Tier>>();
+  // 1) Schema validation
   for (const p of packages) {
-    const set = byService.get(p.service) ?? new Set<Tier>();
-    set.add(p.tier);
-    byService.set(p.service, set);
+    const r = ZServicePackage.safeParse(p);
+    if (!r.success) {
+      issues.push({
+        level: "error",
+        kind: "schema",
+        id: p?.id,
+        message: r.error.issues.map((i) => i.message).join("; "),
+      });
+    }
   }
-  for (const [svc, tiers] of byService.entries()) {
-    for (const t of REQUIRED_TIERS) {
-      if (!tiers.has(t)) {
-        errors.push({
-          type: "warning",
-          message: `Service "${svc}" missing ${t} tier`,
-          context: `service: ${svc}`,
+
+  // 2) ID format + duplicates
+  const seenIds = new Set<string>();
+  for (const p of packages) {
+    if (!p?.id) continue;
+
+    if (!isKebabId(p.id)) {
+      issues.push({
+        level: "error",
+        kind: "id-format",
+        id: p.id,
+        message: `Package id must be kebab-case (a–z, 0–9, hyphens): "${p.id}"`,
+      });
+    }
+
+    if (seenIds.has(p.id)) {
+      issues.push({
+        level: "error",
+        kind: "id-duplicate",
+        id: p.id,
+        message: `Duplicate package id "${p.id}"`,
+      });
+    } else {
+      seenIds.add(p.id);
+    }
+  }
+
+  // 3) Pricing sanity (non-negative; warn if absent)
+  for (const p of packages) {
+    const price = p?.price;
+    if (!price || (price.oneTime == null && price.monthly == null)) {
+      issues.push({
+        level: "warning",
+        kind: "pricing",
+        id: p.id,
+        message: `No public price set (allowed, but UI will show "Contact for pricing")`,
+      });
+      continue;
+    }
+    if (price.oneTime != null && !nonNeg(price.oneTime)) {
+      issues.push({
+        level: "error",
+        kind: "pricing",
+        id: p.id,
+        field: "price.oneTime",
+        message: `One-time price must be a non-negative number`,
+      });
+    }
+    if (price.monthly != null && !nonNeg(price.monthly)) {
+      issues.push({
+        level: "error",
+        kind: "pricing",
+        id: p.id,
+        field: "price.monthly",
+        message: `Monthly price must be a non-negative number`,
+      });
+    }
+  }
+
+  return makeReport(issues);
+}
+
+// ----------------------------------------------------------------------------
+// Bundle validation
+// ----------------------------------------------------------------------------
+
+/**
+ * Validate bundles against schema + business rules.
+ * - Zod schema (shape)
+ * - slug presence/format + duplicate slugs
+ * - id format + duplicate ids
+ * - component references exist in packages
+ * - compareAt >= price checks (when applicable)
+ */
+export function validateBundles(
+  bundles: BunT[],
+  packagesById: Record<string, PkgT>,
+): ValidationReport {
+  const issues: ValidationIssue[] = [];
+
+  // 1) Schema validation
+  for (const b of bundles) {
+    const r = ZPackageBundle.safeParse(b);
+    if (!r.success) {
+      issues.push({
+        level: "error",
+        kind: "schema",
+        id: b?.id,
+        message: r.error.issues.map((i) => i.message).join("; "),
+      });
+    }
+  }
+
+  // 2) ID / slug checks + duplicates
+  const seenIds = new Set<string>();
+  const seenSlugs = new Set<string>();
+
+  for (const b of bundles) {
+    // id format & dups
+    if (!b?.id) {
+      issues.push({
+        level: "error",
+        kind: "id-format",
+        message: "Bundle missing id",
+      });
+    } else {
+      if (!isKebabId(b.id)) {
+        issues.push({
+          level: "error",
+          kind: "id-format",
+          id: b.id,
+          message: `Bundle id must be kebab-case: "${b.id}"`,
+        });
+      }
+      if (seenIds.has(b.id)) {
+        issues.push({
+          level: "error",
+          kind: "id-duplicate",
+          id: b.id,
+          message: `Duplicate bundle id "${b.id}"`,
+        });
+      } else {
+        seenIds.add(b.id);
+      }
+    }
+
+    // slug presence & dups (coerce when missing)
+    const slug = coerceSlug(b.id ?? "", b.slug);
+    if (!slug) {
+      issues.push({
+        level: "error",
+        kind: "slug-empty",
+        id: b.id,
+        message: `Bundle slug missing and id could not coerce`,
+      });
+    } else {
+      if (seenSlugs.has(slug)) {
+        issues.push({
+          level: "error",
+          kind: "slug-duplicate",
+          id: b.id,
+          message: `Duplicate bundle slug "${slug}"`,
+        });
+      } else {
+        seenSlugs.add(slug);
+      }
+      if (b.slug && b.slug !== slug) {
+        issues.push({
+          level: "warning",
+          kind: "slug-mismatch",
+          id: b.id,
+          message: `Bundle slug "${b.slug}" differs from canonical "${slug}"`,
         });
       }
     }
   }
-  return errors;
-}
 
-/** Add-on references: dependencies must exist (in packages or add-ons). */
-export function validateAddOnDependencies(packages: Package[], addOns: AddOn[]): ValidationError[] {
-  const errors: ValidationError[] = [];
-  const known = new Set<string>([...packages.map(p => p.id), ...addOns.map(a => a.id)]);
-  for (const a of addOns) {
-    for (const dep of a.dependencies ?? []) {
-      if (!known.has(dep)) {
-        errors.push({
-          type: "error",
-          message: `Add-on "${a.id}" depends on missing id "${dep}"`,
-          context: `service: ${a.service}`,
+  // 3) Component references
+  for (const b of bundles) {
+    const missing: string[] = [];
+    for (const id of b.components ?? []) {
+      if (!packagesById[id]) missing.push(id);
+    }
+    if (missing.length) {
+      issues.push({
+        level: "error",
+        kind: "bundle-components",
+        id: b.id,
+        message: `Missing component package ids: ${missing.join(", ")}`,
+      });
+    }
+  }
+
+  // 4) Basic pricing sanity: compareAt >= price (if same dimension)
+  for (const b of bundles) {
+    const p = b.price;
+    const c = b.compareAt;
+
+    if (p && c) {
+      // Check only like-with-like, warn if compareAt lower than price
+      if (
+        p.oneTime != null &&
+        c.oneTime != null &&
+        nonNeg(p.oneTime) &&
+        nonNeg(c.oneTime) &&
+        c.oneTime < p.oneTime
+      ) {
+        issues.push({
+          level: "warning",
+          kind: "pricing",
+          id: b.id,
+          message: `compareAt.oneTime (${c.oneTime}) is less than price.oneTime (${p.oneTime})`,
+        });
+      }
+      if (
+        p.monthly != null &&
+        c.monthly != null &&
+        nonNeg(p.monthly) &&
+        nonNeg(c.monthly) &&
+        c.monthly < p.monthly
+      ) {
+        issues.push({
+          level: "warning",
+          kind: "pricing",
+          id: b.id,
+          message: `compareAt.monthly (${c.monthly}) is less than price.monthly (${p.monthly})`,
+        });
+      }
+    }
+
+    // Warn if bundle has neither oneTime nor monthly — allowed but noisy for storefronts
+    if (!p || (p.oneTime == null && p.monthly == null)) {
+      issues.push({
+        level: "warning",
+        kind: "pricing",
+        id: b.id,
+        message:
+          'No bundle price set (allowed). UI will show "Contact for pricing" unless suppressed.',
+      });
+    } else {
+      if (p.oneTime != null && !nonNeg(p.oneTime)) {
+        issues.push({
+          level: "error",
+          kind: "pricing",
+          id: b.id,
+          field: "price.oneTime",
+          message: `One-time price must be a non-negative number`,
+        });
+      }
+      if (p.monthly != null && !nonNeg(p.monthly)) {
+        issues.push({
+          level: "error",
+          kind: "pricing",
+          id: b.id,
+          field: "price.monthly",
+          message: `Monthly price must be a non-negative number`,
         });
       }
     }
   }
-  return errors;
+
+  return makeReport(issues);
 }
 
-/** Pairs-best-with tiers must be valid. (Schema enforces this, but double-check.) */
-export function validateAddOnPairs(addOns: AddOn[]): ValidationError[] {
-  const errors: ValidationError[] = [];
-  const valid = new Set<Tier>(REQUIRED_TIERS as unknown as Tier[]);
-  for (const a of addOns) {
-    for (const t of a.pairsBestWith ?? []) {
-      if (!valid.has(t)) {
-        errors.push({
-          type: "error",
-          message: `Add-on "${a.id}" has invalid pairsBestWith tier "${t}"`,
-          context: `service: ${a.service}`,
-        });
-      }
-    }
-  }
-  return errors;
-}
+// ----------------------------------------------------------------------------
+// Consolidated API
+// ----------------------------------------------------------------------------
 
-/** Run all validations and return consolidated results. */
+/** Validate both collections with cross-refs. */
 export function validateAll(
-  packages: Package[],
-  addOns: AddOn[],
-  featured: FeaturedCard[],
-  bundles: IntegratedBundle[] = [],
-): ValidationError[] {
-  const errors: ValidationError[] = [];
-
-  errors.push(...validateUniqueIds(packages, addOns, featured, bundles));
-  errors.push(...validateIdFormats([...packages, ...addOns, ...featured]));
-  errors.push(...validateFeaturedRefs(packages, featured));
-  errors.push(...validateFeaturedCount(featured));
-  errors.push(...validateTierCoverage(packages));
-  errors.push(...validateAddOnDependencies(packages, addOns));
-  errors.push(...validateAddOnPairs(addOns));
-
-  // Pricing checks for packages + add-ons
-  for (const it of [...packages, ...addOns]) {
-    errors.push(...validatePricingNumbers(it));
-  }
-
-  return errors;
+  packages: PkgT[],
+  bundles: BunT[],
+): ValidationReport {
+  const pkgReport = validatePackages(packages);
+  const byId = indexById(packages);
+  const bunReport = validateBundles(bundles, byId);
+  return makeReport([...pkgReport.issues, ...bunReport.issues]);
 }
 
-/** Utility: summarize counts (handy for CI logs). */
-export function summarize(results: ValidationError[]) {
-  const errorCount = results.filter(r => r.type === "error").length;
-  const warningCount = results.filter(r => r.type === "warning").length;
-  return { errorCount, warningCount, total: results.length };
-}
-
-/** Utility: throw on errors to fail CI. */
-export function assertValid(results: ValidationError[]) {
-  const { errorCount } = summarize(results);
-  if (errorCount > 0) {
-    const lines = results
-      .filter(r => r.type === "error")
-      .map(r => `• ${r.message}${r.context ? `\n    ↳ ${r.context}` : ""}`)
+/** Throw on any errors (keep warnings). */
+export function assertValid(report: ValidationReport): void {
+  if (report.errors > 0) {
+    const lines = report.issues
+      .filter((i) => i.level === "error")
+      .map((i) => `• [${i.kind}] ${i.message}${i.id ? ` (id: ${i.id})` : ""}`)
       .join("\n");
-    throw new Error(`Packages data validation failed (${errorCount} error${errorCount === 1 ? "" : "s"})\n${lines}`);
+    throw new Error(
+      `Packages validation failed (${report.errors} error${
+        report.errors === 1 ? "" : "s"
+      }):\n${lines}`,
+    );
   }
 }
 
-/** Pretty console logging for local dev. */
-export function logValidationResults(results: ValidationError[]): void {
-  const { errorCount, warningCount } = summarize(results);
-  if (results.length === 0) {
-    // eslint-disable-next-line no-console
-    console.log("✅ Packages data validation passed (no issues)");
-    return;
-  }
+/** Pretty printer for local dev / CI logs. */
+export function logValidationReport(report: ValidationReport): void {
   // eslint-disable-next-line no-console
-  console.log("\n📦 Packages Data Validation");
+  console.log("\n📦 Packages Validation Report");
   // eslint-disable-next-line no-console
-  console.log(`   Errors:   ${errorCount}`);
+  console.log(`   Errors:   ${report.errors}`);
   // eslint-disable-next-line no-console
-  console.log(`   Warnings: ${warningCount}\n`);
-  for (const r of results) {
+  console.log(`   Warnings: ${report.warnings}`);
+  if (report.issues.length) {
     // eslint-disable-next-line no-console
-    console.log(`${r.type === "error" ? "❌" : "⚠️"} ${r.message}${r.context ? `\n   • ${r.context}` : ""}`);
+    console.log("");
+    for (const i of report.issues) {
+      const icon = i.level === "error" ? "❌" : "⚠️";
+      // eslint-disable-next-line no-console
+      console.log(
+        `${icon} ${i.kind}: ${i.message}${
+          i.id ? `  (id: ${i.id}${i.field ? ` · ${i.field}` : ""})` : ""
+        }`,
+      );
+    }
   }
-  if (errorCount > 0) {
-    // eslint-disable-next-line no-console
-    console.log("\n💡 Fix errors before deploying to production.");
-  }
+}
+
+/** Convenience runner for scripts: validate, log, and throw on errors. */
+export function runValidation(packages: PkgT[], bundles: BunT[]): void {
+  const report = validateAll(packages, bundles);
+  logValidationReport(report);
+  assertValid(report);
 }

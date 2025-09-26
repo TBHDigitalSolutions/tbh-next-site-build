@@ -1,45 +1,62 @@
 // ============================================================================
-// Packages Domain — Types & Adapters Refactor (SSOT-aligned)
-// ----------------------------------------------------------------------------
-// This single file includes refactored types, raw JSON shapes, generated
-// artifact types, currency formatters, and normalization helpers that map
-// all provided JSON/TS/MDX sources into a *canonical SSOT* used by pages.
-//
-// Copy the sections below into your repo as separate files under:
-//   /src/data/packages/_types/*
-//   /src/data/packages/_adapters/normalize.ts
-//   /src/data/packages/index.ts  (drop-in fixed version)
-//
-// Notes:
-// - Canonical price model = Money { oneTime?, monthly?, currency? }.
-// - Legacy JSON may use { setup }. The normalizer maps "setup" -> oneTime.
-// - Add-on JSON uses `slug` (not `id`) and may include `billing` taxonomy.
-// - Bundles JSON contains presentation headers only — narrative MDX is compiled
-//   into __generated__/bundles.enriched.json as content.html during build.
-// - All types are framework-agnostic.
-// ============================================================================
-
-// ============================================================================
 // /src/data/packages/_types/primitives.ts
+// ----------------------------------------------------------------------------
+// Canonical primitives for the Packages domain.
+// - Framework-agnostic.
+// - Stable unions for services & tiers.
+// - Single public price model: Money { oneTime?, monthly?, currency? }.
+// - Small utility bases (WithId/WithSlug/WithService) used across types.
 // ============================================================================
-export type ServiceSlug = "content" | "leadgen" | "marketing" | "seo" | "webdev" | "video";
-export type Tier = "Essential" | "Professional" | "Enterprise";
-export type BillingModel = "one-time" | "monthly" | "hourly" | "hybrid";
 
-/** Canonical money model (replaces legacy `setup`). */
+/** Canonical service slugs used for filtering, routing, and grouping. */
+export type ServiceSlug =
+  | "content"
+  | "leadgen"
+  | "marketing"
+  | "seo"
+  | "webdev"
+  | "video";
+
+/** Common merchandising tiers (kept as labels only; no public tier tables). */
+export type Tier = "Essential" | "Professional" | "Enterprise";
+
+/**
+ * Billing model hints for add-ons and internal UI logic.
+ * Keep this narrow; expand only when we actually support the mode.
+ */
+export type BillingModel = "one-time" | "monthly" | "hybrid";
+
+/** Currency code (extend when you truly support more than USD end-to-end). */
+export type CurrencyCode = "USD";
+
+/**
+ * Canonical money model (replaces legacy `setup`).
+ * - `oneTime`: project/setup fee
+ * - `monthly`: recurring retainer
+ * - `currency`: optional; formatters default to "USD" when omitted
+ */
 export type Money = {
   oneTime?: number;
   monthly?: number;
-  currency?: "USD"; // default in formatters/consumers
+  currency?: CurrencyCode;
 };
 
-/** Optional display/contract metadata next to price. */
+/** Optional display/contract metadata that may accompany a price. */
 export type PriceMeta = {
-  note?: string; // e.g., "+ ad spend", "starting at"
+  /** Short note near price: "+ ad spend", "starting at", etc. */
+  note?: string;
+  /** Minimum commitment in months (e.g., 3, 6, 12). */
   minTermMonths?: number;
+  /** Display hint when setup is waived after N months. */
   setupWaivedAfterMonths?: number;
-  discountPercent?: number; // internal; never auto-applied
+  /** Optional internal discount (%); never auto-applied in UI. */
+  discountPercent?: number;
 };
 
+/** Simple deliverable/feature row used by some legacy shapes. */
 export type FeatureItem = { label: string; detail?: string };
 
+/** Small utility bases used across authoring types. */
+export type WithId = { id: string };
+export type WithSlug = { slug?: string };
+export type WithService = { service?: ServiceSlug | string };

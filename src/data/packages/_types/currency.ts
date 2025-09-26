@@ -1,35 +1,49 @@
 // ============================================================================
 // /src/data/packages/_types/currency.ts
 // ----------------------------------------------------------------------------
-// UI-friendly currency formatting for Money. Minimal, framework-agnostic,
-// and tolerant of missing/invalid data (falls back to "Contact for pricing").
+// UI-friendly currency helpers for Money.
+// - Robust Intl-based formatting with safe fallbacks
+// - Consistent "Starting at …" labels (public price policy)
+// - Hybrid display prefers monthly first: "$M/month + $S setup"
+// - No framework/runtime coupling; pure TS utilities
 // ============================================================================
 
 import type { Money } from "./primitives";
 
-const MISSING_LABEL = "Contact for pricing";
+/** Label used when a price is missing/invalid. */
+export const MISSING_PRICE_LABEL = "Contact for pricing";
+
+/** Prefix used for public price chips and hero blocks. */
+export const STARTING_PREFIX = "Starting at";
 
 /** Normalize to ISO-4217 3-letter code (defaults to USD). */
-function norm(code?: string): string {
+export function normalizeCurrencyCode(code?: string): string {
   const c = (code ?? "USD").trim().toUpperCase();
   return /^[A-Z]{3}$/.test(c) ? c : "USD";
 }
 
-function isValidAmount(v: unknown): v is number {
-  return typeof v === "number" && Number.isFinite(v) && !Number.isNaN(v);
+/** True when the value is a finite number. */
+export function isValidAmount(v: unknown): v is number {
+  return typeof v === "number" && Number.isFinite(v);
 }
 
 /**
- * Format a numeric amount as currency (0 fraction digits).
- * If Intl or the currency code fails, falls back to a very safe `$<rounded>`.
+ * Format a numeric amount as currency.
+ * Defaults to 0 fraction digits (prices are author-recorded in whole dollars).
+ * If Intl fails, falls back to a very safe "$<rounded>" string.
  */
-export function formatCurrency(amount: number, currency?: string, locale?: string): string {
+export function formatCurrency(
+  amount: number,
+  currency?: string,
+  locale?: string,
+  fractionDigits = 0
+): string {
   try {
     return new Intl.NumberFormat(locale, {
       style: "currency",
-      currency: norm(currency),
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
+      currency: normalizeCurrencyCode(currency),
+      minimumFractionDigits: fractionDigits,
+      maximumFractionDigits: fractionDigits,
     }).format(amount);
   } catch {
     const fallback = isValidAmount(amount) ? Math.round(amount) : 0;
@@ -37,48 +51,156 @@ export function formatCurrency(amount: number, currency?: string, locale?: strin
   }
 }
 
-/** Returns `"$X,XXX/month"` or `"Contact for pricing"` when missing/invalid. */
-export function toMonthlyPrice(amount?: number | null, currency?: string, locale?: string): string {
-  if (!isValidAmount(amount ?? NaN)) return MISSING_LABEL;
+/** "$X,XXX/month" or the missing label. */
+export function toMonthlyPrice(
+  amount?: number | null,
+  currency?: string,
+  locale?: string
+): string {
+  if (!isValidAmount(amount ?? NaN)) return MISSING_PRICE_LABEL;
   return `${formatCurrency(amount as number, currency, locale)}/month`;
 }
 
-/** Returns `"$Y,YYY one-time"` or `"Contact for pricing"` when missing/invalid. */
-export function toOneTimePrice(amount?: number | null, currency?: string, locale?: string): string {
-  if (!isValidAmount(amount ?? NaN)) return MISSING_LABEL;
+/** "$Y,YYY one-time" or the missing label. */
+export function toOneTimePrice(
+  amount?: number | null,
+  currency?: string,
+  locale?: string
+): string {
+  if (!isValidAmount(amount ?? NaN)) return MISSING_PRICE_LABEL;
   return `${formatCurrency(amount as number, currency, locale)} one-time`;
 }
 
 /**
- * Combined label from a Money object:
- * - "$5,000 setup + $2,500/month"
- * - "$5,000 one-time"
- * - "$2,500/month"
- * - "Contact for pricing"
+ * Hybrid label (monthly first) or single component fallback.
+ * Examples:
+ *   • "$2,500/month + $5,000 setup"
+ *   • "$5,000 one-time"
+ *   • "$2,500/month"
+ *   • "Contact for pricing"
  */
 export function toCombinedPrice(m?: Money, locale?: string): string {
-  if (!m || (m.oneTime == null && m.monthly == null)) return MISSING_LABEL;
+  if (!m || (m.oneTime == null && m.monthly == null)) return MISSING_PRICE_LABEL;
 
   const { oneTime, monthly, currency } = m;
-
-  const hasOneTime = isValidAmount(oneTime ?? NaN);
   const hasMonthly = isValidAmount(monthly ?? NaN);
+  const hasOneTime = isValidAmount(oneTime ?? NaN);
 
-  if (hasOneTime && hasMonthly) {
-    return `${formatCurrency(oneTime as number, currency, locale)} setup + ${toMonthlyPrice(
-      monthly as number,
+  if (hasMonthly && hasOneTime) {
+    return `${formatCurrency(monthly as number, currency, locale)}/month + ${formatCurrency(
+      oneTime as number,
       currency,
-      locale,
-    )}`;
+      locale
+    )} setup`;
   }
-  if (hasOneTime) return toOneTimePrice(oneTime as number, currency, locale);
   if (hasMonthly) return toMonthlyPrice(monthly as number, currency, locale);
+  if (hasOneTime) return toOneTimePrice(oneTime as number, currency, locale);
 
-  return MISSING_LABEL;
+  return MISSING_PRICE_LABEL;
 }
 
-/** For “from $X,XXX” chips on cards; falls back to “Contact for pricing”. */
-export function toStartingPrice(amount?: number | null, currency?: string, locale?: string): string {
-  if (!isValidAmount(amount ?? NaN)) return MISSING_LABEL;
-  return `from ${formatCurrency(amount as number, currency, locale)}`;
+/**
+ * Choose the “starting amount” for chips:
+ *   • Prefer monthly when present, else one-time.
+ * Returns { amount, kind } or null when neither is present.
+ */
+export function pickStartingAmount(
+  m?: Money
+): { amount: number; kind: "monthly" | "oneTime"; currency: string } | null {
+  if (!m) return null;
+  const currency = normalizeCurrencyCode(m.currency);
+  if (isValidAmount(m.monthly)) return { amount: m.monthly!, kind: "monthly", currency };
+  if (isValidAmount(m.oneTime)) return { amount: m.oneTime!, kind: "oneTime", currency };
+  return null;
+}
+
+/**
+ * Public chip/hero label per policy:
+ *   • "Starting at $X/month"
+ *   • "Starting at $Y one-time"
+ *   • For hybrid, still prefer the monthly surface: "Starting at $X/month + $Y setup"
+ *   • Falls back to "Contact for pricing"
+ */
+export function toStartingLabel(m?: Money, locale?: string): string {
+  const pick = pickStartingAmount(m);
+  if (!pick) return MISSING_PRICE_LABEL;
+
+  const { amount, kind, currency } = pick;
+
+  // If hybrid, show both with monthly first.
+  const hasBoth =
+    isValidAmount(m?.monthly ?? NaN) && isValidAmount(m?.oneTime ?? NaN);
+
+  if (hasBoth) {
+    return `${STARTING_PREFIX} ${formatCurrency(m!.monthly!, currency, locale)}/month + ${formatCurrency(
+      m!.oneTime!,
+      currency,
+      locale
+    )} setup`;
+  }
+
+  if (kind === "monthly") {
+    return `${STARTING_PREFIX} ${formatCurrency(amount, currency, locale)}/month`;
+  }
+  // kind === "oneTime"
+  return `${STARTING_PREFIX} ${formatCurrency(amount, currency, locale)} one-time`;
+}
+
+/**
+ * Back-compat helper used by some cards:
+ *   Previously returned "from $X,XXX". We standardize on "Starting at $X,XXX".
+ *   Prefer to call toStartingLabel(Money) when possible.
+ */
+export function toStartingPrice(
+  amount?: number | null,
+  currency?: string,
+  locale?: string
+): string {
+  if (!isValidAmount(amount ?? NaN)) return MISSING_PRICE_LABEL;
+  return `${STARTING_PREFIX} ${formatCurrency(amount as number, currency, locale)}`;
+}
+
+/**
+ * Split a money label into parts for micro-typography:
+ *   -> { prefix, amount, suffix }
+ * Examples:
+ *   • "Starting at $2,500/month"  => { "Starting at", "$2,500", "/month" }
+ *   • "Starting at $5,000 one-time" => { "Starting at", "$5,000", "one-time" }
+ *   • Missing -> { "", "Contact for pricing", "" }
+ */
+export function toStartingLabelParts(m?: Money, locale?: string): {
+  prefix: string;
+  amount: string;
+  suffix: string;
+} {
+  const label = toStartingLabel(m, locale);
+  if (label === MISSING_PRICE_LABEL) {
+    return { prefix: "", amount: MISSING_PRICE_LABEL, suffix: "" };
+  }
+  // Try to isolate the currency chunk and trailing suffix
+  // This is heuristic but works well for our formats.
+  const m1 = label.replace(`${STARTING_PREFIX} `, "");
+  const monthlyIdx = m1.indexOf("/month");
+  const oneTimeIdx = m1.indexOf(" one-time");
+
+  if (monthlyIdx > -1) {
+    return {
+      prefix: STARTING_PREFIX,
+      amount: m1.slice(0, monthlyIdx),
+      suffix: "/month",
+    };
+  }
+  if (oneTimeIdx > -1) {
+    return {
+      prefix: STARTING_PREFIX,
+      amount: m1.slice(0, oneTimeIdx),
+      suffix: "one-time",
+    };
+  }
+  return { prefix: STARTING_PREFIX, amount: m1, suffix: "" };
+}
+
+/** Convenience: plain combined label for detail “Price” section. */
+export function toDetailPrice(m?: Money, locale?: string): string {
+  return toCombinedPrice(m, locale);
 }

@@ -1,233 +1,180 @@
+// ============================================================================
 // /src/data/packages/_types/packages.types.ts
-// SSOT type definitions for packages, add-ons, featured, and bundles.
-// Framework-agnostic: no React/Next imports. These are the *authoring* shapes.
+// ----------------------------------------------------------------------------
+// SSOT authoring shapes used by packages, bundles, and add-ons.
+// Framework-agnostic and UI-friendly. Aligns with:
+//  - No public 3-tier pricing (single public “Starting at …” price).
+//  - Narrative as HTML (no MDX at runtime).
+//  - Normalized includes/outcomes/faq blocks for templates/adapters.
+// ============================================================================
 
-// ===== Shared primitives =====================================================
+import type { Money, ServiceSlug, Tier } from "./primitives";
 
-/** Canonical service slugs used across the domain. */
-export type ServiceSlug =
-  | "content"
-  | "leadgen"
-  | "marketing"
-  | "seo"
-  | "webdev"
-  | "video";
+/* ----------------------------------------------------------------------------
+ * Common presentation blocks
+ * --------------------------------------------------------------------------*/
 
-/** Standard merchandising tiers (per service). */
-export type Tier = "Essential" | "Professional" | "Enterprise";
+export type FAQItem = { id?: string | number; question: string; answer: string };
 
-/** Canonical money model (replaces legacy `setup`). */
-export type Money = {
-  /** One-time charge (AKA setup/project). */
-  oneTime?: number;
-  /** Monthly recurring charge (retainer). */
-  monthly?: number;
-  /** ISO code; defaults to "USD" in consumers when omitted. */
-  currency?: "USD";
+export type FAQBlock = { title?: string; faqs: FAQItem[] };
+
+export type IncludesSection = {
+  title?: string;
+  items: { label: string; note?: string }[];
 };
 
-/** Optional display/contract metadata shown near prices. */
-export type PriceMeta = {
-  /** Short note near price: "+ ad spend", "starting at", etc. */
-  note?: string;
-  /** Minimum commitment in months (e.g., 3, 6, 12). */
-  minTermMonths?: number;
-  /** Display hint when setup is waived after N months. */
-  setupWaivedAfterMonths?: number;
-  /** Optional internal discount (%); never auto-applied in UI. */
-  discountPercent?: number;
+export type OutcomesBlock = {
+  title?: string;
+  items: { label: string; value?: string }[]; // value optional for simple bullet lists
 };
 
-/** Simple deliverable/feature row. */
-export interface FeatureItem {
-  label: string;
-  detail?: string;
-}
+/**
+ * Optional matrix for feature/limits display.
+ * NOTE: This is NOT a public 3-tier pricing table; keep pricing single-column.
+ */
+export type PackagePricingMatrix = {
+  columns: { id: string; label: string; note?: string }[]; // e.g., a single "Scope" column
+  groups: {
+    id: string;
+    label: string;
+    note?: string;
+    rows: {
+      id: string;
+      label: string;
+      note?: string;
+      values: Record<string, unknown>; // adapter decides how to render
+    }[];
+  }[];
+  caption?: string;
+  footnotes?: string;
+};
 
-// ===== Core authoring entities ==============================================
+/* ----------------------------------------------------------------------------
+ * Service Packages (the sellable offerings)
+ * --------------------------------------------------------------------------*/
 
-/** Per-service package (tiered offering). */
-export interface ServicePackage {
-  /** Stable id, kebab-case, service-prefixed; e.g., "seo-professional". */
+export type ServicePackage = {
+  /** Stable kebab-case id; usually equals the leaf folder name. */
   id: string;
-  service: ServiceSlug;
+  /** If omitted, UI/adapters default slug=id. */
+  slug?: string;
+
+  /** Primary service key (e.g., "content", "leadgen"). */
+  service: ServiceSlug | string;
+
+  /** Display name for cards/detail pages. */
   name: string;
-  /** Tier is common but not strictly required for specialized packs. */
-  tier?: Tier;
-  /** One-liner for cards/search. */
+
+  /** Optional merchandising tier label (not used for public tier tables). */
+  tier?: Tier | string;
+
+  /** One-liner / strapline for cards & SEO. */
   summary?: string;
-  /** Bulleted deliverables/specs. */
-  features?: FeatureItem[];
-  /** Pricing is optional (custom/enterprise packages may omit it). */
-  price?: Money;
-  /** Optional pricing display/meta. */
-  priceMeta?: PriceMeta;
-  /** Merchandising aids. */
+
+  /** Freeform tags for filtering/rails. Include "under-1k" when applicable. */
+  tags?: string[];
+
+  /** “Popular”, “Premium”, etc. */
   badges?: string[];
-  tags?: string[];
-  /** Optional grouping/category key. */
-  category?: string;
-  /** Optional SLA/timeline string. */
-  sla?: string;
-  /** Weigh as “Popular” in rails/search. */
-  popular?: boolean;
-}
 
-/** Add-on (a-la-carte, attachable to ServicePackages). */
-export interface AddOn {
-  /** e.g., "video-ugc-kit". */
-  id: string;
-  service: ServiceSlug;
-  name: string;
-  description: string;
-  /** Deliverables list. */
-  deliverables: FeatureItem[];
-  /** Optional price (custom add-ons can omit). */
-  price?: Money;
-  /** Optional pricing display/meta. */
-  priceMeta?: PriceMeta;
-  /** Dependencies by id (package/add-on). */
-  dependencies?: string[];
-  /** Suggested package tiers this pairs best with. */
-  pairsBestWith?: Tier[];
-  /** Merchandising */
-  badges?: string[];
-  popular?: boolean;
-  tags?: string[];
-}
+  /**
+   * Public price shown as “Starting at …”.
+   * Keep single-price policy: no public 3-tier tables.
+   * (If you maintain internal tiers, do that in a private field outside this type.)
+   */
+  price: Money;
 
-/** Lightweight featured card used across service hubs/rails. */
-export interface FeaturedCard {
-  id: string;
-  service: ServiceSlug;
-  /** Must reference an existing `ServicePackage.id`. */
-  packageId: string;
-  /** Card headline. */
-  headline: string;
-  /** 3–6 bullets. */
-  highlights: string[];
-  /** Optional “starting at” amount (numeric). */
-  startingAt?: number;
-  /** Optional label like “Most Popular”. */
-  badge?: string;
-  /** CTA label override. */
-  ctaLabel?: string;
-}
+  /** Normalized content blocks */
+  includes?: IncludesSection[];
+  outcomes?: OutcomesBlock;
+  faq?: FAQBlock;
 
-// ===== Bundles (cross-service solutions) ====================================
+  /** Narrative HTML fragment (single safe injection point; no MDX at runtime). */
+  content?: { html: string };
 
-/** Optional grouped “what’s included” section. */
-export type IncludeGroup = { title?: string; items: string[] };
+  /** Optional single-column feature/limits matrix for the detail page. */
+  pricingMatrix?: PackagePricingMatrix;
 
-/** A multi-service integrated bundle resolved at build-time into the façade. */
-export interface Bundle {
-  /** Page slug; e.g., "local-business-growth". */
-  slug: string;
-  /** Internal id (may mirror slug). */
-  id: string;
-
-  // Hero/card basics
-  title: string;
-  subtitle?: string;
-  summary?: string;
-  tags?: string[];
-  category?: "startup" | "local" | "ecommerce" | "b2b" | "custom";
-
-  // Pricing (optional)
-  price?: Money;
-  priceMeta?: PriceMeta;
-
-  // Composition & presentation
-  /** Optional “what’s included” prose groups for quick scan. */
-  includes?: IncludeGroup[];
-  /** IDs of service packages included in the bundle. */
-  components?: string[];
-  /** IDs of recommended add-ons to pair with this bundle. */
+  /** IDs of add-ons to recommend alongside this package. */
   addOnRecommendations?: string[];
 
-  // Outcomes & timeline
-  outcomes?: Array<{ label: string; value: string }>;
-  timeline?: string;
-
-  // FAQ (page-ready)
-  faq?: { title?: string; faqs: Array<{ id: string; question: string; answer: string }> };
-
-  // Optional media for hero/card; MDX may also supply this via front-matter.
-  hero?: {
-    content?: {
-      title?: string;
-      subtitle?: string;
-      primaryCta?: { label: string; href: string };
-      secondaryCta?: { label: string; href: string };
-    };
-    background?: { type: "image" | "video"; src: string; alt?: string };
-  };
+  /** Optional card/OG image. */
   cardImage?: { src: string; alt?: string };
+};
 
-  /** Merchandising hint used by rails/search. */
-  popular?: boolean;
-}
+/* ----------------------------------------------------------------------------
+ * Bundles (curated kits of existing packages)
+ * --------------------------------------------------------------------------*/
 
-// ===== Presentation-only (kept for existing pages) ==========================
-
-/** A tier row for on-page pricing tables (preformatted strings). */
-export interface BundleTier {
+export type PackageBundle = {
+  /** Stable id (often equals slug). */
   id: string;
+  /** If omitted, UI/adapters default slug=id. */
+  slug?: string;
+
+  /** Optional service affinity for filtering (choose a primary if mixed). */
+  service?: ServiceSlug | string;
+
+  /** Card/hero title & supporting copy. */
   name: string;
-  /** Preformatted “$X/month” or “$Y one-time” string for UI. */
-  price: string;
-  period: string; // e.g., "Monthly", "One-time"
-  features: string[];
-  badge?: string;
-  cta: { label: string; href: string };
-}
+  subtitle?: string;
+  summary?: string;
 
-/** Pricing presentation model for bundle page templates. */
-export interface ServicePricing {
-  kind: "tiers";
-  title: string;
-  subtitle: string;
-  tiers: BundleTier[];
-}
+  /** Public price; “compareAt” enables “You save …” UI. */
+  price: Money;
+  compareAt?: Money;
 
-/** Legacy/lib-compatible marketing bundle for page templates. */
-export interface PackageBundle {
-  slug: string;
+  /** Component packages by ID (SSOT cross-ref). */
+  components: string[];
+
+  /** Merchandising */
+  badges?: string[];
+  tags?: string[];
+
+  /** Optional long-form sections (not required for all bundles). */
+  includes?: IncludesSection[];
+  outcomes?: OutcomesBlock;
+  faq?: FAQBlock;
+  content?: { html?: string };
+
+  /** Optional media for cards/OG. */
+  cardImage?: { src: string; alt?: string };
+};
+
+/* ----------------------------------------------------------------------------
+ * Add-Ons (attachable upsells)
+ * --------------------------------------------------------------------------*/
+
+export type AddOn = {
+  /** Stable id; kebab-case. */
   id: string;
-  title: string;
-  subtitle: string;
-  summary: string;
-  category: "startup" | "local" | "ecommerce" | "b2b" | "custom";
-  tags: string[];
-  icon: string;
-  cardImage: { src: string; alt: string };
-  hero: {
-    content: {
-      title: string;
-      subtitle: string;
-      primaryCta: { label: string; href: string };
-      secondaryCta: { label: string; href: string };
-    };
-    background: { type: "image"; src: string; alt: string };
-  };
-  includedServices: string[];
-  highlights: string[];
-  outcomes: {
-    title: string;
-    variant: "stats";
-    items: Array<{ label: string; value: string }>;
-  };
-  pricing: ServicePricing;
-  faq: {
-    title: string;
-    faqs: Array<{ id: string; question: string; answer: string }>;
-  };
-  cta: {
-    title: string;
-    subtitle?: string;
-    primaryCta: { label: string; href: string };
-    secondaryCta: { label: string; href: string };
-    layout: "centered";
-    backgroundType: "gradient";
-  };
-}
+
+  /** Service affinity (used for grouping/filters). */
+  service?: ServiceSlug | string;
+
+  /** Display name & optional description. */
+  name: string;
+  description?: string;
+
+  /** Simple bullet list for cards/detail. */
+  bullets?: string[];
+
+  /** Public price (or omit and provide a priceNote for formulas). */
+  price?: Money;
+
+  /** Human-readable pricing hint (e.g., “+50% of base package rate”). */
+  priceNote?: string;
+
+  /** Billing hint for UIs. */
+  billing?: "one-time" | "monthly" | "hybrid";
+
+  /** Merchandising & targeting */
+  popular?: boolean;
+  tags?: string[];
+
+  /**
+   * Recommendations: package IDs, tags, or tier labels this add-on pairs well with.
+   * (Adapters may resolve these into chips/links.)
+   */
+  pairsBestWith?: string[];
+};
