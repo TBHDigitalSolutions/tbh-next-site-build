@@ -60,6 +60,7 @@ export type PackagesHubTemplateProps = {
   featuredSlugs?: string[];
 
   /** Toolbar toggles (forwarded to the toolbar as needed). */
+  showTypeFilter?: boolean;
   showSearch?: boolean;
   showServiceFilter?: boolean;
   showSort?: boolean;
@@ -115,6 +116,7 @@ export default function PackagesHubTemplate({
   subtitle = "Proven playbooks bundled into simple plans — faster time to value, repeatable results.",
   bundles,
   featuredSlugs = [],
+  showTypeFilter = true,
   showSearch = true,
   showServiceFilter = true,
   showSort = true,
@@ -290,6 +292,10 @@ export default function PackagesHubTemplate({
           sort={sort}
           onSortChange={setSort}
           serviceOptions={serviceOptions}
+          showTypeFilter={showTypeFilter}
+          showSearch={showSearch}
+          showServiceFilter={showServiceFilter}
+          showSort={showSort}
           countsByType={{
             all: index.length,
             bundles: index.length,
