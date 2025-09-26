@@ -1,102 +1,115 @@
-// /src/data/packages/content-production/content-production-addons.ts
-// Content Production add-ons - a la carte enhancements that bolt onto any tier
-
+// src/data/packages/content-production/content-production-addons.ts
 import type { AddOn } from "../_types/packages.types";
 
-export const contentProductionAddOns: AddOn[] = [
-  {
+export const ADDONS_CATALOG: Record<string, AddOn> = {
+  // Brand & Strategy
+  "content-brand-identity-kit": {
     id: "content-brand-identity-kit",
-    service: "content",
-    name: "Brand Identity Starter Kit", 
-    description: "Complete brand foundation with logo, guidelines, and asset library for consistent content creation.",
-    deliverables: [
-      { label: "Logo design and brand guidelines", detail: "Primary logo, variations, usage rules" },
-      { label: "Business card and letterhead design", detail: "Professional stationery suite" },
-      { label: "Brand color palette and typography", detail: "Color codes, font specifications" },
-      { label: "Basic brand asset library", detail: "Templates and brand elements" }
+    name: "Brand Identity Starter Kit",
+    price: { oneTime: 4500, currency: "USD" },
+    bullets: [
+      "Logo design and brand guidelines",
+      "Business card and letterhead design",
+      "Brand color palette and typography",
+      "Basic brand asset library",
     ],
-    billing: "one-time",
-    price: { setup: 4500 },
-    pairsBestWith: ["Essential", "Professional"],
-    popular: true
   },
-  {
-    id: "content-professional-photography",
-    service: "content", 
-    name: "Professional Photography Package",
-    description: "High-quality photography for products, team, and brand storytelling content.",
-    deliverables: [
-      { label: "Full-day product or corporate photography", detail: "8-hour professional shoot" },
-      { label: "50+ edited high-resolution images", detail: "Professional editing and retouching" },
-      { label: "Usage rights and licensing", detail: "Commercial use license included" },
-      { label: "Multiple format optimization", detail: "Web, print, and social formats" }
-    ],
-    billing: "one-time",
-    price: { setup: 3500 },
-    pairsBestWith: ["Professional", "Enterprise"]
-  },
-  {
+  "content-audit-strategy": {
     id: "content-audit-strategy",
-    service: "content",
-    name: "Content Audit & Strategy Package", 
-    description: "Comprehensive analysis of existing content with strategic roadmap for improvement.",
-    deliverables: [
-      { label: "Complete content audit", detail: "Analysis of current content assets" },
-      { label: "Competitive content analysis", detail: "Benchmark against industry leaders" },
-      { label: "6-month content strategy roadmap", detail: "Detailed implementation plan" },
-      { label: "Editorial calendar template setup", detail: "Workflows and approval processes" }
+    name: "Content Audit & Strategy Package",
+    price: { oneTime: 2500, currency: "USD" },
+    bullets: [
+      "Complete content audit (current assets)",
+      "Competitive content analysis",
+      "6-month content strategy roadmap",
+      "Editorial calendar template setup",
     ],
-    billing: "one-time", 
-    price: { setup: 2500 },
-    pairsBestWith: ["Essential", "Professional", "Enterprise"]
   },
-  {
-    id: "content-podcast-production",
-    service: "content",
-    name: "Podcast Production Add-On",
-    description: "Complete podcast setup and ongoing production for thought leadership content.",
-    deliverables: [
-      { label: "Podcast branding and setup", detail: "Logo, intro music, hosting platform" },
-      { label: "Monthly episode production", detail: "2 episodes per month, full editing" },
-      { label: "Show notes and transcription", detail: "SEO-optimized episode descriptions" },
-      { label: "Distribution and promotion", detail: "Multi-platform publishing and social promotion" }
-    ],
-    billing: "hybrid",
-    price: { setup: 4000, monthly: 1500 },
-    pairsBestWith: ["Professional", "Enterprise"],
-    popular: true
-  },
-  {
-    id: "content-social-management",
-    service: "content",
-    name: "Social Media Management Add-On",
-    description: "Daily social media management with community engagement and performance optimization.",
-    deliverables: [
-      { label: "Daily social media posting", detail: "3-5 platforms with optimized content" },
-      { label: "Community management", detail: "2 hours daily engagement and response" },
-      { label: "Social media strategy optimization", detail: "Platform-specific best practices" },
-      { label: "Monthly social analytics", detail: "Performance tracking and insights" }
-    ],
-    billing: "monthly",
-    price: { monthly: 2500 },
-    pairsBestWith: ["Essential", "Professional"],
-    popular: true
-  },
-  {
-    id: "content-video-production",
-    service: "content",
-    name: "Video Content Production Add-On",
-    description: "Professional video content creation for enhanced storytelling and engagement.",
-    deliverables: [
-      { label: "Monthly video production", detail: "4 videos per month (2-5 minutes each)" },
-      { label: "Script development and storyboarding", detail: "Professional pre-production planning" },
-      { label: "Professional filming and editing", detail: "Multi-camera setup with advanced editing" },
-      { label: "Multi-platform optimization", detail: "Versions for web, social, and presentations" }
-    ],
-    billing: "monthly",
-    price: { monthly: 4500 },
-    pairsBestWith: ["Professional", "Enterprise"]
-  }
-];
 
-export default contentProductionAddOns;
+  // Photography & Video
+  "content-professional-photography": {
+    id: "content-professional-photography",
+    name: "Professional Photography Package",
+    price: { oneTime: 3500, currency: "USD" },
+    bullets: [
+      "Full-day product or corporate photography",
+      "50+ edited high-resolution images",
+      "Usage rights and licensing",
+      "Multiple format optimization",
+    ],
+  },
+  "content-video-production": {
+    id: "content-video-production",
+    name: "Video Content Production Add-On",
+    price: { monthly: 4500, currency: "USD" },
+    bullets: [
+      "4 videos/month (2–5 minutes each)",
+      "Scripting & storyboarding",
+      "Pro filming & editing",
+      "Multi-platform optimization",
+    ],
+  },
+
+  // Social Media (tiers)
+  "content-social-starter": {
+    id: "content-social-starter",
+    name: "Social Starter",
+    price: { monthly: 2500, currency: "USD" },
+    bullets: ["3 platforms, 12 posts/month", "Engagement monitoring"],
+  },
+  "content-social-growth": {
+    id: "content-social-growth",
+    name: "Social Growth",
+    price: { monthly: 4500, currency: "USD" },
+    bullets: ["4 platforms, 30 posts/month", "Community management"],
+  },
+  "content-social-authority": {
+    id: "content-social-authority",
+    name: "Social Authority",
+    price: { monthly: 8500, currency: "USD" },
+    bullets: ["Unlimited platforms, 60+ posts/month", "Influencer outreach"],
+  },
+
+  // Podcast & Audio
+  "content-podcast-starter": {
+    id: "content-podcast-starter",
+    name: "Podcast Starter Kit",
+    price: { oneTime: 4000, monthly: 1500, currency: "USD" },
+    bullets: ["Branding, hosting setup", "2 episodes/month (editing included)"],
+  },
+  "content-podcast-growth": {
+    id: "content-podcast-growth",
+    name: "Podcast Growth Pack",
+    price: { monthly: 3500, currency: "USD" },
+    bullets: ["Weekly production", "Distribution + guest outreach"],
+  },
+  "content-audio-branded-series": {
+    id: "content-audio-branded-series",
+    name: "Branded Audio Series",
+    price: { oneTime: 7500, currency: "USD" },
+    bullets: ["6-episode scripted series"],
+  },
+
+  // Accelerators & Compliance
+  "content-accelerator-rapid": {
+    id: "content-accelerator-rapid",
+    name: "Rapid Content Creation Pack",
+    priceNote: "+50% of base package rate",
+    bullets: ["48-hour turnaround, priority queue"],
+  },
+  "content-accelerator-repurpose": {
+    id: "content-accelerator-repurpose",
+    name: "Content Repurposing System",
+    price: { oneTime: 3500, monthly: 1500, currency: "USD" },
+    bullets: [
+      "Audit, multi-format adaptation, library organization",
+    ],
+  },
+  "content-accelerator-brand-compliance": {
+    id: "content-accelerator-brand-compliance",
+    name: "Brand Consistency Monitoring",
+    price: { monthly: 2500, currency: "USD" },
+    bullets: ["Guideline enforcement, approval workflows, reporting"],
+  },
+};
+export type AddOnId = keyof typeof ADDONS_CATALOG;
