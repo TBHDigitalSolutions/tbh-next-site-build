@@ -31,7 +31,7 @@ const PATHS = {
   UNDER_1K: path.join(CATALOG_DIR, "packages.under-1k.json"),
   SERVICE_ADDONS: path.join(CATALOG_DIR, "addons.services.json"),
   FEATURED: path.join(CATALOG_DIR, "featured.json"),
-  OUT: path.join(GEN_DIR, "search/unified.search.json"),
+  OUT: path.join(GEN_DIR, "search", "unified.search.json"),
 };
 
 type AnyRec = Record<string, any>;

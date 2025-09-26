@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import styles from "./packages.module.css";
 
 // Data (SSOT façade)
-import { BUNDLES, FEATURED_BUNDLE_SLUGS } from "@/data/packages";
+import { BUNDLES, FEATURED_BUNDLE_SLUGS, getPackagesSearchIndex } from "@/data/packages";
 
 // app/packages/page.tsx
 // Templates (domain layer)
@@ -32,6 +32,8 @@ export const metadata: Metadata = {
 };
 
 export default function PackagesHubPage() {
+  const searchIndex = getPackagesSearchIndex();
+
   return (
     <div className={styles.page}>
       <PackagesHubTemplate
@@ -39,6 +41,7 @@ export default function PackagesHubPage() {
         subtitle="Proven playbooks bundled into simple plans — faster time to value, repeatable results."
         bundles={BUNDLES}
         featuredSlugs={FEATURED_BUNDLE_SLUGS}
+        searchIndex={searchIndex}
         showServiceFilter
         showSearch
         showSort

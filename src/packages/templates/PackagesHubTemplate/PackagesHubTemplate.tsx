@@ -10,6 +10,7 @@ import styles from "./PackagesHubTemplate.module.css";
 import type { PackageBundle } from "@/packages/lib/types";
 import { toPackageCard } from "@/packages/lib/adapters";
 import { emitItemListJsonLd } from "@/packages/lib/jsonld";
+import type { PackagesSearchRecord } from "@/data/packages/_types/generated";
 
 // Sections (hero/cta/faq)
 import ServiceHero from "@/components/sections/section-layouts/ServiceHero";
@@ -58,6 +59,9 @@ export type PackagesHubTemplateProps = {
 
   /** Curated slugs to lift in Featured rail & "Recommended" sort. */
   featuredSlugs?: string[];
+
+  /** Precompiled search index for toolbar counts & downstream use. */
+  searchIndex?: PackagesSearchRecord[];
 
   /** Toolbar toggles (forwarded to the toolbar as needed). */
   showSearch?: boolean;
@@ -115,6 +119,7 @@ export default function PackagesHubTemplate({
   subtitle = "Proven playbooks bundled into simple plans — faster time to value, repeatable results.",
   bundles,
   featuredSlugs = [],
+  searchIndex,
   showSearch = true,
   showServiceFilter = true,
   showSort = true,
@@ -187,6 +192,38 @@ export default function PackagesHubTemplate({
     () => index.filter((it) => featuredSet.has(it.slug)),
     [index, featuredSet],
   );
+
+  const countsByType = React.useMemo(() => {
+    if (!Array.isArray(searchIndex) || searchIndex.length === 0) {
+      return {
+        all: index.length,
+        bundles: index.length,
+        packages: 0,
+        addons: 0,
+      };
+    }
+
+    return searchIndex.reduce(
+      (acc, doc) => {
+        acc.all += 1;
+        switch (doc.docType) {
+          case "bundle":
+            acc.bundles += 1;
+            break;
+          case "package":
+            acc.packages += 1;
+            break;
+          case "addon":
+            acc.addons += 1;
+            break;
+          default:
+            break;
+        }
+        return acc;
+      },
+      { all: 0, bundles: 0, packages: 0, addons: 0 },
+    );
+  }, [index.length, searchIndex]);
 
   // Service options
   const serviceOptions = React.useMemo(() => {
@@ -290,12 +327,7 @@ export default function PackagesHubTemplate({
           sort={sort}
           onSortChange={setSort}
           serviceOptions={serviceOptions}
-          countsByType={{
-            all: index.length,
-            bundles: index.length,
-            packages: 0,
-            addons: 0,
-          }}
+          countsByType={countsByType}
         />
       </div>
 

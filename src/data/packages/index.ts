@@ -6,6 +6,12 @@
 // ============================================================================
 
 import type { PackageBundle, ServicePackage, AddOn } from "./_types/packages.types";
+import type { PackagesSearchRecord } from "./_types/generated";
+import searchIndexJson from "./__generated__/search/unified.search.json" assert { type: "json" };
+
+const PACKAGES_SEARCH_INDEX: PackagesSearchRecord[] = Array.isArray(searchIndexJson)
+  ? (searchIndexJson as PackagesSearchRecord[])
+  : [];
 
 // ----------------------------------------------------------------------------
 // Helpers
@@ -247,6 +253,8 @@ export const getItemBySlug = (slug: string): CatalogItem | undefined =>
   (BUNDLES_BY_SLUG[slug] && ({ kind: "bundle", ...BUNDLES_BY_SLUG[slug] } as const)) ||
   (PACKAGES_BY_ID[slug] && ({ kind: "package", ...PACKAGES_BY_ID[slug] } as const)) ||
   undefined;
+
+export const getPackagesSearchIndex = (): PackagesSearchRecord[] => PACKAGES_SEARCH_INDEX;
 
 // ----------------------------------------------------------------------------
 // Back-compat generic names
