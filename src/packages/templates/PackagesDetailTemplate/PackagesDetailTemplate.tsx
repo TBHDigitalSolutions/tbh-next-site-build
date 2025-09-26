@@ -5,7 +5,7 @@ import * as React from "react";
 import styles from "./PackagesDetailTemplate.module.css";
 
 import type { PackageBundle } from "@/packages/lib/types";
-import { emitServiceJsonLd } from "@/packages/lib/jsonld";
+import { emitServiceJsonLd, hasServicePrice } from "@/packages/lib/jsonld";
 import { toPackageCard, toIncludesTable, toPriceBlock } from "@/packages/lib/adapters";
 
 // Page-level sections
@@ -61,6 +61,7 @@ export default function PackagesDetailTemplate({
   const overviewIncludes = toIncludesTable(bundle);
   const overviewPinnedCard = toPackageCard(bundle);
   const priceBlockModel = toPriceBlock(bundle);
+  const shouldRenderServiceJsonLd = hasServicePrice(bundle);
 
   // Pricing Matrix: accept an in-object model if provided; otherwise omit
   const pricingMatrixModel = React.useMemo<PackagePricingMatrixProps | null>(() => {
@@ -79,7 +80,7 @@ export default function PackagesDetailTemplate({
   const relatedRailItems = related.map((b) => toPackageCard(b));
 
   // Schema.org JSON-LD (service) for SEO
-  const jsonLd = emitServiceJsonLd(bundle);
+  const jsonLd = shouldRenderServiceJsonLd ? emitServiceJsonLd(bundle) : null;
 
   return (
     <article className={styles.wrap}>

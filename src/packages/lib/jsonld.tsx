@@ -121,6 +121,11 @@ function coerceMeta(b: any): { name: string; description: string; url?: string }
   return { name, description, url };
 }
 
+export function hasServicePrice(bundle: PackageBundle): boolean {
+  const price = resolvePrice(bundle);
+  return price != null && (price.monthly != null || price.oneTime != null);
+}
+
 /** Build the Service JSON-LD object. Only include `offers` when pricing exists. */
 export function buildServiceJsonLd(bundle: PackageBundle) {
   const meta = coerceMeta(bundle as any);
@@ -161,6 +166,7 @@ export function buildServiceJsonLd(bundle: PackageBundle) {
 
 /** Emit a <script> tag with Service JSON-LD (offers only if price exists). */
 export function emitServiceJsonLd(bundle: PackageBundle) {
+  if (!hasServicePrice(bundle)) return null;
   const obj = buildServiceJsonLd(bundle);
   return (
     <script

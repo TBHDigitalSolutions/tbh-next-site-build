@@ -262,6 +262,8 @@ export function toPriceBlock(b: PackageBundle, opts: ToPriceBlockOptions = {}): 
 
   const { name } = coerceMeta(b);
   const priceResolved = resolvePrice(b);
+  const hasResolvedPrice =
+    priceResolved != null && (priceResolved.monthly != null || priceResolved.oneTime != null);
 
   const pb: PriceBlockAdapter = {
     price: { ...(priceResolved ?? {}) },
@@ -271,7 +273,7 @@ export function toPriceBlock(b: PackageBundle, opts: ToPriceBlockOptions = {}): 
     unitLabel,
     caption,
     title: title ?? name,
-    jsonLd,
+    jsonLd: hasResolvedPrice && jsonLd,
     primaryCta: primary ?? { label: "View details", href: `/packages/${b.slug}` },
     secondaryCta: secondary ?? { label: "Book a call", href: "/book" },
     note,
