@@ -1,62 +1,140 @@
+/* PackageCard.module.css
+   - Styles the *inner* content only; the frame handles elevation & padding.
+   - Uses unified tokens from packages-unified.module.css
+*/
+
 .card {
     display: flex;
     flex-direction: column;
-    border: 1px solid var(--color-border, #e5e7eb);
-    border-radius: 16px;
-    background: var(--color-surface, #fff);
-    padding: 16px;
-    transition: box-shadow 0.2s ease, border-color 0.2s ease, transform 0.06s ease;
+    color: var(--pkg-card-fg, var(--text-primary));
 }
 
-.card:hover {
-    border-color: var(--color-border-strong, #d1d5db);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+.cardRail {
+    /* compact tweaks for carousel usage if needed */
 }
 
-.card[data-highlight="true"] {
-    border-color: var(--color-accent, #2563eb);
-    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+.cardHighlight {
+    /* visual emphasis, relies on frame border/selected tokens */
+    --package-selected: var(--package-selected, var(--card-selected));
 }
 
+/* Header / media -------------------------------------------------- */
 .header {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 0.75rem;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: start;
+    gap: var(--spacing-sm);
 }
 
-.title {
-    margin: 0;
-    font-size: 1.125rem;
-    /* 18px */
-    line-height: 1.35;
-    font-weight: 700;
-    color: var(--color-text, #111827);
+.media {
+    position: relative;
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.cardImage {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    border-radius: calc(var(--radius-lg) - 6px);
+    background: var(--pkg-card-media-bg, color-mix(in oklab, var(--bg-surface) 80%, black));
+}
+
+.iconFallback {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 64px;
+    height: 64px;
+    border-radius: var(--radius-md);
+    background: var(--pkg-card-media-bg, color-mix(in oklab, var(--bg-surface) 80%, black));
 }
 
 .badge {
-    display: inline-flex;
-    align-items: center;
-    white-space: nowrap;
-    font-size: 0.75rem;
-    padding: 4px 8px;
-    border-radius: 9999px;
-    background: var(--badge-bg, #eef2ff);
-    color: var(--badge-fg, #3730a3);
-    border: 1px solid var(--badge-border, #c7d2fe);
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    border-radius: 999px;
+    padding: 4px 10px;
+    font-size: var(--font-size-caption);
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    background: var(--pkg-badge-bg, color-mix(in oklab, var(--brand-blue) 12%, var(--bg-surface)));
+    color: var(--pkg-badge-fg, var(--brand-blue));
+    border: 1px solid color-mix(in oklab, var(--brand-blue) 28%, var(--card-border));
+}
+
+.savingsBadge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    border-radius: 999px;
+    padding: 4px 10px;
+    font-size: var(--font-size-caption);
+    font-weight: 800;
+    background: var(--pkg-savings-bg, color-mix(in oklab, #16a34a 18%, var(--bg-surface)));
+    color: var(--pkg-savings-fg, #16a34a);
+    border: 1px solid color-mix(in oklab, #16a34a 32%, var(--card-border));
+}
+
+/* Title / description -------------------------------------------- */
+.title {
+    margin: var(--spacing-sm) 0 0 0;
+    font-family: var(--font-heading);
+    font-size: var(--font-size-h3);
+    color: var(--pkg-card-title, var(--text-primary));
+    line-height: 1.25;
 }
 
 .description {
-    margin-top: 8px;
-    color: var(--color-text-muted, #6b7280);
-    font-size: 0.94rem;
+    margin: var(--spacing-xs) 0 0 0;
+    color: var(--pkg-card-muted, var(--text-secondary));
+    font-size: var(--font-size-body);
 }
 
+/* Value row: starting price + quick features --------------------- */
+.value {
+    display: grid;
+    gap: var(--spacing-sm);
+    margin-top: var(--spacing-sm);
+}
+
+.priceDisplay {
+    display: inline-grid;
+    grid-auto-flow: column;
+    align-items: baseline;
+    gap: 0.5ch;
+}
+
+.priceLabel {
+    font-size: var(--font-size-small);
+    color: var(--text-secondary);
+}
+
+.priceValue {
+    font-weight: 800;
+    font-family: var(--font-heading);
+}
+
+.features {
+    display: grid;
+    gap: var(--spacing-2xs);
+}
+
+.more {
+    margin-top: 2px;
+    color: var(--text-secondary);
+    font-size: var(--font-size-small);
+}
+
+/* Detailed price chip -------------------------------------------- */
 .prices {
-    margin-top: 12px;
+    margin-top: var(--spacing-sm);
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: var(--spacing-xs);
     flex-wrap: wrap;
 }
 
@@ -66,54 +144,23 @@
     gap: 6px;
     padding: 6px 10px;
     border-radius: 9999px;
-    border: 1px solid var(--color-border, #e5e7eb);
-    background: var(--chip-bg, #f9fafb);
-    color: var(--color-text, #111827);
-    font-size: 0.85rem;
+    border: 1px solid var(--card-border);
+    background: var(--pkg-pricechip-bg, var(--chip-price-bg));
+    color: var(--pkg-pricechip-fg, var(--chip-price-fg));
+    font-size: var(--font-size-small);
 }
 
-.features {
-    margin-top: 12px;
-}
-
-.featureList {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 6px;
-}
-
-.featureItem {
-    display: inline-flex;
-    align-items: flex-start;
-    gap: 8px;
-    color: var(--color-text-muted, #374151);
-    font-size: 0.92rem;
-}
-
-.featureItem::before {
-    content: "";
-    display: inline-block;
-    width: 16px;
-    height: 16px;
-    margin-top: 2px;
-    border-radius: 50%;
-    border: 2px solid var(--color-accent, #2563eb);
-}
-
-.more {
+/* Tags ------------------------------------------------------------ */
+.tagsWrap {
     margin-top: 8px;
-    color: var(--color-text-muted, #6b7280);
-    font-size: 0.85rem;
 }
 
+/* CTA buttons ----------------------------------------------------- */
 .actions {
-    margin-top: 14px;
+    margin-top: var(--spacing-md);
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: var(--spacing-sm);
 }
 
 .btn {
@@ -121,32 +168,37 @@
     align-items: center;
     justify-content: center;
     height: 38px;
-    padding: 0 14px;
-    border-radius: 10px;
-    border: 1px solid var(--color-border, #e5e7eb);
-    background: var(--btn-bg, #111827);
-    color: #fff;
-    font-weight: 600;
-    cursor: pointer;
+    padding: 0 var(--spacing-md);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--card-border);
+    font-weight: 700;
+    text-decoration: none;
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast);
+}
+
+.btnPrimary {
+    background: var(--btn-primary-bg);
+    color: var(--btn-primary-fg);
+    border-color: transparent;
+}
+
+.btnPrimary:hover {
+    background: var(--btn-primary-hover);
 }
 
 .btnSecondary {
-    background: #fff;
-    color: var(--color-text, #111827);
+    background: var(--btn-secondary-bg);
+    color: var(--btn-secondary-fg);
+    border-color: var(--btn-secondary-border);
 }
 
-.btn[disabled] {
+.btn[aria-disabled="true"] {
     opacity: 0.6;
     cursor: not-allowed;
 }
 
-.card:focus-within {
-    outline: 2px solid var(--color-accent, #2563eb);
-    outline-offset: 2px;
-}
-
 .footerNote {
-    margin-top: 10px;
-    color: var(--color-text-muted, #6b7280);
-    font-size: 0.8rem;
+    margin-top: var(--spacing-sm);
+    color: var(--text-secondary);
+    font-size: var(--font-size-small);
 }

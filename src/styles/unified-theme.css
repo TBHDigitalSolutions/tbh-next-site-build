@@ -405,3 +405,9 @@ h4 {
     width: 1px;
     overflow: hidden;
 }
+
+/* Package-specific accents */
+:root {
+    --package-ring: color-mix(in oklab, var(--brand-blue) 70%, white);
+    --package-selected: color-mix(in oklab, var(--brand-blue) 82%, #274d8c);
+}

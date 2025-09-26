@@ -1,9 +1,9 @@
-export {
-  AddOnCardFrame,
-  type AddOnCardFrameProps,
-  type AddOnCardFrameVariant,
-  type AddOnCardFramePadding,
-  type AddOnCardFrameHeight,
-} from "./AddOnCardFrame";
+export { default } from "./AddOnCardFrame";
+export { default as AddOnCardFrame } from "./AddOnCardFrame";
 
-export default AddOnCardFrame;
+export type {
+  AddOnCardFrameProps,
+  AddOnCardFrameVariant,
+  AddOnCardFramePadding,
+  AddOnCardFrameHeight,
+} from "./AddOnCardFrame";

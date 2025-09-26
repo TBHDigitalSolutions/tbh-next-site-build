@@ -7,14 +7,27 @@ import Link from "next/link";
 import PackageCardFrame from "@/packages/components/PackageCardFrame";
 import cls from "./PackageCard.module.css";
 
-import PriceLabel, { formatMoney, type Money as PriceMoney } from "@/components/ui/molecules/PriceLabel";
-import { FeatureList } from "@/components/ui/molecules/FeatureList";
-import ServiceChip, { type ServiceSlug as ChipService } from "@/components/ui/molecules/ServiceChip";
-import TagChips from "@/components/ui/molecules/TagChips";
+/**
+ * Defensive imports for molecules:
+ * - Works whether modules export `default` or `{ Named }`
+ * - Avoids "Element type is invalid (got undefined)" at runtime
+ */
+import * as PriceLabelNS from "@/components/ui/molecules/PriceLabel";
+import * as FeatureListNS from "@/components/ui/molecules/FeatureList";
+import * as ServiceChipNS from "@/components/ui/molecules/ServiceChip";
+import * as TagChipsNS from "@/components/ui/molecules/TagChips";
+
+const PriceLabel = (PriceLabelNS as any).default ?? (PriceLabelNS as any).PriceLabel;
+const formatMoney = (PriceLabelNS as any).formatMoney as (n?: number, currency?: string) => string;
+type PriceMoney = PriceLabelNS.Money;
+
+const FeatureList = (FeatureListNS as any).default ?? (FeatureListNS as any).FeatureList;
+const ServiceChip = (ServiceChipNS as any).default ?? (ServiceChipNS as any).ServiceChip;
+const TagChips = (TagChipsNS as any).default ?? (TagChipsNS as any).TagChips;
 
 /* ---------------------------------- Types --------------------------------- */
 
-export type ServiceSlug = ChipService;
+export type ServiceSlug = React.ComponentProps<typeof ServiceChip>["service"];
 
 export type LegacyPrice = { setup?: number; monthly?: number; currency?: string };
 
@@ -58,8 +71,8 @@ export type PackageCardProps = {
 
   // presentation
   className?: string;
-  highlight?: boolean;
-  variant?: "default" | "rail";
+  highlight?: boolean;                // emphasize card
+  variant?: "default" | "rail";       // compact style for carousels
 
   // ux
   isLoading?: boolean;
@@ -142,7 +155,8 @@ export default function PackageCard(props: PackageCardProps) {
   // Normalize money & labels
   const money = normalizeMoney(price);
   const currency = money?.currency ?? "USD";
-  const startingLabel = typeof startingAt === "number" ? `From ${formatMoney(startingAt, currency)}` : null;
+  const startingLabel =
+    typeof startingAt === "number" ? `From ${formatMoney(startingAt, currency)}` : null;
 
   // Badge logic: custom > popular > tier
   const displayBadge = badge ?? (popular ? "Most Popular" : tier ?? undefined);
@@ -174,7 +188,7 @@ export default function PackageCard(props: PackageCardProps) {
   return (
     <PackageCardFrame
       className={cx(
-        cls.card,               // keep existing inner spacing tokens
+        cls.card,
         highlight && cls.cardHighlight,
         variant === "rail" && cls.cardRail,
         className,
@@ -183,6 +197,7 @@ export default function PackageCard(props: PackageCardProps) {
       padding="lg"
       hoverLift
       ariaLabel={`${displayTitle} package`}
+      data-testid={testId}
       data-service={service ?? ""}
       data-tier={tier ?? ""}
       data-popular={popular ? "true" : "false"}
@@ -230,10 +245,7 @@ export default function PackageCard(props: PackageCardProps) {
 
         {shown.length > 0 && (
           <div className={cls.features}>
-            <FeatureList
-              items={shown.map((f, i) => ({ id: `f-${i}`, label: f }))}
-              size="sm"
-            />
+            <FeatureList items={shown.map((f, i) => ({ id: `f-${i}`, label: f }))} size="sm" />
             {remaining > 0 && (
               <div className={cls.more} aria-live="polite">
                 +{remaining} more
@@ -244,15 +256,17 @@ export default function PackageCard(props: PackageCardProps) {
       </div>
 
       {/* Detailed price */}
-      <div className={cls.prices}>
-        <div className={cls.priceChip}>
-          <PriceLabel price={money} />
+      {money && (
+        <div className={cls.prices}>
+          <div className={cls.priceChip}>
+            <PriceLabel price={money} />
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Tags (optional) */}
       {tags && tags.length > 0 ? (
-        <div style={{ marginTop: 8 }}>
+        <div className={cls.tagsWrap}>
           <TagChips tags={tags} />
         </div>
       ) : null}

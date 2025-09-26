@@ -1,98 +1,94 @@
-// src/packages/components/AddOnCard/AddOnCard.tsx
+"use client";
+
 import * as React from "react";
 import Link from "next/link";
-
-import AddOnCardFrame from "@/packages/components/AddOnCardFrame";
 import styles from "./AddOnCard.module.css";
 
+import AddOnCardFrame from "@/packages/components/AddOnCardFrame";
 import PriceLabel, { type Money } from "@/components/ui/molecules/PriceLabel";
-import { FeatureList } from "@/components/ui/molecules/FeatureList";
 
 export type AddOnCardProps = {
-  id: string;
-  title: string;
+  id?: string;
+  service?: string;
+  name: string;
   description?: string;
+  /** Optional bulleted details (3–6 max) */
   bullets?: string[];
-
-  /** Either pass Money or a ready-made label; Money takes precedence. */
+  /** Pricing */
   price?: Money;
-  priceLabel?: string;
-
-  /** e.g., "Popular" */
+  priceLabel?: string; // fallback label (e.g., "Contact for pricing")
+  /** Small badge e.g. “Popular” */
   badge?: string;
-
-  /** Deep link to detail */
+  /** Routing */
+  seoSlug?: string;
   href?: string;
-
-  /** Max bullets to render (default 4) */
-  maxBullets?: number;
-
-  /** a11y/analytics */
-  ariaLabel?: string;
-  "data-track"?: string;
-  "data-id"?: string;
+  /** CTA override */
+  cta?: { label: string; href?: string };
+  /** Presentation */
+  className?: string;
+  variant?: "default" | "rail";
 };
 
-const toFeatureItems = (bullets?: string[]) =>
-  (bullets ?? []).filter(Boolean).map((b, i) => ({ id: `fe-${i}`, label: b as string }));
-
-export const AddOnCard: React.FC<AddOnCardProps> = ({
+export default function AddOnCard({
   id,
-  title,
+  service,
+  name,
   description,
   bullets,
   price,
   priceLabel,
   badge,
+  seoSlug,
   href,
-  maxBullets = 4,
-  ariaLabel,
-  "data-track": dataTrack,
-  "data-id": dataId,
-}) => {
-  const featureItems = toFeatureItems(bullets).slice(0, maxBullets);
+  cta,
+  className,
+  variant = "default",
+}: AddOnCardProps) {
+  const linkHref = cta?.href ?? href ?? (seoSlug ? `/packages/${seoSlug}` : undefined);
+  const clickable = Boolean(linkHref);
 
   return (
     <AddOnCardFrame
-      href={href}
-      ariaLabel={ariaLabel ?? (href ? `${title} – learn more` : undefined)}
-      data-track={dataTrack ?? "addon-card"}
-      data-id={dataId ?? id}
+      className={[styles.card, clickable ? styles.clickable : "", className].filter(Boolean).join(" ")}
       padding="md"
       height="stretch"
       hoverLift
+      ariaLabel={`${name} add-on`}
     >
+      {clickable && <Link className={styles.linkOverlay} href={linkHref!} aria-label={`${name} details`} />}
+
       <div className={styles.inner}>
         <div className={styles.headerRow}>
-          <h3 className={styles.title}>{title}</h3>
-          {badge ? <span className={styles.badge} aria-label={badge}>{badge}</span> : null}
+          <h3 className={styles.title}>{name}</h3>
+          {badge ? <span className={styles.badge}>{badge}</span> : null}
         </div>
 
         {description ? <p className={styles.description}>{description}</p> : null}
 
-        {featureItems.length > 0 && (
+        {(bullets?.length ?? 0) > 0 && (
           <>
             <hr className={styles.divider} />
-            <div aria-label="Key highlights">
-              <FeatureList items={featureItems} size="sm" />
-            </div>
+            <ul className={styles.bullets}>
+              {bullets!.map((b, i) => (
+                <li key={`b-${i}`}>{b}</li>
+              ))}
+            </ul>
           </>
         )}
 
         <div className={styles.footer}>
-          <span className={styles.priceChip} aria-label="Price">
-            {price ? <PriceLabel price={price} /> : (priceLabel ?? "Contact for pricing")}
+          <span className={styles.priceChip}>
+            <PriceLabel price={price} fallbackLabel={priceLabel ?? "Contact for pricing"} />
           </span>
 
-          {href ? (
-            <Link className={styles.cta} href={href} aria-label={`${title} – learn more`}>
-              Learn more <span className={styles.arrow}>→</span>
+          {clickable && (
+            <Link className={styles.cta} href={linkHref!}>
+              {cta?.label ?? "Learn more"}
+              <span className={styles.arrow} aria-hidden>→</span>
             </Link>
-          ) : null}
+          )}
         </div>
       </div>
     </AddOnCardFrame>
   );
-};
-
-export default AddOnCard;
+}

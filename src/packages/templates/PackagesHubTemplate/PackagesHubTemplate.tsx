@@ -3,6 +3,7 @@
 "use client";
 
 import * as React from "react";
+import dynamic from "next/dynamic";
 import clsx from "clsx";
 import styles from "./PackagesHubTemplate.module.css";
 
@@ -10,35 +11,91 @@ import type { PackageBundle } from "@/packages/lib/types";
 import { toPackageCard } from "@/packages/lib/adapters";
 import { emitItemListJsonLd } from "@/packages/lib/jsonld";
 
-// Domain UI
-import PackageCard from "@/packages/components/PackageCard";
-import GrowthPackagesCTA from "@/packages/components/GrowthPackagesCTA";
-import { PackagesToolbar } from "@/packages/components/PackagesToolbar";
-
-// Sections
+// Sections (hero/cta/faq)
 import ServiceHero from "@/components/sections/section-layouts/ServiceHero";
+import { PackageCarousel } from "@/components/sections/section-layouts/PackageCarousel";
+import CTASection from "@/components/sections/section-layouts/CTASection/CTASection";
+import FAQSection from "@/components/sections/section-layouts/FAQSection"; // NEW
+
+// Optional packages sections (rails/grids)
+import AddOnSection from "@/packages/sections/AddOnSection";      // optional
+import BundlesSection from "@/packages/sections/BundlesSection";  // optional
+
+// Theme island (unified tokens for packages domain)
+import pkgTheme from "@/styles/packages-unified.module.css";
+
+/**
+ * Some downstream builds export these as default, others as named.
+ * Dynamic + tolerant resolution + client-only guarantees a valid element
+ * and avoids "invalid element type" at runtime.
+ */
+const PackageCard = dynamic(
+  () =>
+    import("@/packages/components/PackageCard").then(
+      (m: any) => m.default ?? m.PackageCard ?? m,
+    ),
+  { ssr: false },
+) as any;
+
+const PackagesToolbar = dynamic(
+  () =>
+    import("@/packages/components/PackagesToolbar").then(
+      (m: any) => m.default ?? m.PackagesToolbar ?? m,
+    ),
+  { ssr: false },
+) as any;
 
 type SortKey = "recommended" | "alphabetical" | "priceAsc" | "priceDesc";
+
+export type FaqItem = { id: string; question: string; answer: string };
 
 export type PackagesHubTemplateProps = {
   title?: string;
   subtitle?: string;
+
   /** Bundles from facade (`@/data/packages`). */
   bundles: PackageBundle[];
-  /** Curated slugs to boost in "Recommended" sort. */
+
+  /** Curated slugs to lift in Featured rail & "Recommended" sort. */
   featuredSlugs?: string[];
-  /** UI toggles */
+
+  /** Toolbar toggles (forwarded to the toolbar as needed). */
   showSearch?: boolean;
   showServiceFilter?: boolean;
   showSort?: boolean;
-  /** Initial sort key */
+
+  /** Initial sort key. */
   defaultSort?: SortKey;
-  /** Grid card min width */
+
+  /** Grid card min width. */
   minCardWidthPx?: number;
-  /** Emit ItemList JSON-LD when true */
+
+  /** Emit ItemList JSON-LD for visible items. */
   jsonLd?: boolean;
-  /** Empty state message */
+
+  /** Empty state copy. */
   emptyMessage?: string;
+
+  /** Optional copy overrides. */
+  labels?: {
+    featuredTitle?: string;
+    ctaTitle?: string;
+    ctaSubtitle?: string;
+    ctaPrimary?: { label: string; href: string };
+    ctaSecondary?: { label: string; href: string };
+  };
+
+  /** Optional: show curated bundles rail &/or add-ons below the grid */
+  showBundlesSection?: boolean;
+  showAddOnsSection?: boolean;
+  bundlesForRail?: ReturnType<typeof toPackageCard>[]; // if you want a separate curated rail
+  addOnsForSection?: any[]; // your add-on model, passed straight through to AddOnSection
+
+  /** Final-panel FAQ items */
+  faqItems?: FaqItem[];
+
+  /** Extra class for outer wrapper. */
+  className?: string;
 };
 
 type Indexed = {
@@ -48,13 +105,12 @@ type Indexed = {
   services: string[];
   includedServices: string[];
   tags: string[];
-  /** Derived PackageCard props for rendering */
   card: ReturnType<typeof toPackageCard>;
-  /** For price sorts (prefer monthly; fallback oneTime) */
+  /** Prefer monthly for sort, fallback to one-time. */
   priceForSort?: number;
 };
 
-export function PackagesHubTemplate({
+export default function PackagesHubTemplate({
   title = "Integrated Growth Packages",
   subtitle = "Proven playbooks bundled into simple plans — faster time to value, repeatable results.",
   bundles,
@@ -66,8 +122,15 @@ export function PackagesHubTemplate({
   minCardWidthPx = 300,
   jsonLd = true,
   emptyMessage = "No packages match your filters.",
+  labels,
+  showBundlesSection = false,
+  showAddOnsSection = false,
+  bundlesForRail,
+  addOnsForSection,
+  faqItems,
+  className,
 }: PackagesHubTemplateProps) {
-  // Toolbar state (owned here)
+  // Toolbar (owned here)
   const [query, setQuery] = React.useState("");
   const [type, setType] = React.useState<"all" | "bundles" | "packages" | "addons">("all");
   const [service, setService] = React.useState<string | undefined>(undefined);
@@ -83,7 +146,7 @@ export function PackagesHubTemplate({
 
   const featuredSet = React.useMemo(() => new Set(featuredSlugs), [featuredSlugs]);
 
-  // Build render + search/index layer once.
+  // Index once for search/filter/sort
   const index: Indexed[] = React.useMemo(
     () =>
       bundles.map((b) => {
@@ -120,7 +183,12 @@ export function PackagesHubTemplate({
     [bundles],
   );
 
-  // Service options for toolbar
+  const featuredItems = React.useMemo(
+    () => index.filter((it) => featuredSet.has(it.slug)),
+    [index, featuredSet],
+  );
+
+  // Service options
   const serviceOptions = React.useMemo(() => {
     const set = new Set<string>();
     for (const it of index) for (const s of it.services) if (s) set.add(s);
@@ -136,21 +204,17 @@ export function PackagesHubTemplate({
   const filtered = React.useMemo(() => {
     const qNorm = query.trim().toLowerCase();
 
-    // 1) Type filter — today we only render bundles; keep hook for future mixed catalog
-    const byType = index; // if you later mix packages/add-ons, narrow here by `type`
-
-    // 2) Service filter (accept explicit `services` and lenient match on `includedServices`/`tags`)
+    const byType = index; // reserved (future mixed catalog)
     const byService =
       !service || service === "all"
         ? byType
         : byType.filter((it) => {
-            const hitExplicit = it.services.some((s) => s?.toLowerCase() === service.toLowerCase());
-            if (hitExplicit) return true;
+            const explicit = it.services.some((s) => s?.toLowerCase() === service.toLowerCase());
+            if (explicit) return true;
             const hay = [...it.includedServices, ...it.tags].map((x) => String(x).toLowerCase());
             return hay.some((x) => x.includes(service.toLowerCase()));
           });
 
-    // 3) Query
     const byQuery = qNorm
       ? byService.filter((it) =>
           [it.title, it.summary, it.tags.join(" "), it.services.join(" ")]
@@ -160,7 +224,6 @@ export function PackagesHubTemplate({
         )
       : byService;
 
-    // 4) Sort
     const out = [...byQuery];
     switch (sort) {
       case "az":
@@ -188,14 +251,26 @@ export function PackagesHubTemplate({
     return out;
   }, [index, query, service, sort, featuredSet]);
 
+  // Grid columns
   const gridStyle = React.useMemo(
-    () => ({ gridTemplateColumns: `repeat(auto-fit, minmax(${minCardWidthPx}px, 1fr))` }) as React.CSSProperties,
+    () =>
+      ({ gridTemplateColumns: `repeat(auto-fit, minmax(${minCardWidthPx}px, 1fr))` }) as React.CSSProperties,
     [minCardWidthPx],
   );
 
+  // JSON-LD for visible list
+  const jsonLdNode =
+    jsonLd &&
+    emitItemListJsonLd(
+      filtered.map((it) => ({
+        name: it.title,
+        url: it.card.detailsHref ?? `/packages/${it.slug}`,
+      })),
+    );
+
   return (
-    <section className={styles.wrap}>
-      {/* Hero (section-level) */}
+    <section className={clsx(pkgTheme.packagesTheme, styles.wrap, className)}>
+      {/* HERO ----------------------------------------------------- */}
       <ServiceHero
         title={title}
         subtitle={subtitle}
@@ -203,7 +278,7 @@ export function PackagesHubTemplate({
         secondaryCta={{ label: "All services", href: "/services" }}
       />
 
-      {/* Toolbar (search + filters + sort) */}
+      {/* TOOLBAR -------------------------------------------------- */}
       <div className={styles.toolbarWrap}>
         <PackagesToolbar
           query={query}
@@ -217,14 +292,26 @@ export function PackagesHubTemplate({
           serviceOptions={serviceOptions}
           countsByType={{
             all: index.length,
-            bundles: index.length, // today we render bundles only; adjust when mixing
+            bundles: index.length,
             packages: 0,
             addons: 0,
           }}
         />
       </div>
 
-      {/* Grid */}
+      {/* FEATURED RAIL (optional) -------------------------------- */}
+      {featuredItems.length > 0 && (
+        <div className={styles.rail}>
+          <PackageCarousel
+            title={labels?.featuredTitle ?? "Popular packages"}
+            items={featuredItems.map((it) => it.card as any)}
+            layout="carousel"
+            showFooterActions={false}
+          />
+        </div>
+      )}
+
+      {/* GRID ----------------------------------------------------- */}
       <div className={styles.grid} style={gridStyle}>
         {filtered.length === 0 ? (
           <div className={styles.empty} role="status" aria-live="polite">
@@ -243,19 +330,37 @@ export function PackagesHubTemplate({
         )}
       </div>
 
-      {/* CTA rail */}
+      {/* OPTIONAL — BUNDLES rail just below the grid -------------- */}
+      {showBundlesSection && (bundlesForRail?.length ?? 0) > 0 && (
+        <BundlesSection items={bundlesForRail as any} />
+      )}
+
+      {/* OPTIONAL — ADD-ONS section ------------------------------- */}
+      {showAddOnsSection && (addOnsForSection?.length ?? 0) > 0 && (
+        <AddOnSection layout="grid" addOns={addOnsForSection as any} />
+      )}
+
+      {/* CTA BAND ------------------------------------------------- */}
       <div className={styles.ctaBand}>
-        <GrowthPackagesCTA />
+        <CTASection
+          title={labels?.ctaTitle ?? "Ready to grow faster?"}
+          subtitle={labels?.ctaSubtitle ?? "Tell us your goals—get a tailored plan in days."}
+          primaryCta={labels?.ctaPrimary ?? { label: "Request proposal", href: "/contact" }}
+          secondaryCta={labels?.ctaSecondary ?? { label: "See case studies", href: "/work" }}
+        />
       </div>
 
-      {/* JSON-LD */}
-      {jsonLd &&
-        emitItemListJsonLd(
-          filtered.map((it) => ({ name: it.title, url: it.card.detailsHref ?? `/packages/${it.slug}` })),
-        )}
+      {/* FAQ (final panel) --------------------------------------- */}
+      {faqItems && faqItems.length > 0 && (
+        <FAQSection
+          id="packages-faq"
+          title="Packages FAQ"
+          items={faqItems}
+        />
+      )}
+
+      {/* JSON-LD -------------------------------------------------- */}
+      {jsonLdNode}
     </section>
   );
 }
-
-// Keep default export too so either import style works.
-export default PackagesHubTemplate;

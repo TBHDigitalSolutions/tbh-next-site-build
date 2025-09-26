@@ -47,7 +47,7 @@ export type AddOnCardFrameProps = {
  * - Renders as <a>, <button>, or <article> depending on props
  * - Tuned tokens for add-on cards (slightly denser than package cards)
  */
-export const AddOnCardFrame: React.FC<AddOnCardFrameProps> = ({
+const AddOnCardFrame: React.FC<AddOnCardFrameProps> = ({
   variant = "elevated",
   padding = "md",
   height = "auto",
@@ -68,7 +68,7 @@ export const AddOnCardFrame: React.FC<AddOnCardFrameProps> = ({
   const isButton = !href && !!onClick;
   const Tag: any = isAnchor ? "a" : isButton ? "button" : "article";
 
-  const cls = [
+  const classes = [
     styles.root,
     styles[variant],
     styles[`pad-${padding}`],
@@ -77,12 +77,10 @@ export const AddOnCardFrame: React.FC<AddOnCardFrameProps> = ({
     selected ? styles.selected : "",
     disabled ? styles.disabled : "",
     className,
-  ]
-    .filter(Boolean)
-    .join(" ");
+  ].filter(Boolean).join(" ");
 
-  const commonProps = {
-    className: cls,
+  const commonProps: any = {
+    className: classes,
     style,
     "aria-label": ariaLabel,
     "aria-disabled": disabled || undefined,
@@ -90,13 +88,12 @@ export const AddOnCardFrame: React.FC<AddOnCardFrameProps> = ({
   };
 
   if (isAnchor) {
-    const safeRel = rel ?? (target === "_blank" ? "noopener noreferrer" : undefined);
     return (
       <a
         {...commonProps}
         href={href}
         target={target}
-        rel={safeRel}
+        rel={rel ?? (target === "_blank" ? "noopener noreferrer" : undefined)}
         role="group"
       >
         {children}
@@ -117,8 +114,8 @@ export const AddOnCardFrame: React.FC<AddOnCardFrameProps> = ({
     );
   }
 
-  // Non-interactive
   return <article {...commonProps}>{children}</article>;
 };
 
 export default AddOnCardFrame;
+export { AddOnCardFrame };

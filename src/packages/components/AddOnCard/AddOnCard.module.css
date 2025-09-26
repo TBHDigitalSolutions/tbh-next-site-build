@@ -1,30 +1,30 @@
 /* AddOnCard.module.css
-   - CSS Modules friendly (no :root / :global)
-   - Theme variables are scoped to .card for safe inheritance
+   - Consumes unified theme tokens from /src/styles/packages-unified.module.css
+   - Keeps local CSS vars for easy per-card overrides
 */
 
 .card {
-    /* Theme tokens (override by redefining on a parent if needed) */
-    --addon-card-bg: #ffffff;
-    --addon-card-border: rgba(0, 0, 0, 0.08);
-    --addon-card-border-hover: rgba(0, 0, 0, 0.16);
-    --addon-card-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
-    --addon-card-shadow-hover: 0 6px 22px rgba(0, 0, 0, 0.08);
-    --addon-card-radius: 16px;
-    --addon-card-gap: 12px;
+    /* Local theming hooks (default to global tokens) */
+    --addon-card-bg: var(--card-bg);
+    --addon-card-border: var(--card-border);
+    --addon-card-border-hover: var(--card-border-hover, color-mix(in oklab, var(--brand-blue) 35%, var(--card-border)));
+    --addon-card-shadow: var(--card-shadow-rest, var(--shadow-sm));
+    --addon-card-shadow-hover: var(--card-shadow-hover, var(--shadow-lift));
+    --addon-card-radius: var(--radius-lg);
+    --addon-card-gap: var(--spacing-sm);
 
-    --addon-title: #0f172a;
-    /* slate-900 */
-    --addon-subtle: #475569;
-    /* slate-600 */
-    --addon-badge-bg: #eef2ff;
-    /* indigo-50 */
-    --addon-badge-text: #3730a3;
-    /* indigo-800 */
-    --addon-chip-bg: #0f172a;
-    /* slate-900 */
-    --addon-chip-text: #ffffff;
-    --addon-divider: rgba(15, 23, 42, 0.08);
+    --addon-title: var(--text-primary);
+    --addon-subtle: var(--text-secondary);
+
+    /* Badge (uses “add-on” semantic pills) */
+    --addon-badge-bg: var(--pill-addon-bg);
+    --addon-badge-text: var(--pill-addon-fg);
+
+    /* Price chip */
+    --addon-chip-bg: var(--chip-price-bg, var(--input-bg));
+    --addon-chip-text: var(--chip-price-fg, var(--text-primary));
+
+    --addon-divider: var(--border-subtle);
 
     position: relative;
     display: flex;
@@ -33,16 +33,17 @@
     border: 1px solid var(--addon-card-border);
     border-radius: var(--addon-card-radius);
     box-shadow: var(--addon-card-shadow);
-    transition: box-shadow 160ms ease, transform 160ms ease, border-color 160ms ease;
+    transition: box-shadow var(--transition-med), transform var(--transition-med), border-color var(--transition-med), background var(--transition-med);
     overflow: hidden;
 }
 
-/* Apply this class alongside .card when the whole card is a link target */
+/* Add alongside .card when the card links somewhere */
 .clickable:hover,
 .clickable:focus-within {
     border-color: var(--addon-card-border-hover);
     box-shadow: var(--addon-card-shadow-hover);
     transform: translateY(-1px);
+    background: var(--card-hover-bg);
 }
 
 .linkOverlay {
@@ -55,22 +56,22 @@
     position: relative;
     display: grid;
     gap: var(--addon-card-gap);
-    padding: 16px;
+    padding: var(--spacing-md);
 }
 
 .headerRow {
     display: grid;
     grid-template-columns: 1fr auto;
     align-items: start;
-    gap: 8px;
+    gap: var(--spacing-xs);
 }
 
 .title {
     color: var(--addon-title);
-    font-size: 1rem;
-    /* 16px */
+    font-family: var(--font-heading);
+    font-size: var(--font-size-h3);
     line-height: 1.3;
-    font-weight: 700;
+    font-weight: 800;
     margin: 0;
 }
 
@@ -79,16 +80,18 @@
     justify-self: end;
     background: var(--addon-badge-bg);
     color: var(--addon-badge-text);
-    font-weight: 600;
-    font-size: 0.75rem;
+    font-weight: 700;
+    font-size: var(--font-size-small);
     padding: 4px 8px;
     border-radius: 999px;
     white-space: nowrap;
+    border: 1px solid color-mix(in oklab, var(--pill-addon-fg) 28%, var(--addon-badge-bg));
 }
 
 .description {
     color: var(--addon-subtle);
-    font-size: 0.95rem;
+    font-family: var(--font-body);
+    font-size: var(--font-size-body);
     line-height: 1.5;
     margin: 0;
     display: -webkit-box;
@@ -103,7 +106,7 @@
     width: 100%;
     background: var(--addon-divider);
     border: 0;
-    margin: 4px 0 0;
+    margin: var(--spacing-xs) 0 0;
 }
 
 .bullets {
@@ -115,6 +118,7 @@
 
 .bullets li {
     color: var(--addon-subtle);
+    font-family: var(--font-body);
     font-size: 0.9rem;
     line-height: 1.4;
 }
@@ -123,17 +127,18 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 8px;
+    gap: var(--spacing-xs);
     margin-top: 4px;
 }
 
 .priceChip {
     background: var(--addon-chip-bg);
     color: var(--addon-chip-text);
-    font-weight: 700;
+    font-weight: 800;
     font-size: 0.85rem;
     padding: 6px 10px;
     border-radius: 999px;
+    border: 1px solid color-mix(in oklab, var(--addon-chip-text) 16%, var(--addon-chip-bg));
 }
 
 .cta {
@@ -141,9 +146,8 @@
     z-index: 2;
     /* above .linkOverlay */
     font-size: 0.9rem;
-    font-weight: 600;
-    color: var(--addon-title);
-    opacity: 0.9;
+    font-weight: 700;
+    color: var(--text-primary);
     text-decoration: none;
     outline: none;
     display: inline-flex;
@@ -152,15 +156,13 @@
 }
 
 .cta:focus-visible {
-    outline: 2px solid #6366f1;
-    /* indigo-500 */
-    outline-offset: 2px;
+    box-shadow: var(--focus-ring-shadow);
     border-radius: 6px;
 }
 
 .arrow {
     display: inline-block;
-    transition: transform 160ms ease;
+    transition: transform var(--transition-med);
 }
 
 .clickable:hover .arrow,
@@ -171,10 +173,6 @@
 /* Responsive polish */
 @media (min-width: 768px) {
     .inner {
-        padding: 18px;
-    }
-
-    .title {
-        font-size: 1.05rem;
+        padding: calc(var(--spacing-md) + 2px);
     }
 }

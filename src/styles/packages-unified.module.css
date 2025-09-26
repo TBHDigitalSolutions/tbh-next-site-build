@@ -1,0 +1,183 @@
+/* ------------------------------------------------------------------
+   TBH Digital Solutions — Packages Unified (CSS Module, local scope)
+   Purpose:
+     • Opt-in theme island for the Packages Hub & Detail pages.
+     • Expose package-scoped alias vars that map to global tokens
+       (from your global unified-theme.css).
+   Notes:
+     • No :root / :global here (CSS Modules “pure”).
+     • Apply on a container: className={styles.packagesTheme}
+   ------------------------------------------------------------------ */
+
+/* 1) Theme island (dark-first) ----------------------------------- */
+.packagesTheme {
+    /* ---- Color aliases (map to your global tokens) ---- */
+    --pkg-bg: var(--bg-primary, #060512);
+    --pkg-section: var(--bg-section, #0E1730);
+    --pkg-surface: var(--bg-surface, #0B0A18);
+    --pkg-elevated: var(--bg-elevated, #121224);
+
+    --pkg-text: var(--text-primary, #f4f6f7);
+    --pkg-text-muted: var(--text-secondary, #c9ced1);
+    --pkg-text-accent: var(--text-accent, #0EAFFB);
+
+    --pkg-brand: var(--brand-blue, #0EAFFB);
+
+    /* ---- Card recipe (frames rely on these) ---- */
+    --pkg-card-bg: var(--card-bg, var(--pkg-surface));
+    --pkg-card-fg: var(--card-fg, var(--pkg-text));
+    --pkg-card-border: var(--card-border, #4a4a4a);
+    --pkg-card-border-hover: var(--card-border-hover, #5a5a5a);
+    --pkg-card-hover-bg: var(--card-hover-bg, color-mix(in oklab, var(--pkg-surface) 92%, white));
+    --pkg-card-shadow-rest: var(--card-shadow-rest, 0 6px 18px rgba(2, 6, 23, 0.25));
+    --pkg-card-shadow-hover: var(--card-shadow-hover, 0 10px 26px rgba(2, 6, 23, 0.55));
+    --pkg-card-ring: var(--card-ring, color-mix(in oklab, var(--pkg-brand) 45%, white));
+    --pkg-card-selected: var(--card-selected, color-mix(in oklab, var(--pkg-brand) 75%, #7c3aed));
+
+    /* ---- Emphasis (frames fall back to these) ---- */
+    --addon-ring: var(--addon-ring, color-mix(in oklab, var(--pkg-brand) 65%, white));
+    --addon-selected: var(--addon-selected, color-mix(in oklab, var(--pkg-brand) 80%, #1b2437));
+    --package-ring: var(--package-ring, color-mix(in oklab, var(--pkg-brand) 70%, white));
+    --package-selected: var(--package-selected, color-mix(in oklab, var(--pkg-brand) 82%, #274d8c));
+
+    /* ---- Chips / pills ---- */
+    --chip-price-bg: var(--chip-price-bg, #2D2D2F);
+    --chip-price-fg: var(--chip-price-fg, var(--pkg-text));
+
+    /* ---- Tables / matrices ---- */
+    --pkg-table-bg: var(--table-bg, var(--pkg-surface));
+    --pkg-table-head-bg: var(--table-head-bg, color-mix(in oklab, var(--pkg-surface) 80%, var(--pkg-bg)));
+    --pkg-table-border: var(--table-border, #4a4a4a);
+    --pkg-table-stripe: var(--table-stripe, color-mix(in oklab, var(--pkg-surface) 92%, white));
+
+    /* ---- Includes pills (limited/add-on) ---- */
+    --pill-limited-fg: var(--pill-limited-fg, #b45309);
+    --pill-limited-bg: var(--pill-limited-bg, color-mix(in oklab, #b45309 16%, var(--pkg-surface)));
+    --pill-limited-br: var(--pill-limited-br, color-mix(in oklab, #b45309 32%, var(--pkg-surface)));
+
+    --pill-addon-fg: var(--pill-addon-fg, #2563eb);
+    --pill-addon-bg: var(--pill-addon-bg, color-mix(in oklab, #2563eb 16%, var(--pkg-surface)));
+    --pill-addon-br: var(--pill-addon-br, color-mix(in oklab, #2563eb 32%, var(--pkg-surface)));
+
+    /* ---- Carousel controls ---- */
+    --carousel-btn-bg: var(--carousel-btn-bg, color-mix(in oklab, var(--pkg-surface) 75%, black));
+    --carousel-btn-fg: var(--carousel-btn-fg, var(--pkg-text));
+    --carousel-btn-border: var(--carousel-btn-border, var(--pkg-card-border));
+
+    /* ---- Typography ---- */
+    --pkg-h1: var(--font-size-h1, clamp(2rem, 2.5vw + 1rem, 3rem));
+    --pkg-h2: var(--font-size-h2, clamp(1.5rem, 1.6vw + 0.9rem, 2rem));
+    --pkg-h3: var(--font-size-h3, clamp(1.25rem, 1.1vw + 0.7rem, 1.5rem));
+    --pkg-body: var(--font-size-body, clamp(1rem, 0.4vw + 0.9rem, 1.125rem));
+
+    /* ---- Spacing / radii / motion ---- */
+    --pkg-space-2xs: var(--spacing-2xs, 0.25rem);
+    --pkg-space-xs: var(--spacing-xs, 0.5rem);
+    --pkg-space-sm: var(--spacing-sm, 0.75rem);
+    --pkg-space-md: var(--spacing-md, 1rem);
+    --pkg-space-lg: var(--spacing-lg, 1.25rem);
+    --pkg-space-xl: var(--spacing-xl, 1.5rem);
+    --pkg-space-2xl: var(--spacing-2xl, 2rem);
+
+    --pkg-radius-sm: var(--radius-sm, 10px);
+    --pkg-radius-md: var(--radius-md, 14px);
+    --pkg-radius-lg: var(--radius-lg, 18px);
+    --pkg-radius-xl: var(--radius-xl, 22px);
+
+    --pkg-ease-fast: var(--transition-fast, 120ms ease);
+    --pkg-ease: var(--transition-med, 160ms ease);
+    --pkg-ease-slow: var(--transition-slow, 240ms ease);
+
+    /* ---- Structure ---- */
+    --pkg-container-max: var(--container-max, 1200px);
+    --pkg-container-pad-inline: var(--container-pad-inline, 1rem);
+    --pkg-section-pad: var(--section-pad-block, 3.5rem);
+    --pkg-section-pad-lg: var(--section-pad-block-lg, 5rem);
+
+    /* ---- Gradients ---- */
+    --gradient-section: var(--gradient-section, linear-gradient(180deg, var(--pkg-bg) 0%, var(--pkg-section) 100%));
+
+    /* Apply base colors to this island */
+    color: var(--pkg-text);
+    background: var(--pkg-bg);
+}
+
+/* 2) Optional light variant (use alongside a page-level light mode if needed) */
+.packagesLight {
+    --pkg-bg: #ffffff;
+    --pkg-section: #f7f9fb;
+    --pkg-surface: #ffffff;
+
+    --pkg-text: #0f172a;
+    --pkg-text-muted: #334155;
+    --pkg-text-accent: var(--brand-blue, #0EAFFB);
+
+    --pkg-card-bg: #ffffff;
+    --pkg-card-fg: #0f172a;
+    --pkg-card-border: #e2e8f0;
+    --pkg-table-head-bg: #f8fafc;
+}
+
+/* 3) Convenience helpers (drop-in section patterns) --------------- */
+.packagesBand {
+    padding-block: var(--pkg-section-pad);
+    background: var(--gradient-section);
+}
+
+.packagesBand--major {
+    padding-block: var(--pkg-section-pad-lg);
+}
+
+.packagesContainer {
+    width: min(calc(100% - 2 * var(--pkg-container-pad-inline)), var(--pkg-container-max));
+    margin-inline: auto;
+    padding-inline: var(--pkg-container-pad-inline);
+}
+
+.packagesSectionHeader {
+    text-align: center;
+    max-width: 60ch;
+    margin: 0 auto var(--pkg-space-xl);
+}
+
+.packagesSectionTitle {
+    font-family: var(--font-heading, Aldrich, sans-serif);
+    font-size: var(--pkg-h2);
+    color: var(--pkg-text-accent);
+    margin: 0 0 var(--pkg-space-sm);
+}
+
+.packagesSectionSubtitle {
+    font-family: var(--font-body, Newsreader, serif);
+    font-size: var(--pkg-body);
+    color: var(--pkg-text-muted);
+    margin: 0;
+}
+
+/* 4) Optional: extra token tweaks for package/bundle cards -------- */
+.packagesThemeTokens {
+    /* Badge & savings pills */
+    --pkg-badge-bg: color-mix(in oklab, var(--pkg-brand) 12%, var(--pkg-surface));
+    --pkg-badge-fg: var(--pkg-brand);
+
+    --pkg-savings-bg: color-mix(in oklab, #16a34a 18%, var(--pkg-surface));
+    --pkg-savings-fg: #16a34a;
+
+    /* Price chip */
+    --pkg-pricechip-bg: var(--chip-price-bg, #2D2D2F);
+    --pkg-pricechip-fg: var(--chip-price-fg, var(--pkg-text));
+
+    /* Local card text helpers */
+    --pkg-card-media-bg: color-mix(in oklab, var(--pkg-surface) 80%, black);
+    --pkg-card-title: var(--pkg-text);
+    --pkg-card-muted: var(--pkg-text-muted);
+
+    /* Bundle accents (frames fall back if this class isn’t applied) */
+    --bundle-ring: color-mix(in oklab, var(--brand-blue) 55%, #7c3aed);
+    --bundle-selected: color-mix(in oklab, var(--brand-blue) 70%, #7c3aed);
+}
+
+/* Optional: extra spacing before FAQ when present ----------------- */
+.faqBand {
+    margin-top: 2rem;
+}

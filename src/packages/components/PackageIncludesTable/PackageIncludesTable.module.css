@@ -1,206 +1,18 @@
-/* src/packages/components/PackageIncludesTable/PackageIncludesTable.module.css */
+/* Scopes to this module; uses unified theme tokens (no :root/.global) */
 
-.root {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-
-.toolbar {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.75rem;
-}
-
-.title {
-    margin: 0;
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: var(--color-text, #111827);
-}
-
-.search {
-    position: relative;
-    flex: 1 1 280px;
-}
-
-.searchInput {
-    width: 100%;
-    height: 40px;
-    padding: 0 12px 0 36px;
-    border: 1px solid var(--color-border, #e5e7eb);
-    border-radius: 10px;
-    background: var(--color-surface, #fff);
-    color: var(--color-text, #111827);
-}
-
-.searchIcon {
-    position: absolute;
-    left: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 18px;
-    height: 18px;
-    opacity: 0.55;
-    pointer-events: none;
-}
-
-.controls {
-    display: inline-flex;
-    gap: 8px;
-}
-
-.btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    height: 36px;
-    padding: 0 12px;
-    border-radius: 10px;
-    border: 1px solid var(--color-border, #e5e7eb);
-    background: var(--btn-bg, #111827);
-    color: #fff;
-    font-weight: 600;
-    cursor: pointer;
-}
-
-.btnSecondary {
-    background: #fff;
-    color: var(--color-text, #111827);
-}
-
-.btn:focus-visible {
-    outline: 2px solid var(--color-accent, #2563eb);
-    outline-offset: 2px;
-}
-
-.sections {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 0.75rem;
-}
-
-.section {
-    border: 1px solid var(--color-border, #e5e7eb);
-    border-radius: 14px;
-    background: var(--color-surface, #fff);
-}
-
-.summary {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 12px 14px;
-    cursor: pointer;
-}
-
-.summary:hover {
-    background: var(--row-hover, #f9fafb);
-}
-
-.sectionTitle {
-    margin: 0;
-    font-size: 1rem;
-    font-weight: 600;
-    color: var(--color-text, #111827);
-}
-
-.count {
-    font-size: 0.8rem;
-    color: var(--color-text-muted, #6b7280);
-    border: 1px solid var(--color-border, #e5e7eb);
-    background: var(--chip-bg, #f3f4f6);
-    padding: 2px 8px;
-    border-radius: 9999px;
-}
-
-.items {
-    padding: 0 14px 12px 14px;
-}
-
-.list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: grid;
-    gap: 8px;
-}
-
-.item {
-    display: inline-flex;
-    align-items: flex-start;
-    gap: 8px;
-    color: var(--color-text-muted, #374151);
-    font-size: 0.95rem;
-}
-
-/* check glyph */
-.item::before {
-    content: "";
-    display: inline-block;
-    width: 16px;
-    height: 16px;
-    margin-top: 2px;
-    border-radius: 50%;
-    border: 2px solid var(--color-accent, #2563eb);
-}
-
-.mark {
-    background: rgba(250, 204, 21, 0.35);
-    /* amber-300 */
-    padding: 0 2px;
-    border-radius: 4px;
-}
-
-.dense .summary {
-    padding: 10px 12px;
-}
-
-.dense .items {
-    padding: 0 12px 10px 12px;
-}
-
-/* Hide default markers when printing all sections open */
-.printAll details[open]>summary::marker,
-.printAll details>summary::marker {
-    display: none;
-    /* clean print */
-}
-
-@media print {
-    .toolbar {
-        display: none;
-    }
-
-    .section {
-        break-inside: avoid;
-        page-break-inside: avoid;
-    }
-
-    /* PURE: scope element selectors under the local root */
-    .root details {
-        display: block;
-    }
-
-    .root details[open]>summary {
-        pointer-events: none;
-    }
-}
-
-:-moz-ui-invalid
 .wrap {
     width: 100%;
     overflow-x: auto;
 }
 
+/* Table */
 .table {
     width: 100%;
     border-collapse: separate;
     border-spacing: 0;
-    background: var(--surface, #fff);
-    border: 1px solid #e2e8f0;
-    border-radius: 12px;
+    background: var(--table-bg);
+    border: 1px solid var(--table-border);
+    border-radius: var(--radius-lg);
     overflow: hidden;
 }
 
@@ -209,16 +21,18 @@
     font-weight: 800;
     padding: 0.75rem 1rem;
     font-size: 1rem;
-    color: var(--text-primary, #0f172a);
+    color: var(--text-primary);
 }
 
-thead th {
-    background: #f8fafc;
-    border-bottom: 1px solid #e2e8f0;
+/* Head */
+.table thead th {
+    background: var(--table-head-bg);
+    border-bottom: 1px solid var(--table-border);
     padding: 0.75rem 1rem;
     text-align: left;
     font-weight: 700;
     font-size: 0.925rem;
+    color: var(--text-primary);
 }
 
 .hFeature {
@@ -231,33 +45,40 @@ thead th {
 
 .thInner {
     display: grid;
-    gap: 0.125rem;
     justify-items: center;
+    gap: 0.125rem;
 }
 
 .tierLabel {
     font-weight: 800;
+    color: var(--text-primary);
 }
 
 .tierNote {
     font-size: 0.8rem;
-    color: #64748b;
+    color: var(--text-secondary);
 }
 
-tbody td,
-tbody th {
-    border-bottom: 1px solid #eef2f7;
-    padding: 0.65rem 1rem;
+/* Body */
+.table tbody td,
+.table tbody th {
+    border-bottom: 1px solid var(--table-border);
+    padding: var(--table-cell-py, 0.65rem) var(--table-cell-px, 1rem);
 }
 
-tbody tr:last-child td,
-tbody tr:last-child th {
+.table tbody tr:nth-child(2n) .featureCell {
+    background: var(--table-stripe);
+}
+
+.table tbody tr:last-child td,
+.table tbody tr:last-child th {
     border-bottom: none;
 }
 
 .featureCell {
-    background: #fcfcfd;
+    background: color-mix(in oklab, var(--table-bg) 96%, var(--bg-primary));
     vertical-align: top;
+    width: 36%;
 }
 
 .featureInner {
@@ -267,10 +88,11 @@ tbody tr:last-child th {
 
 .featureLabel {
     font-weight: 600;
+    color: var(--text-primary);
 }
 
 .featureNote {
-    color: #64748b;
+    color: var(--text-secondary);
     font-size: 0.85rem;
 }
 
@@ -279,9 +101,31 @@ tbody tr:last-child th {
     vertical-align: middle;
 }
 
+/* Icon states */
 .icon svg {
     width: 1rem;
     height: 1rem;
+}
+
+.yes {
+    color: var(--success);
+}
+
+.no {
+    color: color-mix(in oklab, var(--text-secondary) 70%, black);
+}
+
+/* Pills */
+.pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.15rem 0.5rem;
+    border-radius: 999px;
+    font-size: 0.76rem;
+    font-weight: 700;
+    border: 1px solid transparent;
+    line-height: 1.1;
 }
 
 .inlineIcon {
@@ -290,47 +134,30 @@ tbody tr:last-child th {
     margin-right: 0.25rem;
 }
 
-.text {
-    font-weight: 600;
-}
-
-.pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.25rem;
-    padding: 0.1rem 0.45rem;
-    border-radius: 999px;
-    font-size: 0.75rem;
-    font-weight: 700;
-    border: 1px solid transparent;
-}
-
-.yes {
-    color: #16a34a;
-}
-
-.no {
-    color: #9ca3af;
-}
-
 .limited {
-    color: #b45309;
-    background: #fffbeb;
-    border-color: #fde68a;
+    color: var(--pill-limited-fg);
+    background: var(--pill-limited-bg);
+    border-color: var(--pill-limited-br);
 }
 
 .addon {
-    color: #2563eb;
-    background: #eff6ff;
-    border-color: #bfdbfe;
+    color: var(--pill-addon-fg);
+    background: var(--pill-addon-bg);
+    border-color: var(--pill-addon-br);
 }
 
+.text {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+/* Legend */
 .legend {
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem 1rem;
-    margin-top: 0.5rem;
-    color: #475569;
+    margin-top: 0.65rem;
+    color: var(--text-secondary);
     font-size: 0.9rem;
 }
 
@@ -341,6 +168,25 @@ tbody tr:last-child th {
 }
 
 .legendIcon svg {
-    width: 0.9rem;
-    height: 0.9rem;
+    width: 0.95rem;
+    height: 0.95rem;
+}
+
+/* Responsive */
+@media (max-width: 720px) {
+    .hFeature {
+        min-width: 12rem;
+    }
+
+    .tierNote {
+        font-size: 0.75rem;
+    }
+}
+
+/* Print */
+@media print {
+    .legend {
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
 }

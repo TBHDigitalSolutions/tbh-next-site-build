@@ -18,19 +18,25 @@ export type PackageCardFrameProps = {
   selected?: boolean;
   /** Disabled (no interactions, muted) */
   disabled?: boolean;
+
   /** Optional aria-label for interactive card wrapper */
   ariaLabel?: string;
+
   /** Link behavior: if provided, renders <a> */
   href?: string;
   target?: React.HTMLAttributeAnchorTarget;
   rel?: string;
+
   /** Button behavior: if provided (and no href), renders <button> */
   onClick?: React.MouseEventHandler<HTMLElement>;
+
   /** Extra className / style */
   className?: string;
   style?: React.CSSProperties;
+
   /** Children content of the card */
   children: React.ReactNode;
+
   /** Data attributes (opt-in) */
   "data-testid"?: string;
 };
@@ -40,7 +46,7 @@ export type PackageCardFrameProps = {
  * - Consistent padding, elevation, equal-height option
  * - Renders as <a>, <button>, or <article> depending on props
  */
-export const PackageCardFrame: React.FC<PackageCardFrameProps> = ({
+const PackageCardFrame: React.FC<PackageCardFrameProps> = ({
   variant = "elevated",
   padding = "md",
   height = "auto",
@@ -61,7 +67,7 @@ export const PackageCardFrame: React.FC<PackageCardFrameProps> = ({
   const isButton = !href && !!onClick;
   const Tag: any = isAnchor ? "a" : isButton ? "button" : "article";
 
-  const cls = [
+  const classes = [
     styles.root,
     styles[variant],
     styles[`pad-${padding}`],
@@ -70,12 +76,10 @@ export const PackageCardFrame: React.FC<PackageCardFrameProps> = ({
     selected ? styles.selected : "",
     disabled ? styles.disabled : "",
     className,
-  ]
-    .filter(Boolean)
-    .join(" ");
+  ].filter(Boolean).join(" ");
 
-  const commonProps = {
-    className: cls,
+  const commonProps: any = {
+    className: classes,
     style,
     "aria-label": ariaLabel,
     "aria-disabled": disabled || undefined,
@@ -83,35 +87,18 @@ export const PackageCardFrame: React.FC<PackageCardFrameProps> = ({
   };
 
   if (isAnchor) {
-    const safeRel = rel ?? (target === "_blank" ? "noopener noreferrer" : undefined);
-    return (
-      <a
-        {...commonProps}
-        href={href}
-        target={target}
-        rel={safeRel}
-        role="group"
-      >
-        {children}
-      </a>
-    );
+    commonProps.href = href;
+    commonProps.target = target;
+    commonProps.rel = rel ?? (target === "_blank" ? "noopener noreferrer" : undefined);
+    commonProps.role = "group";
+  } else if (isButton) {
+    commonProps.type = "button";
+    commonProps.onClick = disabled ? undefined : onClick;
+    commonProps.disabled = disabled;
   }
 
-  if (isButton) {
-    return (
-      <button
-        {...commonProps}
-        type="button"
-        onClick={disabled ? undefined : onClick}
-        disabled={disabled}
-      >
-        {children}
-      </button>
-    );
-  }
-
-  // Non-interactive
-  return <article {...commonProps}>{children}</article>;
+  return <Tag {...commonProps}>{children}</Tag>;
 };
 
 export default PackageCardFrame;
+export { PackageCardFrame };

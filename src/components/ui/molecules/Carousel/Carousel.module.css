@@ -40,14 +40,18 @@
 }
 
 /* Controls placement */
+/* Controls placement */
 .controlsInside {
     position: absolute;
     inset: 0;
     pointer-events: none;
+    /* overlay itself ignores events */
 }
 
+/* Allow the actual controls element to be interactive */
 .controlsInside :global(.controls) {
-    pointer-events: none;
+    pointer-events: auto;
+    /* was: none */
 }
 
 .controlsOutside {

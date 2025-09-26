@@ -23,6 +23,7 @@ import "@/styles/unified-theme.css";  // NEW: tokens + shared patterns
 import "@/styles/root.css";
 import "@/styles/layout.css";
 import "@/styles/globals.css";
+import "@/styles/packages-unified.module.css";
 
 
 interface LayoutProps {

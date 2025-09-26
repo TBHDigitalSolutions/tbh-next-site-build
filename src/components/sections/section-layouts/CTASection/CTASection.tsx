@@ -1,4 +1,4 @@
-// shared-ui/components/cta/CTASection.tsx
+// src/components/sections/section-layouts/CTASection/CTASection.tsx
 
 "use client";
 

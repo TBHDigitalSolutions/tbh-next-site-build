@@ -20,7 +20,8 @@
     font-size: 1rem;
 }
 
-thead th {
+/* Scope element selectors under the local .table to keep CSS Modules pure */
+.table thead th {
     background: #f8fafc;
     border-bottom: 1px solid #e2e8f0;
     padding: 0.75rem 1rem;
@@ -52,14 +53,14 @@ thead th {
     color: #64748b;
 }
 
-tbody td,
-tbody th {
+.table tbody td,
+.table tbody th {
     border-bottom: 1px solid #eef2f7;
     padding: 0.65rem 1rem;
 }
 
-tbody tr:last-child td,
-tbody tr:last-child th {
+.table tbody tr:last-child td,
+.table tbody tr:last-child th {
     border-bottom: none;
 }
 

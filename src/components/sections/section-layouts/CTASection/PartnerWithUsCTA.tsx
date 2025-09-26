@@ -5,7 +5,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { FaCheckCircle } from "react-icons/fa";
 // ✅ Correct shared‑UI imports
-import Divider from "@/components/core/layout/Divider/Divider";
+import Divider from "@/components/ui/atoms/Divider/Divider";
 import Button from "@/components/ui/atoms/Button/Button";
 // ✅ Default import of your mock data
 import partnerWithUsData from "@/mock/partnerWithUsCTA";

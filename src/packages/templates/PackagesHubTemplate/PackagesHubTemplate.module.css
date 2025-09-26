@@ -1,29 +1,30 @@
 /* ==========================================================================
    PackagesHubTemplate.module.css
-   Production-ready styles for Packages Hub (CSS Modules safe)
-   - No global selectors
-   - Fallback tokens are scoped to `.wrap`
+   - Local tokens scoped to .wrap
+   - No global selectors (:root, :global), CSS Modules safe
    ========================================================================== */
 
-/* ---- Layout wrapper + local design tokens -------------------------------- */
 .wrap {
-    /* Fallback tokens for this section (override upstream app tokens if present) */
+    /* local, theme-safe tokens (inherit from /styles/packages-unified if present) */
     --hub-max-width: 1200px;
 
-    --bg: var(--background, #0b0b0c);
-    --fg: var(--foreground, #0b0b0c);
-    --muted: var(--muted, #f2f4f7);
-    --muted-foreground: var(--muted-foreground, #667085);
-    --card: var(--card, #ffffff);
-    --card-foreground: var(--card-foreground, #0b0b0c);
-    --border: var(--border, #e5e7eb);
-    --ring: var(--ring, #94a3b8);
+    /* surface + text */
+    --bg: var(--pkg-bg, var(--background, #ffffff));
+    --fg: var(--pkg-fg, var(--foreground, #0b0b0c));
+    --muted: var(--pkg-muted, var(--muted, #f2f4f7));
+    --muted-foreground: var(--pkg-muted-foreground, var(--muted-foreground, #667085));
+    --card: var(--pkg-card, var(--card, #ffffff));
+    --card-foreground: var(--pkg-card-foreground, var(--card-foreground, #0b0b0c));
+    --border: var(--pkg-border, var(--border, #e5e7eb));
+    --ring: var(--pkg-ring, var(--ring, #94a3b8));
 
-    --primary: var(--primary, #3b82f6);
-    --primary-foreground: var(--primary-foreground, #ffffff);
-    --accent: var(--accent, #f4f4f5);
-    --accent-foreground: var(--accent-foreground, #111827);
+    /* actions */
+    --primary: var(--pkg-primary, var(--primary, #3b82f6));
+    --primary-foreground: var(--pkg-primary-foreground, var(--primary-foreground, #ffffff));
+    --accent: var(--pkg-accent, var(--accent, #f4f4f5));
+    --accent-foreground: var(--pkg-accent-foreground, var(--accent-foreground, #111827));
 
+    /* elevation + radius */
     --shadow-sm: 0 1px 2px rgba(0, 0, 0, .06);
     --shadow-md: 0 4px 12px rgba(0, 0, 0, .08);
     --radius-sm: .375rem;
@@ -36,102 +37,21 @@
     color: var(--card-foreground);
 }
 
-/* ---- Header -------------------------------------------------------------- */
-.header {
-    margin-bottom: 1rem;
-}
-
-.title {
-    font-size: clamp(1.5rem, 1.2rem + 1.5vw, 2rem);
-    line-height: 1.2;
-    margin: 0 0 .25rem;
-    color: var(--card-foreground);
-}
-
-.subtitle {
-    margin: 0;
-    color: var(--muted-foreground);
-    font-size: .975rem;
-}
-
-/* ---- Controls (toolbar) -------------------------------------------------- */
-.controls {
-    display: flex;
-    gap: .75rem;
-    flex-wrap: wrap;
+.toolbarWrap {
     margin: 1rem 0 1.25rem;
-    align-items: center;
 }
 
-.control {
-    display: inline-flex;
-    flex-direction: column;
-    gap: .25rem;
+.rail {
+    margin: 0 0 1.25rem;
 }
 
-.search {
-    flex: 1 1 280px;
-    min-width: 220px;
-    height: 2.5rem;
-    padding: .5rem .75rem;
-    border-radius: var(--radius-md);
-    border: 1px solid var(--border);
-    background: var(--card);
-    color: var(--card-foreground);
-    outline: none;
-    box-shadow: var(--shadow-sm);
-    transition: border-color .15s ease, box-shadow .15s ease;
-}
-
-.search::placeholder {
-    color: var(--muted-foreground);
-}
-
-.search:focus {
-    border-color: color-mix(in srgb, var(--primary) 60%, #0000);
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 18%, #0000);
-}
-
-.select {
-    height: 2.5rem;
-    padding: .5rem .75rem;
-    border-radius: var(--radius-md);
-    border: 1px solid var(--border);
-    background: var(--card);
-    color: var(--card-foreground);
-    outline: none;
-    box-shadow: var(--shadow-sm);
-    transition: border-color .15s ease, box-shadow .15s ease;
-}
-
-.select:focus {
-    border-color: color-mix(in srgb, var(--primary) 60%, #0000);
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 18%, #0000);
-}
-
-/* ---- Visually hidden utility -------------------------------------------- */
-.visuallyHidden {
-    position: absolute !important;
-    height: 1px;
-    width: 1px;
-    overflow: hidden;
-    clip: rect(1px, 1px, 1px, 1px);
-    white-space: nowrap;
-    clip-path: inset(50%);
-    border: 0;
-    padding: 0;
-    margin: -1px;
-}
-
-/* ---- Grid (cards area) --------------------------------------------------- */
 .grid {
     display: grid;
     gap: 1rem;
     align-items: start;
-    /* Column sizes provided inline via style prop (minmax(...)) */
+    /* columns set inline via style prop using minmax(...) */
 }
 
-/* Wrapper around each PackageCard for hover/featured affordances */
 .cardWrap {
     position: relative;
     border-radius: var(--radius-lg);
@@ -150,13 +70,11 @@
     box-shadow: 0 0 0 4px color-mix(in srgb, var(--primary) 16%, #0000);
 }
 
-/* Featured state */
 .featured {
     outline: 2px solid color-mix(in srgb, var(--primary) 62%, var(--border));
     box-shadow: 0 0 0 4px color-mix(in srgb, var(--primary) 14%, #0000);
 }
 
-/* ---- Empty state --------------------------------------------------------- */
 .empty {
     grid-column: 1 / -1;
     padding: 2.25rem 1rem;
@@ -172,33 +90,31 @@
             transparent 20px);
 }
 
-/* ---- Responsive tweaks --------------------------------------------------- */
+.ctaBand {
+    margin: 2rem 0 0;
+}
+
+/* Responsive tweaks */
 @media (max-width: 720px) {
     .wrap {
         padding: 1.5rem .75rem;
     }
 
-    .controls {
-        gap: .5rem;
-    }
-
-    .search {
-        flex-basis: 100%;
+    .toolbarWrap {
+        margin: .75rem 0 1rem;
     }
 }
 
 @media (prefers-reduced-motion: reduce) {
-
-    .cardWrap,
-    .search,
-    .select {
+    .cardWrap {
         transition: none !important;
     }
 }
 
-/* ---- Print-friendly ------------------------------------------------------ */
 @media print {
-    .controls {
+
+    .toolbarWrap,
+    .ctaBand {
         display: none !important;
     }
 
