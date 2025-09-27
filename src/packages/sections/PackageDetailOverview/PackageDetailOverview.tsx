@@ -1,3 +1,4 @@
+// src/packages/sections/PackageDetailOverview/PackageDetailOverview.tsx
 "use client";
 
 import * as React from "react";
@@ -6,11 +7,11 @@ import styles from "./PackageDetailOverview.module.css";
 
 // Pinned card (the one the user clicked)
 import PackageCard, { type PackageCardProps } from "@/packages/components/PackageCard";
-
+ 
 // Shared molecules
-import PriceLabel, { type Money } from "@/components/ui/molecules/PriceLabel";
-import OutcomeList, { type OutcomeItem } from "@/components/ui/molecules/OutcomeList";
-import ServiceChip, { type ServiceSlug } from "@/components/ui/molecules/ServiceChip";
+import { PriceLabel, type Money } from "@/components/ui/molecules/PriceLabel";
+import { OutcomeList, type OutcomeItem } from "@/components/ui/molecules/OutcomeList";
+import { ServiceChip, type ServiceSlug } from "@/components/ui/molecules/ServiceChip";
 import TagChips from "@/components/ui/molecules/TagChips";
 
 // “What’s included” table

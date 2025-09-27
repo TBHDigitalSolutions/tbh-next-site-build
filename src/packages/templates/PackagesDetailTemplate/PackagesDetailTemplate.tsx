@@ -6,33 +6,57 @@ import styles from "./PackagesDetailTemplate.module.css";
 
 import type { PackageBundle } from "@/packages/lib/types";
 import { emitServiceJsonLd } from "@/packages/lib/jsonld";
-import { toPackageCard, toIncludesTable, toPriceBlock } from "@/packages/lib/adapters";
+import { toPackageCard, toIncludesTable } from "@/packages/lib/adapters";
+import { sectionCtas, cardCtas, ROUTES } from "@/packages/lib/cta";
+import { startingAtLabel } from "@/packages/lib/pricing";
 
 // Page-level sections
 import ServiceHero from "@/components/sections/section-layouts/ServiceHero";
-// ⬇️ fix: import the concrete file to avoid broken index re-exports
+// ⬇️ keep concrete file import to avoid broken index re-exports in some builds
 import CTASection from "@/components/sections/section-layouts/CTASection/CTASection";
 import FAQSection from "@/components/sections/section-layouts/FAQSection";
 
 // Detail stack
 import PackageDetailOverview from "@/packages/sections/PackageDetailOverview";
-import PriceBlock from "@/packages/components/PriceBlock";
-import PackagePricingMatrix, {
-  type PackagePricingMatrixProps,
-} from "@/packages/components/PackagePricingMatrix";
 import AddOnSection from "@/packages/sections/AddOnSection";
 import RelatedItemsRail from "@/packages/components/RelatedItemsRail";
 
+/* ----------------------------------------------------------------------------
+ * Types
+ * -------------------------------------------------------------------------- */
+
 export type PackagesDetailTemplateProps = {
-  /** The bundle/package to render */
-  bundle: PackageBundle;
-  /** Optional: curated related bundles/packages for the rail */
+  /** The bundle/package entity to render (page-level SSOT) */
+  bundle: PackageBundle & {
+    slug?: string;
+    service?: string;
+    services?: string[];
+    tags?: string[];
+    summary?: string;
+    name?: string;
+    title?: string;
+    icp?: string;
+    price?: { oneTime?: number; monthly?: number; currency?: "USD" };
+    outcomes?: Array<string | { label: string }>;
+    includes?: Array<{ title: string; items: string[] }>;
+    notes?: string;
+    faq?: { title?: string; faqs?: Array<{ q: string; a: string }>; };
+    addOnRecommendations?: string[];
+  };
+
+  /** Optional curated related items (will be adapted to cards) */
   related?: PackageBundle[];
-  /** Optional: recommended add-ons for this bundle */
+
+  /** Optional add-ons already resolved to the section’s expected shape */
   addOns?: Array<any>;
-  /** Optional: FAQ entries (fallback if bundle has none) */
+
+  /** Optional fallback FAQ items (used if bundle has none) */
   faqs?: Array<{ id?: string | number; question: string; answer: string }>;
 };
+
+/* ----------------------------------------------------------------------------
+ * Component
+ * -------------------------------------------------------------------------- */
 
 export default function PackagesDetailTemplate({
   bundle,
@@ -40,105 +64,99 @@ export default function PackagesDetailTemplate({
   addOns = [],
   faqs = [],
 }: PackagesDetailTemplateProps) {
-  // --------------------------
+  // --------------------------------------------------------------------------
   // Hero content (safe defaults)
-  // --------------------------
+  // --------------------------------------------------------------------------
   const heroTitle = bundle.title ?? (bundle as any).name ?? "Package";
   const heroSubtitle =
-    bundle.summary ?? (bundle as any).valueProp ?? (bundle as any).subtitle;
+    bundle.summary ?? (bundle as any).valueProp ?? (bundle as any).subtitle ?? "";
 
-  // --------------------------
-  // Derived booleans
-  // --------------------------
+  // --------------------------------------------------------------------------
+  // Derived collections / flags
+  // --------------------------------------------------------------------------
   const hasAddOns = (addOns?.length ?? 0) > 0;
   const hasRelated = (related?.length ?? 0) > 0;
-  const bundleFaqItems = (bundle as any)?.faq?.faqs ?? [];
+
+  const bundleFaqTitle = (bundle as any)?.faq?.title ?? "Frequently asked questions";
+  const bundleFaqItems: Array<{ q: string; a: string }> = (bundle as any)?.faq?.faqs ?? [];
   const hasFaq = (bundleFaqItems.length ?? 0) > 0 || (faqs?.length ?? 0) > 0;
 
-  // --------------------------
-  // Adapters / models
-  // --------------------------
-  const overviewIncludes = toIncludesTable(bundle);
-  const overviewPinnedCard = toPackageCard(bundle);
-  const priceBlockModel = toPriceBlock(bundle);
+  // --------------------------------------------------------------------------
+  // Adapters / models (single source of truth)
+  // --------------------------------------------------------------------------
+  const includesTable = toIncludesTable(bundle); // normalized for PackageIncludesTable
+  const pinnedCardBase = toPackageCard(bundle);
+  const pinnedCard = { ...pinnedCardBase, variant: "rail", ...cardCtas(bundle.slug ?? "") };
 
-  // Pricing Matrix: accept an in-object model if provided; otherwise omit
-  const pricingMatrixModel = React.useMemo<PackagePricingMatrixProps | null>(() => {
-    const m =
-      (bundle as any)?.pricingMatrix ??
-      (bundle as any)?.matrix ??
-      (bundle as any)?.pricing?.matrix;
+  const relatedRailItems = related.map((b) => ({ ...toPackageCard(b), variant: "rail" }));
 
-    if (m && Array.isArray(m.columns) && Array.isArray(m.groups)) {
-      return m as PackagePricingMatrixProps;
-    }
-    return null;
-  }, [bundle]);
-
-  // Related rail items — pass the adapted cards (the rail handles presentation)
-  const relatedRailItems = related.map((b) => toPackageCard(b));
-
-  // Schema.org JSON-LD (service) for SEO
+  // JSON-LD (schema.org) for SEO
   const jsonLd = emitServiceJsonLd(bundle);
 
+  // CTA helpers (policy standard)
+  const { primary: sectionPrimaryCta, secondary: sectionSecondaryCta } = sectionCtas();
+
+  // Optional CTASection subtitle: reinforce single “Starting at …” label
+  const priceSubtitle =
+    bundle.price ? startingAtLabel(bundle.price as any) : undefined;
+
+  // Normalize outcomes for the overview (strings -> labels)
+  const outcomes: string[] =
+    (bundle as any).outcomes?.map((o: any) => (typeof o === "string" ? o : o?.label)).filter(Boolean) ?? [];
+
+  // Resolve service/tags
+  const serviceSlug = (bundle as any).service ?? (bundle as any).primaryService;
+  const tagChips = (bundle as any).tags ?? (bundle as any).services ?? [];
+
   return (
-    <article className={styles.wrap}>
+    <article
+      className={styles.detailTemplate}
+      data-template="packages-detail"
+      data-bundle={bundle.slug ?? ""}
+    >
       {/* SEO (schema.org) */}
       {jsonLd}
 
       {/* =========================================================
           PAGE HERO — ServiceHero
          ========================================================= */}
-      <ServiceHero
-        title={heroTitle}
-        subtitle={heroSubtitle}
-        tags={(bundle as any)?.services ?? (bundle as any)?.tags ?? []}
-        primaryCta={{ label: "Request proposal", href: "/contact" }}
-        secondaryCta={{ label: "Book a call", href: "/book" }}
-      />
+      <section className={styles.heroSection} aria-label="Overview hero">
+        <ServiceHero
+          title={heroTitle}
+          subtitle={heroSubtitle}
+          tags={tagChips}
+          primaryCta={sectionPrimaryCta}   // "Request proposal" → /contact
+          secondaryCta={sectionSecondaryCta} // "Book a call" → /book
+        />
+      </section>
 
       {/* =========================================================
           SUPER CARD (AT A GLANCE) — PackageDetailOverview
          ========================================================= */}
-      <PackageDetailOverview
-        id={bundle.slug}
-        title={heroTitle}
-        valueProp={heroSubtitle}
-        icp={(bundle as any).icp}
-        service={(bundle as any).primaryService ?? (bundle as any).services?.[0]}
-        tags={(bundle as any).services ?? []}
-        packagePrice={(bundle as any).price}
-        ctaPrimary={{ label: "Request proposal", href: "/contact" }}
-        ctaSecondary={{ label: "Book a call", href: "/book" }}
-        outcomes={(bundle as any).outcomes}
-        includesTable={overviewIncludes as any}
-        pinnedPackageCard={overviewPinnedCard as any}
-        notes={(bundle as any).assumptionsNote}
-      />
-
-      {/* =========================================================
-          PRICING — PriceBlock + PackagePricingMatrix (optional)
-         ========================================================= */}
-      <section className={styles.section} aria-label="Pricing">
-        <PriceBlock {...(priceBlockModel as any)} />
-        {pricingMatrixModel ? <PackagePricingMatrix {...pricingMatrixModel} /> : null}
+      <section className={styles.overviewSection} aria-label="Package details at a glance">
+        <PackageDetailOverview
+          id={bundle.slug}
+          title={heroTitle}
+          valueProp={heroSubtitle}
+          icp={(bundle as any).icp}
+          service={serviceSlug as any}
+          tags={tagChips}
+          // canonical price only; UI derives label
+          price={(bundle as any).price}
+          ctaPrimary={sectionPrimaryCta}
+          ctaSecondary={sectionSecondaryCta}
+          outcomes={outcomes}
+          includesTable={includesTable as any}
+          pinnedPackageCard={pinnedCard as any}
+          notes={(bundle as any).notes ? <p>{(bundle as any).notes}</p> : undefined}
+        />
       </section>
-
-      {/* =========================================================
-          NARRATIVE — compiled HTML from MDX
-         ========================================================= */}
-      {(bundle as any)?.content?.html && (
-        <section className={styles.section} aria-label="Narrative">
-          {/* eslint-disable-next-line react/no-danger */}
-          <article dangerouslySetInnerHTML={{ __html: (bundle as any).content.html }} />
-        </section>
-      )}
 
       {/* =========================================================
           ADD-ONS — recommended upsells
          ========================================================= */}
       {hasAddOns && (
-        <section className={styles.section} aria-label="Recommended add-ons">
+        <section className={styles.addOnsSection} aria-label="Recommended add-ons">
           <AddOnSection
             id="recommended-addons"
             title="Recommended add-ons"
@@ -152,7 +170,7 @@ export default function PackagesDetailTemplate({
           RELATED — packages and/or bundles
          ========================================================= */}
       {hasRelated && (
-        <section className={styles.section} aria-label="Related packages">
+        <section className={styles.relatedSection} aria-label="Related packages">
           <RelatedItemsRail items={relatedRailItems as any} />
         </section>
       )}
@@ -160,12 +178,12 @@ export default function PackagesDetailTemplate({
       {/* =========================================================
           CTA BAND — closing call to action
          ========================================================= */}
-      <section className={styles.section} aria-label="Get started">
+      <section className={styles.ctaSection} aria-label="Get started">
         <CTASection
           title="Let’s shape your growth plan"
-          description="We’ll scope your package and timeline in a quick call."
-          primaryCta={{ label: "Request proposal", href: "/contact" }}
-          secondaryCta={{ label: "Book a call", href: "/book" }}
+          subtitle={priceSubtitle}
+          primaryCta={sectionPrimaryCta}
+          secondaryCta={sectionSecondaryCta}
         />
       </section>
 
@@ -173,15 +191,17 @@ export default function PackagesDetailTemplate({
           FAQ — final panel
          ========================================================= */}
       {hasFaq && (
-        <FAQSection
-          id="bundle-faq"
-          title={(bundle as any)?.faq?.title ?? "Frequently asked questions"}
-          items={(bundleFaqItems.length ? bundleFaqItems : faqs).map((f: any, i: number) => ({
-            id: String(f?.id ?? i),
-            question: f.question,
-            answer: f.answer,
-          }))}
-        />
+        <section className={styles.faqSection} aria-label="Frequently asked questions">
+          <FAQSection
+            id="bundle-faq"
+            title={bundleFaqTitle}
+            items={(bundleFaqItems.length ? bundleFaqItems : faqs).map((f: any, i: number) => ({
+              id: String(f?.id ?? i),
+              question: f.q ?? f.question,
+              answer: f.a ?? f.answer,
+            }))}
+          />
+        </section>
       )}
     </article>
   );

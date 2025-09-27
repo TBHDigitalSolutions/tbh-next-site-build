@@ -1,3 +1,4 @@
+// src/data/packages/Services/content-production/brand-collateral-services/content-brand-complete-system/outcomes.ts
 export const outcomes = [
   "Unified identity system consistently applied across channels",
   "Faster production with reusable patterns and components",

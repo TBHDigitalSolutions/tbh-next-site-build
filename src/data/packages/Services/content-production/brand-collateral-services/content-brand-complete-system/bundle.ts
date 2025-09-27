@@ -1,3 +1,4 @@
+// src/data/packages/Services/content-production/brand-collateral-services/content-brand-complete-system/bundle.ts
 import type { ServicePackage } from "../../../../_types/packages.types";
 import { includes } from "./includes";
 import { outcomes } from "./outcomes";

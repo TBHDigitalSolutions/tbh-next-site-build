@@ -1,3 +1,4 @@
+// src/data/packages/Services/content-production/brand-collateral-services/content-brand-complete-system/includes.ts
 export const includes = [
   { label: "Comprehensive brand identity system", note: "Logo grid, construction, lockups, iconography" },
   { label: "Advanced brand guidelines & applications", note: "Color systems, typography scales, imagery styles" },

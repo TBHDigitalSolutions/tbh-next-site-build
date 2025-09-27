@@ -1,8 +1,8 @@
 // src/packages/components/PackageCard/PackageCard.tsx
+// src/packages/components/PackageCard/PackageCard.tsx
 "use client";
 
 import * as React from "react";
-import Link from "next/link";
 
 import PackageCardFrame from "@/packages/components/PackageCardFrame";
 import cls from "./PackageCard.module.css";
@@ -17,8 +17,15 @@ import * as FeatureListNS from "@/components/ui/molecules/FeatureList";
 import * as ServiceChipNS from "@/components/ui/molecules/ServiceChip";
 import * as TagChipsNS from "@/components/ui/molecules/TagChips";
 
+// Atoms
+import Button from "@/components/ui/atoms/Button/Button";
+import Divider from "@/components/ui/atoms/Divider/Divider";
+
+// Centralized CTAs and pricing helpers
+import { ROUTES, CTA_LABEL } from "@/packages/lib/cta";
+import { startingAtLabel } from "@/packages/lib/pricing";
+
 const PriceLabel = (PriceLabelNS as any).default ?? (PriceLabelNS as any).PriceLabel;
-const formatMoney = (PriceLabelNS as any).formatMoney as (n?: number, currency?: string) => string;
 type PriceMoney = PriceLabelNS.Money;
 
 const FeatureList = (FeatureListNS as any).default ?? (FeatureListNS as any).FeatureList;
@@ -29,6 +36,7 @@ const TagChips = (TagChipsNS as any).default ?? (TagChipsNS as any).TagChips;
 
 export type ServiceSlug = React.ComponentProps<typeof ServiceChip>["service"];
 
+/** @deprecated Prefer the canonical Money shape on `price` */
 export type LegacyPrice = { setup?: number; monthly?: number; currency?: string };
 
 export type PackageCardProps = {
@@ -55,18 +63,16 @@ export type PackageCardProps = {
   // art
   image?: { src: string; alt?: string } | null;
 
-  // pricing (either shape is fine)
+  // pricing (Money is preferred; LegacyPrice still accepted but normalized)
   price?: PriceMoney | LegacyPrice;
-  startingAt?: number;
-  savingsPct?: number;
 
   // taxonomy
   tags?: string[];
 
   // CTA (optional overrides)
   detailsHref?: string;
-  primaryCta?: { label: string; href?: string; onClick?: (slug?: string) => void };
-  secondaryCta?: { label: string; href?: string; onClick?: (slug?: string) => void };
+  primaryCta?: { label?: string; href?: string; onClick?: (slug?: string) => void };
+  secondaryCta?: { label?: string; href?: string; onClick?: (slug?: string) => void };
   footnote?: string;
 
   // presentation
@@ -87,7 +93,7 @@ function normalizeMoney(price?: PriceMoney | LegacyPrice): PriceMoney | undefine
   if (!price) return undefined;
   if ("oneTime" in price || "monthly" in price) {
     const p = price as PriceMoney;
-    return { oneTime: p.oneTime, monthly: p.monthly, currency: p.currency ?? "USD" };
+    return { oneTime: p.oneTime ?? undefined, monthly: p.monthly ?? undefined, currency: p.currency ?? "USD" };
   }
   const legacy = price as LegacyPrice;
   return { oneTime: legacy.setup, monthly: legacy.monthly, currency: legacy.currency ?? "USD" };
@@ -121,8 +127,6 @@ export default function PackageCard(props: PackageCardProps) {
     image,
 
     price,
-    startingAt,
-    savingsPct,
 
     tags,
 
@@ -147,16 +151,14 @@ export default function PackageCard(props: PackageCardProps) {
   const shown = displayFeatures.slice(0, 5);
   const remaining = Math.max(0, displayFeatures.length - shown.length);
 
-  // Resolve hrefs
-  const defaultHref = href ?? detailsHref ?? (slug ? `/packages/${slug}` : "#");
+  // Resolve hrefs (centralized routes)
+  const defaultHref = href ?? detailsHref ?? (slug ? ROUTES.package(slug) : "#");
   const primaryHref = primaryCta?.href ?? defaultHref;
-  const secondaryHref = secondaryCta?.href ?? "/book";
+  const secondaryHref = secondaryCta?.href ?? ROUTES.book;
 
-  // Normalize money & labels
+  // Normalize money & teaser label
   const money = normalizeMoney(price);
-  const currency = money?.currency ?? "USD";
-  const startingLabel =
-    typeof startingAt === "number" ? `From ${formatMoney(startingAt, currency)}` : null;
+  const startingTeaser = money ? startingAtLabel(money) : "";
 
   // Badge logic: custom > popular > tier
   const displayBadge = badge ?? (popular ? "Most Popular" : tier ?? undefined);
@@ -221,25 +223,24 @@ export default function PackageCard(props: PackageCardProps) {
           ) : null}
 
           {displayBadge && <span className={cls.badge}>{displayBadge}</span>}
-          {savingsPct != null && savingsPct > 0 && (
-            <span className={cls.savingsBadge}>Save {savingsPct}%</span>
-          )}
         </div>
 
         <h3 className={cls.title} id={`${(slug ?? displayTitle).replace(/\s+/g, "-")}-title`}>
           {displayTitle}
         </h3>
+
+        {/* Visual separator under the title */}
+        <Divider />
       </header>
 
       {/* Description */}
       {displayDesc && <p className={cls.description}>{displayDesc}</p>}
 
-      {/* Value section (starting price + quick highlights) */}
+      {/* Value section (derived starting price + quick highlights) */}
       <div className={cls.value}>
-        {startingLabel && (
-          <div className={cls.priceDisplay}>
-            <span className={cls.priceLabel}>Starting at</span>
-            <span className={cls.priceValue}>{startingLabel.replace(/^From\s+/i, "")}</span>
+        {startingTeaser && (
+          <div className={cls.priceDisplay} aria-label={startingTeaser}>
+            {startingTeaser}
           </div>
         )}
 
@@ -255,7 +256,7 @@ export default function PackageCard(props: PackageCardProps) {
         )}
       </div>
 
-      {/* Detailed price */}
+      {/* Detailed price chip */}
       {money && (
         <div className={cls.prices}>
           <div className={cls.priceChip}>
@@ -271,31 +272,29 @@ export default function PackageCard(props: PackageCardProps) {
         </div>
       ) : null}
 
+      {/* Divider before CTAs */}
+      <Divider />
+
       {/* Actions */}
       <div className={cls.actions}>
-        <Link
+        <Button
           href={primaryHref}
-          onClick={onPrimary}
-          aria-label={primaryCta?.label ? `${primaryCta.label} — ${displayTitle}` : `View details — ${displayTitle}`}
-          className={cx(cls.btn, cls.btnPrimary)}
-          prefetch
-          aria-disabled={isLoading}
+          variant="primary"
+          ariaLabel={`${primaryCta?.label ?? CTA_LABEL.VIEW_DETAILS} — ${displayTitle}`}
+          disabled={isLoading}
+          onClick={onPrimary as any}
         >
-          {isLoading ? "Loading..." : primaryCta?.label ?? "View details"}
-        </Link>
+          {isLoading ? "Loading..." : (primaryCta?.label ?? CTA_LABEL.VIEW_DETAILS)}
+        </Button>
 
-        {secondaryCta && (
-          <Link
-            href={secondaryHref}
-            onClick={onSecondary}
-            aria-label={`${secondaryCta.label} — ${displayTitle}`}
-            className={cx(cls.btn, cls.btnSecondary)}
-            prefetch
-            aria-disabled={isLoading}
-          >
-            {secondaryCta.label}
-          </Link>
-        )}
+        <Button
+          href={secondaryHref}
+          variant="secondary"
+          ariaLabel={`${secondaryCta?.label ?? CTA_LABEL.BOOK_A_CALL} — ${displayTitle}`}
+          onClick={onSecondary as any}
+        >
+          {secondaryCta?.label ?? CTA_LABEL.BOOK_A_CALL}
+        </Button>
       </div>
 
       {/* Optional footnote */}

@@ -1,3 +1,4 @@
+// src/data/packages/Services/content-production/brand-collateral-services/content-brand-complete-system/narrative.ts
 const narrativeHtml = `
 <section>
   <h2>Why a Complete Brand System?</h2>

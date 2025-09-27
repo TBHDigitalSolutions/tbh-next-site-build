@@ -1,3 +1,5 @@
+// src/data/packages/Services/content-production/brand-collateral-services/content-brand-complete-system/faqs.ts
+
 const faqs = [
   {
     q: "Will you refresh or redesign our logo?",
