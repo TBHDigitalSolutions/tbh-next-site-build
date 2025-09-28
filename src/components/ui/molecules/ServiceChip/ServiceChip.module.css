@@ -1,10 +1,21 @@
-/* Base */
+/* src/components/ui/molecules/ServiceChip/ServiceChip.module.css
+   Brand-aligned, responsive, container-query enhanced.
+
+   Consumes tokens from packages-unified.module.css → unified-theme.css/root.css.
+   TSX contract: chip, sm|md, iconWrap, icon, fallbackDot, text,
+                 subtle|solid|outline, interactive, selected,
+                 svcWebdev|svcSeo|svcVideo|svcContent|svcMarketing|svcLeadgen|svcCustom
+*/
+
+/* =============================== BASE =================================== */
 .chip {
-    --chip-bg: #f1f5f9;
-    /* default bg (subtle) */
-    --chip-fg: #0f172a;
-    /* default text */
-    --chip-ring: rgba(59, 130, 246, .4);
+    /* Brand mappings with safe fallbacks */
+    --chip-accent: var(--brand-blue, #0EAFFB);
+    --chip-ring: var(--card-ring, color-mix(in oklab, var(--chip-accent) 45%, white));
+
+    /* Background/text are set by variants; keep neutral defaults */
+    --chip-bg: var(--pkg-card-bg, var(--bg-elevated, #121224));
+    --chip-fg: var(--pkg-card-fg, var(--text-primary, #f4f6f7));
 
     display: inline-flex;
     align-items: center;
@@ -19,34 +30,41 @@
     text-decoration: none;
     line-height: 1;
 
-    transition: background-color 140ms ease, border-color 140ms ease, color 140ms ease, box-shadow 140ms ease;
+    /* Fluid type + container queries for better scaling inside grids/cards */
+    font-size: clamp(0.8125rem, 0.6cqi + 0.78rem, 0.95rem);
+    container-type: inline-size;
+
+    transition:
+        background-color var(--transition-standard, 160ms ease),
+        border-color var(--transition-standard, 160ms ease),
+        color var(--transition-standard, 160ms ease),
+        box-shadow var(--transition-standard, 160ms ease);
 }
 
-/* Sizes */
+/* Sizes ------------------------------------------------------------------ */
 .sm {
     padding: 0.25rem 0.55rem;
-    font-size: 0.8125rem;
 }
 
 .md {
     padding: 0.35rem 0.7rem;
-    font-size: 0.9rem;
 }
 
+/* Icon cell --------------------------------------------------------------- */
 .iconWrap {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+    display: inline-grid;
+    place-items: center;
+    line-height: 1;
 }
 
 .icon {
-    width: 1em;
-    height: 1em;
+    inline-size: 1em;
+    block-size: 1em;
 }
 
 .fallbackDot {
-    width: 0.5em;
-    height: 0.5em;
+    inline-size: 0.5em;
+    block-size: 0.5em;
     border-radius: 999px;
     background: currentColor;
     display: inline-block;
@@ -56,29 +74,42 @@
     font-weight: 600;
 }
 
-/* Variants */
+/* ============================== VARIANTS ================================ */
+/* Subtle: light tint of accent on current surface */
 .subtle {
+    --chip-bg: var(--chip-bg-subtle,
+            color-mix(in oklab, var(--chip-accent) 14%, var(--bg-surface, #0B0A18)));
+    --chip-fg: var(--chip-fg-subtle,
+            color-mix(in oklab, var(--chip-accent) 70%, white));
     border-color: transparent;
 }
 
+/* Solid: strong accent background, dark readable text */
 .solid {
-    color: #0b1220;
+    --chip-bg: var(--chip-bg-solid, var(--chip-accent));
+    --chip-fg: var(--chip-fg-solid, #0b1220);
     border-color: transparent;
-    /* solid bg comes from service class variable overrides */
 }
 
+/* Outline: transparent bg, accent text/border */
 .outline {
+    --chip-bg: transparent;
+    --chip-fg: var(--chip-accent);
     background: transparent;
     border-color: currentColor;
 }
 
-/* Interactions */
+/* ============================ INTERACTION =============================== */
 .interactive {
     cursor: pointer;
 }
 
-.interactive:hover {
-    filter: brightness(0.98);
+@media (hover: hover) {
+    .interactive:hover {
+        /* subtle lift without changing contrast aggressively */
+        background:
+            color-mix(in oklab, var(--chip-bg) 92%, white);
+    }
 }
 
 .interactive:focus-visible {
@@ -87,92 +118,86 @@
 }
 
 .selected {
-    box-shadow: 0 0 0 2px var(--chip-fg) inset;
+    /* token-aligned inset ring */
+    box-shadow: 0 0 0 2px var(--package-ring, var(--card-ring, currentColor)) inset;
 }
 
-/* -------------------- Service themes (override CSS vars) -------------------- */
+/* Disabled buttons (anchors don’t get disabled attr) */
+.interactive:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    filter: none;
+}
 
-/* Web Development: indigo */
+/* =========================== SERVICE THEMES ============================= */
+/* Each service sets an accent var. Variants derive bg/fg from that. */
 .svcWebdev {
-    --chip-bg: #eef2ff;
-    --chip-fg: #3730a3;
+    --chip-accent: var(--svc-webdev, #4f46e5);
 }
 
-.svcWebdev.solid {
-    --chip-bg: #4f46e5;
-    --chip-fg: #eef2ff;
-}
-
-/* SEO: emerald */
+/* indigo */
 .svcSeo {
-    --chip-bg: #ecfdf5;
-    --chip-fg: #047857;
+    --chip-accent: var(--svc-seo, #10b981);
 }
 
-.svcSeo.solid {
-    --chip-bg: #10b981;
-    --chip-fg: #052e21;
-}
-
-/* Video: violet */
+/* emerald */
 .svcVideo {
-    --chip-bg: #f5f3ff;
-    --chip-fg: #6d28d9;
+    --chip-accent: var(--svc-video, #8b5cf6);
 }
 
-.svcVideo.solid {
-    --chip-bg: #8b5cf6;
-    --chip-fg: #1c0f38;
-}
-
-/* Content: cyan */
+/* violet */
 .svcContent {
-    --chip-bg: #ecfeff;
-    --chip-fg: #0e7490;
+    --chip-accent: var(--svc-content, #06b6d4);
 }
 
-.svcContent.solid {
-    --chip-bg: #06b6d4;
-    --chip-fg: #042c33;
-}
-
-/* Marketing: amber */
+/* cyan   */
 .svcMarketing {
-    --chip-bg: #fffbeb;
-    --chip-fg: #b45309;
+    --chip-accent: var(--svc-marketing, #f59e0b);
 }
 
-.svcMarketing.solid {
-    --chip-bg: #f59e0b;
-    --chip-fg: #3e2500;
-}
-
-/* Lead Generation: rose */
+/* amber  */
 .svcLeadgen {
-    --chip-bg: #fff1f2;
-    --chip-fg: #be123c;
+    --chip-accent: var(--svc-leadgen, #f43f5e);
 }
 
-.svcLeadgen.solid {
-    --chip-bg: #f43f5e;
-    --chip-fg: #3a0a14;
-}
+/* rose   */
 
-/* Custom/fallback: uses parent-set variables or defaults */
-.svcCustom {
-    /* Consumers can set:
-     --chip-bg, --chip-fg, --chip-ring
-  */
-}
+/* Custom/fallback: allow external overrides (—chip-accent, —chip-ring) */
+.svcCustom {}
 
-/* Dark mode tuning */
-@media (prefers-color-scheme: dark) {
+/* ========================== CONTAINER QUERIES =========================== */
+@container (min-width: 36rem) {
     .chip {
-        --chip-bg: #0b1220;
-        --chip-fg: #e2e8f0;
+        font-size: clamp(0.85rem, 0.8cqi + 0.8rem, 1rem);
+    }
+}
+
+@container (min-width: 56rem) {
+    .chip {
+        font-size: clamp(0.9rem, 1cqi + 0.85rem, 1.05rem);
+    }
+}
+
+/* ============================= ACCESSIBILITY ============================ */
+@media (prefers-reduced-motion: reduce) {
+    .chip {
+        transition: none !important;
+    }
+}
+
+@media (forced-colors: active) {
+    .outline {
+        border-color: ButtonText;
     }
 
-    .outline {
-        border-color: var(--chip-fg);
+    .interactive:focus-visible {
+        box-shadow: 0 0 0 3px Highlight;
+    }
+}
+
+/* ================================ PRINT ================================= */
+@media print {
+    .chip {
+        box-shadow: none !important;
     }
 }

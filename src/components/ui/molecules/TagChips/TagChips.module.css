@@ -1,66 +1,166 @@
-.chips {
-    --chip-bg: var(--muted, rgba(0, 0, 0, 0.06));
-    --chip-fg: var(--muted-foreground, #475569);
-    --chip-border: var(--border, rgba(0, 0, 0, 0.12));
-    --chip-bg-service: var(--accent, #eef2ff);
-    --chip-fg-service: var(--accent-foreground, #3730a3);
-    --chip-bg-category: var(--secondary, #ecfeff);
-    --chip-fg-category: var(--secondary-foreground, #0e7490);
+/* src/components/ui/molecules/TagChips/TagChips.module.css
+   Brand-aligned chips for services, categories, and free-form tags.
 
+   Consumes tokens from packages-unified.module.css → unified-theme.css/root.css.
+   TSX contract: chips, wrap|nowrap, sm|md, chip, serviceChip, categoryChip, text
+*/
+
+/* ============================== ROOT LIST =============================== */
+.chips {
+    /* Token mappings + safe fallbacks */
+    --chip-bg: var(--tag-chip-bg,
+            color-mix(in oklab, var(--bg-surface, #0B0A18) 88%, white));
+    --chip-fg: var(--tag-chip-fg, var(--text-secondary, #c9ced1));
+    --chip-border: var(--tag-chip-border, var(--border-subtle, #3b3b3b));
+
+    /* Accents for themed chips */
+    --chip-accent-service: var(--svc-accent, var(--brand-blue, #0EAFFB));
+    --chip-accent-category: var(--cat-accent, #06b6d4);
+
+    /* Layout */
     display: inline-flex;
-    gap: 6px;
+    gap: var(--spacing-2xs, 0.375rem);
     padding: 0;
-    margin: 6px 0 0;
+    margin-block-start: var(--spacing-2xs, 0.375rem);
     list-style: none;
+
+    /* Scale with the column/card it lives in (not viewport) */
+    container-type: inline-size;
 }
 
+/* Wrapping behavior ------------------------------------------------------ */
 .wrap {
     flex-wrap: wrap;
 }
 
 .nowrap {
     flex-wrap: nowrap;
-    overflow: hidden;
+    overflow-x: auto;
+    /* allow horizontal scrolling when tight */
+    overflow-y: hidden;
+    scroll-snap-type: x proximity;
+    -webkit-overflow-scrolling: touch;
+
+    /* Edge fade to hint of overflow (supported browsers only) */
+    --_fade: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+    -webkit-mask-image: var(--_fade);
+    mask-image: var(--_fade);
 }
 
+/* ================================ SIZES ================================= */
 .sm .chip {
-    height: 22px;
-    padding: 0 8px;
+    min-block-size: 22px;
+    padding-inline: 0.5rem;
     font-size: 11px;
 }
 
 .md .chip {
-    height: 26px;
-    padding: 0 10px;
+    min-block-size: 26px;
+    padding-inline: 0.625rem;
     font-size: 12px;
 }
 
+/* ================================ CHIP ================================== */
 .chip {
     display: inline-flex;
     align-items: center;
+    gap: 0.4ch;
     border-radius: 999px;
     background: var(--chip-bg);
     color: var(--chip-fg);
     border: 1px solid var(--chip-border);
     line-height: 1;
     white-space: nowrap;
+
+    /* Smooth theme changes without motion overload */
+    transition:
+        background-color var(--transition-standard, 160ms ease),
+        border-color var(--transition-standard, 160ms ease),
+        color var(--transition-standard, 160ms ease);
 }
 
+/* Service & category tints (brand-consistent) ---------------------------- */
 .serviceChip {
-    background: var(--chip-bg-service);
-    color: var(--chip-fg-service);
-    border-color: color-mix(in oklab, var(--chip-fg-service) 20%, #ffffff);
+    --_svc: var(--chip-accent-service);
+    background: color-mix(in oklab, var(--_svc) 14%, var(--bg-surface, #0B0A18));
+    color: color-mix(in oklab, var(--_svc) 70%, white);
+    border-color: color-mix(in oklab, var(--_svc) 28%, white);
     font-weight: 600;
 }
 
 .categoryChip {
-    background: var(--chip-bg-category);
-    color: var(--chip-fg-category);
-    border-color: color-mix(in oklab, var(--chip-fg-category) 24%, #ffffff);
+    --_cat: var(--chip-accent-category);
+    background: color-mix(in oklab, var(--_cat) 14%, var(--bg-surface, #0B0A18));
+    color: color-mix(in oklab, var(--_cat) 70%, white);
+    border-color: color-mix(in oklab, var(--_cat) 28%, white);
     font-weight: 600;
 }
 
+/* Text span --------------------------------------------------------------- */
 .text {
     display: inline-block;
     transform: translateY(0.5px);
+    /* subtle optical alignment with rounded shape */
+}
+
+/* ============================ CONTAINER QUERIES ========================== */
+/* Let gaps and sizes breathe as the container widens */
+@container (min-width: 36rem) {
+    .chips {
+        gap: var(--spacing-xs, 0.5rem);
+    }
+
+    .md .chip {
+        min-block-size: 28px;
+        font-size: 12.5px;
+    }
+}
+
+@container (min-width: 56rem) {
+    .chips {
+        gap: var(--spacing-sm, 0.75rem);
+    }
+
+    .md .chip {
+        min-block-size: 30px;
+        font-size: 13px;
+    }
+}
+
+/* ========================== VIEWPORT FALLBACKS ========================== */
+@media (max-width: 640px) {
+    .chips {
+        gap: 0.4rem;
+    }
+
+    .nowrap {
+        -webkit-mask-image: none;
+        mask-image: none;
+    }
+}
+
+/* ============================== ACCESSIBILITY =========================== */
+@media (prefers-reduced-motion: reduce) {
+    .chip {
+        transition: none !important;
+    }
+}
+
+@media (forced-colors: active) {
+    .chip {
+        background: Canvas;
+        color: CanvasText;
+        border-color: ButtonText;
+    }
+}
+
+/* ================================= PRINT ================================ */
+@media print {
+    .chips {
+        gap: 0.3rem;
+    }
+
+    .chip {
+        box-shadow: none !important;
+    }
 }

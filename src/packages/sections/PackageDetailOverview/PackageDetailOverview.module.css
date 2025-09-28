@@ -1,43 +1,110 @@
-/* Container shell */
+/* src/packages/sections/PackageDetailOverview/PackageDetailOverview.module.css
+   Brand-aligned, responsive, container-query enhanced.
+
+   Consumes tokens from packages-unified.module.css → unified-theme.css/root.css.
+   TSX contract uses: wrap, grid, left, right, includes, subhead, outcomes
+*/
+
+/* ------------------------------ SHELL ----------------------------------- */
 .wrap {
-    width: 100%;
-    background: var(--surface, #0b1220);
-    border-radius: 20px;
-    border: 1px solid color-mix(in oklab, var(--surface, #fff) 85%, #0b1220);
-    box-shadow: 0 10px 30px rgba(2, 6, 23, 0.06);
-    padding: clamp(1rem, 2vw, 1.5rem);
+    inline-size: 100%;
+
+    /* Brand surfaces + chrome */
+    background: var(--bg-surface, var(--surface, #0B0A18));
+    color: var(--pkg-text, var(--text-primary, #f4f6f7));
+    border-radius: var(--radius-xl, 20px);
+    border: 1px solid color-mix(in oklab, var(--border-subtle, #94a3b8) 60%, transparent);
+    box-shadow: var(--shadow-md, 0 10px 30px rgba(2, 6, 23, 0.06));
+
+    /* Spacing respects safe areas on edge-to-edge layouts */
+    padding-inline: clamp(1rem, 2vw, 1.5rem);
+    padding-block: clamp(1rem, 2vw, 1.5rem);
+    padding-inline: max(clamp(1rem, 2vw, 1.5rem),
+            env(safe-area-inset-left, 0px));
+    padding-inline-end: max(clamp(1rem, 2vw, 1.5rem),
+            env(safe-area-inset-right, 0px));
+
+    /* Let the internal grid act as a container for child scaling */
+    container-type: inline-size;
 }
 
-/* 2-col responsive grid: content | pinned card */
+/* ------------------------------- GRID ----------------------------------- */
+/* 2-col responsive grid: content | pinned card (StickyRail owns stickiness) */
 .grid {
     display: grid;
-    grid-template-columns: 1fr min(380px, 32vw);
-    gap: clamp(1rem, 2vw, 1.5rem);
+    /* Clamp right rail; uses container units since .wrap is a container */
+    grid-template-columns: minmax(0, 1fr) clamp(300px, 32cqi, 380px);
+    gap: clamp(1rem, 2cqi, 1.5rem);
 }
 
-.left {
-    min-width: 0;
-}
-
+/* Content / rail columns */
+.left,
 .right {
-    min-width: 0;
+    min-inline-size: 0;
+    /* prevent overflow with long words/tables */
 }
 
-/* Fallback "What's included" (only used when groups aren't provided) */
+/* ------------------------- FALLBACK “INCLUDES” -------------------------- */
 .includes {
-    margin-top: 1rem;
+    margin-block-start: var(--spacing-md, 1rem);
 }
 
+/* Heading used by fallback includes table */
 .subhead {
-    margin: 0 0 0.5rem;
-    font-size: clamp(1.125rem, 1.4vw, 1.375rem);
+    margin: 0 0 var(--spacing-sm, 0.5rem);
+    font-family: var(--font-heading, Aldrich, sans-serif);
     font-weight: 800;
-    color: var(--text-primary, #0f172a);
+    line-height: 1.2;
+    letter-spacing: 0.2px;
+    color: var(--text-accent, var(--pkg-text-accent, var(--brand-blue, #0EAFFB)));
+    font-size: var(--font-size-h4, clamp(1.125rem, 1.2cqi + 1rem, 1.375rem));
+    text-wrap: balance;
 }
 
-/* Responsive: stack columns on narrow viewports */
+/* Spacing hook for OutcomesBlock below the title */
+.outcomes {
+    margin-block-start: var(--spacing-sm, 0.75rem);
+}
+
+/* ------------------------ CONTAINER RESPONSIVENESS ---------------------- */
+/* On narrow containers, stack; on wider, add breathing room */
+@container (max-width: 62rem) {
+    .grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@container (min-width: 80rem) {
+    .grid {
+        gap: clamp(1.25rem, 2.5cqi, 2rem);
+        grid-template-columns: minmax(0, 1fr) clamp(320px, 28cqi, 420px);
+    }
+}
+
+/* ------------------------- VIEWPORT FALLBACKS --------------------------- */
+/* If container queries aren’t supported, fall back to viewport logic */
 @media (max-width: 980px) {
     .grid {
         grid-template-columns: 1fr;
+    }
+}
+
+/* --------------------------- ACCESSIBILITY ------------------------------ */
+@media (forced-colors: active) {
+    .wrap {
+        border-color: CanvasText;
+        box-shadow: none;
+    }
+}
+
+/* ------------------------------ PRINT ----------------------------------- */
+@media print {
+    .wrap {
+        background: white;
+        color: black;
+        box-shadow: none;
+        border: 1px solid #bbb;
+        border-radius: 0;
+        padding: 1rem;
     }
 }

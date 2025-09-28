@@ -1,12 +1,27 @@
+/* src/components/ui/molecules/PriceLabel/PriceLabel.module.css */
+
 .root {
+    /* brand + layout */
+    --price-fg: var(--pkg-card-fg, var(--text-primary, #f4f6f7));
+    --price-muted: var(--text-secondary, var(--pkg-text-muted, #c9ced1));
+    --price-tertiary: var(--text-tertiary, #94a3b8);
+    --price-accent: var(--text-accent, var(--pkg-text-accent, var(--brand-blue, #0EAFFB)));
+
+    --price-font-size: var(--font-size-body-lg, clamp(1.05rem, 0.8cqi + 0.95rem, 1.25rem));
+    --price-suffix-size: clamp(0.85rem, 0.4cqi + 0.82rem, 0.95rem);
+    --price-notes-size: clamp(0.85rem, 0.3cqi + 0.8rem, 0.95rem);
+
     display: inline-flex;
     align-items: baseline;
     flex-wrap: wrap;
+    /* allow entire price to move to next line */
+    gap: 0.25rem;
+    color: var(--price-fg);
     font-variant-numeric: tabular-nums;
-    color: var(--price-fg, var(--foreground, #0f172a));
+    container-type: inline-size;
 }
 
-/* Variants */
+/* variants */
 .inline {
     gap: 0.25rem;
 }
@@ -14,47 +29,129 @@
 .block {
     display: inline-grid;
     gap: 0.25rem;
+    align-items: start;
 }
 
-/* Parts */
+/* keep each price 'group' as an unbreakable unit */
 .group {
     display: inline-flex;
     align-items: baseline;
     gap: 0.25rem;
+    white-space: nowrap;
+    /* ← key: never break inside the number */
+    min-inline-size: max-content;
+    /* ← prefer moving to the next line */
 }
 
 .amount {
-    font-weight: 700;
+    font-weight: 800;
     line-height: 1.1;
-    /* Scales nicely inside cards and tables */
-    font-size: var(--price-font-size, 1.125rem);
+    font-size: var(--price-font-size);
+    white-space: nowrap;
 }
 
 .suffix {
-    opacity: 0.8;
-    font-weight: 500;
-    font-size: 0.875rem;
+    color: var(--price-muted);
+    opacity: .98;
+    font-weight: 600;
+    font-size: var(--price-suffix-size);
+    line-height: 1.1;
+    white-space: nowrap;
 }
 
 .separator {
-    opacity: 0.6;
-    padding: 0 0.125rem;
+    color: var(--price-tertiary);
+    opacity: .9;
+    padding-inline: 0.125rem;
+    letter-spacing: .015em;
+    white-space: nowrap;
 }
 
+/* notes may wrap */
 .notes {
-    margin-left: 0.25rem;
-    opacity: 0.75;
-    font-size: 0.875rem;
+    margin-inline-start: .25rem;
+    color: var(--price-tertiary);
+    opacity: .9;
+    font-size: var(--price-notes-size);
     font-weight: 500;
+    line-height: 1.2;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    /* allow only the small print to break */
 }
 
 .contact {
-    font-weight: 600;
+    font-weight: 700;
+    color: var(--price-accent);
+    line-height: 1.1;
 }
 
-/* Optional: dark mode token hook */
+/* container queries / fallbacks unchanged */
+@container (min-width: 28rem) {
+    .root {
+        gap: .3rem;
+    }
+
+    .amount {
+        font-size: clamp(1.1rem, 1cqi + 1rem, 1.35rem);
+    }
+
+    .suffix {
+        font-size: clamp(.9rem, .6cqi + .85rem, 1rem);
+    }
+}
+
+@container (min-width: 48rem) {
+    .root {
+        gap: .4rem;
+    }
+
+    .amount {
+        font-size: clamp(1.2rem, 1.2cqi + 1rem, 1.5rem);
+    }
+
+    .notes {
+        font-size: clamp(.9rem, .6cqi + .85rem, 1rem);
+    }
+}
+
+@media (max-width: 640px) {
+    .amount {
+        font-size: clamp(1.05rem, 1.8vw + .95rem, 1.2rem);
+    }
+
+    .suffix,
+    .notes {
+        font-size: clamp(.85rem, 1.4vw + .78rem, .95rem);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .root * {
+        transition: none !important;
+    }
+}
+
+@media (forced-colors: active) {
+    .contact {
+        color: LinkText;
+    }
+
+    .separator {
+        color: GrayText;
+    }
+}
+
 @media (prefers-color-scheme: dark) {
     .root {
-        color: var(--price-fg-dark, var(--foreground, #e2e8f0));
+        color: var(--price-fg-dark, var(--price-fg));
+    }
+}
+
+@media print {
+
+    .root,
+    .contact {
+        color: black;
     }
 }

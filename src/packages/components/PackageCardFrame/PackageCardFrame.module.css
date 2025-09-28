@@ -1,35 +1,43 @@
-/* PackageCardFrame.module.css
-   - Uses shared theme tokens (unified theme)
-   - Slightly roomier than AddOn frames; consistent with Bundle frames
+/* src/packages/components/PackageCardFrame/PackageCardFrame.module.css
+   Brand-aligned frame: elevation, padding, borders, focus, interactivity.
+
+   - Consumes unified tokens; provides fallbacks to package aliases.
+   - Enables container queries for inner content (container-type).
 */
 
 .root {
-    width: 100%;
-    background: var(--card-bg);
-    color: var(--card-fg);
-    border-radius: var(--radius-lg);
-    transition:
-        box-shadow var(--transition-med),
-        transform var(--transition-med),
-        border-color var(--transition-med),
-        background var(--transition-med);
-    text-align: left;
+    /* Visual tokens (with safe fallbacks) */
+    background: var(--card-bg, var(--pkg-card-bg));
+    color: var(--card-fg, var(--pkg-card-fg));
+    border-radius: var(--radius-lg, 12px);
+    border: 1px solid transparent;
 
+    /* Layout */
+    inline-size: 100%;
     display: flex;
     flex-direction: column;
-
-    /* allow equal-height in grid parents via .stretch */
     min-height: 0;
-    border: 1px solid transparent;
+    /* equal-height friend inside grids */
+    text-align: left;
+
+    /* Interaction/motion */
+    transition:
+        box-shadow var(--transition-standard, 160ms ease),
+        transform var(--transition-standard, 160ms ease),
+        border-color var(--transition-standard, 160ms ease),
+        background var(--transition-standard, 160ms ease);
+
+    /* Container queries for children (PackageCard.module.css) */
+    container-type: inline-size;
 }
 
-/* Variants */
+/* Variants --------------------------------------------------------------- */
 .elevated {
     box-shadow: var(--card-shadow-rest, var(--shadow-sm));
 }
 
 .outlined {
-    border-color: var(--card-border);
+    border-color: var(--card-border, var(--pkg-card-border));
 }
 
 .ghost {
@@ -37,55 +45,65 @@
     border-color: transparent;
 }
 
-/* Padding scales */
+/* Padding scales --------------------------------------------------------- */
 .pad-none {
     padding: 0;
 }
 
 .pad-sm {
-    padding: var(--spacing-sm);
+    padding: var(--spacing-sm, 0.75rem);
 }
 
 .pad-md {
-    padding: var(--spacing-md);
+    padding: var(--spacing-md, 1rem);
 }
 
 .pad-lg {
-    padding: var(--spacing-lg);
+    padding: var(--spacing-lg, 1.25rem);
 }
 
-/* Height lock */
+/* Height lock ------------------------------------------------------------ */
 .stretch {
-    height: 100%;
+    block-size: 100%;
 }
 
-/* Hover/active effects (for links/buttons only) */
-.hoverLift:is(a, button):not(:disabled):hover {
-    transform: translateY(-1px);
-    box-shadow: var(--card-shadow-hover, var(--shadow-lift));
-    background: var(--card-hover-bg);
+/* Hover/active (only when interactive) ---------------------------------- */
+@media (hover: hover) {
+    .hoverLift:is(a, button):not(:disabled):hover {
+        transform: translateY(-1px);
+        box-shadow: var(--card-shadow-hover, var(--shadow-lg));
+        background: var(--card-hover-bg, color-mix(in oklab, var(--bg-surface) 92%, white));
+    }
+
+    .hoverLift:is(a, button):active {
+        transform: translateY(0);
+    }
 }
 
-.hoverLift:is(a, button):active {
-    transform: translateY(0);
-}
-
-/* Focus ring */
+/* Focus ring (accessible, tokenized) ------------------------------------ */
 .root:focus-visible {
     outline: none;
-    box-shadow: 0 0 0 3px var(--package-ring, var(--card-ring));
+    box-shadow: 0 0 0 3px var(--package-ring, var(--card-ring, color-mix(in oklab, var(--brand-blue, #0EAFFB) 45%, white)));
 }
 
-/* Selected state (e.g., “Most popular”) */
+/* Selected state (e.g., “Most popular”) -------------------------------- */
 .selected {
-    border-color: var(--package-selected, var(--card-selected));
+    border-color: var(--package-selected, var(--card-selected, var(--brand-blue, #0EAFFB)));
     box-shadow:
-        0 0 0 1px var(--package-selected, var(--card-selected)) inset,
+        0 0 0 1px var(--package-selected, var(--card-selected, var(--brand-blue))) inset,
         var(--card-shadow-rest, var(--shadow-sm));
 }
 
-/* Disabled */
+/* Disabled --------------------------------------------------------------- */
 .disabled {
     opacity: 0.6;
     cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* Reduced motion --------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+    .root {
+        transition: none;
+    }
 }

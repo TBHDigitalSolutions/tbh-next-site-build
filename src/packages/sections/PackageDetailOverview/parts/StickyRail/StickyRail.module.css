@@ -1,23 +1,90 @@
+/* src/packages/sections/PackageDetailOverview/parts/StickyRail/StickyRail.module.css
+   Brand-aligned sticky right rail for Package detail pages.
+
+   Consumes tokens from unified theme:
+   - --header-offset, --z-sticky
+   - supports override via style prop: --sticky-top (set by TSX)
+*/
+
+/* Sticky container -------------------------------------------------------- */
 .wrap {
+    /* Compute an effective top that respects header + safe areas */
+    --_sticky-top: calc(var(--sticky-top, var(--header-offset, 1rem)) + env(safe-area-inset-top, 0px));
+
     position: sticky;
-    /* Respect site header; page can override via inline style or root var */
-    top: var(--sticky-top, var(--header-offset, 1rem));
+    inset-block-start: var(--_sticky-top);
     z-index: var(--z-sticky, 5);
 
-    /* Prevent unnecessary overflow / stacking issues */
+    /* Prevent painting/overflow glitches while staying lightweight */
     contain: layout paint style;
-    width: 100%;
+    isolation: isolate;
+    /* new stacking context for safe z-indexing */
+
+    inline-size: 100%;
+    max-block-size: calc(100dvb - var(--_sticky-top));
+    /* prevent overscrolling off-screen */
+    overflow: visible;
+
+    /* Improve scroll behavior when inside scrollable parents */
+    overscroll-behavior: contain;
+
+    /* Let the card inside size fluidly; actual visuals live in the frame */
+    background: transparent;
+    color: inherit;
 }
 
+/* Shell: creates a query container for the inner card -------------------- */
 .shell {
-    /* No extra chrome here; the PackageCard handles visuals. */
     display: block;
+
+    /* Allow inner components (e.g., PackageCard/Frame) to scale with container width */
+    container-type: inline-size;
+
+    /* Logical margins to align with main content rhythm when needed */
+    margin-block: 0;
+    margin-inline: 0;
 }
 
-/* Disable sticky on narrow viewports; let it flow in the document */
+/* Fallbacks & feature detection ------------------------------------------ */
+@supports not (position: sticky) {
+    .wrap {
+        position: static;
+        inset-block-start: auto;
+        max-block-size: none;
+    }
+}
+
+/* Disable sticky on narrow viewports; let it flow in the document -------- */
 @media (max-width: 980px) {
     .wrap {
         position: static;
-        top: auto;
+        inset-block-start: auto;
+        max-block-size: none;
+    }
+}
+
+/* High-contrast / forced colors ------------------------------------------ */
+@media (forced-colors: active) {
+    .wrap {
+        /* Ensure rail remains visible above content without adding chrome */
+        border: none;
+    }
+}
+
+/* Reduced motion: nothing animates here, but keep future-proof ----------- */
+@media (prefers-reduced-motion: reduce) {
+
+    .wrap,
+    .shell {
+        transition: none !important;
+    }
+}
+
+/* Print-friendly: rails should not be sticky on paper -------------------- */
+@media print {
+    .wrap {
+        position: static !important;
+        inset-block-start: auto !important;
+        max-block-size: none !important;
     }
 }

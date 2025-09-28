@@ -1,104 +1,120 @@
-/* PackageCard.module.css
-   - Styles the *inner* content only; the frame handles elevation & padding.
-   - Uses unified tokens from packages-unified.module.css
+/* src/packages/components/PackageCard/PackageCard.module.css
+   Brand-aligned, responsive, container-query enhanced.
+
+   Notes
+   - This styles the *inner* content only; the outer frame handles elevation,
+     border, padding, focus (see PackageCardFrame.module.css).
+   - Consumes tokens from packages-unified.module.css → unified-theme/root tokens.
 */
 
+/* Base card content -------------------------------------------------------- */
 .card {
     display: flex;
     flex-direction: column;
+    gap: var(--spacing-sm, 0.75rem);
     color: var(--pkg-card-fg, var(--text-primary));
+    min-inline-size: 0;
+    /* avoid overflow in grids */
 }
 
+/* Optional density tweak when used in rails/carousels */
 .cardRail {
-    /* compact tweaks for carousel usage if needed */
+    gap: var(--spacing-xs, 0.5rem);
 }
 
+/* Emphasis (e.g., “Most popular”); the frame will read these vars */
 .cardHighlight {
-    /* visual emphasis, relies on frame border/selected tokens */
     --package-selected: var(--package-selected, var(--card-selected));
 }
 
-/* Header / media -------------------------------------------------- */
+/* Header / media ---------------------------------------------------------- */
 .header {
     display: grid;
     grid-template-columns: 1fr auto;
     align-items: start;
-    gap: var(--spacing-sm);
+    gap: var(--spacing-sm, 0.75rem);
 }
 
 .media {
     position: relative;
     grid-column: 1 / -1;
-    display: flex;
+    display: grid;
     align-items: center;
-    justify-content: space-between;
 }
 
+/* Responsive media — prefers aspect-ratio to fixed height */
 .cardImage {
-    width: 100%;
-    height: 160px;
+    inline-size: 100%;
+    aspect-ratio: 16 / 9;
     object-fit: cover;
-    border-radius: calc(var(--radius-lg) - 6px);
+    border-radius: calc(var(--radius-lg, 12px) - 6px);
     background: var(--pkg-card-media-bg, color-mix(in oklab, var(--bg-surface) 80%, black));
 }
 
+/* Icon fallback if no image */
 .iconFallback {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 64px;
-    height: 64px;
-    border-radius: var(--radius-md);
+    display: inline-grid;
+    place-items: center;
+    inline-size: clamp(48px, 10cqw, 72px);
+    block-size: clamp(48px, 10cqw, 72px);
+    border-radius: var(--radius-md, 8px);
     background: var(--pkg-card-media-bg, color-mix(in oklab, var(--bg-surface) 80%, black));
+}
+
+/* Badges ------------------------------------------------------------------ */
+.badge,
+.savingsBadge {
+    position: absolute;
+    inset-block-start: 10px;
+    border-radius: 999px;
+    padding: 4px 10px;
+    font: 800 var(--font-size-caption, 0.8rem)/1 var(--font-body, Newsreader, serif);
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+    user-select: none;
 }
 
 .badge {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    border-radius: 999px;
-    padding: 4px 10px;
-    font-size: var(--font-size-caption);
-    font-weight: 800;
-    letter-spacing: 0.02em;
+    inset-inline-start: 10px;
     background: var(--pkg-badge-bg, color-mix(in oklab, var(--brand-blue) 12%, var(--bg-surface)));
     color: var(--pkg-badge-fg, var(--brand-blue));
-    border: 1px solid color-mix(in oklab, var(--brand-blue) 28%, var(--card-border));
+    border: 1px solid color-mix(in oklab, var(--brand-blue) 28%, var(--card-border, var(--border-subtle)));
 }
 
 .savingsBadge {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    border-radius: 999px;
-    padding: 4px 10px;
-    font-size: var(--font-size-caption);
-    font-weight: 800;
+    inset-inline-end: 10px;
     background: var(--pkg-savings-bg, color-mix(in oklab, #16a34a 18%, var(--bg-surface)));
     color: var(--pkg-savings-fg, #16a34a);
-    border: 1px solid color-mix(in oklab, #16a34a 32%, var(--card-border));
+    border: 1px solid color-mix(in oklab, #16a34a 32%, var(--card-border, var(--border-subtle)));
 }
 
-/* Title / description -------------------------------------------- */
+/* Title bar --------------------------------------------------------------- */
+.titleBar {
+    display: grid;
+    gap: var(--spacing-2xs, 0.25rem);
+}
+
 .title {
-    margin: var(--spacing-sm) 0 0 0;
-    font-family: var(--font-heading);
-    font-size: var(--font-size-h3);
+    margin: 0;
+    font-family: var(--font-heading, Aldrich, sans-serif);
+    font-size: var(--font-size-h3, var(--pkg-h3, clamp(1.25rem, 1.1vw + 0.7rem, 1.5rem)));
     color: var(--pkg-card-title, var(--text-primary));
-    line-height: 1.25;
+    line-height: 1.2;
+    text-wrap: balance;
 }
 
+/* Copy -------------------------------------------------------------------- */
 .description {
-    margin: var(--spacing-xs) 0 0 0;
+    margin: 0;
     color: var(--pkg-card-muted, var(--text-secondary));
-    font-size: var(--font-size-body);
+    font-size: var(--font-size-body, var(--pkg-body, 1rem));
+    text-wrap: pretty;
 }
 
-/* Value row: starting price + quick features --------------------- */
+/* Value row: teaser + highlights ----------------------------------------- */
 .value {
     display: grid;
-    gap: var(--spacing-sm);
-    margin-top: var(--spacing-sm);
+    gap: var(--spacing-sm, 0.75rem);
 }
 
 .priceDisplay {
@@ -106,35 +122,27 @@
     grid-auto-flow: column;
     align-items: baseline;
     gap: 0.5ch;
-}
-
-.priceLabel {
-    font-size: var(--font-size-small);
-    color: var(--text-secondary);
-}
-
-.priceValue {
-    font-weight: 800;
-    font-family: var(--font-heading);
+    font-weight: 700;
+    color: var(--text-primary);
 }
 
 .features {
     display: grid;
-    gap: var(--spacing-2xs);
+    gap: var(--spacing-2xs, 0.25rem);
 }
 
 .more {
     margin-top: 2px;
     color: var(--text-secondary);
-    font-size: var(--font-size-small);
+    font-size: var(--font-size-small, 0.875rem);
 }
 
-/* Detailed price chip -------------------------------------------- */
+/* Detailed price chip ----------------------------------------------------- */
 .prices {
-    margin-top: var(--spacing-sm);
+    margin-top: var(--spacing-sm, 0.75rem);
     display: flex;
     align-items: center;
-    gap: var(--spacing-xs);
+    gap: var(--spacing-xs, 0.5rem);
     flex-wrap: wrap;
 }
 
@@ -144,61 +152,61 @@
     gap: 6px;
     padding: 6px 10px;
     border-radius: 9999px;
-    border: 1px solid var(--card-border);
-    background: var(--pkg-pricechip-bg, var(--chip-price-bg));
-    color: var(--pkg-pricechip-fg, var(--chip-price-fg));
-    font-size: var(--font-size-small);
+    border: 1px solid var(--card-border, var(--border-subtle));
+    background: var(--pkg-pricechip-bg, var(--chip-price-bg, #2D2D2F));
+    color: var(--pkg-pricechip-fg, var(--chip-price-fg, var(--pkg-card-fg)));
+    font-size: var(--font-size-small, 0.875rem);
 }
 
-/* Tags ------------------------------------------------------------ */
+/* Tags -------------------------------------------------------------------- */
 .tagsWrap {
     margin-top: 8px;
 }
 
-/* CTA buttons ----------------------------------------------------- */
+/* Actions (Buttons are separate component; we only handle spacing) -------- */
 .actions {
-    margin-top: var(--spacing-md);
+    margin-top: var(--spacing-md, 1rem);
     display: flex;
     align-items: center;
-    gap: var(--spacing-sm);
+    gap: var(--spacing-sm, 0.75rem);
+    flex-wrap: wrap;
 }
 
-.btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    height: 38px;
-    padding: 0 var(--spacing-md);
-    border-radius: var(--radius-md);
-    border: 1px solid var(--card-border);
-    font-weight: 700;
-    text-decoration: none;
-    transition: transform var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast);
-}
-
-.btnPrimary {
-    background: var(--btn-primary-bg);
-    color: var(--btn-primary-fg);
-    border-color: transparent;
-}
-
-.btnPrimary:hover {
-    background: var(--btn-primary-hover);
-}
-
-.btnSecondary {
-    background: var(--btn-secondary-bg);
-    color: var(--btn-secondary-fg);
-    border-color: var(--btn-secondary-border);
-}
-
-.btn[aria-disabled="true"] {
-    opacity: 0.6;
-    cursor: not-allowed;
-}
-
+/* Footnote --------------------------------------------------------------- */
 .footerNote {
-    margin-top: var(--spacing-sm);
+    margin-top: var(--spacing-sm, 0.75rem);
     color: var(--text-secondary);
-    font-size: var(--font-size-small);
+    font-size: var(--font-size-small, 0.875rem);
+}
+
+/* ------------------------ Modern responsiveness ------------------------- */
+/* Container queries: the frame sets container-type: inline-size */
+@container (min-width: 420px) {
+    .title {
+        font-size: clamp(1.3rem, 1.2cqi + 1rem, 1.6rem);
+    }
+
+    .cardImage {
+        aspect-ratio: 3 / 2;
+    }
+}
+
+@container (min-width: 640px) {
+    .title {
+        font-size: clamp(1.4rem, 1.2cqi + 1rem, 1.8rem);
+    }
+
+    .actions {
+        justify-content: start;
+    }
+}
+
+/* Motion preferences */
+@media (prefers-reduced-motion: reduce) {
+
+    .priceChip,
+    .badge,
+    .savingsBadge {
+        transition: none !important;
+    }
 }

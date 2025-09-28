@@ -1,46 +1,151 @@
+/* src/packages/sections/PackageDetailOverview/parts/NotesBlock/NotesBlock.module.css
+   Brand-aligned, responsive, container-query enhanced.
+
+   Consumes tokens from packages-unified.module.css → unified-theme.css/root.css.
+   TSX contract: wrap, heading, content, text, compact
+*/
+
+/* Root layout ------------------------------------------------------------- */
 .wrap {
     display: grid;
     gap: var(--spacing-sm, 0.75rem);
-    margin-top: var(--spacing-md, 1rem);
+    margin-block-start: var(--spacing-md, 1rem);
+
+    /* Brand + readability */
+    color: var(--pkg-text, var(--text-primary));
+    max-inline-size: 80ch;
+    /* readable line length */
+    margin-inline: auto;
+    text-wrap: pretty;
+
+    /* Let children scale with the card/column they live in */
+    container-type: inline-size;
 }
 
+/* Compact spacing variant (prop: compact) -------------------------------- */
+.compact {
+    gap: var(--spacing-xs, 0.5rem);
+    margin-block-start: var(--spacing-sm, 0.75rem);
+}
+
+/* Heading ----------------------------------------------------------------- */
 .heading {
     margin: 0;
+    font-family: var(--font-heading, Aldrich, sans-serif);
     font-weight: var(--font-weight-extrabold, 800);
-    letter-spacing: 0;
+    letter-spacing: 0.15px;
     line-height: 1.2;
-    font-size: var(--font-size-h6, 1rem);
-    color: var(--text-primary, #0f172a);
+    /* Brand rule: headings lean into the accent */
+    color: var(--text-accent, var(--pkg-text-accent, var(--brand-blue, #0EAFFB)));
+    /* prefer theme token; clamp as resilient fallback */
+    font-size: var(--font-size-h5, clamp(1.0625rem, 0.8vw + 0.95rem, 1.25rem));
+    text-wrap: balance;
 }
 
+/* Content wrapper --------------------------------------------------------- */
 .content {
     display: grid;
     gap: var(--spacing-xs, 0.5rem);
 }
 
+/* Paragraph notes (string notes are rendered with this class) ------------- */
 .text {
     margin: 0;
-    color: var(--text-tertiary, #475569);
-    font-size: 0.95rem;
-    line-height: 1.55;
+    color: var(--text-secondary, var(--pkg-text-muted, #c9ced1));
+    font-family: var(--font-body, Newsreader, serif);
+    font-size: var(--font-size-body, clamp(0.98rem, 0.4vw + 0.9rem, 1.0625rem));
+    line-height: var(--line-height-body, 1.6);
 }
 
-.content a {
-    color: var(--link, #0ea5e9);
-    text-decoration: underline;
-    text-underline-offset: 2px;
+/* Rich content defaults --------------------------------------------------- */
+.content :is(p, small) {
+    color: var(--text-secondary, var(--pkg-text-muted, #c9ced1));
 }
 
-.content ul,
-.content ol {
+/* Lists use brand-colored markers + hanging bullets ---------------------- */
+.content :is(ul, ol) {
     margin: 0;
-    padding-left: 1.1rem;
-    color: var(--text-tertiary, #475569);
-    font-size: 0.95rem;
-    line-height: 1.5;
+    padding-inline-start: 1.15rem;
+    color: var(--text-secondary, var(--pkg-text-muted, #c9ced1));
+    font-family: var(--font-body, Newsreader, serif);
+    font-size: var(--font-size-body, clamp(0.98rem, 0.4vw + 0.9rem, 1.0625rem));
+    line-height: var(--line-height-body, 1.6);
 }
 
-.compact {
-    gap: var(--spacing-xs, 0.5rem);
-    margin-top: var(--spacing-sm, 0.75rem);
+.content :is(ul, ol)>li {
+    padding-inline-start: 0.1em;
+}
+
+.content ul>li::marker {
+    color: var(--brand-blue, var(--pkg-brand, #0EAFFB));
+}
+
+.content ol {
+    list-style: decimal;
+}
+
+/* Anchors: accessible underline, brand tint, clear focus ----------------- */
+.content a {
+    color: var(--link, var(--text-accent, var(--brand-blue, #0EAFFB)));
+    text-decoration-line: underline;
+    text-underline-offset: 0.18em;
+    text-decoration-thickness: from-font;
+}
+
+.content a:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--brand-blue, #0EAFFB) 45%, white);
+    border-radius: var(--radius-sm, 6px);
+}
+
+/* ------------------------ Modern responsiveness ------------------------- */
+/* Container queries scale within the surrounding column/card */
+@container (min-width: 520px) {
+    .heading {
+        font-size: var(--font-size-h4, clamp(1.125rem, 1.2cqi + 1rem, 1.375rem));
+        letter-spacing: 0.1px;
+    }
+
+    .text {
+        font-size: clamp(1rem, 0.6cqi + 0.95rem, 1.125rem);
+    }
+}
+
+@container (min-width: 840px) {
+    .heading {
+        font-size: var(--font-size-h3, clamp(1.25rem, 1.4cqi + 1.05rem, 1.6rem));
+    }
+}
+
+/* Viewport fallback when container queries aren’t supported --------------- */
+@media (max-width: 640px) {
+    .wrap {
+        gap: var(--spacing-xs, 0.5rem);
+    }
+
+    .text {
+        font-size: clamp(0.95rem, 1.6vw + 0.85rem, 1.0625rem);
+    }
+}
+
+/* High-contrast / forced colors ------------------------------------------ */
+@media (forced-colors: active) {
+    .content a {
+        color: LinkText;
+        text-decoration-color: LinkText;
+    }
+}
+
+/* Motion/accessibility ---------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+    .wrap * {
+        transition: none !important;
+    }
+}
+
+/* Print-friendly tweaks --------------------------------------------------- */
+@media print {
+    .wrap {
+        max-inline-size: none;
+    }
 }

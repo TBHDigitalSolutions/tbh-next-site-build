@@ -3,7 +3,7 @@
    Purpose:
      • Opt-in theme island for the Packages Hub & Detail pages.
      • Expose package-scoped alias vars that map to global tokens
-       (from your global unified-theme.css).
+       (from unified-theme.css / root.css).
    Notes:
      • No :root / :global here (CSS Modules “pure”).
      • Apply on a container: className={styles.packagesTheme}
@@ -13,7 +13,8 @@
 .packagesTheme {
     /* ---- Color aliases (map to your global tokens) ---- */
     --pkg-bg: var(--bg-primary, #060512);
-    --pkg-section: var(--bg-section, #0E1730);
+    /* Use an existing global token for solid section contexts; gradients use --gradient-section */
+    --pkg-section: var(--bg-elevated, #0E1730);
     --pkg-surface: var(--bg-surface, #0B0A18);
     --pkg-elevated: var(--bg-elevated, #121224);
 
@@ -26,11 +27,11 @@
     /* ---- Card recipe (frames rely on these) ---- */
     --pkg-card-bg: var(--card-bg, var(--pkg-surface));
     --pkg-card-fg: var(--card-fg, var(--pkg-text));
-    --pkg-card-border: var(--card-border, #4a4a4a);
-    --pkg-card-border-hover: var(--card-border-hover, #5a5a5a);
+    --pkg-card-border: var(--card-border, var(--border-subtle));
+    --pkg-card-border-hover: var(--card-border-hover, var(--border-strong));
     --pkg-card-hover-bg: var(--card-hover-bg, color-mix(in oklab, var(--pkg-surface) 92%, white));
-    --pkg-card-shadow-rest: var(--card-shadow-rest, 0 6px 18px rgba(2, 6, 23, 0.25));
-    --pkg-card-shadow-hover: var(--card-shadow-hover, 0 10px 26px rgba(2, 6, 23, 0.55));
+    --pkg-card-shadow-rest: var(--card-shadow-rest, var(--shadow-sm));
+    --pkg-card-shadow-hover: var(--card-shadow-hover, var(--shadow-lg));
     --pkg-card-ring: var(--card-ring, color-mix(in oklab, var(--pkg-brand) 45%, white));
     --pkg-card-selected: var(--card-selected, color-mix(in oklab, var(--pkg-brand) 75%, #7c3aed));
 
@@ -47,7 +48,7 @@
     /* ---- Tables / matrices ---- */
     --pkg-table-bg: var(--table-bg, var(--pkg-surface));
     --pkg-table-head-bg: var(--table-head-bg, color-mix(in oklab, var(--pkg-surface) 80%, var(--pkg-bg)));
-    --pkg-table-border: var(--table-border, #4a4a4a);
+    --pkg-table-border: var(--table-border, var(--border-subtle));
     --pkg-table-stripe: var(--table-stripe, color-mix(in oklab, var(--pkg-surface) 92%, white));
 
     /* ---- Includes pills (limited/add-on) ---- */
@@ -79,14 +80,16 @@
     --pkg-space-xl: var(--spacing-xl, 1.5rem);
     --pkg-space-2xl: var(--spacing-2xl, 2rem);
 
-    --pkg-radius-sm: var(--radius-sm, 10px);
-    --pkg-radius-md: var(--radius-md, 14px);
-    --pkg-radius-lg: var(--radius-lg, 18px);
-    --pkg-radius-xl: var(--radius-xl, 22px);
+    /* radii align with global scale */
+    --pkg-radius-sm: var(--radius-sm);
+    --pkg-radius-md: var(--radius-md);
+    --pkg-radius-lg: var(--radius-lg);
+    --pkg-radius-xl: var(--radius-xl);
 
-    --pkg-ease-fast: var(--transition-fast, 120ms ease);
-    --pkg-ease: var(--transition-med, 160ms ease);
-    --pkg-ease-slow: var(--transition-slow, 240ms ease);
+    /* motion aligns with global transitions */
+    --pkg-ease-fast: var(--transition-fast);
+    --pkg-ease: var(--transition-standard);
+    --pkg-ease-slow: var(--transition-slow);
 
     /* ---- Structure ---- */
     --pkg-container-max: var(--container-max, 1200px);

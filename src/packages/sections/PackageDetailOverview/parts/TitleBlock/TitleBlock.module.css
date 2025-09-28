@@ -1,13 +1,31 @@
-/* Root layout */
+/* src/packages/sections/PackageDetailOverview/parts/TitleBlock/TitleBlock.module.css
+   Brand-aligned, responsive, container-query enhanced.
+
+   Consumes tokens from:
+   - packages-unified.module.css → unified-theme.css/root.css
+
+   TSX contract:
+   - classes used by TitleBlock.tsx: wrap, alignStart|alignCenter|alignEnd,
+     title, divider, valueProp, description, icp
+*/
+
+/* Root layout ------------------------------------------------------------- */
 .wrap {
     display: grid;
-    gap: 0.5rem;
+    gap: var(--spacing-sm, 0.75rem);
+    max-inline-size: 78ch;
+    /* readable measure */
+    margin-inline: auto;
+    color: var(--pkg-text, var(--text-primary));
+    text-wrap: pretty;
+    container-type: inline-size;
+    /* enable container queries */
 }
 
-/* Alignment helpers */
+/* Alignment helpers (used by prop: align) -------------------------------- */
 .alignStart {
     justify-items: start;
-    text-align: left;
+    text-align: start;
 }
 
 .alignCenter {
@@ -17,55 +35,98 @@
 
 .alignEnd {
     justify-items: end;
-    text-align: right;
+    text-align: end;
 }
 
-/* Title */
+/* Title ------------------------------------------------------------------- */
 .title {
     margin: 0;
+    font-family: var(--font-heading, Aldrich, sans-serif);
     font-weight: 900;
     letter-spacing: 0.2px;
     line-height: 1.15;
-    /* Prefer theme tokens; clamp as a resilient fallback */
-    font-size: var(--font-size-h2, clamp(1.5rem, 2.4vw, 2rem));
-    color: var(--text-primary, #0f172a);
+    /* brand rule: headings use accent by default */
+    color: var(--text-accent, var(--pkg-text-accent, var(--brand-blue, #0EAFFB)));
+    /* prefer theme tokens; clamp as resilient fallback */
+    font-size: var(--font-size-h2, clamp(1.6rem, 2.2vw + 0.5rem, 2.25rem));
+    text-wrap: balance;
 }
 
-/* Divider under heading */
+/* Divider under heading (Divider atom provides visuals) ------------------- */
 .divider {
-    width: 100%;
-    max-width: 100%;
-    margin: 0.1rem 0 0.25rem 0;
+    inline-size: 100%;
+    max-inline-size: 100%;
+    margin: 0.15rem 0 0.35rem 0;
 }
 
-/* Value prop (concise subhead) */
+/* Value prop (concise subhead) ------------------------------------------- */
 .valueProp {
     margin: 0;
-    color: var(--text-secondary, #334155);
-    font-size: var(--font-size-body-lg, clamp(1rem, 1.2vw, 1.125rem));
+    color: var(--text-secondary, var(--pkg-text-muted, #c9ced1));
+    font-family: var(--font-body, Newsreader, serif);
+    font-size: var(--font-size-body-lg, clamp(1rem, 0.6vw + 0.95rem, 1.125rem));
     line-height: var(--line-height-body, 1.6);
 }
 
-/* Optional longer description */
+/* Optional longer description -------------------------------------------- */
 .description {
     margin: 0;
-    color: var(--text-secondary, #334155);
-    font-size: clamp(0.95rem, 1.1vw, 1.05rem);
+    color: var(--text-secondary, var(--pkg-text-muted, #c9ced1));
+    font-family: var(--font-body, Newsreader, serif);
+    font-size: clamp(0.98rem, 0.5vw + 0.9rem, 1.0625rem);
     line-height: var(--line-height-body, 1.6);
     opacity: 0.95;
 }
 
-/* ICP line */
+/* ICP line (audience) ---------------------------------------------------- */
 .icp {
     margin: 0.1rem 0 0 0;
-    color: var(--text-tertiary, #475569);
+    color: var(--text-tertiary, #94a3b8);
+    font-family: var(--font-body, Newsreader, serif);
     font-size: var(--font-size-body, 0.95rem);
 }
 
-/* Responsive refinements */
+.icp strong {
+    color: var(--text-accent, var(--pkg-text-accent, var(--brand-blue, #0EAFFB)));
+    font-weight: 800;
+}
+
+/* ------------------------ Modern responsiveness ------------------------- */
+/* Container queries scale the typographic ramp within the card/section
+   without relying on viewport width. */
+@container (min-width: 420px) {
+    .title {
+        font-size: var(--font-size-h2, clamp(1.75rem, 1.2cqi + 1.1rem, 2.4rem));
+    }
+
+    .divider {
+        margin: 0.2rem 0 0.45rem 0;
+    }
+}
+
+@container (min-width: 720px) {
+    .wrap {
+        gap: var(--spacing-md, 1rem);
+    }
+
+    .title {
+        font-size: var(--font-size-h1, clamp(1.9rem, 1.4cqi + 1.2rem, 2.7rem));
+        letter-spacing: 0.1px;
+    }
+
+    .valueProp {
+        font-size: var(--font-size-body-lg, clamp(1.05rem, 0.6cqi + 1rem, 1.2rem));
+    }
+
+    .description {
+        font-size: clamp(1rem, 0.5cqi + 0.95rem, 1.125rem);
+    }
+}
+
+/* Small screens (safety net when container queries aren’t available) ------ */
 @media (max-width: 640px) {
     .wrap {
-        gap: 0.4rem;
+        gap: var(--spacing-xs, 0.5rem);
     }
 
     .valueProp {
@@ -73,6 +134,24 @@
     }
 
     .description {
-        font-size: clamp(0.94rem, 1.7vw, 1rem);
+        font-size: clamp(0.95rem, 1.6vw, 1.02rem);
+    }
+}
+
+/* Motion/accessibility ---------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+    .wrap * {
+        transition: none !important;
+    }
+}
+
+/* Print-friendly tweaks --------------------------------------------------- */
+@media print {
+    .wrap {
+        max-inline-size: none;
+    }
+
+    .divider {
+        margin: 0.1rem 0 0.25rem 0;
     }
 }

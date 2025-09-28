@@ -1,20 +1,99 @@
+/* src/packages/sections/PackageDetailOverview/parts/MetaRow/MetaRow.module.css
+   Brand-aligned, responsive, container-query enhanced.
+
+   Consumes tokens from packages-unified.module.css → unified-theme.css/root.css.
+   TSX contract: wrap, alignStart, alignCenter, alignEnd
+*/
+
+/* Root layout ------------------------------------------------------------- */
 .wrap {
+    /* Baseline spacing (can be tuned by container queries below) */
+    --_gap-row: var(--spacing-xs, 0.5rem);
+    --_gap-col: var(--spacing-sm, 0.75rem);
+
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 0.5rem 0.75rem;
-    margin: 0 0 0.25rem 0;
+    justify-content: flex-start;
+    row-gap: var(--_gap-row);
+    column-gap: var(--_gap-col);
+
+    /* Rhythm + readability */
+    margin-block-end: var(--spacing-2xs, 0.25rem);
+    color: var(--pkg-text, var(--text-primary));
+    min-inline-size: 0;
+    /* avoid overflow in tight grids */
+    text-wrap: pretty;
+
+    /* Let children (chips) scale with the local column width, not the viewport */
+    container-type: inline-size;
 }
 
-/* Optional alignment helpers (can also be controlled via inline style) */
+/* Alignment helpers (prop: align) ---------------------------------------- */
 .alignStart {
     justify-content: flex-start;
+    text-align: start;
 }
 
 .alignCenter {
     justify-content: center;
+    text-align: center;
 }
 
 .alignEnd {
     justify-content: flex-end;
+    text-align: end;
+}
+
+/* Child spacing polish ---------------------------------------------------- */
+.wrap>* {
+    /* Ensure chips don’t stretch oddly while still wrapping nicely */
+    flex: 0 1 auto;
+}
+
+/* ------------------------ Modern responsiveness ------------------------- */
+/* Tight columns: reduce gaps so chips stack neatly */
+@container (max-width: 28rem) {
+    .wrap {
+        --_gap-row: var(--spacing-2xs, 0.25rem);
+        --_gap-col: var(--spacing-xs, 0.5rem);
+    }
+}
+
+/* Spacious columns: add breathing room */
+@container (min-width: 48rem) {
+    .wrap {
+        --_gap-row: var(--spacing-sm, 0.75rem);
+        --_gap-col: var(--spacing-md, 1rem);
+    }
+}
+
+/* Viewport fallback when container queries aren’t supported -------------- */
+@media (max-width: 560px) {
+    .wrap {
+        row-gap: var(--spacing-2xs, 0.25rem);
+        column-gap: var(--spacing-xs, 0.5rem);
+    }
+}
+
+/* Accessibility: motion/contrast ---------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+    .wrap * {
+        transition: none !important;
+    }
+}
+
+@media (forced-colors: active) {
+    .wrap {
+        forced-color-adjust: none;
+    }
+}
+
+/* Print-friendly tweaks --------------------------------------------------- */
+@media print {
+    .wrap {
+        row-gap: 0.25rem;
+        column-gap: 0.5rem;
+        margin-block-end: 0.2rem;
+    }
 }

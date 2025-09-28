@@ -1,41 +1,143 @@
+/* src/packages/sections/PackageDetailOverview/parts/CTARow/CTARow.module.css
+   Brand-aligned CTA row using the shared Button atom.
+
+   Consumes tokens from packages-unified.module.css → unified-theme.css/root.css.
+   TSX contract: row, alignStart|alignCenter|alignEnd, sizeSm|sizeMd
+*/
+
+/* Root layout ------------------------------------------------------------- */
 .row {
+    /* spacing scale (overridden by sizeSm/sizeMd) */
+    --_gap: var(--spacing-sm, 0.75rem);
+
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    justify-content: flex-start;
+    gap: var(--_gap);
     flex-wrap: wrap;
-    /* allow wrapping on narrow widths */
+    inline-size: 100%;
+    color: var(--pkg-text, var(--text-primary));
+    text-wrap: pretty;
+
+    /* Let children (Buttons) scale by container width, not viewport */
+    container-type: inline-size;
+
+    /* Avoid accidental overflow when nested in tight grids */
+    min-inline-size: 0;
 }
 
-/* alignment helpers */
+/* Alignment helpers ------------------------------------------------------ */
 .alignStart {
     justify-content: flex-start;
+    text-align: start;
 }
 
 .alignCenter {
     justify-content: center;
+    text-align: center;
 }
 
 .alignEnd {
     justify-content: flex-end;
+    text-align: end;
 }
 
-/* density helpers (optional) */
+/* Density helpers -------------------------------------------------------- */
 .sizeSm {
-    gap: 0.5rem;
+    --_gap: var(--spacing-xs, 0.5rem);
 }
 
 .sizeMd {
-    gap: 0.75rem;
+    --_gap: var(--spacing-sm, 0.75rem);
 }
 
-/* stretch buttons to full width when container is narrow */
-@media (max-width: 560px) {
+/* Button children (via Button atom → .btn class) ------------------------- */
+.row> :global(.btn) {
+    /* Ensure consistent min sizing but allow compression in tight spaces */
+    min-inline-size: clamp(9.5rem, 28cqi, 12.5rem);
+    inline-size: auto;
+    flex: 0 1 auto;
+    text-align: center;
+}
+
+/* Prefer accent for primary and outline for secondary; no overrides needed.
+   But allow local theming via CSS custom props if desired. */
+.row> :global(.btn.primary) {
+    /* Example: uncomment to nudge local hue
+     --btn-bg: var(--accent-primary, #0EAFFB); */
+}
+
+.row> :global(.btn.secondary) {
+    /* Example: local outline strength
+     --btn-bg: var(--accent-primary, #0EAFFB); */
+}
+
+/* Compact stack on very narrow containers -------------------------------- */
+@container (max-width: 36rem) {
     .row {
-        gap: 0.6rem;
+        gap: var(--spacing-xs, .5rem);
     }
 
-    .row :global(a),
-    .row :global(button) {
-        width: 100%;
+    .row> :global(.btn) {
+        min-inline-size: 100%;
+        inline-size: 100%;
+        flex-basis: 100%;
+    }
+}
+
+/* Wider containers: slightly increase affordance ------------------------- */
+@container (min-width: 48rem) {
+    .row {
+        gap: var(--spacing-md, 1rem);
+    }
+
+    .row> :global(.btn) {
+        min-inline-size: clamp(10rem, 22cqi, 14rem);
+    }
+}
+
+/* Viewport fallback when container queries aren’t supported -------------- */
+@media (max-width: 560px) {
+    .row {
+        gap: var(--spacing-xs, .6rem);
+    }
+
+    .row :global(.btn) {
+        inline-size: 100%;
+    }
+}
+
+/* Safe areas (iOS) — helpful if CTAs sit near the bottom on mobile ------- */
+@supports (padding: max(0px)) {
+    .row {
+        padding-inline: max(0px, env(safe-area-inset-left));
+    }
+}
+
+/* High-contrast / forced colors ------------------------------------------ */
+@media (forced-colors: active) {
+    .row> :global(.btn) {
+        /* Let OS manage button contrasts; avoid extra shadows/borders here */
+        box-shadow: none;
+    }
+}
+
+/* Motion/accessibility ---------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+    .row * {
+        transition: none !important;
+    }
+}
+
+/* Print: avoid excessive spacing / full-width buttons -------------------- */
+@media print {
+    .row {
+        gap: .4rem;
+    }
+
+    .row> :global(.btn) {
+        min-inline-size: auto;
+        inline-size: auto;
+        box-shadow: none !important;
     }
 }
