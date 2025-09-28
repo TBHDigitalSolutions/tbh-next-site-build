@@ -6,7 +6,6 @@ import styles from "./PackageDetailOverview.module.css";
 
 /* Types from shared UI */
 import type { Money } from "@/components/ui/molecules/PriceLabel";
-import type { OutcomeItem } from "@/components/ui/molecules/OutcomeList";
 import type { ServiceSlug } from "@/components/ui/molecules/ServiceChip";
 
 /* Types from package components */
@@ -23,8 +22,15 @@ import PriceTeaser from "./parts/PriceTeaser";
 import CTARow from "./parts/CTARow";
 import StickyRail from "./parts/StickyRail";
 
-/* Fallback table renderer (used when groups aren't provided) */
+/* Fallback table renderer (used only when groups aren't provided) */
 import PackageIncludesTable from "@/packages/components/PackageIncludesTable";
+
+/* Highlights now live on the left since the pinned card is compact */
+import { FeatureList } from "@/components/ui/molecules/FeatureList";
+import Divider from "@/components/ui/atoms/Divider/Divider";
+
+/* Optional extras (timeline, ethics, etc.) rendered at the end of the left stack */
+import PackageDetailExtras from "@/packages/sections/PackageDetailExtras";
 
 /* -------------------------------------------------------------------------- */
 /*                                   TYPES                                    */
@@ -50,7 +56,6 @@ export type PackageDetailOverviewProps = {
 
   /** Optional explicit teaser; otherwise we derive from `packagePrice` */
   priceTeaser?: { label?: string; price?: Money; notes?: string };
-
   /** Fallback Money used for teaser when priceTeaser not provided */
   packagePrice?: Money;
 
@@ -58,27 +63,39 @@ export type PackageDetailOverviewProps = {
   ctaPrimary?: CTA;
   ctaSecondary?: CTA;
 
-  /** Outcomes (short bullets) */
-  outcomes?: Array<string | OutcomeItem>;
+  /** Highlights (features). If omitted, we derive top 4–6 from includesGroups. */
+  features?: string[];
+
+  /** Outcomes (short bullets) — strings or objects with `{ label }` */
+  outcomes?: Array<string | { label?: string }>;
 
   /**
-   * What’s included:
-   * Prefer authoring as grouped bullets (UI adapts to {columns,rows} via IncludesFromGroups).
-   * If only a pre-built table is available, pass `includesTable` as a fallback.
+   * What’s included (SSOT):
+   * Prefer `includesGroups` sourced from base.ts (Array<{ title, items }>)
+   * If you truly only have a matrix/table, `includesTable` is supported as a fallback.
    */
   includesGroups?: IncludesGroup[];
   includesTable?: PackageIncludesTableProps;
 
-  /** Optional heading/caption/spacing for the includes section */
-  includesTitle?: string;
-  includesCaption?: string; // default "What’s included"
-  includesCompact?: boolean;
+  /** Includes section heading + optional helper text */
+  includesTitle?: string;          // e.g., "What’s included"
+  includesCaption?: string;        // short helper text under the section title
 
-  /** The package card that was clicked on the hub page (rendered sticky, top-right) */
+  /** Includes visual knobs (pass-through to IncludesFromGroups) */
+  includesVariant?: "cards" | "list"; // default "cards"
+  includesMaxCols?: 2 | 3;            // clamp for auto-fit layout
+  includesDense?: boolean;            // tighter spacing for long lists
+  includesShowIcons?: boolean;        // default true
+  includesFootnote?: React.ReactNode; // small print specific to includes
+
+  /** Sticky right-rail: the card the user clicked on */
   pinnedPackageCard: PackageCardProps;
 
-  /** Optional notes under the includes section (assumptions/terms) */
+  /** Optional page-level notes under the includes section (assumptions/terms) */
   notes?: React.ReactNode;
+
+  /** Optional extras under CTAs (timeline, ethics, requirements…) */
+  extras?: React.ComponentProps<typeof PackageDetailExtras>;
 
   /** Style hooks */
   className?: string;
@@ -102,24 +119,45 @@ export default function PackageDetailOverview({
   packagePrice,
   ctaPrimary,
   ctaSecondary,
+  features,
   outcomes = [],
   includesGroups,
   includesTable,
   includesTitle,
-  includesCaption = "What’s included",
-  includesCompact = false,
+  includesCaption,
+  includesVariant = "cards",   // default to CARDS for single-package details
+  includesMaxCols = 2,
+  includesDense = false,
+  includesShowIcons = true,
+  includesFootnote,
   pinnedPackageCard,
   notes,
+  extras,
   className,
   style,
 }: PackageDetailOverviewProps) {
+  /* ------------------------------- Pricing -------------------------------- */
   const teaserPrice = priceTeaser?.price ?? packagePrice;
   const teaserLabel = priceTeaser?.label ?? (teaserPrice ? "Starting at" : undefined);
   const teaserNotes = priceTeaser?.notes;
 
+  /* ----------------------------- Includes data ---------------------------- */
   const hasGroups = (includesGroups?.length ?? 0) > 0;
-  const hasTable = !!includesTable && (includesTable.rows?.length ?? 0) > 0;
+  const hasTable =
+    !!includesTable && (Array.isArray(includesTable.rows) ? includesTable.rows.length > 0 : true);
 
+  /* --------------------------- Derived highlights ------------------------- */
+  const derivedHighlights: string[] = React.useMemo(() => {
+    if (features?.length) return features;
+    if (!hasGroups) return [];
+    // Flatten all include bullets → take first 4–6 for concise highlights
+    const flat = (includesGroups ?? []).flatMap((g) =>
+      (g.items ?? []).map((it: any) => (typeof it === "string" ? it : it?.label ?? "")),
+    );
+    return flat.filter(Boolean).slice(0, 6);
+  }, [features, hasGroups, includesGroups]);
+
+  /* -------------------------------- Render -------------------------------- */
   return (
     <section
       id={id}
@@ -131,9 +169,6 @@ export default function PackageDetailOverview({
       <div className={styles.grid}>
         {/* =============================== LEFT =============================== */}
         <div className={styles.left}>
-          {/* Meta chips (service + tags) */}
-          <MetaRow service={service} tags={tags} show={showMeta} />
-
           {/* Title + value prop + (optional) description + ICP */}
           <TitleBlock
             id={id ? `${id}__title` : undefined}
@@ -143,39 +178,89 @@ export default function PackageDetailOverview({
             icp={icp}
           />
 
-          {/* Outcomes */}
-          <OutcomesBlock outcomes={outcomes} className={styles.outcomes} />
+          {/* Meta chips (service + tags) */}
+          <MetaRow service={service} tags={tags} show={showMeta} />
 
-          {/* What’s included */}
+          {/* -------------------------- Highlights --------------------------- */}
+          {derivedHighlights.length > 0 && (
+            <section className={styles.block} aria-labelledby={`${id ?? title}-highlights`}>
+              <h2 id={`${id ?? title}-highlights`} className={styles.blockTitle}>
+                Highlights
+              </h2>
+              <Divider className={styles.blockDivider} />
+              <FeatureList
+                items={derivedHighlights.map((f, i) => ({ id: `hl-${i}`, label: f }))}
+                size="md"
+                ariaLabel="Key highlights"
+              />
+            </section>
+          )}
+
+          {/* --------------------------- Outcomes ---------------------------- */}
+          {(outcomes?.length ?? 0) > 0 && (
+            <section className={styles.block} aria-labelledby={`${id ?? title}-outcomes`}>
+              <h2 id={`${id ?? title}-outcomes`} className={styles.blockTitle}>
+                Outcomes you can expect
+              </h2>
+              <Divider className={styles.blockDivider} />
+              <OutcomesBlock
+                outcomes={outcomes}
+                className={styles.outcomes}
+                /* If your OutcomesBlock supports props like layout/columns, pass them here */
+              />
+            </section>
+          )}
+
+          {/* ------------------------ What’s included ------------------------ */}
           {hasGroups ? (
             <IncludesFromGroups
               packageName={title}
               groups={includesGroups!}
-              title={includesTitle ?? includesCaption}
+              title={includesTitle ?? "What’s included"}
               caption={includesCaption}
-              compact={includesCompact}
+              variant={includesVariant}         // "cards" | "list" (cards by default)
+              maxCols={includesMaxCols}         // clamp auto-fit columns (2 or 3)
+              dense={includesDense}
+              showIcons={includesShowIcons}
+              footnote={includesFootnote}
               ariaLabel="What's included"
+              data-testid="includes-from-groups"
             />
           ) : hasTable ? (
             <section className={styles.includes} aria-label="What's included">
-              <h2 className={styles.subhead}>{includesTitle ?? includesCaption}</h2>
+              <h2 className={styles.subhead}>{includesTitle ?? "What’s included"}</h2>
+              <Divider className={styles.blockDivider} />
               <PackageIncludesTable {...(includesTable as PackageIncludesTableProps)} />
+              {includesFootnote ? <p className={styles.includesFootnote}>{includesFootnote}</p> : null}
             </section>
           ) : null}
 
-          {/* Notes (small print) */}
+          {/* ------------------------------ Notes ---------------------------- */}
           <NotesBlock>{notes}</NotesBlock>
 
-          {/* Price teaser (derived from canonical Money) */}
+          {/* --------------------------- Price teaser ------------------------ */}
           <PriceTeaser price={teaserPrice} label={teaserLabel} notes={teaserNotes} />
 
-          {/* Primary actions */}
+          {/* ------------------------------ CTAs ----------------------------- */}
           <CTARow primary={ctaPrimary} secondary={ctaSecondary} />
+
+          {/* ------------------------------ Extras --------------------------- */}
+          {extras ? <PackageDetailExtras {...extras} /> : null}
         </div>
 
         {/* =============================== RIGHT ============================== */}
         <aside className={styles.right} aria-label="Selected package">
-          <StickyRail card={pinnedPackageCard} />
+          {/* True compact/pinned card — summary (clamped) + price punchline + CTAs */}
+          <StickyRail
+            card={{
+              ...pinnedPackageCard,
+              variant: "pinned-compact",
+              hideTags: true,
+              hideOutcomes: true,
+              hideIncludes: true,
+              descriptionMaxLines: 3,
+            }}
+          />
         </aside>
       </div>
     </section>

@@ -1,12 +1,13 @@
 /* src/packages/sections/PackageDetailOverview/parts/StickyRail/StickyRail.module.css
+/* src/packages/sections/PackageDetailOverview/parts/StickyRail/StickyRail.module.css
    Brand-aligned sticky right rail for Package detail pages.
 
    Consumes tokens from unified theme:
-   - --header-offset, --z-sticky
-   - supports override via style prop: --sticky-top (set by TSX)
+   - --header-offset, --z-sticky, --radius-xl, --accent-500, --surface-charcoal, shadows, etc.
+   - You can override the top offset via the style prop: --sticky-top
 */
 
-/* Sticky container -------------------------------------------------------- */
+/* -------------------------- Sticky container ---------------------------- */
 .wrap {
     /* Compute an effective top that respects header + safe areas */
     --_sticky-top: calc(var(--sticky-top, var(--header-offset, 1rem)) + env(safe-area-inset-top, 0px));
@@ -33,11 +34,10 @@
     color: inherit;
 }
 
-/* Shell: creates a query container for the inner card -------------------- */
+/* ----------------------------- Shell ----------------------------------- */
+/* Creates a query container for the inner card and keeps layout fluid */
 .shell {
     display: block;
-
-    /* Allow inner components (e.g., PackageCard/Frame) to scale with container width */
     container-type: inline-size;
 
     /* Logical margins to align with main content rhythm when needed */
@@ -45,7 +45,28 @@
     margin-inline: 0;
 }
 
-/* Fallbacks & feature detection ------------------------------------------ */
+/* ------------------------- Card frame visuals --------------------------- */
+.cardFrame {
+    /* “card on gradient” look */
+    background: var(--surface-charcoal, #12141e);
+    border: 1px solid var(--brand-accent, var(--accent-500, #0EAFFB));
+    border-radius: var(--radius-xl, 20px);
+    box-shadow: var(--shadow-lg, 0 20px 40px rgba(0, 0, 0, 0.35));
+    overflow: clip;
+
+    /* Ensure the card’s own frame uses tighter paddings nicely inside */
+    display: block;
+}
+
+/* Small visual nudge so the rail separates from the left column */
+@container (min-width: 62rem) {
+    .cardFrame {
+        transform: translateZ(0);
+        /* prevent blurring from sticky compositing */
+    }
+}
+
+/* --------------------------- Fallbacks ---------------------------------- */
 @supports not (position: sticky) {
     .wrap {
         position: static;
@@ -54,7 +75,7 @@
     }
 }
 
-/* Disable sticky on narrow viewports; let it flow in the document -------- */
+/* Disable sticky on narrow viewports; let it flow in the document */
 @media (max-width: 980px) {
     .wrap {
         position: static;
@@ -63,15 +84,20 @@
     }
 }
 
-/* High-contrast / forced colors ------------------------------------------ */
+/* ------------------------ Accessibility --------------------------------- */
 @media (forced-colors: active) {
     .wrap {
-        /* Ensure rail remains visible above content without adding chrome */
         border: none;
+    }
+
+    /* Ensure rail remains visible without extra chrome */
+    .cardFrame {
+        border-color: CanvasText;
+        box-shadow: none;
     }
 }
 
-/* Reduced motion: nothing animates here, but keep future-proof ----------- */
+/* ---------------------- Motion / Print hygiene -------------------------- */
 @media (prefers-reduced-motion: reduce) {
 
     .wrap,
@@ -80,7 +106,6 @@
     }
 }
 
-/* Print-friendly: rails should not be sticky on paper -------------------- */
 @media print {
     .wrap {
         position: static !important;

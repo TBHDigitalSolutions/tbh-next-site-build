@@ -98,6 +98,29 @@
     border-radius: var(--radius-sm, 6px);
 }
 
+/* ========================= Emphasis utility ============================= */
+/* Apply to NotesBlock root via className to increase readability */
+.notesEmphasis {
+    /* Prefer bumping the body variables so all descendants scale coherently */
+    --font-size-body: clamp(0.95rem, 0.92rem + 0.3vw, 1.05rem);
+    --line-height-body: 1.6;
+    /* Nudge overall text color for better contrast within the block */
+    --pkg-text: var(--text-primary, #e9eef2);
+}
+
+.notesEmphasis .text {
+    /* Ensure the paragraph class picks up the emphasis sizing/contrast */
+    font-size: var(--font-size-body);
+    line-height: var(--line-height-body);
+    color: var(--text-secondary, var(--pkg-text, #e9eef2));
+}
+
+.notesEmphasis .content :is(p, small, li) {
+    font-size: var(--font-size-body);
+    line-height: var(--line-height-body);
+    color: var(--text-secondary, var(--pkg-text, #e9eef2));
+}
+
 /* ------------------------ Modern responsiveness ------------------------- */
 /* Container queries scale within the surrounding column/card */
 @container (min-width: 520px) {
@@ -125,6 +148,11 @@
 
     .text {
         font-size: clamp(0.95rem, 1.6vw + 0.85rem, 1.0625rem);
+    }
+
+    .notesEmphasis .text,
+    .notesEmphasis .content :is(p, small, li) {
+        font-size: clamp(1rem, 1.8vw + 0.9rem, 1.125rem);
     }
 }
 

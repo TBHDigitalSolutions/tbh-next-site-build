@@ -1,4 +1,5 @@
 // src/packages/sections/PackageDetailOverview/parts/TitleBlock/TitleBlock.tsx
+// src/packages/sections/PackageDetailOverview/parts/TitleBlock/TitleBlock.tsx
 "use client";
 
 import * as React from "react";
@@ -21,8 +22,15 @@ export type TitleBlockProps = {
   /** Longer descriptive paragraph (optional) */
   description?: React.ReactNode;
 
-  /** Audience line; renders as “For: …” when provided (optional) */
-  icp?: string;
+  /** ICP body text (audience); when present we render the “Ideal for” block */
+  icp?: React.ReactNode;
+
+  /**
+   * Optional ICP header label and an optional extra line/paragraph
+   * to elaborate on the audience fit beneath the ICP line.
+   */
+  icpTitle?: string;                // default: "Ideal for"
+  icpDescription?: React.ReactNode; // optional second paragraph
 
   /** Show a divider beneath the title (brand rule) */
   showDivider?: boolean; // default: true
@@ -42,6 +50,8 @@ export default function TitleBlock({
   valueProp,
   description,
   icp,
+  icpTitle = "Ideal for",
+  icpDescription,
   showDivider = true,
   align = "start",
   className,
@@ -49,7 +59,6 @@ export default function TitleBlock({
   "data-testid": testId = "title-block",
 }: TitleBlockProps) {
   const Heading = as as keyof JSX.IntrinsicElements;
-
   const alignClass =
     align === "center" ? styles.alignCenter : align === "end" ? styles.alignEnd : styles.alignStart;
 
@@ -72,10 +81,16 @@ export default function TitleBlock({
 
       {description ? <p className={styles.description}>{description}</p> : null}
 
-      {icp ? (
-        <p className={styles.icp}>
-          <strong>For:</strong> {icp}
-        </p>
+      {/* ICP block: header + divider + body (+ optional extra description) */}
+      {(icp || icpDescription) ? (
+        <section className={styles.block} aria-labelledby={id ? `${id}__icp` : undefined}>
+          <h3 className={styles.blockTitle} id={id ? `${id}__icp` : undefined}>
+            {icpTitle}
+          </h3>
+          <Divider className={styles.blockDivider} />
+          {icp ? <p className={styles.icp}>{icp}</p> : null}
+          {icpDescription ? <p className={styles.icpDesc}>{icpDescription}</p> : null}
+        </section>
       ) : null}
     </header>
   );

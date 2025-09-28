@@ -1,161 +1,286 @@
 /* src/packages/sections/PackageDetailOverview/parts/IncludesFromGroups/IncludesFromGroups.module.css
-   Brand-aligned, responsive, container-query enhanced.
-
-   Consumes tokens from packages-unified.module.css → unified-theme.css/root.css.
-   TSX uses: wrap, heading, compact, deliverables, deliverablesHeading, deliverablesList
+   Brand-aligned, responsive, production-ready.
+   Depends on: packages-unified.module.css (theme island)
+               unified-theme.css (design tokens)
 */
 
-/* Root layout ------------------------------------------------------------- */
+/* ---------------------------
+   Section & header
+---------------------------- */
 .wrap {
-    display: grid;
-    gap: var(--spacing-sm, 0.75rem);
-    margin-top: var(--spacing-md, 1rem);
+    display: block;
     color: var(--pkg-text, var(--text-primary));
-    text-wrap: pretty;
-    max-inline-size: 80ch;
-    /* readable line length */
-    margin-inline: auto;
     container-type: inline-size;
-    /* enable container queries */
+    /* enable container queries if supported */
 }
 
-/* Compact spacing variant (prop: compact) -------------------------------- */
-.compact {
-    gap: var(--spacing-xs, 0.5rem);
-    margin-top: var(--spacing-sm, 0.75rem);
+.header {
+    margin-block: var(--spacing-sm, 0.75rem) var(--spacing-xs, 0.5rem);
 }
 
-/* Section heading --------------------------------------------------------- */
 .heading {
-    margin: 0;
-    font-family: var(--font-heading, Aldrich, sans-serif);
-    font-weight: var(--font-weight-extrabold, 800);
+    font-family: var(--font-heading);
+    font-weight: 650;
+    font-size: var(--font-size-xl, 1.25rem);
     line-height: 1.2;
-    letter-spacing: 0.2px;
-    /* Brand: headings lean into the accent */
-    color: var(--text-accent, var(--pkg-text-accent, var(--brand-blue, #0EAFFB)));
-    font-size: var(--font-size-h4, clamp(1.125rem, 0.8vw + 1rem, 1.375rem));
+    margin: 0 0 var(--spacing-xs, 0.5rem);
+    color: var(--pkg-title, var(--text-primary));
+    letter-spacing: 0.25px;
     text-wrap: balance;
 }
 
-/* Divider spacing (works with Divider atom or plain <hr>) ----------------- */
-.wrap> :is(hr, .divider) {
-    margin: 0.15rem 0 0.35rem 0;
+/* Center utility used by heading + divider when headerAlign="center" */
+.center {
+    text-align: center;
+    margin-inline: auto;
+    display: block;
+}
+
+.caption {
+    margin: 0;
+    color: var(--pkg-text-muted, var(--text-secondary, #c8ccd0));
+    font-size: var(--font-size-sm, 0.95rem);
+}
+
+/* Divider placement under header */
+.headerDivider {
+    margin-block: var(--spacing-sm, 0.75rem) var(--spacing-sm, 0.75rem);
+    opacity: .8;
+}
+
+/* When centered, keep divider a pleasant width and centered */
+.headerDivider.center {
+    inline-size: min(220px, 40%);
+    margin-inline: auto;
+}
+
+/* ---------------------------
+   Cards grid (default variant)
+---------------------------- */
+.grid {
+    --card-min-w: 280px;
+    /* adjustable via container width */
+    --grid-gap: var(--spacing-md, 1rem);
+    display: grid;
+    gap: var(--grid-gap);
+}
+
+.gridAuto {
+    grid-template-columns: repeat(auto-fit, minmax(var(--card-min-w), 1fr));
+}
+
+/* Explicit column clamps if cols is provided */
+.cols2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.cols3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+/* Optional maxCols cap for auto-fit (limits overall grid width) */
+.maxCols2 {
+    max-inline-size: calc((2 * var(--card-min-w)) + var(--grid-gap));
+    margin-inline: auto;
+}
+
+.maxCols3 {
+    max-inline-size: calc((3 * var(--card-min-w)) + (2 * var(--grid-gap)));
+    margin-inline: auto;
+}
+
+/* Card surface */
+.card {
+    background: var(--pkg-card-bg, var(--pkg-surface, #1B1B1F));
+    /* charcoal */
+    color: var(--pkg-card-fg, var(--pkg-text));
+    border: 1px solid var(--pkg-card-border, var(--border-subtle, #2a2e35));
+    border-radius: var(--radius-lg, 12px);
+    box-shadow: var(--pkg-card-shadow-rest, var(--shadow-sm));
+    padding: clamp(12px, 2vw, 18px);
+    transition: box-shadow .2s ease, border-color .2s ease, transform .2s ease, background .2s ease;
+    will-change: transform;
+}
+
+.card:hover,
+.card:focus-within {
+    border-color: var(--pkg-card-border-hover, var(--border-strong, #3a3f46));
+    box-shadow: var(--pkg-card-shadow-hover, var(--shadow-lg));
+    background: var(--pkg-card-hover-bg, color-mix(in oklab, var(--pkg-surface) 92%, white));
+}
+
+/* Title inside card */
+.cardTitle {
+    margin: 0 0 8px;
+    font: 600 var(--font-size-base, 1rem)/1.3 var(--font-heading);
+    color: var(--pkg-card-title, var(--pkg-text));
+    letter-spacing: .2px;
+}
+
+/* Divider inside card */
+.cardDivider {
+    border: 0;
+    height: 1px;
+    background: var(--pkg-card-border, var(--border-subtle));
+    margin: 0 0 10px;
     inline-size: 100%;
 }
 
-/* Table spacing (PackageIncludesTable renders after the heading) ---------- */
-.wrap> :is(table, .package-includes-table, [data-component="package-includes-table"]) {
-    border-radius: var(--radius-md, 8px);
-    background: var(--pkg-table-bg, var(--bg-surface));
-    box-shadow: var(--shadow-xs, 0 1px 0 rgba(0, 0, 0, .08));
+/* Bullets inside card */
+.bullets {
+    list-style: none;
+    margin: 0;
+    padding: 0;
 }
 
-/* Deliverables block ------------------------------------------------------ */
+.bullet {
+    display: grid;
+    grid-template-columns: 18px 1fr;
+    align-items: start;
+    column-gap: 8px;
+    row-gap: 4px;
+    margin: 8px 0;
+}
+
+.noIcons .bullet,
+.noIcons .listItem {
+    grid-template-columns: 1fr !important;
+}
+
+.icon {
+    width: 16px;
+    height: 16px;
+    margin-top: 2px;
+    color: var(--pkg-brand, var(--brand-blue, #0EAFFB));
+    opacity: .9;
+}
+
+/* Item text + optional note */
+.text {
+    line-height: 1.45;
+}
+
+.note {
+    color: var(--pkg-card-muted, var(--text-secondary));
+    font-size: 0.92em;
+    letter-spacing: 0.1px;
+}
+
+/* ---------------------------
+   Lone last card centering (3 total groups → 2 cols on row 1, 1 centered on row 2)
+---------------------------- */
+.grid>.card:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+    justify-self: center;
+    max-inline-size: 560px;
+}
+
+/* ---------------------------
+   List variant (no card chrome)
+---------------------------- */
+.listWrap {
+    display: grid;
+    gap: var(--spacing-md, 1rem);
+}
+
+.listGroup {}
+
+.listTitle {
+    margin: 0 0 6px;
+    font: 600 var(--font-size-base, 1rem)/1.3 var(--font-heading);
+}
+
+.list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.listItem {
+    display: grid;
+    grid-template-columns: 18px 1fr;
+    align-items: start;
+    gap: 8px;
+    margin: 6px 0;
+}
+
+/* ---------------------------
+   Dense mode
+---------------------------- */
+.dense .card {
+    padding: clamp(10px, 1.5vw, 14px);
+}
+
+.dense .bullet {
+    margin: 6px 0;
+    row-gap: 2px;
+}
+
+.dense .listItem {
+    margin: 4px 0;
+}
+
+/* ---------------------------
+   Deliverables + footnote (optional)
+---------------------------- */
 .deliverables {
-    display: grid;
-    gap: var(--spacing-sm, 0.75rem);
-    margin-top: var(--spacing-sm, 0.75rem);
-    padding-top: var(--spacing-sm, 0.75rem);
+    margin-top: var(--spacing-lg, 1.5rem);
 }
 
-/* Optional “between sections” divider when title/table exists */
-.deliverables> :is(hr, .divider) {
-    margin: var(--spacing-xs, 0.5rem) 0;
-}
-
-/* Deliverables heading */
 .deliverablesHeading {
-    margin: 0;
-    font-family: var(--font-heading, Aldrich, sans-serif);
-    font-weight: var(--font-weight-extrabold, 800);
-    letter-spacing: 0.15px;
-    line-height: 1.2;
-    color: var(--text-accent, var(--pkg-text-accent, var(--brand-blue, #0EAFFB)));
-    font-size: clamp(1.05rem, 0.6vw + 0.9rem, 1.25rem);
+    font: 600 var(--font-size-base, 1rem)/1.3 var(--font-heading);
+    margin: 0 0 6px;
 }
 
-/* Deliverables list (brand markers + hanging bullets) --------------------- */
 .deliverablesList {
-    --_list-indent: 1.25em;
-    display: grid;
-    gap: var(--spacing-2xs, 0.25rem);
+    list-style: disc inside;
     margin: 0;
-    padding: 0 0 0 var(--_list-indent);
-    list-style: disc outside;
-    color: var(--text-secondary, var(--pkg-text-muted, #c9ced1));
-    font-family: var(--font-body, Newsreader, serif);
-    font-size: var(--font-size-body, clamp(0.98rem, 0.4vw + 0.9rem, 1.0625rem));
+    padding: 0;
+    color: var(--pkg-text, var(--text-primary));
 }
 
-.deliverablesList>li {
-    padding-inline-start: 0.15em;
+.footnote {
+    margin-top: var(--spacing-md, 1rem);
+    color: var(--pkg-text-muted, var(--text-secondary));
+    font-size: .95rem;
 }
 
-.deliverablesList>li::marker {
-    color: var(--brand-blue, var(--pkg-brand, #0EAFFB));
-}
-
-/* Density auto-tuning when compact + many items --------------------------- */
-.compact .deliverablesList {
-    gap: 0.2rem;
-}
-
-/* ------------------------ Modern responsiveness ------------------------- */
-/* Container queries: scale text within its layout container (not viewport) */
-@container (min-width: 520px) {
-    .heading {
-        font-size: var(--font-size-h3, clamp(1.25rem, 1.2cqi + 1rem, 1.6rem));
+/* ---------------------------
+   Responsive niceties
+---------------------------- */
+@media (max-width: 480px) {
+    .grid {
+        --card-min-w: 240px;
+        gap: var(--spacing-sm, .75rem);
     }
 
-    .deliverablesHeading {
-        font-size: clamp(1.1rem, 0.8cqi + 0.95rem, 1.35rem);
+    .bullet {
+        margin: 6px 0;
     }
 }
 
-@container (min-width: 840px) {
-    .wrap {
-        gap: var(--spacing-md, 1rem);
-    }
-
-    .heading {
-        font-size: var(--font-size-h2, clamp(1.4rem, 1.4cqi + 1.1rem, 1.9rem));
-    }
-
-    .deliverablesHeading {
-        font-size: clamp(1.15rem, 0.9cqi + 1rem, 1.45rem);
-    }
-
-    .deliverablesList {
-        font-size: clamp(1rem, 0.5cqi + 0.95rem, 1.125rem);
+/* Container queries when supported */
+@container (min-width: 720px) {
+    .grid {
+        --card-min-w: 300px;
     }
 }
 
-/* Viewport fallback when container queries unsupported -------------------- */
-@media (max-width: 640px) {
-    .wrap {
-        gap: var(--spacing-xs, 0.5rem);
-    }
-
-    .deliverablesList {
-        font-size: clamp(0.95rem, 1.6vw + 0.8rem, 1.05rem);
-    }
-}
-
-/* Motion/accessibility ---------------------------------------------------- */
+/* Reduce motion preference */
 @media (prefers-reduced-motion: reduce) {
-    .wrap * {
-        transition: none !important;
+    .card {
+        transition: none;
     }
 }
 
-/* Print-safe tweaks ------------------------------------------------------- */
+/* Print */
 @media print {
-    .wrap {
-        max-inline-size: none;
+    .card {
+        break-inside: avoid;
+        box-shadow: none;
     }
 
-    .deliverables {
-        break-inside: avoid;
+    .grid {
+        gap: 12px;
     }
 }

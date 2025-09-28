@@ -27,6 +27,8 @@ export type ServiceSlug = React.ComponentProps<typeof ServiceChip>["service"];
 /** @deprecated Prefer the canonical Money shape on `price` */
 export type LegacyPrice = { setup?: number; monthly?: number; currency?: string };
 
+export type PackageCardVariant = "default" | "rail" | "pinned-compact";
+
 export type PackageCardProps = {
   id?: string;
   slug?: string;
@@ -35,8 +37,14 @@ export type PackageCardProps = {
 
   name?: string;
   title?: string;
-  description?: string;
+
+  /** Short body text shown on the card (preferred) */
   summary?: string;
+
+  /** Fallback if no summary is provided */
+  description?: string;
+
+  /** Highlights (top 5 shown); falls back to `highlights` */
   features?: string[];
   highlights?: string[];
 
@@ -47,6 +55,7 @@ export type PackageCardProps = {
 
   image?: { src: string; alt?: string } | null;
 
+  /** Canonical Money (SSOT) or legacy */
   price?: PriceMoney | LegacyPrice;
 
   tags?: string[];
@@ -58,11 +67,21 @@ export type PackageCardProps = {
 
   className?: string;
   highlight?: boolean;
-  variant?: "default" | "rail";
 
+  /** Visual layout */
+  variant?: PackageCardVariant;
+
+  /** Loading state */
   isLoading?: boolean;
 
   analyticsCategory?: string;
+
+  /** Compact content controls (useful beyond pinned-compact) */
+  hideTags?: boolean;
+  hideOutcomes?: boolean;   // reserved for parity with other surfaces
+  hideIncludes?: boolean;   // hides the features list
+  /** Clamp summary/description lines (e.g., 2 or 3); default 3 for pinned-compact */
+  descriptionMaxLines?: number;
 };
 
 /* --------------------------------- Utils ---------------------------------- */
@@ -92,8 +111,9 @@ export default function PackageCard(props: PackageCardProps) {
 
     name,
     title,
-    description,
+
     summary,
+    description,
     features,
     highlights,
 
@@ -118,11 +138,23 @@ export default function PackageCard(props: PackageCardProps) {
     isLoading = false,
 
     analyticsCategory = "packages",
+
+    // compact controls
+    hideTags,
+    hideOutcomes, // reserved
+    hideIncludes,
+    descriptionMaxLines,
   } = props;
+
+  // Variant/compact decisions
+  const isPinnedCompact = variant === "pinned-compact";
+  const shouldHideTags = isPinnedCompact || !!hideTags;
+  const shouldHideIncludes = isPinnedCompact || !!hideIncludes;
+  const clampedLines = isPinnedCompact ? (descriptionMaxLines ?? 3) : descriptionMaxLines;
 
   // Display strings
   const displayTitle = name ?? title ?? "Untitled package";
-  // ↓↓↓ Reverse precedence so cards favor the short summary
+  // Prefer SUMMARY for card body
   const displayDesc = (summary && summary.trim()) ? summary : (description ?? "");
   const displayFeatures = (features && features.length ? features : highlights) ?? [];
   const shown = displayFeatures.slice(0, 5);
@@ -164,12 +196,19 @@ export default function PackageCard(props: PackageCardProps) {
     secondaryCta?.onClick?.(slug);
   }, [fire, secondaryCta, slug]);
 
+  // Clamp class helper (expects CSS utilities like .clamp2, .clamp3, …)
+  const clampClass =
+    clampedLines && clampedLines >= 1 && clampedLines <= 5
+      ? (cls as Record<string, string>)[`clamp${clampedLines}`]
+      : "";
+
   return (
     <PackageCardFrame
       className={cx(
         cls.card,
         highlight && cls.cardHighlight,
         variant === "rail" && cls.cardRail,
+        isPinnedCompact && cls.cardPinned, // optional: style hook for pinned compact
         className,
       )}
       height="stretch"
@@ -211,8 +250,12 @@ export default function PackageCard(props: PackageCardProps) {
         </div>
       </header>
 
-      {/* Description */}
-      {displayDesc && <p className={cls.description}>{displayDesc}</p>}
+      {/* Body text (summary preferred) */}
+      {displayDesc && (
+        <p className={cx(cls.description, clampClass)}>
+          {displayDesc}
+        </p>
+      )}
 
       {/* Value (teaser + quick highlights) */}
       <div className={cls.value}>
@@ -222,7 +265,8 @@ export default function PackageCard(props: PackageCardProps) {
           </div>
         )}
 
-        {shown.length > 0 && (
+        {/* Highlights/Includes — hidden for pinned-compact by default */}
+        {!shouldHideIncludes && shown.length > 0 && (
           <div className={cls.features}>
             <FeatureList items={shown.map((f, i) => ({ id: `f-${i}`, label: f }))} size="sm" />
             {remaining > 0 && (
@@ -234,8 +278,8 @@ export default function PackageCard(props: PackageCardProps) {
         )}
       </div>
 
-      {/* Detailed price chip */}
-      {money && (
+      {/* Detailed price chip — hidden for pinned-compact to reduce duplication */}
+      {!isPinnedCompact && money && (
         <div className={cls.prices}>
           <div className={cls.priceChip}>
             <PriceLabel price={money} />
@@ -243,14 +287,15 @@ export default function PackageCard(props: PackageCardProps) {
         </div>
       )}
 
-      {/* Tags */}
-      {tags && tags.length > 0 ? (
+      {/* Tags — hidden for pinned-compact by default */}
+      {!shouldHideTags && tags && tags.length > 0 ? (
         <div className={cls.tagsWrap}>
           <TagChips tags={tags} />
         </div>
       ) : null}
 
-      <Divider />
+      {/* Divider — optional; keep it out of the way on pinned-compact */}
+      {!isPinnedCompact && <Divider />}
 
       {/* Actions */}
       <div className={cls.actions}>

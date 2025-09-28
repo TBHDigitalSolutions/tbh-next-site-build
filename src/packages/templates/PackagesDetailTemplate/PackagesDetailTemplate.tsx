@@ -8,6 +8,8 @@
      and FAQ with consistent containers.
    - Important fixes included:
      • Pass `description` to PackageDetailOverview → TitleBlock.
+     • Pass `includesGroups={bundle.includes}` (SSOT) to PackageDetailOverview.
+     • Keep table fallback for legacy/matrix includes (will be removed later).
      • Normalize authored FAQs (supports both legacy `faq.faqs` and flat `faqs`).
      • Use FullWidthSection wrappers with requested container sizing.
 ============================================================================= */
@@ -61,7 +63,7 @@ export type PackagesDetailTemplateProps = {
 
     /** Content collections */
     outcomes?: Array<string | { label: string }>;
-    includes?: Array<{ title: string; items: string[] }>;
+    includes?: Array<{ title: string; items: (string | { label: string; note?: string })[] }>;
     notes?: string;
 
     /** FAQ — support both legacy and flat shapes */
@@ -116,7 +118,7 @@ export default function PackagesDetailTemplate({
   const hasAddOns = (addOns?.length ?? 0) > 0;
   const hasRelated = (related?.length ?? 0) > 0;
 
-  // Build a 1-column "What's included" table from grouped bullets
+  // Build a simple one-column "What's included" table from grouped bullets (fallback only)
   const includesTable: PackageIncludesTableProps | undefined = React.useMemo(() => {
     const groups = (bundle as any).includes as Array<{ title: string; items: string[] }> | undefined;
     if (!groups?.length) return undefined;
@@ -125,7 +127,7 @@ export default function PackagesDetailTemplate({
       groups.flatMap((group) =>
         (group.items ?? []).map((item, i) => ({
           id: `${group.title.toLowerCase().replace(/\s+/g, "-")}-${i}`,
-          label: `${group.title} — ${item}`,
+          label: `${group.title} — ${typeof item === "string" ? item : (item as any)?.label ?? ""}`,
           values: { pkg: true }, // single checkmark column
         })),
       ) ?? [];
@@ -164,7 +166,7 @@ export default function PackagesDetailTemplate({
   // CTA band subtitle derived from canonical price
   const priceSubtitle = bundle.price ? startingAtLabel(bundle.price as any) : undefined;
 
-  // Outcomes normalized (strings → {label})
+  // Outcomes normalized (strings → {label} → string[])
   const outcomes: string[] =
     (bundle as any).outcomes?.map((o: any) => (typeof o === "string" ? o : o?.label)).filter(Boolean) ?? [];
 
@@ -218,31 +220,48 @@ export default function PackagesDetailTemplate({
       <FullWidthSection
         aria-label="Package details at a glance"
         containerSize="wide"
-        containerSpacing="sm"
+        containerSpacing="none"
         className={styles.overviewSection}
       >
         <PackageDetailOverview
           id={bundle.slug}
           title={heroTitle}
           valueProp={heroSubtitle}
-          description={(bundle as any).description}  //* pass long blurb to TitleBlock 
+          description={(bundle as any).description}  // long blurb into TitleBlock
           icp={(bundle as any).icp}
-          /* De-dup meta: let the HERO show service/tags; hide in overview */
+
+          /* De-dup meta: let the HERO show chips; hide them in overview */
           service={undefined as any}
           tags={undefined}
           showMeta={false}
+
           /* Canonical price only (renderer derives “Starting at …”) */
           packagePrice={(bundle as any).price}
-          /* CTAs */
-          ctaPrimary={sectionPrimaryCta}
-          ctaSecondary={sectionSecondaryCta}
+
+          /* CTAs (policy standard for detail pages) */
+          ctaPrimary={sectionPrimaryCta}       // "Request proposal" → /contact
+          ctaSecondary={sectionSecondaryCta}   // "Book a call" → /book
+
           /* Outcomes & Includes */
           outcomes={outcomes}
+
+          /* ✅ NEW: Pass SSOT groups directly from base.ts */
+          includesGroups={(bundle as any).includes}
+          includesTitle="What’s included"
+          includesVariant="cards"              // default; explicit for clarity
+          includesMaxCols={2}                  // two-up grid on desktop (“boom, boom”)
+          includesDense={false}
+          includesShowIcons
+          includesFootnote={(bundle as any).notes}
+
+          /* Optional fallback table (legacy/matrix cases) */
           includesTable={(includesTable as any) ?? emptyIncludes}
+
           /* Right sticky card */
           pinnedPackageCard={pinnedCard as any}
-          /* Notes (plain text allowed) */
-          notes={(bundle as any).notes}
+
+          /* Page-level notes (if you choose to keep a separate NotesBlock) */
+          notes={undefined}
         />
       </FullWidthSection>
 
@@ -342,7 +361,7 @@ export default function PackagesDetailTemplate({
               <FAQSection
                 id="bundle-faq"
                 title={title}
-                faqs={list}                 // NOTE: FAQSection expects `faqs`, not `items` 
+                faqs={list}                 // FAQSection expects `faqs`
                 variant="default"
                 allowMultiple={false}
                 enableSearch={true}

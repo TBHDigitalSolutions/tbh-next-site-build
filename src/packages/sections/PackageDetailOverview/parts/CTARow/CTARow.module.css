@@ -1,6 +1,4 @@
-/* src/packages/sections/PackageDetailOverview/parts/CTARow/CTARow.module.css
-   Brand-aligned CTA row using the shared Button atom.
-
+/* Brand-aligned CTA row using the shared Button atom.
    Consumes tokens from packages-unified.module.css → unified-theme.css/root.css.
    TSX contract: row, alignStart|alignCenter|alignEnd, sizeSm|sizeMd
 */
@@ -60,22 +58,21 @@
     text-align: center;
 }
 
-/* Prefer accent for primary and outline for secondary; no overrides needed.
-   But allow local theming via CSS custom props if desired. */
+/* Prefer accent for primary and outline for secondary; theme controls colors */
 .row> :global(.btn.primary) {
-    /* Example: uncomment to nudge local hue
-     --btn-bg: var(--accent-primary, #0EAFFB); */
+    /* Example: uncomment to locally tweak hue/intensity
+   --btn-bg: var(--accent-primary, #0EAFFB); */
 }
 
 .row> :global(.btn.secondary) {
     /* Example: local outline strength
-     --btn-bg: var(--accent-primary, #0EAFFB); */
+   --btn-border: color-mix(in oklab, var(--accent-primary, #0EAFFB) 40%, black); */
 }
 
 /* Compact stack on very narrow containers -------------------------------- */
 @container (max-width: 36rem) {
     .row {
-        gap: var(--spacing-xs, .5rem);
+        gap: var(--spacing-xs, 0.5rem);
     }
 
     .row> :global(.btn) {
@@ -99,7 +96,7 @@
 /* Viewport fallback when container queries aren’t supported -------------- */
 @media (max-width: 560px) {
     .row {
-        gap: var(--spacing-xs, .6rem);
+        gap: var(--spacing-xs, 0.6rem);
     }
 
     .row :global(.btn) {
@@ -132,7 +129,7 @@
 /* Print: avoid excessive spacing / full-width buttons -------------------- */
 @media print {
     .row {
-        gap: .4rem;
+        gap: 0.4rem;
     }
 
     .row> :global(.btn) {

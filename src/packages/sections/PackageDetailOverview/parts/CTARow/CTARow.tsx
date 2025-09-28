@@ -26,7 +26,7 @@ export type CTARowProps = {
   className?: string;
   style?: React.CSSProperties;
 
-  /** Optional analytics hook (spread on the wrapper) */
+  /** Optional analytics hook (adds data-* attributes) */
   analytics?: {
     category?: string;
     action?: string;
@@ -36,9 +36,9 @@ export type CTARowProps = {
 
 /**
  * CTARow — standardized CTA pair using the shared Button atom.
- * - Never renders raw <a>/<button>; always uses Button (asChild).
- * - Mobile-first: CTAs stack to full width <560px.
- * - Accessibility: grouped with aria-label; each link gets a descriptive aria-label.
+ * - Primary uses variant="primary" (accent-blue bg, off-white text per theme).
+ * - Secondary uses variant="secondary".
+ * - Mobile-first: CTAs stack full-width at narrow container widths (CSS).
  */
 export default function CTARow({
   primary,
@@ -72,18 +72,24 @@ export default function CTARow({
         : {})}
     >
       {primary ? (
-        <Button asChild variant="primary" data-testid={`${testId}__primary`}>
-          <a href={primary.href} aria-label={primary.ariaLabel ?? primary.label}>
-            {primary.label}
-          </a>
+        <Button
+          href={primary.href}
+          variant="primary"
+          ariaLabel={primary.ariaLabel ?? primary.label}
+          data-testid={`${testId}__primary`}
+        >
+          {primary.label}
         </Button>
       ) : null}
 
       {secondary ? (
-        <Button asChild variant="secondary" data-testid={`${testId}__secondary`}>
-          <a href={secondary.href} aria-label={secondary.ariaLabel ?? secondary.label}>
-            {secondary.label}
-          </a>
+        <Button
+          href={secondary.href}
+          variant="secondary"
+          ariaLabel={secondary.ariaLabel ?? secondary.label}
+          data-testid={`${testId}__secondary`}
+        >
+          {secondary.label}
         </Button>
       ) : null}
     </div>
