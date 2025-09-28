@@ -30,6 +30,44 @@
 
     /* Let the list scale with the surrounding column/card */
     container-type: inline-size;
+
+    /* Alignment controls (set via data-* for zero-specificity override) */
+    justify-items: start;
+    /* default */
+}
+
+.root[data-align="center"] {
+    justify-items: center;
+}
+
+.root[data-align="end"] {
+    justify-items: end;
+}
+
+/* Text alignment controls (labels + notes) */
+.root[data-text="left"] .content {
+    text-align: left;
+}
+
+.root[data-text="center"] .content {
+    text-align: center;
+}
+
+.root[data-text="right"] .content {
+    text-align: right;
+}
+
+/* Also align inline-flex label row to match text intent */
+.root[data-text="left"] .label {
+    justify-content: flex-start;
+}
+
+.root[data-text="center"] .label {
+    justify-content: center;
+}
+
+.root[data-text="right"] .label {
+    justify-content: flex-end;
 }
 
 /* ============================== DENSITY ================================ */
@@ -56,7 +94,7 @@
     /* avoid overflow in tight grids */
 }
 
-/* Icon cell --------------------------------------------------------------- */
+/* Icon cell -------------------------------------------------------------- */
 .iconWrap {
     line-height: 1;
     inline-size: var(--_icon-col, 1.25rem);
@@ -72,7 +110,7 @@
     block-size: clamp(0.9rem, 1.2cqi, 1.1rem);
 }
 
-/* Content ---------------------------------------------------------------- */
+/* Content --------------------------------------------------------------- */
 .content {
     display: grid;
     gap: 0.125rem;
@@ -174,8 +212,7 @@
     pointer-events: none;
     z-index: 20;
 
-    transition:
-        opacity var(--transition-fast, 120ms ease);
+    transition: opacity var(--transition-fast, 120ms ease);
 }
 
 /* Little arrow */
@@ -199,7 +236,7 @@
     pointer-events: auto;
 }
 
-/* =========================== RESPONSIVENESS ============================= */
+/* =========================== RESPONSIVENESS ============================ */
 /* Scale icon column + spacing based on container width (not viewport) */
 @container (min-width: 30rem) {
     .item {
@@ -217,7 +254,7 @@
     }
 }
 
-/* Viewport fallback when container queries aren’t supported --------------- */
+/* Viewport fallback when container queries aren’t supported -------------- */
 @media (max-width: 640px) {
     .md {
         row-gap: var(--spacing-xs, 0.5rem);
@@ -229,7 +266,7 @@
     }
 }
 
-/* ============================== ACCESSIBILITY =========================== */
+/* ============================== ACCESSIBILITY ========================== */
 @media (prefers-reduced-motion: reduce) {
     .tooltip {
         transition: none !important;
@@ -245,14 +282,14 @@
     }
 }
 
-/* ================================ DARK HOOK ============================= */
+/* ================================ DARK HOOK ============================ */
 @media (prefers-color-scheme: dark) {
     .root {
         color: var(--feature-fg-dark);
     }
 }
 
-/* ================================ PRINT ================================ */
+/* ================================ PRINT =============================== */
 @media print {
     .tooltip {
         display: none !important;

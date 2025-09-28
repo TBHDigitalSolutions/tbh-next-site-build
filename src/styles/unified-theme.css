@@ -411,3 +411,50 @@ h4 {
     --package-ring: color-mix(in oklab, var(--brand-blue) 70%, white);
     --package-selected: color-mix(in oklab, var(--brand-blue) 82%, #274d8c);
 }
+/* 5) ---------- Universal heading stack utilities ---------- */
+/* Generic utilities so any section can render: Title + Divider + Tagline,
+   centered as a group, with the tagline’s text left-aligned. */
+.hgroup {
+    display: grid;
+    justify-items: center;
+    /* centers the whole header group */
+    gap: var(--space-2, var(--pkg-space-xs, 0.5rem));
+    margin-block: var(--space-4, var(--pkg-space-md, 1rem)) var(--space-3, var(--pkg-space-sm, 0.75rem));
+}
+
+.hpair {
+    display: inline-grid;
+    justify-items: center;
+    /* centers title + divider inside */
+    inline-size: max-content;
+    /* makes Divider match the title width */
+    max-inline-size: 100%;
+}
+
+.hTitle {
+    margin: 0;
+    text-align: center;
+    text-wrap: balance;
+}
+
+.hRule {
+    inline-size: clamp(120px, 40cqi, 560px);
+    /* centered underline sized by container */
+    margin-inline: auto;
+}
+
+.hTaglineWrap {
+    display: grid;
+    justify-items: center;
+    /* centers the block itself */
+}
+
+.hTagline {
+    margin: 0;
+    max-inline-size: 68ch;
+    text-align: left;
+    /* centered block, left-aligned text content */
+    color: var(--text-secondary, var(--pkg-text-muted));
+    line-height: 1.6;
+    font-size: clamp(0.95rem, 0.2vw + 0.95rem, 1.05rem);
+}

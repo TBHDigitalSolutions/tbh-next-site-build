@@ -4,6 +4,7 @@
    Consumes tokens from packages-unified.module.css → unified-theme.css/root.css.
    TSX contract: root, md|sm, list|inline|grid, cols1|cols2|cols3,
                  item, iconWrap, icon, content, label, emphasis, note
+   + NEW: alignStart|alignCenter|alignEnd, textLeft|textCenter|textRight
 */
 
 /* ============================== ROOT ==================================== */
@@ -79,6 +80,33 @@
 
 .cols3 {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+/* ============================ ALIGNMENT (NEW) =========================== */
+/* Affects item alignment inside the list/grid */
+.alignStart {
+    justify-items: start;
+}
+
+.alignCenter {
+    justify-items: center;
+}
+
+.alignEnd {
+    justify-items: end;
+}
+
+/* Text alignment for the content cell (label/note) */
+.textLeft .content {
+    text-align: left;
+}
+
+.textCenter .content {
+    text-align: center;
+}
+
+.textRight .content {
+    text-align: right;
 }
 
 /* =============================== ITEM ================================== */

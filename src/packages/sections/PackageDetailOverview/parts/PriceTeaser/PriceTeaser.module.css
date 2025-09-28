@@ -1,14 +1,16 @@
 /* src/packages/sections/PackageDetailOverview/parts/PriceTeaser/PriceTeaser.module.css */
 
+/* Root: single-row, no wrapping */
 .wrap {
     display: inline-flex;
-    flex-wrap: wrap;
-    /* allow items to move to the next row */
+    flex-wrap: nowrap;
+    /* ← enforce one line */
     align-items: baseline;
-    gap: var(--_gap, var(--spacing-sm, .75rem));
+    gap: var(--_gap, var(--spacing-sm, 0.75rem));
     color: var(--pkg-text, var(--text-primary));
+    white-space: nowrap;
+    /* prevent teaser + notes from stacking */
     container-type: inline-size;
-    /* DO NOT set overflow-wrap:anywhere here – it causes the vertical stack */
 }
 
 /* alignment + density */
@@ -28,50 +30,50 @@
 }
 
 .sizeSm {
-    --_gap: var(--spacing-xs, .5rem);
-    row-gap: var(--spacing-2xs, .25rem);
+    --_gap: var(--spacing-xs, 0.5rem);
+    row-gap: var(--spacing-2xs, 0.25rem);
 }
 
 .sizeMd {
-    --_gap: var(--spacing-sm, .75rem);
-    row-gap: var(--spacing-xs, .5rem);
+    --_gap: var(--spacing-sm, 0.75rem);
+    row-gap: var(--spacing-xs, 0.5rem);
 }
 
-/* label + teaser notes */
+/* teaser label */
 .label {
     font-family: var(--font-body, Newsreader, serif);
     font-weight: 800;
-    letter-spacing: .02em;
+    letter-spacing: 0.02em;
     color: var(--pkg-card-fg, var(--text-primary));
-    font-size: var(--font-size-body, clamp(.95rem, .4vw + .9rem, 1rem));
+    font-size: var(--font-size-body, clamp(0.95rem, 0.4vw + 0.9rem, 1rem));
     line-height: 1.2;
     white-space: nowrap;
 }
 
 .emphasis .label {
-    padding: .12rem .38rem;
+    padding: 0.12rem 0.38rem;
     border-radius: var(--radius-sm, 6px);
     background: color-mix(in oklab, var(--brand-blue, var(--pkg-brand, #0EAFFB)) 12%, var(--bg-surface, transparent));
     border: 1px solid color-mix(in oklab, var(--brand-blue, var(--pkg-brand, #0EAFFB)) 28%, var(--border-subtle, currentColor));
 }
 
+/* optional small print */
 .notes {
-    opacity: .92;
+    opacity: 0.92;
     color: var(--text-tertiary, var(--pkg-text-muted, #94a3b8));
     font-family: var(--font-body, Newsreader, serif);
-    font-size: var(--font-size-caption, clamp(.85rem, .3vw + .82rem, .95rem));
+    font-size: var(--font-size-caption, clamp(0.85rem, 0.3vw + 0.82rem, 0.95rem));
     line-height: 1.2;
     overflow-wrap: anywhere;
-    /* allow small-print to wrap if needed */
 }
 
 @container (min-width: 380px) {
     .label {
-        font-size: clamp(1rem, 1cqi + .9rem, 1.0625rem);
+        font-size: clamp(1rem, 1cqi + 0.9rem, 1.0625rem);
     }
 
     .notes {
-        font-size: clamp(.9rem, .6cqi + .84rem, .975rem);
+        font-size: clamp(0.9rem, 0.6cqi + 0.84rem, 0.975rem);
     }
 }
 
@@ -81,17 +83,17 @@
     }
 
     .label {
-        font-size: clamp(1.025rem, 1cqi + .95rem, 1.1rem);
+        font-size: clamp(1.025rem, 1cqi + 0.95rem, 1.1rem);
     }
 
     .notes {
-        font-size: clamp(.95rem, .6cqi + .88rem, 1rem);
+        font-size: clamp(0.95rem, 0.6cqi + 0.88rem, 1rem);
     }
 }
 
 @media (max-width: 640px) {
     .wrap {
-        gap: var(--_gap, .6rem);
+        gap: var(--_gap, 0.6rem);
     }
 }
 
@@ -111,7 +113,7 @@
 
 @media print {
     .wrap {
-        gap: .4rem;
+        gap: 0.4rem;
     }
 
     .emphasis .label {

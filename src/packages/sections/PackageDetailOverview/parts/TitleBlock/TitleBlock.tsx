@@ -63,6 +63,7 @@ export default function TitleBlock({
     align === "center" ? styles.alignCenter : align === "end" ? styles.alignEnd : styles.alignStart;
 
   const headingId = id ? `${id}__title` : undefined;
+  const icpHeadingId = id ? `${id}__icp` : undefined;
 
   return (
     <header
@@ -71,25 +72,32 @@ export default function TitleBlock({
       aria-labelledby={headingId}
       data-testid={testId}
     >
+      {/* Main title + optional divider */}
       <Heading id={headingId} className={styles.title}>
         {title}
       </Heading>
-
       {showDivider && <Divider className={styles.divider} />}
 
+      {/* Short value prop and optional long description */}
       {valueProp ? <p className={styles.valueProp}>{valueProp}</p> : null}
-
       {description ? <p className={styles.description}>{description}</p> : null}
 
-      {/* ICP block: header + divider + body (+ optional extra description) */}
+      {/* ICP block — Title + Divider wrapped together, then tagline block below; all centered */}
       {(icp || icpDescription) ? (
-        <section className={styles.block} aria-labelledby={id ? `${id}__icp` : undefined}>
-          <h3 className={styles.blockTitle} id={id ? `${id}__icp` : undefined}>
-            {icpTitle}
-          </h3>
-          <Divider className={styles.blockDivider} />
-          {icp ? <p className={styles.icp}>{icp}</p> : null}
-          {icpDescription ? <p className={styles.icpDesc}>{icpDescription}</p> : null}
+        <section className={styles.icpSection} aria-labelledby={icpHeadingId}>
+          <div className={styles.hgroup}>
+            <div className={styles.hpair}>
+              <h3 id={icpHeadingId} className={styles.hTitle}>
+                {icpTitle}
+              </h3>
+              <Divider className={styles.hRule} />
+            </div>
+
+            <div className={styles.hTaglineWrap}>
+              {icp ? <p className={styles.hTagline}>{icp}</p> : null}
+              {icpDescription ? <p className={styles.hTagline}>{icpDescription}</p> : null}
+            </div>
+          </div>
         </section>
       ) : null}
     </header>

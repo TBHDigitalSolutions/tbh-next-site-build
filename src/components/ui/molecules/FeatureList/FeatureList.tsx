@@ -1,3 +1,6 @@
+// src/components/ui/molecules/FeatureList/FeatureList.tsx
+"use client";
+
 import * as React from "react";
 import styles from "./FeatureList.module.css";
 
@@ -24,6 +27,10 @@ export type FeatureListProps = {
   showExcluded?: boolean;
   /** Visual density */
   size?: "sm" | "md";
+  /** Horizontal alignment of the whole list (grid item alignment) */
+  align?: "start" | "center" | "end";
+  /** Text alignment for labels/notes (does not affect the icon column) */
+  textAlign?: "left" | "center" | "right";
   /** ARIA label for the whole list */
   ariaLabel?: string;
   className?: string;
@@ -34,31 +41,31 @@ export type FeatureListProps = {
 
 const CheckIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" {...props}>
-    <path d="M16.7 5.7a1 1 0 0 1 0 1.4l-7.5 7.5a1 1 0 0 1-1.4 0L3.3 10.1a1 1 0 1 1 1.4-1.4l3.3 3.3 6.8-6.3a1 1 0 0 1 1.9 0z" fill="currentColor"/>
+    <path d="M16.7 5.7a1 1 0 0 1 0 1.4l-7.5 7.5a1 1 0 0 1-1.4 0L3.3 10.1a1 1 0 1 1 1.4-1.4l3.3 3.3 6.8-6.3a1 1 0 0 1 1.9 0z" fill="currentColor" />
   </svg>
 );
 
 const MinusIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" {...props}>
-    <path d="M4 10.5a.5.5 0 0 1 .5-.5h11a.5.5 0 1 1 0 1h-11a.5.5 0 0 1-.5-.5z" fill="currentColor"/>
+    <path d="M4 10.5a.5.5 0 0 1 .5-.5h11a.5.5 0 1 1 0 1h-11a.5.5 0 0 1-.5-.5z" fill="currentColor" />
   </svg>
 );
 
 const PlusIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" {...props}>
-    <path d="M10 4a.75.75 0 0 1 .75.75V9.25h4.5a.75.75 0 1 1 0 1.5h-4.5v4.5a.75.75 0 1 1-1.5 0v-4.5H4.25a.75.75 0 1 1 0-1.5h4.5V4.75A.75.75 0 0 1 10 4z" fill="currentColor"/>
+    <path d="M10 4a.75.75 0 0 1 .75.75V9.25h4.5a.75.75 0 1 1 0 1.5h-4.5v4.5a.75.75 0 1 1-1.5 0v-4.5H4.25a.75.75 0 1 1 0-1.5h4.5V4.75A.75.75 0 0 1 10 4z" fill="currentColor" />
   </svg>
 );
 
 const XIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" {...props}>
-    <path d="M5.3 5.3a1 1 0 0 1 1.4 0L10 8.6l3.3-3.3a1 1 0 0 1 1.4 1.4L11.4 10l3.3 3.3a1 1 0 0 1-1.4 1.4L10 11.4l-3.3 3.3a1 1 0 0 1-1.4-1.4L8.6 10 5.3 6.7a1 1 0 0 1 0-1.4z" fill="currentColor"/>
+    <path d="M5.3 5.3a1 1 0 0 1 1.4 0L10 8.6l3.3-3.3a1 1 0 0 1 1.4 1.4L11.4 10l3.3 3.3a1 1 0 0 1-1.4 1.4L10 11.4l-3.3 3.3a1 1 0 0 1-1.4-1.4L8.6 10 5.3 6.7a1 1 0 0 1 0-1.4z" fill="currentColor" />
   </svg>
 );
 
 const InfoIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" {...props}>
-    <path d="M10 2a8 8 0 1 0 .001 16.001A8 8 0 0 0 10 2zm.75 11.25a.75.75 0 1 1-1.5 0V9.5a.75.75 0 1 1 1.5 0v3.75zM10 7.25a.875.875 0 1 1 0-1.75.875.875 0 0 1 0 1.75z" fill="currentColor"/>
+    <path d="M10 2a8 8 0 1 0 .001 16.001A8 8 0 0 0 10 2zm.75 11.25a.75.75 0 1 1-1.5 0V9.5a.75.75 0 1 1 1.5 0v3.75zM10 7.25a.875.875 0 1 1 0-1.75.875.875 0 0 1 0 1.75z" fill="currentColor" />
   </svg>
 );
 
@@ -82,32 +89,36 @@ function defaultIconForState(state: FeatureState | undefined): React.ReactNode {
 
 /* ---- Component ---- */
 
-export const FeatureList: React.FC<FeatureListProps> = ({
+const FeatureList: React.FC<FeatureListProps> = ({
   items,
   showExcluded = false,
   size = "md",
+  align = "start",
+  textAlign = "left",
   ariaLabel,
   className,
-  style
+  style,
 }) => {
-  const visible = showExcluded ? items : items.filter(it => it.included !== false);
+  const visible = showExcluded ? items : items.filter((it) => it.included !== false);
 
   return (
     <ul
       className={[
         styles.root,
         size === "sm" ? styles.sm : styles.md,
-        className
-      ].filter(Boolean).join(" ")}
+        className,
+      ]
+        .filter(Boolean)
+        .join(" ")}
       style={style}
       aria-label={ariaLabel}
+      data-align={align}
+      data-text={textAlign}
     >
-      {visible.map(item => {
+      {visible.map((item) => {
         const state = item.included;
         const liClass = [styles.item, stateClass(state)].join(" ");
-        const labelText =
-          typeof item.label === "string" ? item.label : undefined;
-
+        const labelText = typeof item.label === "string" ? item.label : undefined;
         const tooltipId = React.useId();
 
         return (
@@ -147,3 +158,5 @@ export const FeatureList: React.FC<FeatureListProps> = ({
 };
 
 export default FeatureList;
+/* ⬇️ IMPORTANT: remove the duplicate re-export that caused the conflict */
+// export type { FeatureListProps };  // <-- DELETE THIS LINE

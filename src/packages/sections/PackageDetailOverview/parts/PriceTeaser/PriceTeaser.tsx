@@ -3,35 +3,44 @@
 
 import * as React from "react";
 import styles from "./PriceTeaser.module.css";
-import { PriceLabel, type Money } from "@/components/ui/molecules/PriceLabel";
+import type { Money } from "@/components/ui/molecules/PriceLabel";
+import { startingAtLabel } from "@/packages/lib/pricing";
 
+/**
+ * PriceTeaser — "Starting at …" text derived from canonical Money
+ * - Single source of truth via startingAtLabel(price)
+ * - Single line (no wrapping), alignment controlled via props
+ * - Optional small-print notes remain supported
+ *
+ * NOTE: We intentionally DO NOT render <PriceLabel/> here to avoid
+ *       double-rendering different formats of the same price.
+ */
 export type PriceTeaserProps = {
-  /** Canonical package price (Money). If missing/empty, component renders null. */
+  /** Canonical package price (Money). Renders null if absent/empty. */
   price?: Money;
 
-  /** Leading text shown before the price (defaults to “Starting at”). */
-  label?: string;
-
-  /** Optional small-print notes (e.g., “Month-to-month available”). */
+  /** (Optional) small-print notes, e.g., “Month-to-month available”. */
   notes?: string;
 
   /** Visual density. */
   size?: "sm" | "md";
 
-  /** Emphasize the label with a subtle brand tint. */
+  /** Emphasize the teaser chip with a subtle brand tint. */
   emphasis?: boolean;
 
-  /** Horizontal alignment helper. */
+  /** Horizontal alignment for the row. */
   align?: "start" | "center" | "end";
 
   className?: string;
   style?: React.CSSProperties;
   "data-testid"?: string;
+
+  /** @deprecated — label text is computed from Money and ignored */
+  label?: string;
 };
 
 export default function PriceTeaser({
   price,
-  label = "Starting at",
   notes,
   size = "md",
   emphasis = false,
@@ -40,8 +49,14 @@ export default function PriceTeaser({
   style,
   "data-testid": testId,
 }: PriceTeaserProps) {
-  const hasPrice = !!price && (typeof price.monthly === "number" || typeof price.oneTime === "number");
+  // Ensure we actually have a price to derive from
+  const hasPrice =
+    !!price && (typeof price.monthly === "number" || typeof price.oneTime === "number");
   if (!hasPrice) return null;
+
+  // Compute the single punchline from the canonical Money object
+  const teaser = startingAtLabel(price as Money);
+  if (!teaser) return null;
 
   const alignClass =
     align === "center" ? styles.alignCenter : align === "end" ? styles.alignEnd : styles.alignStart;
@@ -49,13 +64,7 @@ export default function PriceTeaser({
 
   return (
     <div
-      className={[
-        styles.wrap,
-        alignClass,
-        sizeClass,
-        emphasis ? styles.emphasis : undefined,
-        className,
-      ]
+      className={[styles.wrap, alignClass, sizeClass, emphasis ? styles.emphasis : undefined, className]
         .filter(Boolean)
         .join(" ")}
       style={style}
@@ -63,13 +72,10 @@ export default function PriceTeaser({
       aria-label="Price teaser"
       data-testid={testId ?? "price-teaser"}
     >
-      {/* Leading label */}
-      {label ? <span className={styles.label}>{label}</span> : null}
+      {/* Single-line teaser derived from Money */}
+      <span className={styles.label}>{teaser}</span>
 
-      {/* Canonical price display (delegates formatting to PriceLabel) */}
-      <PriceLabel price={price as Money} />
-
-      {/* Optional notes */}
+      {/* Optional small-print notes (kept for flexibility) */}
       {notes ? <span className={styles.notes}>{notes}</span> : null}
     </div>
   );

@@ -1,4 +1,3 @@
-// src/packages/sections/PackageDetailOverview/parts/OutcomesBlock/OutcomesBlock.tsx
 "use client";
 
 import * as React from "react";
@@ -9,37 +8,51 @@ import { OutcomeList, type OutcomeItem } from "@/components/ui/molecules/Outcome
 export type OutcomesBlockProps = {
   /** Array of simple strings or OutcomeList items */
   outcomes?: Array<string | OutcomeItem>;
-  /** Optional heading shown above the list */
+
+  /** Optional heading shown above the list (ignored when hideHeading is true) */
   title?: string;
-  /** Grid columns for the list (defaults to 3 on desktop) */
+
+  /** When true, suppress the local title + divider and render only the list grid */
+  hideHeading?: boolean;
+
+  /** Grid columns for the list (defaults to 2; use CSS/container queries to bump on xl) */
   columns?: 2 | 3 | 4;
+
   /** Size token forwarded to OutcomeList (defaults to "sm") */
   size?: "sm" | "md" | "lg";
+
   /** Visual variant forwarded to OutcomeList (defaults to "check") */
   variant?: "check" | "bullet" | "dot";
-  /** Render a divider under the heading (default true when title is provided) */
+
+  /** Render a divider under the heading (default true when a title is provided and hideHeading is false) */
   showDivider?: boolean;
+
   /** Compact spacing if needed */
   compact?: boolean;
+
   /** Optional ids / testing / styling hooks */
   id?: string;
   "data-testid"?: string;
   className?: string;
   style?: React.CSSProperties;
+
   /** Aria label for the section wrapper (defaults to "Expected outcomes") */
   ariaLabel?: string;
 };
 
 function normalizeOutcomes(items: OutcomesBlockProps["outcomes"]): OutcomeItem[] {
   return (items ?? []).map((o, i) =>
-    typeof o === "string" ? { id: `o-${i}`, label: o } : { id: o.id ?? `o-${i}`, label: o.label }
+    typeof o === "string"
+      ? { id: `o-${i}`, label: o }
+      : { id: o.id ?? `o-${i}`, label: o.label }
   );
 }
 
 function OutcomesBlock({
   outcomes = [],
   title,
-  columns = 3,
+  hideHeading = false,
+  columns = 2,               // default to 2; scale up via container/parent CSS at xl
   size = "sm",
   variant = "check",
   showDivider = true,
@@ -53,6 +66,8 @@ function OutcomesBlock({
   const items = React.useMemo(() => normalizeOutcomes(outcomes), [outcomes]);
   if (items.length === 0) return null;
 
+  const shouldShowHeader = !!title && !hideHeading;
+
   return (
     <section
       id={id}
@@ -60,8 +75,9 @@ function OutcomesBlock({
       style={style}
       aria-label={ariaLabel ?? "Expected outcomes"}
       data-testid={testId}
+      data-component="outcomes-block"
     >
-      {title ? (
+      {shouldShowHeader ? (
         <>
           <h2 className={styles.heading}>{title}</h2>
           {showDivider ? <Divider /> : null}

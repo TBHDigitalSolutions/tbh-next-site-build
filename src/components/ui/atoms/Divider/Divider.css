@@ -1,36 +1,69 @@
 /* ============================
    📏 Reusable Section Divider
 ============================ */
+/* --------------------------------------------------------------------------
+   Divider — container-aware, brand-aligned
+   - Defaults to 100% of its wrapper width
+   - Centering controlled via alignment modifier classes
+   - Colors map to theme vars; fallbacks included
+---------------------------------------------------------------------------- */
+
+.divider,
 .section-divider {
-    width: 100%;
-    height: 4px;
+    /* keep legacy classname for safety */
+    inline-size: var(--divider-width, 100%);
+    block-size: var(--divider-thickness, 4px);
+    border-radius: var(--radius-sm, 6px);
     margin: 0;
-    border-radius: var(--radius-sm);
-    background: linear-gradient(to right, transparent, var(--brand-blue), transparent);
-    transition: background var(--transition-default);
+    background: linear-gradient(90deg,
+            transparent,
+            var(--brand-blue, var(--accent-500, #0EAFFB)),
+            transparent);
+    transition: background var(--transition-default, 160ms ease), opacity 120ms ease;
+    /* Prevent fuzzy edges during transforms */
+    transform: translateZ(0);
 }
 
-/* ✅ Light Theme */
-.light .section-divider {
-    background: linear-gradient(to right, transparent, var(--brand-blue), transparent);
+/* Alignment via margins so it plays nicely inside CSS Grid/Flex containers */
+.divider--start {
+    margin-inline: 0 auto;
 }
 
-/* ✅ Dark Theme */
-.dark .section-divider {
-    background: linear-gradient(to right, transparent, var(--charcoal-navy), transparent);
+.divider--center {
+    margin-inline: auto;
 }
 
-/* ============================
-   📱 Responsive Width (Optional)
-============================ */
-@media (max-width: 768px) {
+.divider--end {
+    margin-inline: auto 0;
+}
+
+/* Tone variants */
+.divider--muted {
+    background: linear-gradient(90deg,
+            transparent,
+            color-mix(in oklab, var(--brand-blue, #0EAFFB) 35%, black),
+            transparent);
+}
+
+.divider--inverse {
+    background: linear-gradient(90deg,
+            transparent,
+            color-mix(in oklab, white 85%, var(--brand-blue, #0EAFFB)),
+            transparent);
+}
+
+/* Optional glow */
+.divider--glow {
+    box-shadow: 0 0 24px color-mix(in oklab, var(--brand-blue, #0EAFFB) 45%, transparent);
+}
+
+/* Remove opinionated viewport MQs; let container control the size */
+
+/* High-contrast friendly */
+@media (forced-colors: active) {
+
+    .divider,
     .section-divider {
-        width: 100%;
+        background: CanvasText !important;
     }
 }
-
-@media (max-width: 480px) {
-    .section-divider {
-        width: 90%;
-    }
-} 

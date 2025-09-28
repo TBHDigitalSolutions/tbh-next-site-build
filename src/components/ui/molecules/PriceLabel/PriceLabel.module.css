@@ -13,8 +13,17 @@
 
     display: inline-flex;
     align-items: baseline;
-    flex-wrap: wrap;
-    /* allow entire price to move to next line */
+
+    /* IMPORTANT: single-line policy */
+    flex-wrap: nowrap;
+    /* never wrap onto a 2nd line */
+    white-space: nowrap;
+    /* keep whole label on one row */
+    overflow: hidden;
+    /* avoid layout overflow */
+    text-overflow: ellipsis;
+    /* graceful clip for long notes */
+
     gap: 0.25rem;
     color: var(--price-fg);
     font-variant-numeric: tabular-nums;
@@ -30,17 +39,21 @@
     display: inline-grid;
     gap: 0.25rem;
     align-items: start;
+    /* NOTE: `block` variant is kept for backward compatibility. If the
+     page enforces "single line always", use `variant="inline"`. */
 }
 
-/* keep each price 'group' as an unbreakable unit */
+/* each price 'group' is an unbreakable unit */
 .group {
     display: inline-flex;
     align-items: baseline;
     gap: 0.25rem;
     white-space: nowrap;
-    /* ← key: never break inside the number */
+    /* never break inside number+suffix */
     min-inline-size: max-content;
-    /* ← prefer moving to the next line */
+    /* prefer moving as a whole */
+    flex: 0 0 auto;
+    /* do not shrink */
 }
 
 .amount {
@@ -48,6 +61,8 @@
     line-height: 1.1;
     font-size: var(--price-font-size);
     white-space: nowrap;
+    flex: 0 0 auto;
+    /* do not shrink */
 }
 
 .suffix {
@@ -57,6 +72,7 @@
     font-size: var(--price-suffix-size);
     line-height: 1.1;
     white-space: nowrap;
+    flex: 0 0 auto;
 }
 
 .separator {
@@ -65,9 +81,11 @@
     padding-inline: 0.125rem;
     letter-spacing: .015em;
     white-space: nowrap;
+    flex: 0 0 auto;
+    /* prevent shrinking of the separator */
 }
 
-/* notes may wrap */
+/* notes remain on the same line; truncate if too long */
 .notes {
     margin-inline-start: .25rem;
     color: var(--price-tertiary);
@@ -75,18 +93,25 @@
     font-size: var(--price-notes-size);
     font-weight: 500;
     line-height: 1.2;
-    white-space: normal;
-    overflow-wrap: anywhere;
-    /* allow only the small print to break */
+    white-space: nowrap;
+    /* single-line notes */
+    overflow: hidden;
+    /* clip inside the line */
+    text-overflow: ellipsis;
+    /* … */
+    flex: 1 1 auto;
+    /* take remaining space */
 }
 
 .contact {
     font-weight: 700;
     color: var(--price-accent);
     line-height: 1.1;
+    white-space: nowrap;
+    flex: 0 0 auto;
 }
 
-/* container queries / fallbacks unchanged */
+/* container queries / fallbacks */
 @container (min-width: 28rem) {
     .root {
         gap: .3rem;

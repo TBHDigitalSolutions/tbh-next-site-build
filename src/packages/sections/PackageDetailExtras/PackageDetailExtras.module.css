@@ -14,6 +14,14 @@
    with safe fallbacks for local development.
 */
 
+/* src/packages/sections/PackageDetailExtras/PackageDetailExtras.module.css
+   Brand-aligned, responsive, container-query powered styles for the
+   PackageDetailExtras section.
+
+   Implements the “Title + Divider + Tagline” wrapping/alignment rule using
+   universal utilities (.hgroup/.hpair/.hTitle/.hRule/.hTaglineWrap/.hTagline).
+*/
+
 /* ------------------------------ Root wrap -------------------------------- */
 .wrap {
     display: grid;
@@ -30,61 +38,64 @@
     display: grid;
     gap: var(--space-5, 1rem);
     padding-block: var(--space-2, 0.5rem);
-    /* keeps sections visually distinct without heavy chrome */
 }
 
-/* ---------------------- Header / Title+Divider+Tagline ------------------- */
-/* Parent container holding (Title+Divider) and Tagline */
-.header {
+/* ---------- Universal heading stack utilities (module-local) ------------- */
+.hgroup {
     display: grid;
     justify-items: center;
-    /* Center the title+divider group AND the tagline block */
-    gap: var(--space-3, 0.75rem);
+    /* centers the whole header group */
+    gap: var(--space-2, 0.5rem);
+    margin-block: var(--space-4, 1rem) var(--space-3, 0.75rem);
     text-wrap: pretty;
 }
 
-/* Wrap the Title + Divider together (MANDATORY rule) */
-.headerTop {
-    display: grid;
+.hpair {
+    display: inline-grid;
     justify-items: center;
-    /* Center Title and Divider */
+    /* centers title + divider inside */
+    inline-size: max-content;
+    /* ← makes Divider match the title width */
+    max-inline-size: 100%;
     gap: var(--space-2, 0.5rem);
-    inline-size: 100%;
-    max-inline-size: 72ch;
 }
 
-/* Title — centered */
-.headerTitle {
+.hTitle {
     margin: 0;
     text-align: center;
+    text-wrap: balance;
     font-family: var(--font-heading, Aldrich, ui-sans-serif);
     font-weight: var(--font-weight-extrabold, 800);
     letter-spacing: 0.15px;
     line-height: 1.2;
     color: var(--text-accent, var(--brand-blue, #0EAFFB));
     font-size: var(--font-size-h3, clamp(1.25rem, 1.2cqi + 1rem, 1.6rem));
-    text-wrap: balance;
 }
 
-/* Divider placed directly under the Title (inside .headerTop) */
-.headerDivider {
-    inline-size: clamp(160px, 35%, 360px);
-    height: 2px;
+.hRule {
+    inline-size: clamp(160px, 40cqi, 560px);
+    /* centered underline */
+    block-size: 2px;
     border-radius: 999px;
-    background:
-        linear-gradient(90deg,
-            color-mix(in lab, var(--brand-blue, #0EAFFB) 60%, transparent) 0%,
-            color-mix(in lab, var(--brand-blue, #0EAFFB) 85%, #0c1a24) 50%,
-            color-mix(in lab, var(--brand-blue, #0EAFFB) 60%, transparent) 100%);
-    box-shadow: 0 0 0 1px color-mix(in oklab, var(--brand-blue, #0EAFFB) 20%, transparent);
+    margin-inline: auto;
+    background: linear-gradient(90deg,
+            color-mix(in oklab, var(--brand-blue, #0EAFFB) 10%, transparent),
+            color-mix(in oklab, var(--brand-blue, #0EAFFB) 85%, #0c1a24),
+            color-mix(in oklab, var(--brand-blue, #0EAFFB) 10%, transparent));
+    box-shadow: 0 0 0 1px color-mix(in oklab, var(--brand-blue, #0EAFFB) 18%, transparent);
 }
 
-/* Tagline — center the *block*, left-align the *text* inside */
-.headerTagline {
+.hTaglineWrap {
+    display: grid;
+    justify-items: center;
+    /* centers the block itself */
+}
+
+.hTagline {
     margin: 0;
-    inline-size: min(72ch, 100%);
+    max-inline-size: 72ch;
     text-align: left;
-    /* left-aligned text within a centered block */
+    /* centered block, left-aligned text */
     color: var(--text-secondary, #c9ced1);
     font-family: var(--font-body, Newsreader, ui-serif);
     font-size: clamp(0.98rem, 0.45cqi + 0.9rem, 1.0625rem);
@@ -105,7 +116,6 @@
     overflow: hidden;
 }
 
-/* Step card */
 .step {
     min-inline-size: 0;
 }
@@ -167,10 +177,10 @@
 
 .line {
     inline-size: 100%;
-    height: 2px;
+    block-size: 2px;
     background: linear-gradient(90deg,
-            color-mix(in lab, var(--brand-blue, #0EAFFB) 40%, transparent),
-            color-mix(in lab, var(--brand-blue, #0EAFFB) 75%, #0e1822));
+            color-mix(in oklab, var(--brand-blue, #0EAFFB) 40%, transparent),
+            color-mix(in oklab, var(--brand-blue, #0EAFFB) 75%, #0e1822));
     border-radius: 999px;
 }
 
@@ -208,12 +218,12 @@
 /* --------------------------- Container Queries --------------------------- */
 /* Scale title/divider inside their container (not viewport) */
 @container (min-width: 520px) {
-    .headerTitle {
+    .hTitle {
         font-size: clamp(1.35rem, 0.9cqi + 1.1rem, 1.75rem);
     }
 
-    .headerDivider {
-        inline-size: clamp(220px, 40%, 420px);
+    .hRule {
+        inline-size: clamp(220px, 42cqi, 480px);
     }
 
     .timeline {
@@ -222,7 +232,7 @@
 }
 
 @container (min-width: 840px) {
-    .headerTitle {
+    .hTitle {
         font-size: clamp(1.5rem, 1.1cqi + 1.2rem, 2rem);
     }
 
@@ -242,12 +252,13 @@
     .timeline {
         grid-auto-flow: row;
         grid-auto-columns: auto;
+        row-gap: var(--space-3, 0.75rem);
     }
 }
 
 /* --------------------------- High Contrast A11y -------------------------- */
 @media (forced-colors: active) {
-    .headerDivider {
+    .hRule {
         background: CanvasText;
         box-shadow: none;
     }

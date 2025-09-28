@@ -5,8 +5,13 @@
    - packages-unified.module.css → unified-theme.css/root.css
 
    TSX contract:
-   - classes used by TitleBlock.tsx: wrap, alignStart|alignCenter|alignEnd,
+   - classes used by TitleBlock.tsx:
+     wrap, alignStart|alignCenter|alignEnd,
      title, divider, valueProp, description,
+     icpSection,
+     hgroup, hpair, hTitle, hRule, hTaglineWrap, hTagline
+
+   Back-compat (kept but not used by new ICP):
      block, blockTitle, blockDivider, icp, icpDesc
 */
 
@@ -23,7 +28,7 @@
     /* enable container queries */
 }
 
-/* Alignment helpers (used by prop: align) -------------------------------- */
+/* Alignment helpers (prop: align) ---------------------------------------- */
 .alignStart {
     justify-items: start;
     text-align: start;
@@ -52,7 +57,8 @@
     text-wrap: balance;
 }
 
-/* Divider under heading (Divider atom provides visuals) ------------------- */
+/* Divider under main heading --------------------------------------------- */
+/* We keep it container-aware; centering handled by parent alignment */
 .divider {
     inline-size: 100%;
     max-inline-size: 100%;
@@ -78,7 +84,57 @@
     opacity: 0.95;
 }
 
-/* ICP block (header + divider + body) ------------------------------------ */
+/* ---------- Universal heading stack utilities (for ICP block) ----------- */
+.icpSection {
+    margin-block-start: var(--spacing-md, 1rem);
+}
+
+.hgroup {
+    display: grid;
+    justify-items: center;
+    /* centers the whole header group */
+    gap: var(--space-2, 0.5rem);
+    margin-block: var(--space-4, 1rem) var(--space-3, 0.75rem);
+}
+
+.hpair {
+    display: inline-grid;
+    justify-items: center;
+    /* centers title + divider inside */
+    inline-size: max-content;
+    /* ← makes Divider match the title width */
+    max-inline-size: 100%;
+}
+
+.hTitle {
+    margin: 0;
+    text-align: center;
+    text-wrap: balance;
+}
+
+.hRule {
+    inline-size: clamp(120px, 40cqi, 560px);
+    /* centered underline */
+    margin-inline: auto;
+}
+
+.hTaglineWrap {
+    display: grid;
+    justify-items: center;
+    /* centers the block itself */
+}
+
+.hTagline {
+    margin: 0;
+    max-inline-size: 68ch;
+    text-align: left;
+    /* centered block, left-aligned text */
+    color: var(--text-secondary);
+    line-height: 1.6;
+    font-size: clamp(0.95rem, 0.2vw + 0.95rem, 1.05rem);
+}
+
+/* ----------------------- Back-compat (legacy ICP styles) ---------------- */
 .block {
     display: grid;
     gap: var(--spacing-xs, 0.5rem);
@@ -99,10 +155,9 @@
 .blockDivider {
     inline-size: min(100%, 22rem);
     margin: 0;
-    /* rely on the Divider’s own spacing rhythm elsewhere */
+    /* rely on Divider’s own rhythm elsewhere */
 }
 
-/* ICP line (audience) ---------------------------------------------------- */
 .icp {
     margin: 0.1rem 0 0 0;
     color: var(--text-tertiary, #94a3b8);
@@ -115,7 +170,6 @@
     font-weight: 800;
 }
 
-/* Optional extra description under ICP ----------------------------------- */
 .icpDesc {
     margin: 0;
     color: var(--text-secondary, var(--pkg-text-muted, #c9ced1));
@@ -125,8 +179,6 @@
 }
 
 /* ------------------------ Modern responsiveness ------------------------- */
-/* Container queries scale the typographic ramp within the card/section
-   without relying on viewport width. */
 @container (min-width: 420px) {
     .title {
         font-size: var(--font-size-h2, clamp(1.75rem, 1.2cqi + 1.1rem, 2.4rem));

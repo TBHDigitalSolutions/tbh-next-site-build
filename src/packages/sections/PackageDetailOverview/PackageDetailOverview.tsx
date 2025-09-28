@@ -194,6 +194,8 @@ export default function PackageDetailOverview({
               <FeatureList
                 items={derivedHighlights.map((f, i) => ({ id: `hl-${i}`, label: f }))}
                 size="md"
+                align="center"
+                textAlign="right"
                 ariaLabel="Key highlights"
               />
             </section>
@@ -209,7 +211,8 @@ export default function PackageDetailOverview({
                 <Divider className={styles.blockDivider} />
                 <p className={styles.blockTagline}>{outcomesTagline}</p>
               </div>
-              <OutcomesBlock outcomes={outcomes} className={styles.outcomes} />
+              {/* Parent owns header; OutcomesBlock renders grid only */}
+              <OutcomesBlock outcomes={outcomes} className={styles.outcomes} hideHeading />
             </section>
           )}
 
@@ -226,8 +229,8 @@ export default function PackageDetailOverview({
               <IncludesFromGroups
                 packageName={title}
                 groups={includesGroups!}
-                title={includesTitle}
-                caption={includesTagline}
+                /* Parent owns header; child renders grid only */
+                hideHeading
                 variant={includesVariant}    // default "cards"
                 maxCols={includesMaxCols}    // 2-up “boom boom”
                 dense={includesDense}
@@ -253,11 +256,10 @@ export default function PackageDetailOverview({
           <NotesBlock className={styles.notesEmphasis}>{notes}</NotesBlock>
 
           {/* --------------------------- Price teaser ------------------------- */}
-          {/* PriceTeaser already derives the teaser from Money → consistent with right card */}
+          {/* PriceTeaser derives the teaser from Money → consistent with right card */}
           <PriceTeaser price={packagePrice} />
 
           {/* ------------------------------- CTAs ----------------------------- */}
-          {/* Buttons are standardized in CTARow (primary/secondary) */}
           <CTARow primary={ctaPrimary} secondary={ctaSecondary} />
         </div>
 

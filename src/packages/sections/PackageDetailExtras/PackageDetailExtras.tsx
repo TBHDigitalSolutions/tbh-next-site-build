@@ -146,15 +146,17 @@ export default function PackageDetailExtras({
     >
       {/* ============================== TIMELINE ============================== */}
       {hasTimeline && (
-        <div className={styles.block} aria-label="Timeline / Turnaround">
+        <section className={styles.block} aria-label="Timeline / Turnaround">
           {/* Header group: (Title + Divider) wrapped together, Tagline directly under, then all wrapped */}
-          <header className={styles.headerGroup}>
-            <div className={styles.titleAndRule}>
-              <h2 className={styles.heading}>{finalTimelineTitle}</h2>
-              <Divider className={styles.divider} />
+          <header className={styles.hgroup}>
+            <div className={styles.hpair}>
+              <h2 className={styles.hTitle}>{finalTimelineTitle}</h2>
+              <Divider className={styles.hRule} />
             </div>
             {finalTimelineTagline ? (
-              <p className={styles.tagline}>{finalTimelineTagline}</p>
+              <div className={styles.hTaglineWrap}>
+                <p className={styles.hTagline}>{finalTimelineTagline}</p>
+              </div>
             ) : null}
           </header>
 
@@ -191,20 +193,22 @@ export default function PackageDetailExtras({
               );
             })}
           </ol>
-        </div>
+        </section>
       )}
 
       {/* =========================== LIMITS & ETHICS ========================== */}
       {(hasEthics || hasLimits) && (
-        <div className={styles.block} aria-label="Limits and Ethics">
+        <section className={styles.block} aria-label="Limits and Ethics">
           {/* Header group: (Title + Divider) wrapped together, Tagline directly under, then all wrapped */}
-          <header className={styles.headerGroup}>
-            <div className={styles.titleAndRule}>
-              <h2 className={styles.heading}>{finalEthicsTitle}</h2>
-              <Divider className={styles.divider} />
+          <header className={styles.hgroup}>
+            <div className={styles.hpair}>
+              <h2 className={styles.hTitle}>{finalEthicsTitle}</h2>
+              <Divider className={styles.hRule} />
             </div>
             {finalEthicsTagline ? (
-              <p className={styles.tagline}>{finalEthicsTagline}</p>
+              <div className={styles.hTaglineWrap}>
+                <p className={styles.hTagline}>{finalEthicsTagline}</p>
+              </div>
             ) : null}
           </header>
 
@@ -223,7 +227,7 @@ export default function PackageDetailExtras({
               ))}
             </ul>
           )}
-        </div>
+        </section>
       )}
     </section>
   );

@@ -1,3 +1,6 @@
+// src/components/ui/molecules/PriceLabel/PriceLabel.tsx
+"use client";
+
 import * as React from "react";
 import styles from "./PriceLabel.module.css";
 
@@ -28,11 +31,6 @@ export type PriceLabelProps = {
   };
 };
 
-/**
- * Format a numeric amount into a localized currency string.
- * Defaults to 0 fraction digits (e.g., $1,500) to match most pricing UIs.
- * Override with `options` if needed.
- */
 export function formatMoney(
   amount: number,
   currency: string = "USD",
@@ -42,7 +40,6 @@ export function formatMoney(
   try {
     return new Intl.NumberFormat(locale, { style: "currency", currency, ...options }).format(amount);
   } catch {
-    // Fallback: naive string if Intl fails or currency invalid.
     const rounded = Math.round((amount + Number.EPSILON) * 100) / 100;
     return `${currency} ${rounded.toLocaleString()}`;
   }
@@ -84,17 +81,29 @@ export const PriceLabel: React.FC<PriceLabelProps> = ({
   const hasMonthly = typeof price?.monthly === "number";
   const hasOneTime = typeof price?.oneTime === "number";
 
+  // Render contact text if no numeric price was provided
   if (!price || (!hasMonthly && !hasOneTime)) {
     return (
-      <span className={[styles.root, styles[variant], className].filter(Boolean).join(" ")} style={style}>
-        <span className={styles.contact} aria-label={contactText}>{contactText}</span>
+      <span
+        className={[styles.root, styles[variant], className].filter(Boolean).join(" ")}
+        style={style}
+        role="text"
+        aria-label={contactText}
+      >
+        <span className={styles.contact}>{contactText}</span>
         {price?.notes ? <span className={styles.notes}> {price.notes}</span> : null}
       </span>
     );
   }
 
   const parts: React.ReactNode[] = [];
-  const ariaLabel = buildAriaLabel(price.oneTime, price.monthly, price.currency ?? currency, locale, cfg);
+  const ariaLabel = buildAriaLabel(
+    price.oneTime,
+    price.monthly,
+    price.currency ?? currency,
+    locale,
+    cfg
+  );
 
   if (hasOneTime) {
     parts.push(
@@ -130,6 +139,7 @@ export const PriceLabel: React.FC<PriceLabelProps> = ({
     <span
       className={[styles.root, styles[variant], className].filter(Boolean).join(" ")}
       style={style}
+      role="text"
       aria-label={ariaLabel}
     >
       {parts}

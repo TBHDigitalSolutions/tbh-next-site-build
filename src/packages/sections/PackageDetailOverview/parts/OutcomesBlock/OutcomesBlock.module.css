@@ -39,11 +39,14 @@
     /* Prefer theme token; clamp for resilient fallback */
     font-size: var(--font-size-h4, clamp(1.125rem, 0.8vw + 1rem, 1.375rem));
     text-wrap: balance;
+    text-align: center;
+    /* center when local heading is rendered */
 }
 
 /* Divider (works with Divider atom or <hr>) ------------------------------- */
 .wrap> :is(hr, .divider) {
     inline-size: 100%;
+    /* full width of the outcomes block body */
     margin: 0.15rem 0 0.4rem 0;
 }
 

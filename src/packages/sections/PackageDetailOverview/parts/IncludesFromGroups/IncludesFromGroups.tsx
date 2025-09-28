@@ -1,5 +1,4 @@
 // src/packages/sections/PackageDetailOverview/parts/IncludesFromGroups/IncludesFromGroups.tsx
-// src/packages/sections/PackageDetailOverview/parts/IncludesFromGroups/IncludesFromGroups.tsx
 "use client";
 
 import * as React from "react";
@@ -58,6 +57,9 @@ export type IncludesFromGroupsProps = {
   /** Header alignment: start (default) or center */
   headerAlign?: "start" | "center";
 
+  /** When true, suppress local Title + Divider. Parent (Overview) owns the header. */
+  hideHeading?: boolean;
+
   /** A11y + DOM plumbing */
   id?: string;
   "data-testid"?: string;
@@ -76,9 +78,9 @@ export default function IncludesFromGroups({
   caption,
   packageName,
   groups,
-  variant = "cards",               // ← default to CARDS for single-package details
+  variant = "cards",               // default to CARDS for single-package details
   cols,
-  maxCols = 2,                      // ← default clamp to 2 columns, per spec
+  maxCols = 2,                      // clamp to 2 columns per spec
   dense = false,
   showIcons = true,
   footnote,
@@ -86,6 +88,7 @@ export default function IncludesFromGroups({
   deliverablesTitle = "Deliverables",
   deliverables,
   headerAlign = "start",
+  hideHeading = false,
   id,
   "data-testid": testId = "includes-from-groups",
   className,
@@ -128,17 +131,22 @@ export default function IncludesFromGroups({
       className={cx(styles.wrap, dense && styles.dense, className)}
       style={style}
     >
-      {(title || caption) && (
-        <header className={styles.header}>
-          {title ? (
-            <h2 className={cx(styles.heading, centerHeader && styles.center)}>{title}</h2>
-          ) : null}
-          {caption ? <p className={cx(styles.caption, centerHeader && styles.center)}>{caption}</p> : null}
-        </header>
-      )}
+      {/* Local header (optional) — parent Overview may hide this and own the Title+Divider+Tagline */}
+      {!hideHeading && (title || caption) ? (
+        <>
+          <header className={styles.header}>
+            {title ? (
+              <h2 className={cx(styles.heading, centerHeader && styles.center)}>{title}</h2>
+            ) : null}
+            {caption ? (
+              <p className={cx(styles.caption, centerHeader && styles.center)}>{caption}</p>
+            ) : null}
+          </header>
 
-      {showDivider && (title || caption) ? (
-        <Divider className={cx(styles.headerDivider, centerHeader && styles.center)} />
+          {showDivider ? (
+            <Divider className={cx(styles.headerDivider, centerHeader && styles.center)} />
+          ) : null}
+        </>
       ) : null}
 
       {/* Cards or List */}
@@ -159,8 +167,7 @@ export default function IncludesFromGroups({
                     <li key={i} className={styles.bullet}>
                       {showIcons ? (
                         <span className={styles.icon} aria-hidden="true">
-                          {/* inline SVG check */}
-                          <svg viewBox="0 0 20 20" width="16" height="16" role="img" aria-label="" focusable="false">
+                          <svg viewBox="0 0 20 20" width="16" height="16" role="img" focusable="false">
                             <path
                               d="M7.6 13.2 4.8 10.4a1 1 0 1 0-1.4 1.4l3.8 3.8a1 1 0 0 0 1.4 0l7-7a1 1 0 1 0-1.4-1.4l-6.6 6.4Z"
                               fill="currentColor"
@@ -184,7 +191,7 @@ export default function IncludesFromGroups({
                     <li key={i} className={styles.listItem}>
                       {showIcons ? (
                         <span className={styles.icon} aria-hidden="true">
-                          <svg viewBox="0 0 20 20" width="16" height="16" role="img" aria-label="" focusable="false">
+                          <svg viewBox="0 0 20 20" width="16" height="16" role="img" focusable="false">
                             <path
                               d="M7.6 13.2 4.8 10.4a1 1 0 1 0-1.4 1.4l3.8 3.8a1 1 0 0 0 1.4 0l7-7a1 1 0 1 0-1.4-1.4l-6.6 6.4Z"
                               fill="currentColor"

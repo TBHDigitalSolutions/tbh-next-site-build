@@ -1,5 +1,4 @@
 /* src/packages/sections/PackageDetailOverview/PackageDetailOverview.module.css
-/* PackageDetailOverview.module.css
    - Deep navy gradient background
    - 2-col grid with sticky rail area
    - Feature list spacing + below-grid band for CTAs/Extras
@@ -99,10 +98,8 @@
         padding: 1rem;
     }
 }
-/* src/packages/sections/PackageDetailOverview/PackageDetailOverview.module.css */
 
-/* ...existing grid/left/right styles remain... */
-
+/* -------------------------- SECTION HEADER STACK ------------------------ */
 /* Generic section block with header (Title + Divider + Tagline) */
 .block {
     display: grid;
@@ -114,13 +111,14 @@
     display: grid;
     gap: var(--space-2, 8px);
     align-items: start;
+    justify-items: center;
+    /* center title + divider + tagline */
 }
 
 .blockHeaderCenter {
     display: grid;
     gap: var(--space-2, 8px);
     justify-items: center;
-    /* center title + divider + tagline */
 }
 
 .blockTitle {
@@ -128,10 +126,13 @@
     font: var(--font-h3, 700 1.375rem/1.2 var(--font-heading, Aldrich, system-ui));
     color: var(--text-primary);
     text-wrap: balance;
+    text-align: center;
 }
 
 .blockDivider {
-    inline-size: min(100%, 680px);
+    inline-size: clamp(120px, 40cqi, 560px);
+    /* centered underline width */
+    margin-inline: auto;
 }
 
 .blockTagline {
@@ -140,6 +141,8 @@
     font-size: clamp(0.95rem, 0.92rem + 0.3vw, 1.05rem);
     line-height: 1.6;
     text-wrap: pretty;
+    text-align: left;
+    /* centered block with left-aligned text content */
 }
 
 .center {
@@ -152,7 +155,7 @@
     margin-block-start: var(--space-2, 8px);
 }
 
-/* Reuse the readable notes emphasis (already added in your NotesBlock.module.css update) */
+/* Readable notes emphasis */
 .notesEmphasis {
     font-size: clamp(0.95rem, 0.92rem + 0.3vw, 1.05rem);
     line-height: 1.6;
