@@ -1,9 +1,10 @@
+/* Root layout */
 .wrap {
     display: grid;
     gap: 0.5rem;
 }
 
-/* alignment helpers */
+/* Alignment helpers */
 .alignStart {
     justify-items: start;
     text-align: left;
@@ -19,22 +20,25 @@
     text-align: right;
 }
 
+/* Title */
 .title {
     margin: 0;
     font-weight: 900;
     letter-spacing: 0.2px;
     line-height: 1.15;
-    /* Prefer theme tokens; clamp as a fallback */
+    /* Prefer theme tokens; clamp as a resilient fallback */
     font-size: var(--font-size-h2, clamp(1.5rem, 2.4vw, 2rem));
     color: var(--text-primary, #0f172a);
 }
 
+/* Divider under heading */
 .divider {
     width: 100%;
     max-width: 100%;
     margin: 0.1rem 0 0.25rem 0;
 }
 
+/* Value prop (concise subhead) */
 .valueProp {
     margin: 0;
     color: var(--text-secondary, #334155);
@@ -42,13 +46,23 @@
     line-height: var(--line-height-body, 1.6);
 }
 
+/* Optional longer description */
+.description {
+    margin: 0;
+    color: var(--text-secondary, #334155);
+    font-size: clamp(0.95rem, 1.1vw, 1.05rem);
+    line-height: var(--line-height-body, 1.6);
+    opacity: 0.95;
+}
+
+/* ICP line */
 .icp {
     margin: 0.1rem 0 0 0;
     color: var(--text-tertiary, #475569);
     font-size: var(--font-size-body, 0.95rem);
 }
 
-/* reduce vertical density slightly on narrow screens */
+/* Responsive refinements */
 @media (max-width: 640px) {
     .wrap {
         gap: 0.4rem;
@@ -56,5 +70,9 @@
 
     .valueProp {
         font-size: clamp(0.975rem, 1.8vw, 1.05rem);
+    }
+
+    .description {
+        font-size: clamp(0.94rem, 1.7vw, 1rem);
     }
 }

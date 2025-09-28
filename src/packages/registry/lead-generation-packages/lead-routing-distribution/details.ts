@@ -35,6 +35,7 @@ export const leadRoutingDistributionDetail: PackageDetailOverviewProps = {
   id: `${base.slug}-overview`,
   title: base.name,
   valueProp: base.summary,
+  description: base.description, // NEW: longer blurb for TitleBlock (optional)
   icp: base.icp,
   service: base.service,
   tags: base.tags,

@@ -4,14 +4,16 @@
 import * as React from "react";
 import styles from "./PackageDetailOverview.module.css";
 
-/* Types */
-import type { PackageCardProps } from "@/packages/components/PackageCard";
-import type { PackageIncludesTableProps } from "@/packages/components/PackageIncludesTable/PackageIncludesTable";
+/* Types from shared UI */
+import type { Money } from "@/components/ui/molecules/PriceLabel";
 import type { OutcomeItem } from "@/components/ui/molecules/OutcomeList";
 import type { ServiceSlug } from "@/components/ui/molecules/ServiceChip";
-import type { Money } from "@/components/ui/molecules/PriceLabel";
 
-/* Parts (focused presentational components) */
+/* Types from package components */
+import type { PackageIncludesTableProps } from "@/packages/components/PackageIncludesTable/PackageIncludesTable";
+import type { PackageCardProps } from "@/packages/components/PackageCard";
+
+/* Focused parts */
 import MetaRow from "./parts/MetaRow";
 import TitleBlock from "./parts/TitleBlock";
 import OutcomesBlock from "./parts/OutcomesBlock";
@@ -21,7 +23,7 @@ import PriceTeaser from "./parts/PriceTeaser";
 import CTARow from "./parts/CTARow";
 import StickyRail from "./parts/StickyRail";
 
-/* Fallback table (only used when groups aren't provided) */
+/* Fallback table renderer (used when groups aren't provided) */
 import PackageIncludesTable from "@/packages/components/PackageIncludesTable";
 
 /* -------------------------------------------------------------------------- */
@@ -37,6 +39,8 @@ export type PackageDetailOverviewProps = {
   /** Headline & hero-style meta */
   title: string;
   valueProp: string;
+  /** Optional longer blurb beneath the value prop (forwarded to TitleBlock) */
+  description?: string;
   icp?: string;
   service?: ServiceSlug;
   tags?: string[];
@@ -64,8 +68,10 @@ export type PackageDetailOverviewProps = {
    */
   includesGroups?: IncludesGroup[];
   includesTable?: PackageIncludesTableProps;
+
+  /** Optional heading/caption/spacing for the includes section */
   includesTitle?: string;
-  includesCaption?: string;
+  includesCaption?: string; // default "What’s included"
   includesCompact?: boolean;
 
   /** The package card that was clicked on the hub page (rendered sticky, top-right) */
@@ -87,6 +93,7 @@ export default function PackageDetailOverview({
   id,
   title,
   valueProp,
+  description,
   icp,
   service,
   tags,
@@ -106,6 +113,10 @@ export default function PackageDetailOverview({
   className,
   style,
 }: PackageDetailOverviewProps) {
+  const teaserPrice = priceTeaser?.price ?? packagePrice;
+  const teaserLabel = priceTeaser?.label ?? (teaserPrice ? "Starting at" : undefined);
+  const teaserNotes = priceTeaser?.notes;
+
   const hasGroups = (includesGroups?.length ?? 0) > 0;
   const hasTable = !!includesTable && (includesTable.rows?.length ?? 0) > 0;
 
@@ -123,18 +134,19 @@ export default function PackageDetailOverview({
           {/* Meta chips (service + tags) */}
           <MetaRow service={service} tags={tags} show={showMeta} />
 
-          {/* Title + value prop + ICP */}
+          {/* Title + value prop + (optional) description + ICP */}
           <TitleBlock
             id={id ? `${id}__title` : undefined}
             title={title}
             valueProp={valueProp}
+            description={description}
             icp={icp}
           />
 
           {/* Outcomes */}
-          <OutcomesBlock outcomes={outcomes} />
+          <OutcomesBlock outcomes={outcomes} className={styles.outcomes} />
 
-          {/* What's included */}
+          {/* What’s included */}
           {hasGroups ? (
             <IncludesFromGroups
               packageName={title}
@@ -155,7 +167,7 @@ export default function PackageDetailOverview({
           <NotesBlock>{notes}</NotesBlock>
 
           {/* Price teaser (derived from canonical Money) */}
-          <PriceTeaser price={priceTeaser?.price ?? packagePrice} label={priceTeaser?.label} notes={priceTeaser?.notes} />
+          <PriceTeaser price={teaserPrice} label={teaserLabel} notes={teaserNotes} />
 
           {/* Primary actions */}
           <CTARow primary={ctaPrimary} secondary={ctaSecondary} />

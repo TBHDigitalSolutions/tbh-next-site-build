@@ -1,5 +1,4 @@
 // src/packages/components/PackageCard/PackageCard.tsx
-// src/packages/components/PackageCard/PackageCard.tsx
 "use client";
 
 import * as React from "react";
@@ -7,30 +6,19 @@ import * as React from "react";
 import PackageCardFrame from "@/packages/components/PackageCardFrame";
 import cls from "./PackageCard.module.css";
 
-/**
- * Defensive imports for molecules:
- * - Works whether modules export `default` or `{ Named }`
- * - Avoids "Element type is invalid (got undefined)" at runtime
- */
-import * as PriceLabelNS from "@/components/ui/molecules/PriceLabel";
-import * as FeatureListNS from "@/components/ui/molecules/FeatureList";
-import * as ServiceChipNS from "@/components/ui/molecules/ServiceChip";
-import * as TagChipsNS from "@/components/ui/molecules/TagChips";
-
 // Atoms
 import Button from "@/components/ui/atoms/Button/Button";
 import Divider from "@/components/ui/atoms/Divider/Divider";
 
+// Molecules — use named/default imports directly
+import { PriceLabel, type Money as PriceMoney } from "@/components/ui/molecules/PriceLabel";
+import { FeatureList } from "@/components/ui/molecules/FeatureList";
+import { ServiceChip } from "@/components/ui/molecules/ServiceChip";
+import TagChips from "@/components/ui/molecules/TagChips";
+
 // Centralized CTAs and pricing helpers
 import { ROUTES, CTA_LABEL } from "@/packages/lib/cta";
 import { startingAtLabel } from "@/packages/lib/pricing";
-
-const PriceLabel = (PriceLabelNS as any).default ?? (PriceLabelNS as any).PriceLabel;
-type PriceMoney = PriceLabelNS.Money;
-
-const FeatureList = (FeatureListNS as any).default ?? (FeatureListNS as any).FeatureList;
-const ServiceChip = (ServiceChipNS as any).default ?? (ServiceChipNS as any).ServiceChip;
-const TagChips = (TagChipsNS as any).default ?? (TagChipsNS as any).TagChips;
 
 /* ---------------------------------- Types --------------------------------- */
 
@@ -40,13 +28,11 @@ export type ServiceSlug = React.ComponentProps<typeof ServiceChip>["service"];
 export type LegacyPrice = { setup?: number; monthly?: number; currency?: string };
 
 export type PackageCardProps = {
-  // identity / routing
   id?: string;
   slug?: string;
   href?: string;
   testId?: string;
 
-  // naming/content
   name?: string;
   title?: string;
   description?: string;
@@ -54,36 +40,28 @@ export type PackageCardProps = {
   features?: string[];
   highlights?: string[];
 
-  // service + tier context
   service?: ServiceSlug;
   tier?: "Essential" | "Professional" | "Enterprise";
   popular?: boolean;
   badge?: string;
 
-  // art
   image?: { src: string; alt?: string } | null;
 
-  // pricing (Money is preferred; LegacyPrice still accepted but normalized)
   price?: PriceMoney | LegacyPrice;
 
-  // taxonomy
   tags?: string[];
 
-  // CTA (optional overrides)
   detailsHref?: string;
   primaryCta?: { label?: string; href?: string; onClick?: (slug?: string) => void };
   secondaryCta?: { label?: string; href?: string; onClick?: (slug?: string) => void };
   footnote?: string;
 
-  // presentation
   className?: string;
-  highlight?: boolean;                // emphasize card
-  variant?: "default" | "rail";       // compact style for carousels
+  highlight?: boolean;
+  variant?: "default" | "rail";
 
-  // ux
   isLoading?: boolean;
 
-  // analytics
   analyticsCategory?: string;
 };
 
@@ -125,9 +103,7 @@ export default function PackageCard(props: PackageCardProps) {
     badge,
 
     image,
-
     price,
-
     tags,
 
     detailsHref,
@@ -144,23 +120,24 @@ export default function PackageCard(props: PackageCardProps) {
     analyticsCategory = "packages",
   } = props;
 
-  // Resolve display strings
+  // Display strings
   const displayTitle = name ?? title ?? "Untitled package";
-  const displayDesc = description ?? summary ?? "";
+  // ↓↓↓ Reverse precedence so cards favor the short summary
+  const displayDesc = (summary && summary.trim()) ? summary : (description ?? "");
   const displayFeatures = (features && features.length ? features : highlights) ?? [];
   const shown = displayFeatures.slice(0, 5);
   const remaining = Math.max(0, displayFeatures.length - shown.length);
 
-  // Resolve hrefs (centralized routes)
+  // Hrefs
   const defaultHref = href ?? detailsHref ?? (slug ? ROUTES.package(slug) : "#");
   const primaryHref = primaryCta?.href ?? defaultHref;
   const secondaryHref = secondaryCta?.href ?? ROUTES.book;
 
-  // Normalize money & teaser label
+  // Money & teaser
   const money = normalizeMoney(price);
   const startingTeaser = money ? startingAtLabel(money) : "";
 
-  // Badge logic: custom > popular > tier
+  // Badge
   const displayBadge = badge ?? (popular ? "Most Popular" : tier ?? undefined);
 
   // Analytics
@@ -204,7 +181,7 @@ export default function PackageCard(props: PackageCardProps) {
       data-tier={tier ?? ""}
       data-popular={popular ? "true" : "false"}
     >
-      {/* Media/Header */}
+      {/* Header / Media */}
       <header className={cls.header}>
         <div className={cls.media}>
           {image?.src ? (
@@ -225,18 +202,19 @@ export default function PackageCard(props: PackageCardProps) {
           {displayBadge && <span className={cls.badge}>{displayBadge}</span>}
         </div>
 
-        <h3 className={cls.title} id={`${(slug ?? displayTitle).replace(/\s+/g, "-")}-title`}>
-          {displayTitle}
-        </h3>
-
-        {/* Visual separator under the title */}
-        <Divider />
+        {/* Title + underline as a single unit */}
+        <div className={cls.titleBar}>
+          <h3 className={cls.title} id={`${(slug ?? displayTitle).replace(/\s+/g, "-")}-title`}>
+            {displayTitle}
+          </h3>
+          <Divider />
+        </div>
       </header>
 
       {/* Description */}
       {displayDesc && <p className={cls.description}>{displayDesc}</p>}
 
-      {/* Value section (derived starting price + quick highlights) */}
+      {/* Value (teaser + quick highlights) */}
       <div className={cls.value}>
         {startingTeaser && (
           <div className={cls.priceDisplay} aria-label={startingTeaser}>
@@ -265,14 +243,13 @@ export default function PackageCard(props: PackageCardProps) {
         </div>
       )}
 
-      {/* Tags (optional) */}
+      {/* Tags */}
       {tags && tags.length > 0 ? (
         <div className={cls.tagsWrap}>
           <TagChips tags={tags} />
         </div>
       ) : null}
 
-      {/* Divider before CTAs */}
       <Divider />
 
       {/* Actions */}
@@ -297,7 +274,6 @@ export default function PackageCard(props: PackageCardProps) {
         </Button>
       </div>
 
-      {/* Optional footnote */}
       {footnote && <div className={cls.footerNote}>{footnote}</div>}
     </PackageCardFrame>
   );

@@ -1,25 +1,36 @@
 // src/packages/templates/PackagesDetailTemplate/PackagesDetailTemplate.tsx
-// src/packages/templates/PackagesDetailTemplate/PackagesDetailTemplate.tsx
 "use client";
+
+/* =============================================================================
+   PackagesDetailTemplate
+   - Page-level composition for a single package/bundle
+   - Renders the hero, overview (super card), extras, add-ons, related, CTA band,
+     and FAQ with consistent containers.
+   - Important fixes included:
+     • Pass `description` to PackageDetailOverview → TitleBlock.
+     • Normalize authored FAQs (supports both legacy `faq.faqs` and flat `faqs`).
+     • Use FullWidthSection wrappers with requested container sizing.
+============================================================================= */
 
 import * as React from "react";
 import styles from "./PackagesDetailTemplate.module.css";
 
+/* ------------------------------- Data & utils ------------------------------ */
 import type { PackageBundle } from "@/packages/lib/types";
 import { emitServiceJsonLd } from "@/packages/lib/jsonld";
 import { toPackageCard } from "@/packages/lib/adapters";
 import { sectionCtas, cardCtas } from "@/packages/lib/cta";
 import { startingAtLabel } from "@/packages/lib/pricing";
 
-// Layout wrapper
+/* --------------------------------- Layout --------------------------------- */
 import FullWidthSection from "@/components/sections/section-layouts/FullWidthSection/FullWidthSection";
 
-// Page-level sections
+/* --------------------------- Page-level sections --------------------------- */
 import ServiceHero from "@/components/sections/section-layouts/ServiceHero";
 import CTASection from "@/components/sections/section-layouts/CTASection/CTASection";
 import FAQSection from "@/components/sections/section-layouts/FAQSection";
 
-// Detail stack
+/* --------------------------------- Detail --------------------------------- */
 import PackageDetailOverview from "@/packages/sections/PackageDetailOverview";
 import type { PackageIncludesTableProps } from "@/packages/components/PackageIncludesTable/PackageIncludesTable";
 import AddOnSection from "@/packages/sections/AddOnSection";
@@ -31,36 +42,47 @@ import PackageDetailExtras from "@/packages/sections/PackageDetailExtras";
  * -------------------------------------------------------------------------- */
 
 export type PackagesDetailTemplateProps = {
+  /** SSOT bundle; minimal typing + flexible optional fields for authoring */
   bundle: PackageBundle & {
     slug?: string;
     service?: string;
     services?: string[];
     tags?: string[];
-    summary?: string;
+
+    /** Headline stack */
     name?: string;
     title?: string;
+    summary?: string;       // short value prop
+    description?: string;   // longer paragraph used on detail overview
     icp?: string;
+
+    /** Pricing (canonical Money shape) */
     price?: { oneTime?: number; monthly?: number; currency?: "USD" };
+
+    /** Content collections */
     outcomes?: Array<string | { label: string }>;
     includes?: Array<{ title: string; items: string[] }>;
     notes?: string;
 
-    /** Legacy + new FAQ authoring shapes */
+    /** FAQ — support both legacy and flat shapes */
     faq?: { title?: string; faqs?: Array<{ q?: string; a?: string; id?: string | number }> };
     faqs?: Array<{ question?: string; answer?: string; id?: string | number }>;
 
-    addOnRecommendations?: string[];
-
-    /** Media passed to Hero */
+    /** Media (hero background) */
     image?: { src?: string; alt?: string };
 
-    /** Extras (deliverables handled elsewhere by design) */
+    /** Extras shown in PackageDetailExtras */
     timeline?: { setup?: string; launch?: string; ongoing?: string };
     ethics?: string[];
+
+    addOnRecommendations?: string[];
   };
 
+  /** Optional related bundles and add-ons (already resolved upstream) */
   related?: PackageBundle[];
   addOns?: Array<any>;
+
+  /** Optional page-level FAQ fallback */
   faqs?: Array<{ id?: string | number; question?: string; answer?: string }>;
 };
 
@@ -74,23 +96,27 @@ export default function PackagesDetailTemplate({
   addOns = [],
   faqs = [],
 }: PackagesDetailTemplateProps) {
-  // --------------------------- HERO CONTENT ---------------------------
+  /* ------------------------------------------------------------------------ *
+   * HERO CONTENT
+   * ------------------------------------------------------------------------ */
   const heroTitle = bundle.title ?? (bundle as any).name ?? "Package";
   const heroSubtitle =
     bundle.summary ?? (bundle as any).valueProp ?? (bundle as any).subtitle ?? "";
 
-  // Pass hero image via `media` (this is the key for background/visual mode)
+  // Pass hero image via `media` (expected API for visual/background hero)
   const heroImage = (bundle as any).image as { src?: string; alt?: string } | undefined;
   const heroMedia =
     heroImage?.src
       ? ({ type: "image", src: heroImage.src, alt: heroImage.alt } as const)
       : undefined;
 
-  // ---------------------- DERIVED COLLECTIONS/FLAGS -------------------
+  /* ------------------------------------------------------------------------ *
+   * DERIVED COLLECTIONS / FLAGS
+   * ------------------------------------------------------------------------ */
   const hasAddOns = (addOns?.length ?? 0) > 0;
   const hasRelated = (related?.length ?? 0) > 0;
 
-  // Build the single-column includes table inline ({ columns, rows })
+  // Build a 1-column "What's included" table from grouped bullets
   const includesTable: PackageIncludesTableProps | undefined = React.useMemo(() => {
     const groups = (bundle as any).includes as Array<{ title: string; items: string[] }> | undefined;
     if (!groups?.length) return undefined;
@@ -100,7 +126,7 @@ export default function PackagesDetailTemplate({
         (group.items ?? []).map((item, i) => ({
           id: `${group.title.toLowerCase().replace(/\s+/g, "-")}-${i}`,
           label: `${group.title} — ${item}`,
-          values: { pkg: true },
+          values: { pkg: true }, // single checkmark column
         })),
       ) ?? [];
 
@@ -113,44 +139,39 @@ export default function PackagesDetailTemplate({
     } as PackageIncludesTableProps;
   }, [bundle, heroTitle]);
 
-  // Explicit empty fallback (no-op for the table component)
+  // Explicit empty fallback (keeps renderer predictable)
   const emptyIncludes: PackageIncludesTableProps = {
     caption: "What’s included",
     columns: [],
     rows: [],
   };
 
-  // Pinned rail card & related rails
+  // Pinned rail card & related rails (adapted from bundle)
   const pinnedCardBase = toPackageCard(bundle);
   const { primary, secondary } = cardCtas(bundle.slug ?? "");
-  const pinnedCard = {
-    ...pinnedCardBase,
-    variant: "rail",
-    primaryCta: primary,
-    secondaryCta: secondary,
-  };
+  const pinnedCard = { ...pinnedCardBase, variant: "rail", primaryCta: primary, secondaryCta: secondary };
   const relatedRailItems = React.useMemo(
     () => related.map((b) => ({ ...toPackageCard(b), variant: "rail" })),
     [related],
   );
 
-  // SEO JSON-LD
+  // Schema.org JSON-LD for SEO
   const jsonLd = emitServiceJsonLd(bundle);
 
   // CTAs (policy standard)
   const { primary: sectionPrimaryCta, secondary: sectionSecondaryCta } = sectionCtas();
 
-  // CTA band subtitle from canonical price
+  // CTA band subtitle derived from canonical price
   const priceSubtitle = bundle.price ? startingAtLabel(bundle.price as any) : undefined;
 
-  // Outcomes (normalize)
+  // Outcomes normalized (strings → {label})
   const outcomes: string[] =
     (bundle as any).outcomes?.map((o: any) => (typeof o === "string" ? o : o?.label)).filter(Boolean) ?? [];
 
-  // Chips shown in hero (omitted in overview)
+  // Chips shown in HERO (omit in Overview to avoid duplication)
   const tagChips = (bundle as any).tags ?? (bundle as any).services ?? [];
 
-  // Extras (Timeline / Ethics only)
+  // Extras (Timeline / Ethics only — deliverables handled elsewhere by design)
   const extras = React.useMemo(
     () => ({
       timeline: (bundle as any).timeline as
@@ -160,13 +181,18 @@ export default function PackagesDetailTemplate({
     }),
     [bundle],
   );
-
   const hasExtras =
     !!extras.timeline?.setup || !!extras.timeline?.launch || !!extras.timeline?.ongoing || !!extras.ethics?.length;
 
-  // ----------------------------- RENDER --------------------------------
+  /* ------------------------------------------------------------------------ *
+   * RENDER
+   * ------------------------------------------------------------------------ */
   return (
-    <article className={styles.detailTemplate} data-template="packages-detail" data-bundle={bundle.slug ?? ""}>
+    <article
+      className={styles.detailTemplate}
+      data-template="packages-detail"
+      data-bundle={bundle.slug ?? ""}
+    >
       {/* SEO (schema.org) */}
       {jsonLd}
 
@@ -199,6 +225,7 @@ export default function PackagesDetailTemplate({
           id={bundle.slug}
           title={heroTitle}
           valueProp={heroSubtitle}
+          description={(bundle as any).description}  //* pass long blurb to TitleBlock 
           icp={(bundle as any).icp}
           /* De-dup meta: let the HERO show service/tags; hide in overview */
           service={undefined as any}
@@ -206,7 +233,7 @@ export default function PackagesDetailTemplate({
           showMeta={false}
           /* Canonical price only (renderer derives “Starting at …”) */
           packagePrice={(bundle as any).price}
-          /* CTAs (policy) */
+          /* CTAs */
           ctaPrimary={sectionPrimaryCta}
           ctaSecondary={sectionSecondaryCta}
           /* Outcomes & Includes */
@@ -214,7 +241,7 @@ export default function PackagesDetailTemplate({
           includesTable={(includesTable as any) ?? emptyIncludes}
           /* Right sticky card */
           pinnedPackageCard={pinnedCard as any}
-          /* Notes (plain text; component accepts ReactNode) */
+          /* Notes (plain text allowed) */
           notes={(bundle as any).notes}
         />
       </FullWidthSection>
@@ -239,7 +266,12 @@ export default function PackagesDetailTemplate({
           containerSpacing="sm"
           className={styles.addOnsSection}
         >
-          <AddOnSection id="recommended-addons" title="Recommended add-ons" layout="carousel" addOns={addOns as any} />
+          <AddOnSection
+            id="recommended-addons"
+            title="Recommended add-ons"
+            layout="carousel" /* or "grid" */
+            addOns={addOns as any}
+          />
         </FullWidthSection>
       )}
 
@@ -272,21 +304,21 @@ export default function PackagesDetailTemplate({
 
       {/* ============================== FAQ ============================== */}
       {
-        // Normalize authored FAQs (supports both: bundle.faqs OR bundle.faq?.faqs)
+        // Normalize FAQs from either authoring shape:
         (() => {
           const rawAuthored =
             (Array.isArray((bundle as any)?.faqs) && (bundle as any).faqs) ||
             (Array.isArray((bundle as any)?.faq?.faqs) && (bundle as any).faq.faqs) ||
             [];
 
-          // Normalize to { id, question, answer }
+          // → { id, question, answer }
           const normalizedAuthored = rawAuthored.map((f: any, i: number) => ({
             id: String(f?.id ?? i),
             question: f?.question ?? f?.q,
             answer: f?.answer ?? f?.a,
           }));
 
-          // Page-level fallback `faqs` prop
+          // Page-level fallback
           const normalizedFallback = (faqs ?? []).map((f: any, i: number) => ({
             id: String(f?.id ?? i),
             question: f?.question ?? f?.q,
@@ -295,12 +327,12 @@ export default function PackagesDetailTemplate({
 
           const list = normalizedAuthored.length ? normalizedAuthored : normalizedFallback;
           const title =
-            (bundle as any)?.faq?.title // legacy optional title if present
-            ?? "Frequently asked questions";
+            (bundle as any)?.faq?.title /* optional authored title */ ??
+            "Frequently asked questions";
 
-          const show = list.length > 0;
+          if (list.length === 0) return null;
 
-          return show ? (
+          return (
             <FullWidthSection
               aria-label="Frequently asked questions"
               containerSize="wide"
@@ -310,7 +342,7 @@ export default function PackagesDetailTemplate({
               <FAQSection
                 id="bundle-faq"
                 title={title}
-                faqs={list}                 // <-- correct prop for FAQSection
+                faqs={list}                 // NOTE: FAQSection expects `faqs`, not `items` 
                 variant="default"
                 allowMultiple={false}
                 enableSearch={true}
@@ -318,7 +350,7 @@ export default function PackagesDetailTemplate({
                 searchPlaceholder="Search FAQs"
               />
             </FullWidthSection>
-          ) : null;
+          );
         })()
       }
     </article>

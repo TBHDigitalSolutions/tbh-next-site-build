@@ -1,7 +1,7 @@
 /* Container shell */
 .wrap {
     width: 100%;
-    background: var(--surface, #fff);
+    background: var(--surface, #0b1220);
     border-radius: 20px;
     border: 1px solid color-mix(in oklab, var(--surface, #fff) 85%, #0b1220);
     box-shadow: 0 10px 30px rgba(2, 6, 23, 0.06);
