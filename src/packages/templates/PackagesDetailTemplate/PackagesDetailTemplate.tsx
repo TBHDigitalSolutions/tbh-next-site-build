@@ -1,4 +1,5 @@
 // src/packages/templates/PackagesDetailTemplate/PackagesDetailTemplate.tsx
+// src/packages/templates/PackagesDetailTemplate/PackagesDetailTemplate.tsx
 "use client";
 
 import * as React from "react";
@@ -6,27 +7,30 @@ import styles from "./PackagesDetailTemplate.module.css";
 
 import type { PackageBundle } from "@/packages/lib/types";
 import { emitServiceJsonLd } from "@/packages/lib/jsonld";
-import { toPackageCard, toIncludesTable } from "@/packages/lib/adapters";
-import { sectionCtas, cardCtas, ROUTES } from "@/packages/lib/cta";
+import { toPackageCard } from "@/packages/lib/adapters";
+import { sectionCtas, cardCtas } from "@/packages/lib/cta";
 import { startingAtLabel } from "@/packages/lib/pricing";
+
+// Layout wrapper
+import FullWidthSection from "@/components/sections/section-layouts/FullWidthSection/FullWidthSection";
 
 // Page-level sections
 import ServiceHero from "@/components/sections/section-layouts/ServiceHero";
-// ⬇️ keep concrete file import to avoid broken index re-exports in some builds
 import CTASection from "@/components/sections/section-layouts/CTASection/CTASection";
 import FAQSection from "@/components/sections/section-layouts/FAQSection";
 
 // Detail stack
 import PackageDetailOverview from "@/packages/sections/PackageDetailOverview";
+import type { PackageIncludesTableProps } from "@/packages/components/PackageIncludesTable/PackageIncludesTable";
 import AddOnSection from "@/packages/sections/AddOnSection";
 import RelatedItemsRail from "@/packages/components/RelatedItemsRail";
+import PackageDetailExtras from "@/packages/sections/PackageDetailExtras";
 
 /* ----------------------------------------------------------------------------
  * Types
  * -------------------------------------------------------------------------- */
 
 export type PackagesDetailTemplateProps = {
-  /** The bundle/package entity to render (page-level SSOT) */
   bundle: PackageBundle & {
     slug?: string;
     service?: string;
@@ -40,18 +44,24 @@ export type PackagesDetailTemplateProps = {
     outcomes?: Array<string | { label: string }>;
     includes?: Array<{ title: string; items: string[] }>;
     notes?: string;
-    faq?: { title?: string; faqs?: Array<{ q: string; a: string }>; };
+
+    /** Legacy + new FAQ authoring shapes */
+    faq?: { title?: string; faqs?: Array<{ q?: string; a?: string; id?: string | number }> };
+    faqs?: Array<{ question?: string; answer?: string; id?: string | number }>;
+
     addOnRecommendations?: string[];
+
+    /** Media passed to Hero */
+    image?: { src?: string; alt?: string };
+
+    /** Extras (deliverables handled elsewhere by design) */
+    timeline?: { setup?: string; launch?: string; ongoing?: string };
+    ethics?: string[];
   };
 
-  /** Optional curated related items (will be adapted to cards) */
   related?: PackageBundle[];
-
-  /** Optional add-ons already resolved to the section’s expected shape */
   addOns?: Array<any>;
-
-  /** Optional fallback FAQ items (used if bundle has none) */
-  faqs?: Array<{ id?: string | number; question: string; answer: string }>;
+  faqs?: Array<{ id?: string | number; question?: string; answer?: string }>;
 };
 
 /* ----------------------------------------------------------------------------
@@ -64,145 +74,253 @@ export default function PackagesDetailTemplate({
   addOns = [],
   faqs = [],
 }: PackagesDetailTemplateProps) {
-  // --------------------------------------------------------------------------
-  // Hero content (safe defaults)
-  // --------------------------------------------------------------------------
+  // --------------------------- HERO CONTENT ---------------------------
   const heroTitle = bundle.title ?? (bundle as any).name ?? "Package";
   const heroSubtitle =
     bundle.summary ?? (bundle as any).valueProp ?? (bundle as any).subtitle ?? "";
 
-  // --------------------------------------------------------------------------
-  // Derived collections / flags
-  // --------------------------------------------------------------------------
+  // Pass hero image via `media` (this is the key for background/visual mode)
+  const heroImage = (bundle as any).image as { src?: string; alt?: string } | undefined;
+  const heroMedia =
+    heroImage?.src
+      ? ({ type: "image", src: heroImage.src, alt: heroImage.alt } as const)
+      : undefined;
+
+  // ---------------------- DERIVED COLLECTIONS/FLAGS -------------------
   const hasAddOns = (addOns?.length ?? 0) > 0;
   const hasRelated = (related?.length ?? 0) > 0;
 
-  const bundleFaqTitle = (bundle as any)?.faq?.title ?? "Frequently asked questions";
-  const bundleFaqItems: Array<{ q: string; a: string }> = (bundle as any)?.faq?.faqs ?? [];
-  const hasFaq = (bundleFaqItems.length ?? 0) > 0 || (faqs?.length ?? 0) > 0;
+  // Build the single-column includes table inline ({ columns, rows })
+  const includesTable: PackageIncludesTableProps | undefined = React.useMemo(() => {
+    const groups = (bundle as any).includes as Array<{ title: string; items: string[] }> | undefined;
+    if (!groups?.length) return undefined;
 
-  // --------------------------------------------------------------------------
-  // Adapters / models (single source of truth)
-  // --------------------------------------------------------------------------
-  const includesTable = toIncludesTable(bundle); // normalized for PackageIncludesTable
+    const rows =
+      groups.flatMap((group) =>
+        (group.items ?? []).map((item, i) => ({
+          id: `${group.title.toLowerCase().replace(/\s+/g, "-")}-${i}`,
+          label: `${group.title} — ${item}`,
+          values: { pkg: true },
+        })),
+      ) ?? [];
+
+    if (!rows.length) return undefined;
+
+    return {
+      caption: "What’s included",
+      columns: [{ id: "pkg", label: heroTitle }],
+      rows,
+    } as PackageIncludesTableProps;
+  }, [bundle, heroTitle]);
+
+  // Explicit empty fallback (no-op for the table component)
+  const emptyIncludes: PackageIncludesTableProps = {
+    caption: "What’s included",
+    columns: [],
+    rows: [],
+  };
+
+  // Pinned rail card & related rails
   const pinnedCardBase = toPackageCard(bundle);
-  const pinnedCard = { ...pinnedCardBase, variant: "rail", ...cardCtas(bundle.slug ?? "") };
+  const { primary, secondary } = cardCtas(bundle.slug ?? "");
+  const pinnedCard = {
+    ...pinnedCardBase,
+    variant: "rail",
+    primaryCta: primary,
+    secondaryCta: secondary,
+  };
+  const relatedRailItems = React.useMemo(
+    () => related.map((b) => ({ ...toPackageCard(b), variant: "rail" })),
+    [related],
+  );
 
-  const relatedRailItems = related.map((b) => ({ ...toPackageCard(b), variant: "rail" }));
-
-  // JSON-LD (schema.org) for SEO
+  // SEO JSON-LD
   const jsonLd = emitServiceJsonLd(bundle);
 
-  // CTA helpers (policy standard)
+  // CTAs (policy standard)
   const { primary: sectionPrimaryCta, secondary: sectionSecondaryCta } = sectionCtas();
 
-  // Optional CTASection subtitle: reinforce single “Starting at …” label
-  const priceSubtitle =
-    bundle.price ? startingAtLabel(bundle.price as any) : undefined;
+  // CTA band subtitle from canonical price
+  const priceSubtitle = bundle.price ? startingAtLabel(bundle.price as any) : undefined;
 
-  // Normalize outcomes for the overview (strings -> labels)
+  // Outcomes (normalize)
   const outcomes: string[] =
     (bundle as any).outcomes?.map((o: any) => (typeof o === "string" ? o : o?.label)).filter(Boolean) ?? [];
 
-  // Resolve service/tags
-  const serviceSlug = (bundle as any).service ?? (bundle as any).primaryService;
+  // Chips shown in hero (omitted in overview)
   const tagChips = (bundle as any).tags ?? (bundle as any).services ?? [];
 
+  // Extras (Timeline / Ethics only)
+  const extras = React.useMemo(
+    () => ({
+      timeline: (bundle as any).timeline as
+        | { setup?: string; launch?: string; ongoing?: string }
+        | undefined,
+      ethics: (bundle as any).ethics as string[] | undefined,
+    }),
+    [bundle],
+  );
+
+  const hasExtras =
+    !!extras.timeline?.setup || !!extras.timeline?.launch || !!extras.timeline?.ongoing || !!extras.ethics?.length;
+
+  // ----------------------------- RENDER --------------------------------
   return (
-    <article
-      className={styles.detailTemplate}
-      data-template="packages-detail"
-      data-bundle={bundle.slug ?? ""}
-    >
+    <article className={styles.detailTemplate} data-template="packages-detail" data-bundle={bundle.slug ?? ""}>
       {/* SEO (schema.org) */}
       {jsonLd}
 
-      {/* =========================================================
-          PAGE HERO — ServiceHero
-         ========================================================= */}
-      <section className={styles.heroSection} aria-label="Overview hero">
+      {/* ============================== HERO ============================== */}
+      <FullWidthSection
+        aria-label="Overview hero"
+        containerSize="full"
+        containerSpacing="none"
+        padded={false}
+        className={styles.heroSection}
+      >
         <ServiceHero
           title={heroTitle}
           subtitle={heroSubtitle}
           tags={tagChips}
-          primaryCta={sectionPrimaryCta}   // "Request proposal" → /contact
-          secondaryCta={sectionSecondaryCta} // "Book a call" → /book
+          media={heroMedia}
+          primaryCta={sectionPrimaryCta}
+          secondaryCta={sectionSecondaryCta}
         />
-      </section>
+      </FullWidthSection>
 
-      {/* =========================================================
-          SUPER CARD (AT A GLANCE) — PackageDetailOverview
-         ========================================================= */}
-      <section className={styles.overviewSection} aria-label="Package details at a glance">
+      {/* ========================== SUPER CARD =========================== */}
+      <FullWidthSection
+        aria-label="Package details at a glance"
+        containerSize="wide"
+        containerSpacing="sm"
+        className={styles.overviewSection}
+      >
         <PackageDetailOverview
           id={bundle.slug}
           title={heroTitle}
           valueProp={heroSubtitle}
           icp={(bundle as any).icp}
-          service={serviceSlug as any}
-          tags={tagChips}
-          // canonical price only; UI derives label
-          price={(bundle as any).price}
+          /* De-dup meta: let the HERO show service/tags; hide in overview */
+          service={undefined as any}
+          tags={undefined}
+          showMeta={false}
+          /* Canonical price only (renderer derives “Starting at …”) */
+          packagePrice={(bundle as any).price}
+          /* CTAs (policy) */
           ctaPrimary={sectionPrimaryCta}
           ctaSecondary={sectionSecondaryCta}
+          /* Outcomes & Includes */
           outcomes={outcomes}
-          includesTable={includesTable as any}
+          includesTable={(includesTable as any) ?? emptyIncludes}
+          /* Right sticky card */
           pinnedPackageCard={pinnedCard as any}
-          notes={(bundle as any).notes ? <p>{(bundle as any).notes}</p> : undefined}
+          /* Notes (plain text; component accepts ReactNode) */
+          notes={(bundle as any).notes}
         />
-      </section>
+      </FullWidthSection>
 
-      {/* =========================================================
-          ADD-ONS — recommended upsells
-         ========================================================= */}
+      {/* ============================== EXTRAS ============================ */}
+      {hasExtras && (
+        <FullWidthSection
+          aria-label="Additional details"
+          containerSize="wide"
+          containerSpacing="sm"
+          className={styles.extrasSection}
+        >
+          <PackageDetailExtras {...extras} />
+        </FullWidthSection>
+      )}
+
+      {/* ============================== ADD-ONS =========================== */}
       {hasAddOns && (
-        <section className={styles.addOnsSection} aria-label="Recommended add-ons">
-          <AddOnSection
-            id="recommended-addons"
-            title="Recommended add-ons"
-            layout="carousel" /* or "grid" */
-            addOns={addOns as any}
-          />
-        </section>
+        <FullWidthSection
+          aria-label="Recommended add-ons"
+          containerSize="wide"
+          containerSpacing="sm"
+          className={styles.addOnsSection}
+        >
+          <AddOnSection id="recommended-addons" title="Recommended add-ons" layout="carousel" addOns={addOns as any} />
+        </FullWidthSection>
       )}
 
-      {/* =========================================================
-          RELATED — packages and/or bundles
-         ========================================================= */}
+      {/* ============================== RELATED =========================== */}
       {hasRelated && (
-        <section className={styles.relatedSection} aria-label="Related packages">
+        <FullWidthSection
+          aria-label="Related packages"
+          containerSize="wide"
+          containerSpacing="sm"
+          className={styles.relatedSection}
+        >
           <RelatedItemsRail items={relatedRailItems as any} />
-        </section>
+        </FullWidthSection>
       )}
 
-      {/* =========================================================
-          CTA BAND — closing call to action
-         ========================================================= */}
-      <section className={styles.ctaSection} aria-label="Get started">
+      {/* ============================== CTA BAND ========================== */}
+      <FullWidthSection
+        aria-label="Get started"
+        containerSize="wide"
+        containerSpacing="sm"
+        className={styles.ctaSection}
+      >
         <CTASection
           title="Let’s shape your growth plan"
           subtitle={priceSubtitle}
           primaryCta={sectionPrimaryCta}
           secondaryCta={sectionSecondaryCta}
         />
-      </section>
+      </FullWidthSection>
 
-      {/* =========================================================
-          FAQ — final panel
-         ========================================================= */}
-      {hasFaq && (
-        <section className={styles.faqSection} aria-label="Frequently asked questions">
-          <FAQSection
-            id="bundle-faq"
-            title={bundleFaqTitle}
-            items={(bundleFaqItems.length ? bundleFaqItems : faqs).map((f: any, i: number) => ({
-              id: String(f?.id ?? i),
-              question: f.q ?? f.question,
-              answer: f.a ?? f.answer,
-            }))}
-          />
-        </section>
-      )}
+      {/* ============================== FAQ ============================== */}
+      {
+        // Normalize authored FAQs (supports both: bundle.faqs OR bundle.faq?.faqs)
+        (() => {
+          const rawAuthored =
+            (Array.isArray((bundle as any)?.faqs) && (bundle as any).faqs) ||
+            (Array.isArray((bundle as any)?.faq?.faqs) && (bundle as any).faq.faqs) ||
+            [];
+
+          // Normalize to { id, question, answer }
+          const normalizedAuthored = rawAuthored.map((f: any, i: number) => ({
+            id: String(f?.id ?? i),
+            question: f?.question ?? f?.q,
+            answer: f?.answer ?? f?.a,
+          }));
+
+          // Page-level fallback `faqs` prop
+          const normalizedFallback = (faqs ?? []).map((f: any, i: number) => ({
+            id: String(f?.id ?? i),
+            question: f?.question ?? f?.q,
+            answer: f?.answer ?? f?.a,
+          }));
+
+          const list = normalizedAuthored.length ? normalizedAuthored : normalizedFallback;
+          const title =
+            (bundle as any)?.faq?.title // legacy optional title if present
+            ?? "Frequently asked questions";
+
+          const show = list.length > 0;
+
+          return show ? (
+            <FullWidthSection
+              aria-label="Frequently asked questions"
+              containerSize="wide"
+              containerSpacing="sm"
+              className={styles.faqSection}
+            >
+              <FAQSection
+                id="bundle-faq"
+                title={title}
+                faqs={list}                 // <-- correct prop for FAQSection
+                variant="default"
+                allowMultiple={false}
+                enableSearch={true}
+                enableCategoryFilter={false}
+                searchPlaceholder="Search FAQs"
+              />
+            </FullWidthSection>
+          ) : null;
+        })()
+      }
     </article>
   );
 }

@@ -6,7 +6,7 @@ import { base } from "./base";
 /** UI registry: Package Card for Lead Routing & Distribution */
 export const leadRoutingDistributionCard: PackageCardProps = {
   // identity / routing
-  id: `${base.service}-${base.id}`,
+  id: base.id, // no double prefix
   slug: base.slug,
   href: `/packages/${base.slug}`,
   testId: `card-${base.slug}`,
@@ -14,11 +14,9 @@ export const leadRoutingDistributionCard: PackageCardProps = {
   // naming / content
   name: base.name,
   description: base.summary,
-  // Top 5 features: flatten first two include groups to produce the curated five
-  features: [
-    ...base.includes[0].items,
-    ...base.includes[1].items,
-  ].slice(0, 5),
+
+  // top 5 features (resilient to authoring changes)
+  features: (base.includes?.flatMap((g) => g.items) ?? []).slice(0, 5),
 
   // service / tier context
   service: base.service,

@@ -1,4 +1,5 @@
 // src/packages/registry/lead-generation-packages/lead-routing-distribution/details.ts
+
 import type { PackageDetailOverviewProps } from "@/packages/sections/PackageDetailOverview";
 import type { PackageIncludesTableProps } from "@/packages/components/PackageIncludesTable/PackageIncludesTable";
 import type { PackageCardProps } from "@/packages/components/PackageCard";
@@ -6,21 +7,31 @@ import { sectionCtas } from "@/packages/lib/cta";
 import { base } from "./base";
 import { leadRoutingDistributionCard } from "./card";
 
-// What's included (grouped bullets)
+/** Build a single-column “What’s included” table from grouped bullets */
 const includesTable: PackageIncludesTableProps = {
-  sections: base.includes.map(g => ({ title: g.title, items: g.items })),
+  caption: "What’s included",
+  columns: [{ id: "pkg", label: base.name }],
+  rows: base.includes.flatMap((group) =>
+    group.items.map((item, i) => ({
+      id: `${group.title.toLowerCase().replace(/\s+/g, "-")}-${i}`,
+      label: `${group.title} — ${item}`,
+      values: { pkg: true }, // checkmark in the single column
+    })),
+  ),
 };
 
+/** Pinned card in compact (rail) variant */
 const pinnedPackageCard: PackageCardProps = {
   ...leadRoutingDistributionCard,
   variant: "rail",
 };
 
+/** Standardized CTAs for detail pages */
 const { primary: ctaPrimary, secondary: ctaSecondary } = sectionCtas();
 
-/** Detail Overview (Super Card) */
+/** Detail Overview (Super Card) registry entry */
 export const leadRoutingDistributionDetail: PackageDetailOverviewProps = {
-  // headline & meta
+  /* Headline & meta */
   id: `${base.slug}-overview`,
   title: base.name,
   valueProp: base.summary,
@@ -28,22 +39,26 @@ export const leadRoutingDistributionDetail: PackageDetailOverviewProps = {
   service: base.service,
   tags: base.tags,
 
-  // canonical price ONLY (renderer derives “Starting at …”)
-  price: base.price,
+  /* Canonical price ONLY (renderer derives “Starting at …”) */
+  packagePrice: base.price,
 
-  // CTAs (policy)
+  /* CTAs (policy) */
   ctaPrimary,
   ctaSecondary,
 
-  // outcomes
+  /* Outcomes */
   outcomes: base.outcomes,
 
-  // what's included
+  /* What’s included (single-column table) */
   includesTable,
 
-  // sticky right rail
+  /* Sticky right rail */
   pinnedPackageCard,
 
-  // notes below table
-  notes: base.notes ? <p>{base.notes}</p> : undefined,
+  /* Notes (plain text; no JSX in .ts files) */
+  notes: base.notes,
+
+  /* Styling hooks (optional) */
+  className: undefined,
+  style: undefined,
 };

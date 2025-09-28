@@ -1,0 +1,65 @@
+.wrap {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.5rem;
+}
+
+/* alignment helpers */
+.alignStart {
+    justify-content: flex-start;
+    text-align: left;
+}
+
+.alignCenter {
+    justify-content: center;
+    text-align: center;
+}
+
+.alignEnd {
+    justify-content: flex-end;
+    text-align: right;
+}
+
+/* size density */
+.sizeSm {
+    row-gap: 0.25rem;
+    column-gap: 0.5rem;
+}
+
+.sizeMd {
+    row-gap: 0.5rem;
+    column-gap: 0.75rem;
+}
+
+.label {
+    font-weight: 800;
+    letter-spacing: 0.2px;
+    color: var(--text-primary, #0f172a);
+    font-size: var(--font-size-body, 0.95rem);
+}
+
+.notes {
+    opacity: 0.85;
+    color: var(--text-tertiary, #475569);
+    font-size: var(--font-size-caption, 0.9rem);
+}
+
+/* subtle emphasis option */
+.emphasis .label {
+    text-decoration: none;
+    background: color-mix(in oklab, var(--brand-500, #0ea5e9) 12%, transparent);
+    border-radius: 6px;
+    padding: 0.1rem 0.3rem;
+}
+
+/* small devices: tighten spacing a bit */
+@media (max-width: 640px) {
+    .wrap {
+        gap: 0.4rem;
+    }
+
+    .notes {
+        font-size: 0.875rem;
+    }
+}

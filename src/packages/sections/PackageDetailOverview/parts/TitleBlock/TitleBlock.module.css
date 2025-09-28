@@ -1,0 +1,60 @@
+.wrap {
+    display: grid;
+    gap: 0.5rem;
+}
+
+/* alignment helpers */
+.alignStart {
+    justify-items: start;
+    text-align: left;
+}
+
+.alignCenter {
+    justify-items: center;
+    text-align: center;
+}
+
+.alignEnd {
+    justify-items: end;
+    text-align: right;
+}
+
+.title {
+    margin: 0;
+    font-weight: 900;
+    letter-spacing: 0.2px;
+    line-height: 1.15;
+    /* Prefer theme tokens; clamp as a fallback */
+    font-size: var(--font-size-h2, clamp(1.5rem, 2.4vw, 2rem));
+    color: var(--text-primary, #0f172a);
+}
+
+.divider {
+    width: 100%;
+    max-width: 100%;
+    margin: 0.1rem 0 0.25rem 0;
+}
+
+.valueProp {
+    margin: 0;
+    color: var(--text-secondary, #334155);
+    font-size: var(--font-size-body-lg, clamp(1rem, 1.2vw, 1.125rem));
+    line-height: var(--line-height-body, 1.6);
+}
+
+.icp {
+    margin: 0.1rem 0 0 0;
+    color: var(--text-tertiary, #475569);
+    font-size: var(--font-size-body, 0.95rem);
+}
+
+/* reduce vertical density slightly on narrow screens */
+@media (max-width: 640px) {
+    .wrap {
+        gap: 0.4rem;
+    }
+
+    .valueProp {
+        font-size: clamp(0.975rem, 1.8vw, 1.05rem);
+    }
+}

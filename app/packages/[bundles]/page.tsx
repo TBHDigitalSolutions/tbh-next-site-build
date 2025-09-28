@@ -3,22 +3,42 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import styles from "../packages.module.css";
 
-// SSOT (facade)
+// SSOT (façade)
 import { BUNDLES, getBundleBySlug, ADDONS_BY_ID } from "@/data/packages";
 
-// Template (import concrete file for safety)
+// Template (concrete import)
 import PackagesDetailTemplate from "@/packages/templates/PackagesDetailTemplate/PackagesDetailTemplate";
 
-// Optional: revalidate every hour (ISR). Adjust as needed.
+// Revalidate every hour (ISR). Adjust as needed.
 export const revalidate = 3600;
 
 type Params = { bundles: string };
+
+/** Minimal shape we actually read here (keep page loose-coupled) */
+type MinimalBundle = {
+  slug: string;
+  name?: string;
+  title?: string;
+  summary?: string;
+  subtitle?: string;
+  description?: string;
+  service?: string;
+  primaryService?: string;
+  tags?: string[];
+  services?: string[];
+  seo?: { title?: string; description?: string };
+  image?: { src?: string; alt?: string };
+  cardImage?: { src?: string; alt?: string };
+  addOnRecommendations?: string[];
+};
 
 /* -------------------------------------------------------------------------- */
 /* Static params for SSG/ISR                                                  */
 /* -------------------------------------------------------------------------- */
 export function generateStaticParams() {
-  return BUNDLES.map((b) => ({ bundles: b.slug }));
+  return (BUNDLES || [])
+    .filter((b: any) => !!b?.slug)
+    .map((b: any) => ({ bundles: String(b.slug) }));
 }
 
 /* -------------------------------------------------------------------------- */
@@ -26,7 +46,7 @@ export function generateStaticParams() {
 /* -------------------------------------------------------------------------- */
 export function generateMetadata({ params }: { params: Params }): Metadata {
   const { bundles } = params;
-  const bundle = getBundleBySlug(bundles);
+  const bundle = getBundleBySlug(bundles) as MinimalBundle | undefined;
 
   if (!bundle) {
     return {
@@ -36,34 +56,47 @@ export function generateMetadata({ params }: { params: Params }): Metadata {
     };
   }
 
-  const anyBundle = bundle as any;
-  const title =
-    anyBundle?.seo?.title ??
-    `${anyBundle.title ?? anyBundle.name ?? "Package"} • Integrated Growth Package`;
+  const site = (process.env.NEXT_PUBLIC_SITE_URL || "").trim();
+  const toAbsoluteUrl = (src?: string): string | undefined => {
+    if (!src) return undefined;
+    if (/^https?:\/\//i.test(src)) return src;
+    if (!site) return undefined; // no site configured → skip OG image to avoid invalid URL
+    return `${site.replace(/\/+$/, "")}/${src.replace(/^\/+/, "")}`;
+  };
 
-  const description =
-    anyBundle?.seo?.description ??
-    anyBundle.subtitle ??
-    anyBundle.summary ??
-    anyBundle.description ??
+  const heroTitle =
+    bundle.seo?.title ??
+    `${(bundle.title ?? bundle.name ?? "Package")} • Integrated Growth Package`;
+
+  const heroDescription =
+    bundle.seo?.description ??
+    bundle.subtitle ??
+    bundle.summary ??
+    bundle.description ??
     "Package details";
 
-  const image = anyBundle?.image ?? anyBundle?.cardImage;
-  const site = process.env.NEXT_PUBLIC_SITE_URL ?? "";
-  const absolute = (src?: string) =>
-    src?.startsWith?.("http") ? src : src ? `${site}${src}` : undefined;
+  const image = bundle.image ?? bundle.cardImage;
+  const imageUrl = toAbsoluteUrl(image?.src);
 
   return {
-    title,
-    description,
+    title: heroTitle,
+    description: heroDescription,
     alternates: { canonical: `/packages/${bundle.slug}` },
     openGraph: {
-      title,
-      description,
+      title: heroTitle,
+      description: heroDescription,
       type: "website",
-      ...(image?.src && {
-        images: [{ url: absolute(image.src)!, alt: image.alt || bundle.name }],
+      url: `/packages/${bundle.slug}`,
+      siteName: "TBH Digital",
+      ...(imageUrl && {
+        images: [{ url: imageUrl, alt: image?.alt || bundle.name || "Package image" }],
       }),
+    },
+    twitter: {
+      card: imageUrl ? "summary_large_image" : "summary",
+      title: heroTitle,
+      description: heroDescription,
+      ...(imageUrl && { images: [imageUrl] }),
     },
   };
 }
@@ -71,27 +104,27 @@ export function generateMetadata({ params }: { params: Params }): Metadata {
 /* -------------------------------------------------------------------------- */
 /* Helpers                                                                    */
 /* -------------------------------------------------------------------------- */
-function pickRelated(current: any, all: any[], max = 8) {
+function pickRelated(current: MinimalBundle, all: MinimalBundle[], max = 8) {
   const service = current.service ?? current.primaryService;
   const currentSlug = current.slug;
   const currentTags: string[] = current.tags ?? current.services ?? [];
 
   const byService = all.filter(
-    (b) => (b as any).slug !== currentSlug && ((b as any).service ?? (b as any).primaryService) === service,
+    (b) => b.slug !== currentSlug && (b.service ?? b.primaryService) === service,
   );
 
   if (byService.length >= max) return byService.slice(0, max);
 
   const byTags = all
-    .filter((b) => (b as any).slug !== currentSlug)
+    .filter((b) => b.slug !== currentSlug)
     .filter((b) => {
-      const tags: string[] = (b as any).tags ?? (b as any).services ?? [];
+      const tags: string[] = b.tags ?? b.services ?? [];
       return tags.some((t) => currentTags.includes(t));
     });
 
-  const merged = [...byService];
+  const merged: MinimalBundle[] = [...byService];
   for (const r of byTags) {
-    if (!merged.find((m) => (m as any).slug === (r as any).slug)) {
+    if (!merged.find((m) => m.slug === r.slug)) {
       merged.push(r);
     }
     if (merged.length >= max) break;
@@ -104,24 +137,31 @@ function pickRelated(current: any, all: any[], max = 8) {
 /* -------------------------------------------------------------------------- */
 export default function PackageDetailPage({ params }: { params: Params }) {
   const { bundles } = params;
-  const bundle = getBundleBySlug(bundles);
+  const bundle = getBundleBySlug(bundles) as MinimalBundle | undefined;
   if (!bundle) return notFound();
 
-  // Resolve curated add-ons (safe if ADDONS_BY_ID is empty)
+  // Resolve curated add-ons (safe even if ADDONS_BY_ID is empty)
   const addOns =
-    ((bundle as any).addOnRecommendations as string[] | undefined)?.map(
-      (id) => (ADDONS_BY_ID as Record<string, unknown> | undefined)?.[id],
-    ).filter(Boolean) ?? [];
+    (bundle.addOnRecommendations || [])
+      .map((id) => (ADDONS_BY_ID as Record<string, unknown> | undefined)?.[id])
+      .filter(Boolean) ?? [];
 
-  // Derive related bundles (fallback heuristic)
-  const related = pickRelated(bundle, BUNDLES, 8);
+  // Derive related bundles (fallback heuristic by service/tags)
+  const related = pickRelated(bundle, (BUNDLES as unknown as MinimalBundle[]) || [], 8);
 
-  // Fallback FAQs if you want to inject extras beyond bundle.faq
+  // Optional: inject extra FAQs (beyond bundle.faq)
   const faqs: Array<{ id?: string | number; question: string; answer: string }> = [];
 
+  // NOTE: PackagesDetailTemplate now passes bundle.image.{src,alt} → ServiceHero,
+  // so the hero correctly renders the authored image from base.ts.
   return (
     <main className={styles.page} data-route="packages/[bundles]">
-      <PackagesDetailTemplate bundle={bundle as any} related={related as any} addOns={addOns as any} faqs={faqs} />
+      <PackagesDetailTemplate
+        bundle={bundle as any}
+        related={related as any}
+        addOns={addOns as any}
+        faqs={faqs}
+      />
     </main>
   );
 }

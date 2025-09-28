@@ -9,7 +9,7 @@ export type Faq = {
   category?: string | null;
   tags?: string[];
 };
-
+ 
 export type FAQSectionProps = {
   /** Anchor id for deep-linking (renders a permalink icon/link). */
   id?: string;

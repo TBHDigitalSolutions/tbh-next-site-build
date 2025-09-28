@@ -1,0 +1,20 @@
+.wrap {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 0.75rem;
+    margin: 0 0 0.25rem 0;
+}
+
+/* Optional alignment helpers (can also be controlled via inline style) */
+.alignStart {
+    justify-content: flex-start;
+}
+
+.alignCenter {
+    justify-content: center;
+}
+
+.alignEnd {
+    justify-content: flex-end;
+}

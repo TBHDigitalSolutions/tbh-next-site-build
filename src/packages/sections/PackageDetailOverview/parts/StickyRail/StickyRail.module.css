@@ -1,0 +1,23 @@
+.wrap {
+    position: sticky;
+    /* Respect site header; page can override via inline style or root var */
+    top: var(--sticky-top, var(--header-offset, 1rem));
+    z-index: var(--z-sticky, 5);
+
+    /* Prevent unnecessary overflow / stacking issues */
+    contain: layout paint style;
+    width: 100%;
+}
+
+.shell {
+    /* No extra chrome here; the PackageCard handles visuals. */
+    display: block;
+}
+
+/* Disable sticky on narrow viewports; let it flow in the document */
+@media (max-width: 980px) {
+    .wrap {
+        position: static;
+        top: auto;
+    }
+}

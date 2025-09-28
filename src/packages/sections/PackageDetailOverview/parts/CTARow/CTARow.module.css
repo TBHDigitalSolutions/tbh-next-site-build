@@ -1,0 +1,41 @@
+.row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    /* allow wrapping on narrow widths */
+}
+
+/* alignment helpers */
+.alignStart {
+    justify-content: flex-start;
+}
+
+.alignCenter {
+    justify-content: center;
+}
+
+.alignEnd {
+    justify-content: flex-end;
+}
+
+/* density helpers (optional) */
+.sizeSm {
+    gap: 0.5rem;
+}
+
+.sizeMd {
+    gap: 0.75rem;
+}
+
+/* stretch buttons to full width when container is narrow */
+@media (max-width: 560px) {
+    .row {
+        gap: 0.6rem;
+    }
+
+    .row :global(a),
+    .row :global(button) {
+        width: 100%;
+    }
+}
