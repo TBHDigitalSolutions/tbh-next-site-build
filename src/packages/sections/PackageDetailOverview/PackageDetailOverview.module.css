@@ -99,3 +99,69 @@
         padding: 1rem;
     }
 }
+/* src/packages/sections/PackageDetailOverview/PackageDetailOverview.module.css */
+
+/* ...existing grid/left/right styles remain... */
+
+/* Generic section block with header (Title + Divider + Tagline) */
+.block {
+    display: grid;
+    gap: var(--space-3, 12px);
+    margin-block: var(--space-6, 24px) 0;
+}
+
+.blockHeader {
+    display: grid;
+    gap: var(--space-2, 8px);
+    align-items: start;
+}
+
+.blockHeaderCenter {
+    display: grid;
+    gap: var(--space-2, 8px);
+    justify-items: center;
+    /* center title + divider + tagline */
+}
+
+.blockTitle {
+    margin: 0;
+    font: var(--font-h3, 700 1.375rem/1.2 var(--font-heading, Aldrich, system-ui));
+    color: var(--text-primary);
+    text-wrap: balance;
+}
+
+.blockDivider {
+    inline-size: min(100%, 680px);
+}
+
+.blockTagline {
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: clamp(0.95rem, 0.92rem + 0.3vw, 1.05rem);
+    line-height: 1.6;
+    text-wrap: pretty;
+}
+
+.center {
+    justify-self: center;
+    text-align: center;
+}
+
+/* Outcomes grid spacing hook (OutcomesBlock uses its own layout; we just space it nicely) */
+.outcomes {
+    margin-block-start: var(--space-2, 8px);
+}
+
+/* Reuse the readable notes emphasis (already added in your NotesBlock.module.css update) */
+.notesEmphasis {
+    font-size: clamp(0.95rem, 0.92rem + 0.3vw, 1.05rem);
+    line-height: 1.6;
+    color: var(--text-secondary);
+}
+
+/* Below-grid slot (extras) */
+.belowGrid {
+    margin-block-start: var(--space-8, 32px);
+    display: grid;
+    gap: var(--space-6, 24px);
+}

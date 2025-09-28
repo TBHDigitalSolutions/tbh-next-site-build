@@ -1,10 +1,13 @@
 // src/packages/sections/PackageDetailExtras/PackageDetailExtras.tsx
-
 "use client";
 
 import * as React from "react";
 import Divider from "@/components/ui/atoms/Divider/Divider";
 import styles from "./PackageDetailExtras.module.css";
+
+/* -------------------------------------------------------------------------- */
+/*                                    Types                                   */
+/* -------------------------------------------------------------------------- */
 
 export type TimelineItem = {
   /** Short title of the step, e.g., "Setup" */
@@ -23,14 +26,12 @@ export type LegacyTimeline = {
 
 export type PackageDetailExtrasProps = {
   /**
-   * New flexible timeline blocks (1–5).
-   * If omitted, we’ll try to derive from `timeline` (legacy shape).
+   * Flexible timeline blocks (1–5). If omitted, we’ll try to derive from `timeline` (legacy shape).
    */
   timelineBlocks?: TimelineItem[];
 
   /**
-   * Legacy timeline shape (optional).
-   * If `timelineBlocks` is provided, it wins.
+   * Legacy timeline shape (optional). If `timelineBlocks` is provided, it wins.
    */
   timeline?: LegacyTimeline;
 
@@ -39,44 +40,85 @@ export type PackageDetailExtrasProps = {
    */
   ethics?: string[];
 
-  /** Headings (customizable / i18n-ready) */
-  timelineHeading?: string; // default: "Timeline & Turnaround"
-  ethicsHeading?: string;   // default: "Limits & Ethics"
+  /**
+   * Optional separate "limits" bullets (out-of-scope items). If provided,
+   * they are rendered under the same "Limits & Ethics" section as a second list.
+   */
+  limits?: string[];
 
-  /** Styling hooks */
+  /* ------------------------ OVERRIDABLE COPY (NEW) ----------------------- */
+  /** Section 1: Timeline & Turnaround */
+  timelineTitle?: string;     // default: "Timeline & Turnaround"
+  timelineTagline?: string;   // default: "How we get you live and iterating."
+
+  /** Section 2: Limits & Ethics */
+  ethicsTitle?: string;       // default: "Limits & Ethics"
+  ethicsTagline?: string;     // default: "Boundaries that keep outcomes fair and compliant."
+
+  /* -------- Back-compat aliases (if callers still pass these names) ------ */
+  /** @deprecated Use timelineTitle */
+  timelineHeading?: string;
+  /** @deprecated Use ethicsTitle */
+  ethicsHeading?: string;
+
+  /* ------------------------------ Utilities ------------------------------ */
   className?: string;
   style?: React.CSSProperties;
-
-  /** Testing / a11y */
   id?: string;
   "data-testid"?: string;
   ariaLabel?: string;
 };
 
+/* -------------------------------------------------------------------------- */
+/*                                 Component                                  */
+/* -------------------------------------------------------------------------- */
+
 export default function PackageDetailExtras({
   timelineBlocks,
   timeline,
   ethics,
-  timelineHeading = "Timeline & Turnaround",
-  ethicsHeading = "Limits & Ethics",
+  limits,
+
+  // New copy overrides with sensible defaults
+  timelineTitle,
+  timelineTagline,
+  ethicsTitle,
+  ethicsTagline,
+
+  // Back-compat aliases (map to new names if supplied)
+  timelineHeading,
+  ethicsHeading,
+
   className,
   style,
   id,
   "data-testid": testId = "package-detail-extras",
   ariaLabel,
 }: PackageDetailExtrasProps) {
-  // --- Normalize the timeline into a 1–5 step array ---
-  const steps: TimelineItem[] = React.useMemo(() => {
-    const direct = (timelineBlocks ?? [])
-      .filter(Boolean)
-      .map((b) => ({
-        title: (b?.title ?? "").trim(),
-        note: b?.note?.trim(),
-        id: b?.id,
-      }))
-      .filter((b) => b.title.length > 0);
+  /* -------------------------------- Defaults ------------------------------ */
+  const finalTimelineTitle =
+    timelineTitle ?? timelineHeading /* back-compat */ ?? "Timeline & Turnaround";
+  const finalTimelineTagline =
+    timelineTagline ?? "How we get you live and iterating.";
 
-    if (direct.length > 0) return direct.slice(0, 5);
+  const finalEthicsTitle =
+    ethicsTitle ?? ethicsHeading /* back-compat */ ?? "Limits & Ethics";
+  const finalEthicsTagline =
+    ethicsTagline ?? "Boundaries that keep outcomes fair and compliant.";
+
+  /* --------------------------- Normalize timeline ------------------------- */
+  const steps: TimelineItem[] = React.useMemo(() => {
+    const fromBlocks =
+      (timelineBlocks ?? [])
+        .filter(Boolean)
+        .map((b) => ({
+          title: (b?.title ?? "").trim(),
+          note: b?.note?.trim(),
+          id: b?.id,
+        }))
+        .filter((b) => b.title.length > 0) || [];
+
+    if (fromBlocks.length > 0) return fromBlocks.slice(0, 5);
 
     // Legacy fallbacks
     const derived: TimelineItem[] = [];
@@ -89,9 +131,11 @@ export default function PackageDetailExtras({
 
   const hasTimeline = steps.length > 0;
   const hasEthics = (ethics?.filter(Boolean).length ?? 0) > 0;
+  const hasLimits = (limits?.filter(Boolean).length ?? 0) > 0;
 
-  if (!hasTimeline && !hasEthics) return null;
+  if (!hasTimeline && !hasEthics && !hasLimits) return null;
 
+  /* -------------------------------- Render -------------------------------- */
   return (
     <section
       id={id}
@@ -103,8 +147,16 @@ export default function PackageDetailExtras({
       {/* ============================== TIMELINE ============================== */}
       {hasTimeline && (
         <div className={styles.block} aria-label="Timeline / Turnaround">
-          <h2 className={styles.heading}>{timelineHeading}</h2>
-          <Divider />
+          {/* Header group: (Title + Divider) wrapped together, Tagline directly under, then all wrapped */}
+          <header className={styles.headerGroup}>
+            <div className={styles.titleAndRule}>
+              <h2 className={styles.heading}>{finalTimelineTitle}</h2>
+              <Divider className={styles.divider} />
+            </div>
+            {finalTimelineTagline ? (
+              <p className={styles.tagline}>{finalTimelineTagline}</p>
+            ) : null}
+          </header>
 
           <ol className={styles.timeline} aria-label="Project timeline">
             {steps.map((step, i) => {
@@ -113,9 +165,14 @@ export default function PackageDetailExtras({
               const isLast = i === steps.length - 1;
               return (
                 <React.Fragment key={key}>
-                  <li className={styles.step} aria-label={`${step.title}${step.note ? ` — ${step.note}` : ""}`}>
+                  <li
+                    className={styles.step}
+                    aria-label={`${step.title}${step.note ? ` — ${step.note}` : ""}`}
+                  >
                     <div className={styles.stepCard}>
-                      <div className={styles.stepIndex} aria-hidden="true">{index}</div>
+                      <div className={styles.stepIndex} aria-hidden="true">
+                        {index}
+                      </div>
                       <div className={styles.stepBody}>
                         <div className={styles.stepTitle}>{step.title}</div>
                         {step.note ? <p className={styles.stepNote}>{step.note}</p> : null}
@@ -126,8 +183,8 @@ export default function PackageDetailExtras({
                   {/* Connector (arrow) between steps */}
                   {!isLast && (
                     <li className={styles.connector} aria-hidden="true">
-                      <span className={styles.line}></span>
-                      <span className={styles.chevron}></span>
+                      <span className={styles.line} />
+                      <span className={styles.chevron} />
                     </li>
                   )}
                 </React.Fragment>
@@ -138,15 +195,34 @@ export default function PackageDetailExtras({
       )}
 
       {/* =========================== LIMITS & ETHICS ========================== */}
-      {hasEthics && (
+      {(hasEthics || hasLimits) && (
         <div className={styles.block} aria-label="Limits and Ethics">
-          <h2 className={styles.heading}>{ethicsHeading}</h2>
-          <Divider />
-          <ul className={styles.ethicsList}>
-            {ethics!.filter(Boolean).map((e, i) => (
-              <li key={`ethic-${i}`}>{e}</li>
-            ))}
-          </ul>
+          {/* Header group: (Title + Divider) wrapped together, Tagline directly under, then all wrapped */}
+          <header className={styles.headerGroup}>
+            <div className={styles.titleAndRule}>
+              <h2 className={styles.heading}>{finalEthicsTitle}</h2>
+              <Divider className={styles.divider} />
+            </div>
+            {finalEthicsTagline ? (
+              <p className={styles.tagline}>{finalEthicsTagline}</p>
+            ) : null}
+          </header>
+
+          {hasEthics && (
+            <ul className={styles.ethicsList} aria-label="Ethics">
+              {ethics!.filter(Boolean).map((e, i) => (
+                <li key={`ethic-${i}`}>{e}</li>
+              ))}
+            </ul>
+          )}
+
+          {hasLimits && (
+            <ul className={styles.limitsList} aria-label="Limits">
+              {limits!.filter(Boolean).map((l, i) => (
+                <li key={`limit-${i}`}>{l}</li>
+              ))}
+            </ul>
+          )}
         </div>
       )}
     </section>
