@@ -254,11 +254,13 @@ export default function PackageDetailOverview({
           <StickyRail
             card={{
               ...pinnedPackageCard,
+              summary: valueProp,            // ← use the short value prop that’s already on the page
               variant: "pinned-compact",
               hideTags: true,
               hideOutcomes: true,
               hideIncludes: true,
               descriptionMaxLines: 3,
+              footnote: undefined,           // ← hide small print in pinned card
             }}
           />
         </aside>

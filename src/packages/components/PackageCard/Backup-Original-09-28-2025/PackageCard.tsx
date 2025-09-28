@@ -1,3 +1,4 @@
+// src/packages/components/PackageCard/PackageCard.tsx
 "use client";
 
 import * as React from "react";
@@ -9,8 +10,8 @@ import cls from "./PackageCard.module.css";
 import Button from "@/components/ui/atoms/Button/Button";
 import Divider from "@/components/ui/atoms/Divider/Divider";
 
-// Molecules
-import { type Money as PriceMoney } from "@/components/ui/molecules/PriceLabel";
+// Molecules — use named/default imports directly
+import { PriceLabel, type Money as PriceMoney } from "@/components/ui/molecules/PriceLabel";
 import { FeatureList } from "@/components/ui/molecules/FeatureList";
 import { ServiceChip } from "@/components/ui/molecules/ServiceChip";
 import TagChips from "@/components/ui/molecules/TagChips";
@@ -26,7 +27,7 @@ export type ServiceSlug = React.ComponentProps<typeof ServiceChip>["service"];
 /** @deprecated Prefer the canonical Money shape on `price` */
 export type LegacyPrice = { setup?: number; monthly?: number; currency?: string };
 
-type PackageCardVariant = "default" | "rail" | "pinned-compact";
+export type PackageCardVariant = "default" | "rail" | "pinned-compact";
 
 export type PackageCardProps = {
   id?: string;
@@ -37,12 +38,13 @@ export type PackageCardProps = {
   name?: string;
   title?: string;
 
-  /** Short value prop (preferred on cards) */
+  /** Short body text shown on the card (preferred) */
   summary?: string;
-  /** Longer description (rendered in its own section; not shown in pinned) */
+
+  /** Fallback if no summary is provided */
   description?: string;
 
-  /** Feature/highlight bullets (max 5 shown). */
+  /** Highlights (top 5 shown); falls back to `highlights` */
   features?: string[];
   highlights?: string[];
 
@@ -53,7 +55,7 @@ export type PackageCardProps = {
 
   image?: { src: string; alt?: string } | null;
 
-  /** Canonical price (SSOT) or legacy */
+  /** Canonical Money (SSOT) or legacy */
   price?: PriceMoney | LegacyPrice;
 
   tags?: string[];
@@ -66,35 +68,19 @@ export type PackageCardProps = {
   className?: string;
   highlight?: boolean;
 
-  /** Visual/content variants */
+  /** Visual layout */
   variant?: PackageCardVariant;
 
+  /** Loading state */
   isLoading?: boolean;
+
   analyticsCategory?: string;
 
-  /* ----------------------- Content controls (discipline) ------------------ */
-  /** Explicitly enable tags; default is false (even if tags exist) */
-  showTags?: boolean;
-  /** Explicitly enable badge; default is false */
-  showBadge?: boolean;
-  /** Explicitly enable tier chip; default is false */
-  showTier?: boolean;
-  /** Show long description section in non-pinned variants (default true) */
-  showDescription?: boolean;
-  /** Show features list in non-pinned variants (default true) */
-  showFeatures?: boolean;
-  /** Show secondary button (default true in non-pinned) */
-  showSecondaryCta?: boolean;
-
-  /* ---------------------------- Compact helpers --------------------------- */
-  /** Force-hide tags regardless of showTags */
+  /** Compact content controls (useful beyond pinned-compact) */
   hideTags?: boolean;
-  /** Reserved for future (kept for API parity) */
-  hideOutcomes?: boolean;
-  /** Reserved for future (kept for API parity) */
-  hideIncludes?: boolean;
-
-  /** Clamp summary lines (used in pinned-compact); defaults to 3 when pinned */
+  hideOutcomes?: boolean;   // reserved for parity with other surfaces
+  hideIncludes?: boolean;   // hides the features list
+  /** Clamp summary/description lines (e.g., 2 or 3); default 3 for pinned-compact */
   descriptionMaxLines?: number;
 };
 
@@ -104,11 +90,7 @@ function normalizeMoney(price?: PriceMoney | LegacyPrice): PriceMoney | undefine
   if (!price) return undefined;
   if ("oneTime" in price || "monthly" in price) {
     const p = price as PriceMoney;
-    return {
-      oneTime: p.oneTime ?? undefined,
-      monthly: p.monthly ?? undefined,
-      currency: p.currency ?? "USD",
-    };
+    return { oneTime: p.oneTime ?? undefined, monthly: p.monthly ?? undefined, currency: p.currency ?? "USD" };
   }
   const legacy = price as LegacyPrice;
   return { oneTime: legacy.setup, monthly: legacy.monthly, currency: legacy.currency ?? "USD" };
@@ -129,6 +111,7 @@ export default function PackageCard(props: PackageCardProps) {
 
     name,
     title,
+
     summary,
     description,
     features,
@@ -156,30 +139,23 @@ export default function PackageCard(props: PackageCardProps) {
 
     analyticsCategory = "packages",
 
-    // Content controls (default-off for tags/badge/tier; default-on for others)
-    showTags,
-    showBadge,
-    showTier,
-    showDescription,
-    showFeatures,
-    showSecondaryCta,
-
-    // Compact helpers
+    // compact controls
     hideTags,
-    hideOutcomes, // eslint-disable-line @typescript-eslint/no-unused-vars
-    hideIncludes, // eslint-disable-line @typescript-eslint/no-unused-vars
-
+    hideOutcomes, // reserved
+    hideIncludes,
     descriptionMaxLines,
   } = props;
 
-  const isPinned = variant === "pinned-compact";
+  // Variant/compact decisions
+  const isPinnedCompact = variant === "pinned-compact";
+  const shouldHideTags = isPinnedCompact || !!hideTags;
+  const shouldHideIncludes = isPinnedCompact || !!hideIncludes;
+  const clampedLines = isPinnedCompact ? (descriptionMaxLines ?? 3) : descriptionMaxLines;
 
-  // Title/summary/description
+  // Display strings
   const displayTitle = name ?? title ?? "Untitled package";
-  const displaySummary = (summary && summary.trim()) || "";
-  const displayDescription = (description && description.trim()) || "";
-
-  // Feature list (top 5 only)
+  // Prefer SUMMARY for card body
+  const displayDesc = (summary && summary.trim()) ? summary : (description ?? "");
   const displayFeatures = (features && features.length ? features : highlights) ?? [];
   const shown = displayFeatures.slice(0, 5);
   const remaining = Math.max(0, displayFeatures.length - shown.length);
@@ -193,26 +169,8 @@ export default function PackageCard(props: PackageCardProps) {
   const money = normalizeMoney(price);
   const startingTeaser = money ? startingAtLabel(money) : "";
 
-  // Badge/tier discipline
-  const computedBadge = badge ?? (popular ? "Most Popular" : tier ?? undefined);
-
-  // Variant-driven guards
-  const canShowDescription = !isPinned && (showDescription ?? true) && !!displayDescription;
-  const canShowFeatures = !isPinned && (showFeatures ?? true) && shown.length > 0;
-  const canShowSecondary = !isPinned && (showSecondaryCta ?? true);
-
-  const canShowTags =
-    !isPinned &&
-    !hideTags &&
-    (showTags ?? false) &&
-    Array.isArray(tags) &&
-    tags.length > 0;
-
-  const canShowBadge = !isPinned && (showBadge ?? false) && !!computedBadge;
-  const canShowTier = !isPinned && (showTier ?? false) && !!tier;
-
-  // Summary clamp (pinned defaults to 3 lines if not provided)
-  const clampLines = isPinned ? descriptionMaxLines ?? 3 : descriptionMaxLines;
+  // Badge
+  const displayBadge = badge ?? (popular ? "Most Popular" : tier ?? undefined);
 
   // Analytics
   const fire = React.useCallback(
@@ -238,13 +196,19 @@ export default function PackageCard(props: PackageCardProps) {
     secondaryCta?.onClick?.(slug);
   }, [fire, secondaryCta, slug]);
 
+  // Clamp class helper (expects CSS utilities like .clamp2, .clamp3, …)
+  const clampClass =
+    clampedLines && clampedLines >= 1 && clampedLines <= 5
+      ? (cls as Record<string, string>)[`clamp${clampedLines}`]
+      : "";
+
   return (
     <PackageCardFrame
       className={cx(
         cls.card,
         highlight && cls.cardHighlight,
         variant === "rail" && cls.cardRail,
-        isPinned && cls.cardPinned,
+        isPinnedCompact && cls.cardPinned, // optional: style hook for pinned compact
         className,
       )}
       height="stretch"
@@ -256,7 +220,7 @@ export default function PackageCard(props: PackageCardProps) {
       data-tier={tier ?? ""}
       data-popular={popular ? "true" : "false"}
     >
-      {/* ============================ HEADER ============================ */}
+      {/* Header / Media */}
       <header className={cls.header}>
         <div className={cls.media}>
           {image?.src ? (
@@ -274,45 +238,35 @@ export default function PackageCard(props: PackageCardProps) {
             </div>
           ) : null}
 
-          {canShowBadge && <span className={cls.badge}>{computedBadge}</span>}
-          {canShowTier && !canShowBadge && tier ? <span className={cls.badge}>{tier}</span> : null}
+          {displayBadge && <span className={cls.badge}>{displayBadge}</span>}
         </div>
 
-        {/* Title + divider + summary in a single container */}
-        <div className={cls.titleWrap}>
-          <h3
-            className={cls.title}
-            title={displayTitle}
-            id={`${(slug ?? displayTitle).replace(/\s+/g, "-")}-title`}
-          >
+        {/* Title + underline as a single unit */}
+        <div className={cls.titleBar}>
+          <h3 className={cls.title} id={`${(slug ?? displayTitle).replace(/\s+/g, "-")}-title`}>
             {displayTitle}
           </h3>
           <Divider />
-
-          {displaySummary ? (
-            <p
-              className={cx(
-                cls.summary,
-                clampLines ? cls.summaryClamp : null,
-              )}
-              style={clampLines ? ({ ["--summary-lines" as any]: String(clampLines) } as React.CSSProperties) : undefined}
-            >
-              {displaySummary}
-            </p>
-          ) : null}
         </div>
       </header>
 
-      {/* ========================== DESCRIPTION ========================== */}
-      {canShowDescription && (
-        <section className={cls.descriptionSection} aria-label="Description">
-          <p className={cls.description}>{displayDescription}</p>
-        </section>
+      {/* Body text (summary preferred) */}
+      {displayDesc && (
+        <p className={cx(cls.description, clampClass)}>
+          {displayDesc}
+        </p>
       )}
 
-      {/* ============================ FEATURES =========================== */}
-      {canShowFeatures && (
-        <section className={cls.featuresSection} aria-label="Highlights">
+      {/* Value (teaser + quick highlights) */}
+      <div className={cls.value}>
+        {startingTeaser && (
+          <div className={cls.priceDisplay} aria-label={startingTeaser}>
+            {startingTeaser}
+          </div>
+        )}
+
+        {/* Highlights/Includes — hidden for pinned-compact by default */}
+        {!shouldHideIncludes && shown.length > 0 && (
           <div className={cls.features}>
             <FeatureList items={shown.map((f, i) => ({ id: `f-${i}`, label: f }))} size="sm" />
             {remaining > 0 && (
@@ -321,29 +275,30 @@ export default function PackageCard(props: PackageCardProps) {
               </div>
             )}
           </div>
-        </section>
+        )}
+      </div>
+
+      {/* Detailed price chip — hidden for pinned-compact to reduce duplication */}
+      {!isPinnedCompact && money && (
+        <div className={cls.prices}>
+          <div className={cls.priceChip}>
+            <PriceLabel price={money} />
+          </div>
+        </div>
       )}
 
-      {/* ============================== TAGS ============================= */}
-      {canShowTags ? (
-        <div className={cls.tagsWrap} role="list" aria-label="Tags">
-          {/* enforce single row, no wrap via CSS */}
-          <TagChips tags={tags!} />
+      {/* Tags — hidden for pinned-compact by default */}
+      {!shouldHideTags && tags && tags.length > 0 ? (
+        <div className={cls.tagsWrap}>
+          <TagChips tags={tags} />
         </div>
       ) : null}
 
-      {/* ============================== PRICE ============================ */}
-      {money && (
-        <div className={cls.priceRow} aria-label={startingTeaser} title={startingTeaser}>
-          {startingTeaser}
-        </div>
-      )}
+      {/* Divider — optional; keep it out of the way on pinned-compact */}
+      {!isPinnedCompact && <Divider />}
 
-      {/* Divider must be directly above the CTA section */}
-      <Divider className={cls.actionsDivider} />
-
-      {/* ============================== CTAS ============================= */}
-      <div className={cx(cls.actions, canShowSecondary ? cls.actionsTwo : cls.actionsOne)}>
+      {/* Actions */}
+      <div className={cls.actions}>
         <Button
           href={primaryHref}
           variant="primary"
@@ -354,19 +309,16 @@ export default function PackageCard(props: PackageCardProps) {
           {isLoading ? "Loading..." : (primaryCta?.label ?? CTA_LABEL.VIEW_DETAILS)}
         </Button>
 
-        {canShowSecondary ? (
-          <Button
-            href={secondaryHref}
-            variant="secondary"
-            ariaLabel={`${secondaryCta?.label ?? CTA_LABEL.BOOK_A_CALL} — ${displayTitle}`}
-            onClick={onSecondary as any}
-          >
-            {secondaryCta?.label ?? CTA_LABEL.BOOK_A_CALL}
-          </Button>
-        ) : null}
+        <Button
+          href={secondaryHref}
+          variant="secondary"
+          ariaLabel={`${secondaryCta?.label ?? CTA_LABEL.BOOK_A_CALL} — ${displayTitle}`}
+          onClick={onSecondary as any}
+        >
+          {secondaryCta?.label ?? CTA_LABEL.BOOK_A_CALL}
+        </Button>
       </div>
 
-      {/* ============================== FOOTNOTE ========================== */}
       {footnote && <div className={cls.footerNote}>{footnote}</div>}
     </PackageCardFrame>
   );
