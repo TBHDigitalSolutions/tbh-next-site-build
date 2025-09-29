@@ -36,6 +36,69 @@ git push origin main
 * If your repo uses commit linting (Conventional Commits), the `feat(packages): …` scope should pass.
 * Want a signed commit? Replace `git commit` with `git commit -S` (if GPG/S/MIME is set up).
 
+---
+
+Your commands will work, but I’d tighten the process and make the commit message clearer (subject ≤72 chars; details in body). Here are two good options you can paste.
+
+# Option A — single squashed commit (multi-line, conventional)
+
+```bash
+git add -A
+git status
+
+git commit -m "feat(pricing+price-components+card): unify types and integrate PriceActionsBand" -m "
+- Add shared Money type and formatMoney helpers in src/packages/lib/pricing.ts
+  • normalizeMoney, srPriceSentence, isHybrid/only predicates
+- Refactor PriceLabel: inline/block, chip appearance for hybrids, ARIA sentence,
+  index exports, token-only CSS
+- Refactor PriceTeaser: band vs inline modes, chip support, SR-only phrasing,
+  no tagline/fine-print leakage, shared Money import
+- PriceActionsBand: PRESET map (badge placement, teaser mode, base/fine visibility,
+  divider), monthly-only default baseNote=proposal, remove double-divider,
+  consistent CTARow props
+- PackageCard (default/rail/pinned): use card-hybrid/oneTime band, chips on hybrids,
+  no base note/fine print on cards, fix footnote [object Object], analytics attrs
+- CSS: container queries + tokenized colors (PackageCard/PriceActionsBand/PriceTeaser)
+- Docs: README for PriceActionsBand
+"
+
+git push origin main
+```
+
+# Option B — best practice (branch + PR)
+
+If you can, do this on a feature branch and open a PR (easier to review/revert):
+
+```bash
+git checkout -b feat/price-actions-band
+git add -A
+git commit -m "feat(pricing+price-components+card): unify types and integrate PriceActionsBand" -m "
+(see body above)
+"
+git push -u origin feat/price-actions-band
+# open PR on GitHub
+```
+
+# Quick tips
+
+* Run checks before pushing:
+
+  ```bash
+  pnpm typecheck && pnpm lint && pnpm test && pnpm build
+  ```
+
+* If you already pushed and need to tweak the message:
+
+  ```bash
+  git commit --amend
+  git push --force-with-lease
+  ```
+
+* If your repo prefers Conventional Commits, the subject I used fits that style. If not, you can replace the subject with your original phrasing and keep the detailed body bullets.
+
+This keeps the history readable and makes the changes (pricing lib + components + cards + CSS + docs) crystal clear.
+
+---
 # Quick: commit & push to existing remote
 
 ```bash

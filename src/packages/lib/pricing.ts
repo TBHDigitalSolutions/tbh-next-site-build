@@ -1,13 +1,14 @@
 // src/packages/lib/pricing.ts
 /**
- * Lightweight pricing utilities for UI surfaces (cards, detail pages).
- * - No UI imports (avoids circular deps)
- * - Token-agnostic; pure formatting + shape helpers
+ * Canonical pricing utilities used by cards, detail bands, and labels.
+ * - Pure TypeScript: no UI imports (prevents circular deps)
+ * - Token-agnostic; just formatting + shape helpers
+ * - Exposes both named exports and a default object (for legacy imports)
  */
 
 /* --------------------------------- Types --------------------------------- */
 
-export type CurrencyCode = "USD" | (string & {}); // keep open for other ISO codes
+export type CurrencyCode = "USD" | (string & {}); // allow other ISO codes without narrowing
 
 /** Canonical money shape used across packages */
 export type Money = {
@@ -15,15 +16,15 @@ export type Money = {
   oneTime?: number | null;
   /** Recurring fee */
   monthly?: number | null;
-  /** ISO code; defaults to "USD" when omitted */
+  /** ISO 4217 currency code (defaults to "USD" when omitted) */
   currency?: CurrencyCode;
   /** Optional author note; UI decides whether to show */
   notes?: string;
 };
 
-/** Legacy shape still seen in older data (maps to Money) */
+/** Legacy authoring shape that maps to Money */
 export type LegacyPrice = {
-  setup?: number | null;
+  setup?: number | null;      // maps to Money.oneTime
   monthly?: number | null;
   currency?: CurrencyCode;
 };
@@ -83,18 +84,23 @@ export function normalizeMoney(
 export function hasPrice(p?: Money | null): p is Money {
   return !!p && (isFiniteNumber(p.oneTime) || isFiniteNumber(p.monthly));
 }
-export function hasMonthly(p?: Money | null): p is Money {
+
+export function hasMonthly(p?: Money | null): p is Money & Required<Pick<Money, "monthly">> {
   return !!p && isFiniteNumber(p.monthly);
 }
-export function hasOneTime(p?: Money | null): p is Money {
+
+export function hasOneTime(p?: Money | null): p is Money & Required<Pick<Money, "oneTime">> {
   return !!p && isFiniteNumber(p.oneTime);
 }
+
 export function isHybrid(p?: Money | null): p is Money {
   return !!p && isFiniteNumber(p.monthly) && isFiniteNumber(p.oneTime);
 }
+
 export function isOneTimeOnly(p?: Money | null): p is Money {
   return !!p && isFiniteNumber(p.oneTime) && !isFiniteNumber(p.monthly);
 }
+
 export function isMonthlyOnly(p?: Money | null): p is Money {
   return !!p && isFiniteNumber(p.monthly) && !isFiniteNumber(p.oneTime);
 }
@@ -103,10 +109,7 @@ export function isMonthlyOnly(p?: Money | null): p is Money {
 
 /**
  * Format an amount with Intl.NumberFormat.
- * Defaults:
- *  - currency: "USD"
- *  - locale: "en-US"
- *  - no cents (0 fraction digits)
+ * Defaults: USD / en-US / no cents (0 fraction digits).
  */
 export function formatMoney(
   amount: number,
@@ -119,7 +122,7 @@ export function formatMoney(
       amount
     );
   } catch {
-    // ultra-safe fallback
+    // Ultra-safe fallback if currency code is unrecognized on this runtime.
     const rounded = Math.round((amount + Number.EPSILON) * 100) / 100;
     return `${currency} ${rounded.toLocaleString(locale, { maximumFractionDigits: 0 })}`;
   }
@@ -160,7 +163,7 @@ export function srPriceSentence(
 }
 
 /**
- * Public-facing teaser string from canonical price.
+ * Human-facing teaser string (useful for legacy one-line price rows).
  * Policy:
  *  - monthly + oneTime → "Starting at $X/mo + $Y setup"
  *  - monthly only      → "Starting at $X/mo"
@@ -192,16 +195,24 @@ export function startingAtLabel(
   return "";
 }
 
-/* ---------------------------- Compat / Defaults --------------------------- */
-
+/* ---------------------------- Default export ----------------------------- */
 /**
- * Default export contains formatMoney for historical imports that do:
+ * Some parts of the app may still do:
  *   import pricing from "@/packages/lib/pricing";
  *   pricing.formatMoney(...)
+ * Keep this default object to avoid runtime errors while everything migrates
+ * to named imports.
  */
-const _default = { formatMoney, normalizeMoney, startingAtLabel, srPriceSentence };
+const _default = {
+  formatMoney,
+  normalizeMoney,
+  startingAtLabel,
+  srPriceSentence,
+  hasPrice,
+  hasMonthly,
+  hasOneTime,
+  isHybrid,
+  isMonthlyOnly,
+  isOneTimeOnly,
+};
 export default _default;
-
-/* ------------------------------- Re-exports ------------------------------- */
-// Helpful named re-exports if you prefer a “utils barrel” in future.
-// export * from "./more-pricing-utils";

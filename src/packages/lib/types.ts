@@ -112,3 +112,42 @@ export type BundleMeta = {
 
 /** Bundle with attached metadata (for scripts/build output). */
 export type BundleWithMeta = PackageBundle & { __meta?: BundleMeta };
+
+/* ----------------------------------------------------------------------------
+ * Define shared, documented types (used by base/card/details mappers and components)
+ * **Acceptance**
+ *   - All downstream imports compile.
+ *   - No circular deps.
+ * ---------------------------------------------------------------------------- */
+export type Money = { monthly?: number; oneTime?: number; currency: "USD" | string };
+
+export type BandVariant =
+  | "detail-hybrid"
+  | "card-hybrid"
+  | "detail-oneTime"
+  | "card-oneTime";
+
+export type PriceBandCopy = {
+  /** Optional marketing line shown ONLY on details. Never falls back to summary. */
+  tagline?: string;
+  /** Base note selector: "proposal" → “Base price — request proposal”, "final" → “… final after scope” */
+  baseNote?: "proposal" | "final";
+  /** Additional microcopy for details: e.g., “3-month minimum • + ad spend” */
+  finePrint?: string;
+  /** Derived from price shape if not supplied */
+  variantOverride?: BandVariant;
+};
+
+export type PackageIdentity = {
+  id: string;
+  slug: string;
+  service: "webdev" | "seo" | "marketing" | "leadgen" | "content" | "video";
+  name: string;
+  summary?: string;
+  // … other core metadata
+};
+
+export type PackagePricing = {
+  price: Money;
+  priceBand?: PriceBandCopy; // NEW: explicit band copy container
+};
