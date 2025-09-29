@@ -3,171 +3,134 @@
 
 import * as React from "react";
 import styles from "./PriceLabel.module.css";
-
-export type Money = {
-  oneTime?: number | null;
-  monthly?: number | null;
-  currency?: string;
-  notes?: string;
-};
+import type { Money } from "@/packages/lib/pricing";
+import { formatMoney } from "@/packages/lib/pricing";
 
 export type PriceLabelProps = {
   price?: Money;
   currency?: string;
   locale?: string;
-  contactText?: string;
+  /** Visual flow; cards use "inline". */
   variant?: "inline" | "block";
+  /** Chips vs plain text; cards typically use "chip" for hybrids. */
   appearance?: "chip" | "plain";
+  /** Order of parts when hybrid. */
   order?: "monthly-first" | "oneTime-first";
+  /** Optional copy tweaks. */
+  labels?: {
+    monthlySuffix?: string;   // default "/mo"
+    oneTimeSuffix?: string;   // default "setup" if hybrid; otherwise "" for one-time only
+    plusSeparator?: string;   // default " + "
+  };
+  /** Shown when price is missing. */
+  contactText?: string;
   className?: string;
   style?: React.CSSProperties;
-  labels?: {
-    monthlySuffix?: string;
-    oneTimeSuffix?: string;
-    plusSeparator?: string;
-    setupPrefix?: string;
-  };
 };
 
-function cx(...parts: Array<string | undefined | null | false>) {
-  return parts.filter(Boolean).join(" ");
+const cx = (...xs: Array<string | false | null | undefined>) => xs.filter(Boolean).join(" ");
+
+function hasMonthly(p?: Money): p is Required<Pick<Money, "monthly">> & Money {
+  return !!(p && typeof p.monthly === "number");
+}
+function hasOneTime(p?: Money): p is Required<Pick<Money, "oneTime">> & Money {
+  return !!(p && typeof p.oneTime === "number");
+}
+function isHybrid(p?: Money) {
+  return hasMonthly(p) && hasOneTime(p);
 }
 
-export function formatMoney(
-  amount: number,
-  currency: string = "USD",
-  locale: string = "en-US",
-  options: Intl.NumberFormatOptions = { minimumFractionDigits: 0, maximumFractionDigits: 0 }
-): string {
-  try {
-    return new Intl.NumberFormat(locale, { style: "currency", currency, ...options }).format(amount);
-  } catch {
-    const rounded = Math.round((amount + Number.EPSILON) * 100) / 100;
-    return `${currency} ${rounded.toLocaleString()}`;
-  }
-}
-
-function buildAriaLabel(
-  oneTime: number | null | undefined,
-  monthly: number | null | undefined,
+function buildAria(
+  price: Money,
   currency: string,
-  locale: string,
-  monthlySuffixWord: string
-): string {
-  const parts: string[] = [];
-  if (typeof monthly === "number") {
-    parts.push(`${formatMoney(monthly, currency, locale)} per ${monthlySuffixWord.replace("/", "")}`);
+  monthlySuffixText: string,
+  oneTimeSuffixText: string
+) {
+  if (isHybrid(price)) {
+    const monthly = `${formatMoney(price.monthly!, currency)} per ${monthlySuffixText.replace("/", "") || "month"}`;
+    const setup = `${formatMoney(price.oneTime!, currency)} ${oneTimeSuffixText || "setup"}`;
+    return `${monthly} plus ${setup}`;
   }
-  if (typeof oneTime === "number") {
-    parts.push(`${formatMoney(oneTime, currency, locale)} setup`);
+  if (hasMonthly(price)) {
+    return `${formatMoney(price.monthly!, currency)} per ${monthlySuffixText.replace("/", "") || "month"}`;
   }
-  return parts.join(" plus ");
+  return `${formatMoney(price.oneTime!, currency)}`;
 }
 
 const PriceLabel: React.FC<PriceLabelProps> = ({
   price,
-  currency = "USD",
+  currency = price?.currency ?? "USD",
   locale = "en-US",
-  contactText = "Contact for pricing",
   variant = "inline",
   appearance = "chip",
   order = "monthly-first",
+  labels,
+  contactText = "Contact for pricing",
   className,
   style,
-  labels,
 }) => {
-  const cfg = React.useMemo(
-    () => ({
+  const cfg = React.useMemo(() => {
+    const hybrid = isHybrid(price);
+    return {
       monthlySuffix: labels?.monthlySuffix ?? "/mo",
-      oneTimeSuffix: labels?.oneTimeSuffix ?? "setup",
+      oneTimeSuffix: labels?.oneTimeSuffix ?? (hybrid ? "setup" : ""),
       plusSeparator: labels?.plusSeparator ?? " + ",
-      setupPrefix: labels?.setupPrefix ?? "",
-    }),
-    [labels]
-  );
+    };
+  }, [labels, price]);
 
-  const hasMonthly = typeof price?.monthly === "number";
-  const hasOneTime = typeof price?.oneTime === "number";
-
-  if (!price || (!hasMonthly && !hasOneTime)) {
+  // Missing price → contact text (no [object Object])
+  if (!price || (!hasMonthly(price) && !hasOneTime(price))) {
     return (
       <span
-        className={cx(styles.root, styles[variant], className)}
+        className={cx(styles.root, styles[variant], styles.appearancePlain, className)}
         style={style}
         role="text"
         aria-label={contactText}
+        data-component="PriceLabel"
+        data-appearance="plain"
       >
         <span className={styles.contact}>{contactText}</span>
-        {price?.notes ? <span className={styles.notes}> {price.notes}</span> : null}
       </span>
     );
   }
 
-  const monthlyNode = hasMonthly ? (
-    <span key="mo" className={cx(styles.group, appearance === "chip" && styles.chip)}>
-      <span className={styles.amount} aria-hidden="true">
-        {formatMoney(price.monthly as number, price.currency ?? currency, locale)}
-      </span>
-      <span className={styles.suffix} aria-hidden="true">{cfg.monthlySuffix}</span>
+  const monthlyNode = hasMonthly(price) ? (
+    <span key="mo" className={cx(styles.group, appearance === "chip" && styles.chip)} aria-hidden="true">
+      <span className={styles.amount}>{formatMoney(price.monthly!, currency, locale)}</span>
+      {cfg.monthlySuffix ? <span className={styles.suffix}>{cfg.monthlySuffix}</span> : null}
     </span>
   ) : null;
 
-  const oneTimeNode = hasOneTime ? (
-    <span key="ot" className={cx(styles.group, appearance === "chip" && styles.chip)}>
-      <span className={styles.amount} aria-hidden="true">
-        {formatMoney(price.oneTime as number, price.currency ?? currency, locale)}
-      </span>
-      <span className={styles.suffix} aria-hidden="true">{cfg.oneTimeSuffix}</span>
+  const oneTimeNode = hasOneTime(price) ? (
+    <span key="ot" className={cx(styles.group, appearance === "chip" && styles.chip)} aria-hidden="true">
+      <span className={styles.amount}>{formatMoney(price.oneTime!, currency, locale)}</span>
+      {cfg.oneTimeSuffix ? <span className={styles.suffix}>{cfg.oneTimeSuffix}</span> : null}
     </span>
   ) : null;
 
-  const renderOrder =
-    order === "oneTime-first"
-      ? [
-          oneTimeNode,
-          hasOneTime && hasMonthly ? (
-            <span key="sep" className={styles.separator} aria-hidden="true">
-              {cfg.plusSeparator}
-            </span>
-          ) : null,
-          monthlyNode,
-        ]
-      : [
-          monthlyNode,
-          hasOneTime && hasMonthly ? (
-            <span key="sep" className={styles.separator} aria-hidden="true">
-              {cfg.plusSeparator}
-            </span>
-          ) : null,
-          oneTimeNode,
-        ];
+  const needsPlus = hasMonthly(price) && hasOneTime(price);
+  const ordered = order === "oneTime-first"
+    ? [oneTimeNode, needsPlus && <span key="sep" className={styles.separator} aria-hidden="true">{cfg.plusSeparator}</span>, monthlyNode]
+    : [monthlyNode, needsPlus && <span key="sep" className={styles.separator} aria-hidden="true">{cfg.plusSeparator}</span>, oneTimeNode];
 
-  const ariaLabel = buildAriaLabel(
-    price.oneTime,
-    price.monthly,
-    price.currency ?? currency,
-    locale,
-    cfg.monthlySuffix
-  );
-
-  const rootClass = cx(
-    styles.root,
-    styles[variant],
-    appearance === "chip" ? styles.appearanceChip : styles.appearancePlain,
-    className
-  );
+  const aria = buildAria(price, currency, cfg.monthlySuffix, cfg.oneTimeSuffix);
 
   return (
     <span
-      className={rootClass}
+      className={cx(
+        styles.root,
+        styles[variant],
+        appearance === "chip" ? styles.appearanceChip : styles.appearancePlain,
+        className
+      )}
       style={style}
       role="text"
-      aria-label={ariaLabel}
+      aria-label={aria}
       data-component="PriceLabel"
       data-appearance={appearance}
     >
-      {renderOrder}
-      {price.notes ? <span className={styles.notes}> {price.notes}</span> : null}
+      {ordered}
+      {/* Intentionally do not render price.notes here when used inside band */}
     </span>
   );
 };

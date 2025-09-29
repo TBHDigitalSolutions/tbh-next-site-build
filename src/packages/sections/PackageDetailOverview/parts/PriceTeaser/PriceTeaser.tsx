@@ -3,177 +3,158 @@
 
 import * as React from "react";
 import styles from "./PriceTeaser.module.css";
-
-export type Money = {
-  monthly?: number | null;
-  oneTime?: number | null;
-  currency?: string;
-};
+import type { Money } from "@/packages/lib/pricing";
+import { formatMoney } from "@/packages/lib/pricing";
 
 export type PriceTeaserProps = {
-  /** Canonical price. Renders null if neither monthly nor oneTime provided. */
   price?: Money;
-
-  /** Layout mode: "band" = stacked amounts; "inline" = label + amount on one line. */
-  mode?: "band" | "inline"; // default "band"
-
-  /** Show visible “Starting at” label (kept off by default for band mode, on for inline). */
+  /** Stacked ‘band’ (detail) vs single-line ‘inline’ (cards/rails). */
+  mode?: "band" | "inline";
+  /** Chip styling for inline mode; hybrids render as two chips when "chip". */
+  appearance?: "chip" | "plain";
+  /** Show visible “Starting at” label; keep false in band (badge handles it). */
   showLabel?: boolean;
-
-  /** Visual density. */
-  size?: "sm" | "md"; // default "md"
-
-  /** Align the block horizontally. */
-  align?: "start" | "center" | "end"; // default "start"
-
-  /** Subtle background/emphasis chip treatment. */
-  emphasis?: boolean;
-
-  /** @deprecated — fine print now lives in PriceActionsBand; kept for extreme back-compat (not rendered). */
-  notes?: string;
-
-  /** @deprecated — label text is computed; not used. */
-  label?: string;
-
+  /** Screen-reader prefix, default "Starting at". */
+  ariaLabelPrefix?: string;
+  /** Align text block. */
+  align?: "start" | "center";
   className?: string;
   style?: React.CSSProperties;
-  "data-testid"?: string;
+  /** @deprecated — use PriceActionsBand.finePrint instead */
+  notes?: string;
 };
 
-function hasMonthly(p?: Money) {
-  return typeof p?.monthly === "number";
-}
+const cx = (...xs: Array<string | false | null | undefined>) => xs.filter(Boolean).join(" ");
 
-function hasOneTime(p?: Money) {
-  return typeof p?.oneTime === "number";
+function hasMonthly(p?: Money): p is Required<Pick<Money, "monthly">> & Money {
+  return !!(p && typeof p.monthly === "number");
 }
-
+function hasOneTime(p?: Money): p is Required<Pick<Money, "oneTime">> & Money {
+  return !!(p && typeof p.oneTime === "number");
+}
 function isHybrid(p?: Money) {
   return hasMonthly(p) && hasOneTime(p);
 }
 
-function fmt(n: number | null | undefined, currency = "USD", locale = "en-US") {
-  if (typeof n !== "number") return "";
-  return new Intl.NumberFormat(locale, {
-    style: "currency",
-    currency,
-    maximumFractionDigits: 0,
-    minimumFractionDigits: 0,
-  }).format(n);
-}
-
-export default function PriceTeaser({
+const PriceTeaser: React.FC<PriceTeaserProps> = ({
   price,
   mode = "band",
-  showLabel,
-  size = "md",
-  align = "start",
-  emphasis = false,
-  // deprecated props intentionally accepted but unused:
-  notes: _notes,
-  label: _label,
+  appearance = "plain",
+  showLabel = false,
+  ariaLabelPrefix = "Starting at",
+  align = "center",
   className,
   style,
-  "data-testid": testId,
-}: PriceTeaserProps) {
-  const hasPrice = hasMonthly(price) || hasOneTime(price);
-  if (!hasPrice) return null;
-
+  // notes deprecated intentionally not rendered (fine print lives in band)
+}) => {
   const currency = price?.currency ?? "USD";
-  const monthly = hasMonthly(price) ? fmt(price?.monthly, currency) : "";
-  const oneTime = hasOneTime(price) ? fmt(price?.oneTime, currency) : "";
 
-  const alignClass =
-    align === "center" ? styles.alignCenter : align === "end" ? styles.alignEnd : styles.alignStart;
-  const sizeClass = size === "sm" ? styles.sizeSm : styles.sizeMd;
+  if (!price || (!hasMonthly(price) && !hasOneTime(price))) {
+    return null;
+  }
 
-  // default visible label behavior per mode
-  const labelVisible = typeof showLabel === "boolean" ? showLabel : mode === "inline";
-
-  // a11y sentence always present
-  const srSentence = isHybrid(price)
-    ? `Starting at ${monthly} per month plus ${oneTime} setup.`
+  // SR-only sentence (always present for accessibility).
+  const sr = isHybrid(price)
+    ? `${ariaLabelPrefix} ${formatMoney(price.monthly, currency)} per month plus ${formatMoney(price.oneTime, currency)} setup.`
     : hasMonthly(price)
-    ? `Starting at ${monthly} per month.`
-    : `Starting at ${oneTime} one-time.`;
+    ? `${ariaLabelPrefix} ${formatMoney(price.monthly, currency)} per month.`
+    : `${ariaLabelPrefix} ${formatMoney(price.oneTime!, currency)}.`;
 
-  if (mode === "inline") {
-    // Inline: used by one-time detail variant (also works for monthly-only)
-    const amount = hasMonthly(price) ? `${monthly}` : `${oneTime}`;
-    const suffix = hasMonthly(price) ? "/mo" : hasOneTime(price) ? " one-time" : "";
+  // ----- BAND MODE (stacked) -----
+  if (mode === "band") {
     return (
       <div
-        className={[
-          styles.wrap,
-          styles.inline,
-          alignClass,
-          sizeClass,
-          emphasis ? styles.emphasis : undefined,
-          className,
-        ]
-          .filter(Boolean)
-          .join(" ")}
-        style={style}
-        role="group"
-        aria-label="Price teaser"
-        data-testid={testId ?? "price-teaser"}
-      >
-        {labelVisible && <span className={styles.label}>Starting at:</span>}
-        <span className={styles.amount} aria-hidden="true">
-          {amount}
-        </span>
-        {suffix && (
-          <span className={styles.suffix} aria-hidden="true">
-            {suffix}
-          </span>
+        className={cx(
+          styles.root,
+          styles.band,
+          align === "center" ? styles.alignCenter : styles.alignStart,
+          className
         )}
-        <span className={styles.srOnly}>{srSentence}</span>
+        style={style}
+        data-component="PriceTeaser"
+        data-mode="band"
+      >
+        {showLabel ? <div className={styles.labelVis}>Starting at</div> : null}
+
+        {/* Line 1: monthly OR one-time amount */}
+        {hasMonthly(price) ? (
+          <div className={styles.lineMonthly} aria-hidden="true">
+            <span className={styles.amount}>{formatMoney(price.monthly, currency)}</span>
+            <span className={styles.suffix}>/mo</span>
+          </div>
+        ) : (
+          <div className={styles.lineMonthly} aria-hidden="true">
+            <span className={styles.amount}>{formatMoney(price.oneTime!, currency)}</span>
+          </div>
+        )}
+
+        {/* Line 2: setup, only when hybrid */}
+        {isHybrid(price) ? (
+          <div className={styles.lineSetup} aria-hidden="true">
+            <span className={styles.plus}>+</span>
+            <span className={styles.amount}>{formatMoney(price.oneTime!, currency)}</span>
+            <span className={styles.suffix}>setup</span>
+          </div>
+        ) : null}
+
+        <span className={styles.srOnly}>{sr}</span>
       </div>
     );
   }
 
-  // BAND MODE (default) — stacked lines for hybrid, single line for monthly-only or one-time.
+  // ----- INLINE MODE (single row; cards/rails) -----
+  const inlineChips = appearance === "chip" && isHybrid(price);
+
   return (
     <div
-      className={[
-        styles.wrap,
-        styles.band,
-        alignClass,
-        sizeClass,
-        emphasis ? styles.emphasis : undefined,
-        className,
-      ]
-        .filter(Boolean)
-        .join(" ")}
+      className={cx(
+        styles.root,
+        styles.inline,
+        align === "center" ? styles.alignCenter : styles.alignStart,
+        className
+      )}
       style={style}
-      role="group"
-      aria-label="Price teaser"
-      data-testid={testId ?? "price-teaser"}
+      role="text"
+      aria-label={sr}
+      data-component="PriceTeaser"
+      data-mode="inline"
+      data-appearance={appearance}
     >
-      {labelVisible && <span className={styles.label}>Starting at</span>}
+      {showLabel ? <span className={styles.labelInline}>Starting at</span> : null}
 
-      {/* Primary line(s) */}
-      {hasMonthly(price) && (
-        <div className={styles.monthlyLine} aria-hidden="true">
-          <span className={styles.amount}>{monthly}</span>
-          <span className={styles.suffix}>/mo</span>
-        </div>
+      {inlineChips ? (
+        <span className={styles.inlineChips} aria-hidden="true">
+          <span className={cx(styles.group, styles.chip)}>
+            <span className={styles.amount}>{formatMoney(price.monthly, currency)}</span>
+            <span className={styles.suffix}>/mo</span>
+          </span>
+          <span className={styles.gap} />
+          <span className={cx(styles.group, styles.chip)}>
+            <span className={styles.amount}>{formatMoney(price.oneTime!, currency)}</span>
+            <span className={styles.suffix}>setup</span>
+          </span>
+        </span>
+      ) : (
+        <span className={styles.inlineText} aria-hidden="true">
+          {hasMonthly(price) ? (
+            <>
+              <span className={styles.amount}>{formatMoney(price.monthly, currency)}</span>
+              <span className={styles.suffix}>/mo</span>
+              {hasOneTime(price) ? (
+                <>
+                  <span className={styles.separator}> + </span>
+                  <span className={styles.amount}>{formatMoney(price.oneTime, currency)}</span>
+                  <span className={styles.suffix}>setup</span>
+                </>
+              ) : null}
+            </>
+          ) : (
+            <span className={styles.amount}>{formatMoney(price.oneTime!, currency)}</span>
+          )}
+        </span>
       )}
-
-      {isHybrid(price) && (
-        <div className={styles.setupLine} aria-hidden="true">
-          + {oneTime} <span className={styles.setupWord}>setup</span>
-        </div>
-      )}
-
-      {!hasMonthly(price) && hasOneTime(price) && (
-        <div className={styles.oneTimeLine} aria-hidden="true">
-          <span className={styles.amount}>{oneTime}</span>
-          <span className={styles.suffix}> one-time</span>
-        </div>
-      )}
-
-      <span className={styles.srOnly}>{srSentence}</span>
     </div>
   );
-}
+};
+
+export default React.memo(PriceTeaser);

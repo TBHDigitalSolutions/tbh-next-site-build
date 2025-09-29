@@ -1,145 +1,140 @@
-/* Base wrapper */
-.wrap {
-    --teaser-fg: var(--pkg-text, var(--text-primary));
-    --teaser-muted: var(--pkg-text-muted, var(--text-secondary));
-    --teaser-accent: var(--pkg-text-accent, var(--brand-blue));
-    --teaser-bg: color-mix(in oklab, var(--teaser-accent) 10%, transparent);
+/* Token-first, responsive, container-aware styling for PriceTeaser */
 
-    color: var(--teaser-fg);
-    container-type: inline-size;
-}
-
-/* Modes */
-.band {
-    display: grid;
-    justify-items: start;
-    gap: .35rem;
-}
-
-.inline {
-    display: inline-flex;
-    gap: .5rem;
-    align-items: baseline;
-    white-space: nowrap;
-}
-
-/* Alignment */
-.alignStart {
-    justify-items: start;
-    text-align: left;
+.root {
+    inline-size: 100%;
+    color: var(--text-primary);
+    font-variant-numeric: tabular-nums;
 }
 
 .alignCenter {
-    justify-items: center;
     text-align: center;
+    justify-items: center;
 }
 
-.alignEnd {
-    justify-items: end;
-    text-align: right;
+.alignStart {
+    text-align: left;
+    justify-items: start;
 }
 
-/* Density */
-.sizeSm {
-    font-size: clamp(.95rem, .25cqi + .92rem, 1.02rem);
+/* ---------- Band (stacked) ---------- */
+.band {
+    display: grid;
+    gap: .35rem;
 }
 
-.sizeMd {
-    font-size: clamp(1rem, .35cqi + .96rem, 1.08rem);
-}
-
-/* Optional emphasis background (subtle chip) */
-.emphasis {
-    padding: .5rem .75rem;
-    border-radius: var(--radius-xl, 14px);
-    background: var(--teaser-bg);
-    box-shadow: 0 0 0 1px color-mix(in oklab, var(--teaser-accent) 28%, transparent);
-}
-
-/* Visible label / badge text */
-.label {
-    font-family: var(--font-heading, ui-sans-serif);
-    font-weight: 800;
+.labelVis {
+    color: var(--text-secondary);
     text-transform: uppercase;
     letter-spacing: .04em;
-    color: var(--teaser-accent);
-    line-height: 1.2;
+    font-weight: 600;
+    font-size: .75rem;
 }
 
-/* Amounts & suffixes */
+.lineMonthly {
+    display: inline-flex;
+    align-items: baseline;
+    gap: .35rem;
+    font-weight: 700;
+    font-size: clamp(1.125rem, 0.9cqi + 1rem, 1.5rem);
+}
+
+.lineSetup {
+    display: inline-flex;
+    align-items: baseline;
+    gap: .35rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+    font-size: clamp(.95rem, 0.6cqi + .9rem, 1.0625rem);
+}
+
+.plus {
+    opacity: .9;
+}
+
 .amount {
-    font-family: var(--font-heading, ui-sans-serif);
-    font-weight: 800;
-    line-height: 1.1;
-    color: var(--teaser-fg);
-    font-size: clamp(1.1rem, 1.2cqi + 1rem, 1.5rem);
+    white-space: nowrap;
 }
 
 .suffix {
-    font-family: var(--font-body, ui-sans-serif);
-    font-weight: 600;
-    color: var(--teaser-muted);
-    font-size: clamp(.9rem, .6cqi + .85rem, 1rem);
-    line-height: 1.1;
+    opacity: .9;
 }
 
-/* Stacked lines (band mode) */
-.monthlyLine {
+/* ---------- Inline (single row) ---------- */
+.inline {
+    display: grid;
+    align-items: center;
+    gap: .25rem;
+}
+
+.labelInline {
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    font-weight: 600;
+    font-size: .75rem;
+}
+
+.inlineText {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: 700;
+    font-size: clamp(1.05rem, 0.8cqi + 1rem, 1.25rem);
+}
+
+.separator {
+    opacity: .9;
+}
+
+.inlineChips {
+    display: inline-grid;
+    grid-auto-flow: column;
+    grid-auto-columns: max-content;
+    gap: .375rem;
+    white-space: nowrap;
+}
+
+.group {
     display: inline-flex;
     align-items: baseline;
-    gap: .35rem;
+    gap: .25rem;
 }
 
-.setupLine {
-    color: var(--teaser-muted);
-    font-weight: 500;
-    font-size: clamp(.95rem, .2cqi + .9rem, 1rem);
-}
-
-.setupWord {
+.chip {
+    padding: .125rem .5rem;
+    border-radius: 999px;
+    background: color-mix(in oklab, var(--brand-blue, var(--accent-500, #0EAFFB)) 12%, transparent);
+    border: 1px solid color-mix(in oklab, var(--brand-blue, var(--accent-500, #0EAFFB)) 50%, transparent);
+    color: var(--text-primary);
     font-weight: 600;
+    font-size: clamp(.95rem, 0.6cqi + .9rem, 1.0625rem);
 }
 
-.oneTimeLine {
-    display: inline-flex;
-    align-items: baseline;
-    gap: .35rem;
+.gap {
+    inline-size: .25rem;
+    display: inline-block;
 }
 
-/* Accessibility */
 .srOnly {
-    position: absolute !important;
+    position: absolute;
     inline-size: 1px;
     block-size: 1px;
-    padding: 0;
     margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
+    padding: 0;
     border: 0;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    overflow: hidden;
+    white-space: nowrap;
 }
 
-/* Container tweaks */
-@container (min-width: 40rem) {
-    .amount {
-        font-size: clamp(1.2rem, 1.4cqi + 1rem, 1.65rem);
-    }
-}
-
-@media (prefers-reduced-motion: reduce) {
-
-    .wrap,
-    .wrap * {
-        transition: none !important;
-    }
-}
-
-@media (forced-colors: active) {
-    .label {
-        color: LinkText;
+/* Narrow containers: keep inline chips readable */
+@container (max-width: 340px) {
+    .inlineText {
+        font-size: clamp(1rem, 1cqi + .9rem, 1.125rem);
     }
 
-    .suffix {
-        color: GrayText;
+    .chip {
+        font-size: clamp(.9rem, 0.8cqi + .8rem, 1rem);
     }
 }
