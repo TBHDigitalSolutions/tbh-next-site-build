@@ -1,4 +1,3 @@
-// src/packages/components/PackageCard/PackageCard.tsx
 "use client";
 
 import * as React from "react";
@@ -20,8 +19,7 @@ import TagChips from "@/components/ui/molecules/TagChips";
 import { ROUTES, CTA_LABEL } from "@/packages/lib/cta";
 import { startingAtLabel } from "@/packages/lib/pricing";
 
-// Price band (card variants)
-import PriceActionsBand from "@/packages/sections/PackageDetailOverview/parts/PriceActionsBand";
+/* ---------------------------------- Types --------------------------------- */
 
 export type ServiceSlug = React.ComponentProps<typeof ServiceChip>["service"];
 
@@ -67,8 +65,7 @@ export type PackageCardProps = {
   detailsHref?: string;
   primaryCta?: { label?: string; href?: string; onClick?: (slug?: string) => void };
   secondaryCta?: { label?: string; href?: string; onClick?: (slug?: string) => void };
-  /** Footnote text shown at the very bottom of the card. */
-  footnote?: unknown; // runtime-safe guard (strings preferred)
+  footnote?: string;
 
   className?: string;
   highlight?: boolean;
@@ -105,10 +102,12 @@ export type PackageCardProps = {
   descriptionMaxLines?: number;
 
   /* --------------------------- New band controls -------------------------- */
-  /** Default "band" uses PriceActionsBand on cards; "label" keeps legacy one-liner. */
+  /** Default "label" keeps today’s single-line .priceRow */
   priceFlavor?: PriceFlavor;
-  /** Only used when priceFlavor="band": choose the card band recipe (auto if omitted) */
+  /** Only used when priceFlavor="band": choose the card band recipe */
   priceVariant?: PriceBandVariant;
+  /** Override for the micro-line under price */
+  priceMetaLine?: string;
 
   /** Apply card CTA policy automatically (View details / Book a call). Defaults to true. */
   useCardCtaPolicy?: boolean;
@@ -120,28 +119,20 @@ export type PackageCardProps = {
 
 function normalizeMoney(price?: PriceMoney | LegacyPrice): PriceMoney | undefined {
   if (!price) return undefined;
-  if ("oneTime" in (price as any) || "monthly" in (price as any)) {
+  if ("oneTime" in price || "monthly" in price) {
     const p = price as PriceMoney;
     return {
-      oneTime: typeof p.oneTime === "number" ? p.oneTime : undefined,
-      monthly: typeof p.monthly === "number" ? p.monthly : undefined,
+      oneTime: p.oneTime ?? undefined,
+      monthly: p.monthly ?? undefined,
       currency: p.currency ?? "USD",
     };
   }
   const legacy = price as LegacyPrice;
-  return {
-    oneTime: typeof legacy.setup === "number" ? legacy.setup : undefined,
-    monthly: typeof legacy.monthly === "number" ? legacy.monthly : undefined,
-    currency: legacy.currency ?? "USD",
-  };
+  return { oneTime: legacy.setup, monthly: legacy.monthly, currency: legacy.currency ?? "USD" };
 }
 
 function cx(...parts: Array<string | false | null | undefined>) {
   return parts.filter(Boolean).join(" ");
-}
-
-function isHybrid(m?: PriceMoney) {
-  return !!(m && typeof m.monthly === "number" && typeof m.oneTime === "number");
 }
 
 /* --------------------------------- Card ----------------------------------- */
@@ -179,6 +170,7 @@ export default function PackageCard(props: PackageCardProps) {
     variant = "default",
 
     isLoading = false,
+
     analyticsCategory = "packages",
 
     // Content controls (default-off for tags/badge/tier; default-on for others)
@@ -193,11 +185,13 @@ export default function PackageCard(props: PackageCardProps) {
     hideTags,
     hideOutcomes, // eslint-disable-line @typescript-eslint/no-unused-vars
     hideIncludes, // eslint-disable-line @typescript-eslint/no-unused-vars
+
     descriptionMaxLines,
 
-    // New band controls
-    priceFlavor = "band", // ← default to band per v2 rules
+    // New band controls (all optional / additive)
+    priceFlavor = "label",
     priceVariant,
+    priceMetaLine,
     useCardCtaPolicy = true,
     usePinnedCtaPolicy = true,
   } = props;
@@ -217,10 +211,12 @@ export default function PackageCard(props: PackageCardProps) {
   // Hrefs
   const defaultHref = href ?? detailsHref ?? (slug ? ROUTES.package(slug) : "#");
 
-  // Money & teaser (for legacy one-liner fallback)
+  // Money & teaser
   const money = normalizeMoney(price);
   const startingTeaser = money ? startingAtLabel(money) : "";
-  const hybrid = isHybrid(money);
+
+  const isHybrid = !!(money && money.monthly && money.oneTime);
+  const isOneTimeOnly = !!(money && money.oneTime && !money.monthly);
 
   // Badge/tier discipline
   const computedBadge = badge ?? (popular ? "Most Popular" : tier ?? undefined);
@@ -297,22 +293,6 @@ export default function PackageCard(props: PackageCardProps) {
   const secondaryAria = `Book a call about ${displayTitle}`;
 
   /* ================================ Render ================================= */
-
-  // Footnote safety: never show [object Object]
-  const safeFootnote = React.useMemo(() => {
-    if (footnote == null) return undefined;
-    if (typeof footnote === "string") return footnote;
-    if (typeof footnote === "number") return String(footnote);
-    if (Array.isArray(footnote)) return (footnote as unknown[]).filter(Boolean).join(" • ");
-    return undefined;
-  }, [footnote]);
-
-  // Choose card band variant (no base note / fine print on cards)
-  const cardBandVariant: PriceBandVariant | undefined = money
-    ? hybrid
-      ? "card-hybrid"
-      : "card-oneTime"
-    : undefined;
 
   return (
     <PackageCardFrame
@@ -414,14 +394,31 @@ export default function PackageCard(props: PackageCardProps) {
 
       {/* ============================== PRICE ============================ */}
       {money &&
-        (priceFlavor === "band" && cardBandVariant ? (
-          <div className={cls.priceArea} aria-label="Starting price">
-            <PriceActionsBand
-              variant={cardBandVariant}
-              price={money}
-              align="start"
-              /* No tagline/base note/fine print on cards */
-            />
+        (priceFlavor === "band" ? (
+          <div className={cls.priceBand} aria-label="Starting price">
+            <span className={cls.priceBadge} aria-hidden="true">
+              STARTING AT
+            </span>
+
+            <div className={cls.priceInline}>
+              {isHybrid ? (
+                // Variant 2 — hybrid one-liner; chips permitted
+                <PriceLabel price={money} appearance="chip" variant="inline" />
+              ) : (
+                // Variant 4 — one-time; inline bold amount, no suffix
+                <PriceLabel
+                  price={money}
+                  appearance="plain"
+                  variant="inline"
+                  labels={{ oneTimeSuffix: "" }}
+                />
+              )}
+            </div>
+
+            <div className={cls.priceMeta}>
+              {priceMetaLine ??
+                (money.monthly ? "Base price — request proposal" : "Base price — final after scope")}
+            </div>
           </div>
         ) : (
           // Legacy single-line label (kept for rollout safety)
@@ -430,9 +427,8 @@ export default function PackageCard(props: PackageCardProps) {
           </div>
         ))}
 
-      {/* Divider must be directly above the CTA section.
-          Pinned-compact: no divider per v2 rules */}
-      {!isPinned ? <Divider className={cls.actionsDivider} /> : null}
+      {/* Divider must be directly above the CTA section */}
+      <Divider className={cls.actionsDivider} />
 
       {/* ============================== CTAS ============================= */}
       <div className={cx(cls.actions, canShowSecondary ? cls.actionsTwo : cls.actionsOne)}>
@@ -461,7 +457,7 @@ export default function PackageCard(props: PackageCardProps) {
       </div>
 
       {/* ============================== FOOTNOTE ========================== */}
-      {safeFootnote ? <div className={cls.footerNote}>{safeFootnote}</div> : null}
+      {footnote && <div className={cls.footerNote}>{footnote}</div>}
     </PackageCardFrame>
   );
 }

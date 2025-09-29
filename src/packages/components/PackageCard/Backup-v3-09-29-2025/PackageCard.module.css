@@ -1,0 +1,313 @@
+/* PackageCard.module.css
+   - Enforces rules for titles, summary/description, tags, price, and CTAs
+   - Uses container queries for responsive behavior (content-aware)
+   - Assumes design tokens from packages-unified → unified-theme
+*/
+
+/* ------------------------------ Root card -------------------------------- */
+.card {
+    /* Set a CQ context so internals adapt to available width */
+    container-type: inline-size;
+
+    display: grid;
+    gap: var(--space-4, 1rem);
+    color: var(--text-primary, #e6eaee);
+    background: transparent;
+    /* CardFrame provides base surface */
+    min-inline-size: 0;
+    /* avoid overflow in rails */
+}
+
+.cardHighlight {
+    outline: 2px solid color-mix(in oklab, var(--brand-blue, #0EAFFB) 30%, transparent);
+}
+
+.cardRail {
+    /* visual tweaks for rail variant if needed */
+}
+
+.cardPinned {
+    /* pinned-compact lives in a sticky rail; keep spacing tight */
+    gap: var(--space-3, 0.75rem);
+}
+
+/* ------------------------------- Header ---------------------------------- */
+.header {
+    display: grid;
+    gap: var(--space-3, 0.75rem);
+}
+
+.media {
+    position: relative;
+    display: grid;
+    place-items: center;
+    min-height: 56px;
+}
+
+.cardImage {
+    inline-size: 100%;
+    max-inline-size: 460px;
+    block-size: auto;
+    border-radius: var(--radius-lg, 14px);
+    object-fit: cover;
+}
+
+.iconFallback {
+    display: inline-grid;
+    place-items: center;
+    inline-size: 44px;
+    block-size: 44px;
+    border-radius: 999px;
+    background: color-mix(in oklab, var(--brand-blue, #0EAFFB) 12%, transparent);
+}
+
+.badge {
+    position: absolute;
+    inset-inline-end: 0.5rem;
+    inset-block-start: 0.5rem;
+    background: var(--brand-blue, #0EAFFB);
+    color: var(--surface-0, #0b0f1a);
+    border-radius: var(--radius-full, 999px);
+    font-weight: 700;
+    font-size: 0.75rem;
+    letter-spacing: 0.2px;
+    padding: 0.25rem 0.5rem;
+}
+
+/* Title + Divider + Summary in one container */
+.titleWrap {
+    display: grid;
+    justify-items: center;
+    /* center-align all headers/titles */
+    gap: var(--space-2, 0.5rem);
+    text-align: center;
+    min-inline-size: 0;
+}
+
+.title {
+    margin: 0;
+    font: 800 clamp(1.05rem, 0.8cqi + 0.95rem, 1.25rem) var(--font-heading, Aldrich, system-ui, sans-serif);
+    letter-spacing: 0.2px;
+    line-height: 1.15;
+
+    /* Single-line only */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.summary {
+    margin: 0;
+    /* left-align per rule */
+    text-align: left;
+    font: 500 clamp(0.95rem, 0.6cqi + 0.9rem, 1.05rem) var(--font-body, Inter, system-ui, sans-serif);
+    color: var(--text-secondary, #c9ced1);
+}
+
+.summaryClamp {
+    display: -webkit-box;
+    -webkit-line-clamp: var(--summary-lines, 3);
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* --------------------------- Description block --------------------------- */
+.descriptionSection {
+    display: grid;
+}
+
+.description {
+    margin: 0;
+    text-align: left;
+    /* per rule */
+    color: var(--text-secondary, #c9ced1);
+    font: 400 clamp(0.95rem, 0.5cqi + 0.9rem, 1.0625rem) var(--font-body, Inter, system-ui, sans-serif);
+    line-height: 1.55;
+}
+
+/* --------------------------- Features / bullets -------------------------- */
+.featuresSection {
+    display: grid;
+}
+
+.features {
+    display: grid;
+    justify-items: center;
+    /* bullets centered */
+    gap: var(--space-2, 0.5rem);
+}
+
+/* Center the list but left-align bullet text */
+.features :is(ul, ol) {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    text-align: left;
+    /* bullet text left-aligned */
+}
+
+.more {
+    font-size: 0.875rem;
+    color: var(--text-muted, #aab2b9);
+}
+
+/* --------------------------------- Tags ---------------------------------- */
+.tagsWrap {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: max-content;
+    gap: var(--space-2, 0.5rem);
+
+    /* One row only — never wrap; allow scrolling if overflow */
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    scrollbar-width: thin;
+}
+
+.tagsWrap * {
+    flex-wrap: nowrap !important;
+}
+
+/* ------------------------------ Legacy Price Row ------------------------- */
+.priceRow {
+    display: block;
+    text-align: center;
+    font: 700 clamp(1rem, 0.8cqi + 0.95rem, 1.125rem) var(--font-body, Inter, system-ui, sans-serif);
+    color: var(--text-primary, #e6eaee);
+
+    /* Always one line */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    padding-block: 0.25rem;
+    border-radius: var(--radius-md, 10px);
+    background: color-mix(in oklab, var(--brand-blue, #0EAFFB) 8%, transparent);
+}
+
+/* ------------------------------ New Price Band --------------------------- */
+.priceBand {
+    display: grid;
+    justify-items: center;
+    gap: var(--space-2, 0.5rem);
+    text-align: center;
+    color: var(--text-primary, #e6eaee);
+}
+
+.priceBadge {
+    --_bg: color-mix(in oklab, var(--brand-blue, #0EAFFB) 10%, transparent);
+    --_bd: color-mix(in oklab, var(--brand-blue, #0EAFFB) 24%, transparent);
+    background: var(--_bg);
+    box-shadow: 0 0 0 1px var(--_bd) inset;
+    color: var(--text-secondary, #c9ced1);
+    border-radius: var(--radius-full, 999px);
+    padding: 2px 10px;
+
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+}
+
+.priceInline {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.35rem;
+    white-space: nowrap;
+}
+
+/* If using PriceLabel, tighten the look slightly */
+.priceInline [data-component="PriceLabel"] {
+    --price-font-size: clamp(1.05rem, 0.8cqi + 0.95rem, 1.25rem);
+    --price-suffix-size: clamp(0.85rem, 0.4cqi + 0.82rem, 0.95rem);
+}
+
+.priceMeta {
+    color: var(--text-secondary, #c9ced1);
+    font-weight: 600;
+    font-size: 0.875rem;
+    line-height: 1.25;
+    text-wrap: pretty;
+}
+
+/* ------------------------------- CTA section ----------------------------- */
+.actionsDivider {
+    margin-block-start: -0.25rem;
+}
+
+.actions {
+    display: grid;
+    align-items: center;
+    gap: var(--space-3, 0.75rem);
+    min-inline-size: 0;
+}
+
+.actionsTwo {
+    grid-template-columns: 1fr 1fr;
+}
+
+.actionsOne {
+    grid-template-columns: 1fr;
+    justify-items: center;
+}
+
+.actions>* {
+    min-inline-size: 0;
+}
+
+/* ------------------------------- Footer note ----------------------------- */
+.footerNote {
+    margin-block-start: var(--space-2, 0.5rem);
+    color: var(--text-muted, #aab2b9);
+    font-size: 0.875rem;
+    line-height: 1.45;
+}
+
+/* -------------------------- Container responsiveness --------------------- */
+@container (min-width: 440px) {
+    .card {
+        gap: var(--space-5, 1.25rem);
+    }
+
+    .title {
+        font-size: clamp(1.125rem, 0.9cqi + 1rem, 1.35rem);
+    }
+
+    .summary {
+        font-size: clamp(1rem, 0.8cqi + 0.95rem, 1.125rem);
+    }
+
+    .description {
+        font-size: clamp(1rem, 0.7cqi + 0.95rem, 1.125rem);
+    }
+
+    .priceRow {
+        font-size: clamp(1.0625rem, 0.9cqi + 1rem, 1.2rem);
+    }
+}
+
+@container (min-width: 620px) {
+    .card {
+        gap: var(--space-6, 1.5rem);
+    }
+}
+
+/* --------------------------- Accessibility modes ------------------------- */
+@media (forced-colors: active) {
+    .badge {
+        background: ButtonFace;
+        color: ButtonText;
+    }
+
+    .priceRow {
+        background: Canvas;
+        color: CanvasText;
+    }
+}
+
+/* ------------------------------- No motion ------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+    .card * {
+        transition: none !important;
+    }
+}
