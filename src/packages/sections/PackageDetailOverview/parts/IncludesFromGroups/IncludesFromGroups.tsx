@@ -1,4 +1,3 @@
-// src/packages/sections/PackageDetailOverview/parts/IncludesFromGroups/IncludesFromGroups.tsx
 "use client";
 
 import * as React from "react";
@@ -47,7 +46,7 @@ export type IncludesFromGroupsProps = {
 
   /** Optional small print under the grid/list */
   footnote?: React.ReactNode;
-  /** Optional divider below the header */
+  /** Optional divider below the header (local header only) */
   showDivider?: boolean;
 
   /** Optional "Deliverables" band (occasionally used) */

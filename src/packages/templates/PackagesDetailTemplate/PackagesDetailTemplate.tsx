@@ -249,7 +249,7 @@ export default function PackagesDetailTemplate({
           includesGroups={(bundle as any).includes}
           includesTitle="What’s included"
           includesVariant="cards"              // default; explicit for clarity
-          includesMaxCols={2}                  // two-up grid on desktop (“boom, boom”)
+          includesMaxCols={3}                  // three-up grid on desktop (“boom, boom”)
           includesDense={false}
           includesShowIcons
           includesFootnote={(bundle as any).notes}

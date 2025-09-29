@@ -1,4 +1,5 @@
 // src/packages/sections/PackageDetailOverview/parts/NotesBlock/NotesBlock.tsx
+// src/packages/sections/PackageDetailOverview/parts/NotesBlock/NotesBlock.tsx
 "use client";
 
 import * as React from "react";

@@ -1,19 +1,19 @@
-/* ------------------------------------------------------------------
+/* --------------------------------------------------------------------------
    TBH Digital Solutions — Packages Unified (CSS Module, local scope)
-   Purpose:
-     • Opt-in theme island for the Packages Hub & Detail pages.
+   Purpose
+     • Opt-in theme island for Packages Hub & Detail pages.
      • Expose package-scoped alias vars that map to global tokens
        (from unified-theme.css / root.css).
-   Notes:
+   Notes
      • No :root / :global here (CSS Modules “pure”).
      • Apply on a container: className={styles.packagesTheme}
-   ------------------------------------------------------------------ */
+     • Container-aware: this module enables container queries on key wrappers.
+---------------------------------------------------------------------------- */
 
-/* 1) Theme island (dark-first) ----------------------------------- */
+/* 1) Theme island (dark-first) ------------------------------------------- */
 .packagesTheme {
-    /* ---- Color aliases (map to your global tokens) ---- */
+    /* ---- Color aliases (map to global tokens) ---- */
     --pkg-bg: var(--bg-primary, #060512);
-    /* Use an existing global token for solid section contexts; gradients use --gradient-section */
     --pkg-section: var(--bg-elevated, #0E1730);
     --pkg-surface: var(--bg-surface, #0B0A18);
     --pkg-elevated: var(--bg-elevated, #121224);
@@ -80,16 +80,14 @@
     --pkg-space-xl: var(--spacing-xl, 1.5rem);
     --pkg-space-2xl: var(--spacing-2xl, 2rem);
 
-    /* radii align with global scale */
-    --pkg-radius-sm: var(--radius-sm);
-    --pkg-radius-md: var(--radius-md);
-    --pkg-radius-lg: var(--radius-lg);
-    --pkg-radius-xl: var(--radius-xl);
+    --pkg-radius-sm: var(--radius-sm, 6px);
+    --pkg-radius-md: var(--radius-md, 10px);
+    --pkg-radius-lg: var(--radius-lg, 14px);
+    --pkg-radius-xl: var(--radius-xl, 20px);
 
-    /* motion aligns with global transitions */
-    --pkg-ease-fast: var(--transition-fast);
-    --pkg-ease: var(--transition-standard);
-    --pkg-ease-slow: var(--transition-slow);
+    --pkg-ease-fast: var(--transition-fast, 120ms ease);
+    --pkg-ease: var(--transition-standard, 160ms ease);
+    --pkg-ease-slow: var(--transition-slow, 240ms ease);
 
     /* ---- Structure ---- */
     --pkg-container-max: var(--container-max, 1200px);
@@ -100,12 +98,14 @@
     /* ---- Gradients ---- */
     --gradient-section: var(--gradient-section, linear-gradient(180deg, var(--pkg-bg) 0%, var(--pkg-section) 100%));
 
-    /* Apply base colors to this island */
     color: var(--pkg-text);
     background: var(--pkg-bg);
+
+    /* Allow components inside to use color-scheme if needed */
+    color-scheme: dark;
 }
 
-/* 2) Optional light variant (use alongside a page-level light mode if needed) */
+/* 2) Optional light variant ---------------------------------------------- */
 .packagesLight {
     --pkg-bg: #ffffff;
     --pkg-section: #f7f9fb;
@@ -119,27 +119,36 @@
     --pkg-card-fg: #0f172a;
     --pkg-card-border: #e2e8f0;
     --pkg-table-head-bg: #f8fafc;
+
+    color-scheme: light;
 }
 
-/* 3) Convenience helpers (drop-in section patterns) --------------- */
+/* 3) Convenience helpers (drop-in section patterns) ---------------------- */
 .packagesBand {
     padding-block: var(--pkg-section-pad);
     background: var(--gradient-section);
+    border-radius: var(--pkg-radius-xl);
 }
 
+/* Stronger vertical rhythm band */
 .packagesBand--major {
     padding-block: var(--pkg-section-pad-lg);
 }
 
 .packagesContainer {
-    width: min(calc(100% - 2 * var(--pkg-container-pad-inline)), var(--pkg-container-max));
+    inline-size: min(calc(100% - 2 * var(--pkg-container-pad-inline)), var(--pkg-container-max));
     margin-inline: auto;
     padding-inline: var(--pkg-container-pad-inline);
+    /* Enable container queries for child components */
+    container-type: inline-size;
+    container-name: packages;
+    /* Prevent accidental overflow in nested grids */
+    min-inline-size: 0;
 }
 
 .packagesSectionHeader {
     text-align: center;
-    max-width: 60ch;
+    max-inline-size: 60ch;
     margin: 0 auto var(--pkg-space-xl);
 }
 
@@ -148,6 +157,7 @@
     font-size: var(--pkg-h2);
     color: var(--pkg-text-accent);
     margin: 0 0 var(--pkg-space-sm);
+    text-wrap: balance;
 }
 
 .packagesSectionSubtitle {
@@ -155,9 +165,60 @@
     font-size: var(--pkg-body);
     color: var(--pkg-text-muted);
     margin: 0;
+    text-wrap: pretty;
+    line-height: 1.6;
 }
 
-/* 4) Optional: extra token tweaks for package/bundle cards -------- */
+/* 4) Universal heading stack utilities ----------------------------------- */
+/* These are reused by Overview & Extras to render: Title + Divider + Tagline */
+.hgroup {
+    display: grid;
+    justify-items: center;
+    /* centers the whole header group */
+    gap: var(--pkg-space-xs);
+    margin-block: var(--pkg-space-md) var(--pkg-space-sm);
+}
+
+.hpair {
+    display: inline-grid;
+    justify-items: center;
+    /* centers title + divider inside */
+    inline-size: max-content;
+    /* ← makes Divider match the title width */
+    max-inline-size: 100%;
+    min-inline-size: 0;
+}
+
+.hTitle {
+    margin: 0;
+    text-align: center;
+    text-wrap: balance;
+}
+
+.hRule {
+    /* The Divider atom will fill this container; we provide a stable bound. */
+    inline-size: clamp(120px, 40cqi, 560px);
+    margin-inline: auto;
+}
+
+.hTaglineWrap {
+    display: grid;
+    justify-items: center;
+    /* centers the block itself */
+}
+
+.hTagline {
+    margin: 0;
+    max-inline-size: 68ch;
+    text-align: left;
+    /* centered block, left-aligned text */
+    color: var(--pkg-text-muted);
+    line-height: 1.6;
+    font-size: clamp(0.95rem, 0.2vw + 0.95rem, 1.05rem);
+    text-wrap: pretty;
+}
+
+/* 5) Extra token tweaks for package/bundle cards -------------------------- */
 .packagesThemeTokens {
     /* Badge & savings pills */
     --pkg-badge-bg: color-mix(in oklab, var(--pkg-brand) 12%, var(--pkg-surface));
@@ -180,7 +241,109 @@
     --bundle-selected: color-mix(in oklab, var(--brand-blue) 70%, #7c3aed);
 }
 
-/* Optional: extra spacing before FAQ when present ----------------- */
+/* Optional: extra spacing before FAQ when present ------------------------ */
 .faqBand {
-    margin-top: 2rem;
+    margin-block-start: 2rem;
 }
+
+/* 6) Responsive behavior via container queries --------------------------- */
+/* Small (≤ 20rem) */
+@container packages (max-width: 20rem) {
+    .packagesSectionTitle {
+        font-size: clamp(1.25rem, 3cqi + 1rem, 1.5rem);
+    }
+
+    .hTagline {
+        font-size: clamp(0.95rem, 1.5cqi + 0.85rem, 1.025rem);
+    }
+
+    .hgroup {
+        gap: var(--pkg-space-2xs);
+    }
+}
+
+/* Medium (20–32rem) */
+@container packages (min-width: 20rem) and (max-width: 32rem) {
+    .packagesSectionTitle {
+        font-size: clamp(1.375rem, 2.2cqi + 1rem, 1.75rem);
+    }
+}
+
+/* Large (32–48rem) */
+@container packages (min-width: 32rem) and (max-width: 48rem) {
+    .packagesSectionTitle {
+        font-size: clamp(1.5rem, 1.6cqi + 1rem, 1.9rem);
+    }
+}
+
+/* XLarge (> 48rem) */
+@container packages (min-width: 48rem) {
+    .packagesSectionTitle {
+        font-size: clamp(1.6rem, 1.2cqi + 1rem, 2rem);
+    }
+}
+
+/* 7) Accessibility & motion ---------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+    .packagesTheme * {
+        transition: none !important;
+        animation: none !important;
+    }
+}
+
+/* High-contrast / forced colors */
+@media (forced-colors: active) {
+
+    .packagesBand,
+    .packagesBand--major {
+        background: Canvas !important;
+        border: 1px solid CanvasText;
+    }
+
+    .hTitle {
+        color: CanvasText !important;
+    }
+
+    .hTagline {
+        color: CanvasText !important;
+    }
+}
+
+/* 8) Print-friendly tweaks ------------------------------------------------ */
+@media print {
+
+    .packagesBand,
+    .packagesBand--major {
+        background: none !important;
+        box-shadow: none !important;
+    }
+
+    .packagesContainer {
+        inline-size: 100%;
+        padding-inline: 0;
+        container-type: normal;
+        /* avoid unexpected print artifacts */
+    }
+}
+
+/* 9) Heading stack safety guards (scoped) -------------------------------- */
+/* Ensure visual centering is honored even if a parent sets left alignment */
+:where(.hgroup) .hTitle {
+    text-align: center;
+}
+
+/* Keep the underline sized & centered by the stack – never full width */
+:where(.hRule) {
+    inline-size: clamp(120px, 40cqi, 560px);
+    margin-inline: auto;
+}
+
+/* Defensive reset for any generic hr/divider dropped into the stack */
+:where(.hpair) :is(hr, .divider) {
+    inline-size: 100%;
+    /* 100% of the hpair, which is max-content */
+    margin-inline: auto;
+    /* center within the hpair */
+    block-size: var(--divider-thickness, 4px);
+}
+

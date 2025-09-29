@@ -1,6 +1,7 @@
 /* src/packages/sections/PackageDetailOverview/PackageDetailOverview.module.css
    - Deep navy gradient background
    - 2-col grid with sticky rail area
+   - Unified header stack (Title + Divider + Tagline)
    - Feature list spacing + below-grid band for CTAs/Extras
 */
 
@@ -8,8 +9,7 @@
 .wrap {
     inline-size: 100%;
     /* Deep navy gradient surface */
-    background: var(--surface-deep-navy,
-            linear-gradient(180deg, #0b0a18 0%, #0e1424 100%));
+    background: var(--surface-deep-navy, linear-gradient(180deg, #0b0a18 0%, #0e1424 100%));
     color: var(--pkg-text, var(--text-primary, #f4f6f7));
     border-radius: var(--radius-xl, 20px);
     border: 1px solid color-mix(in oklab, var(--border-subtle, #94a3b8) 40%, transparent);
@@ -19,6 +19,7 @@
     padding-inline-end: max(clamp(1rem, 2vw, 1.5rem), env(safe-area-inset-right, 0px));
     padding-block: clamp(1rem, 2vw, 1.5rem);
 
+    /* container queries for responsive grid tuning */
     container-type: inline-size;
 }
 
@@ -34,20 +35,71 @@
     min-inline-size: 0;
 }
 
-/* Spacing hooks */
+/* -------------------------- SECTION HEADER STACK ------------------------ */
+.block {
+    display: grid;
+    gap: var(--space-3, 12px);
+    /* header → body gap */
+    margin-block: var(--space-6, 24px) 0;
+    /* space above each section */
+}
+
+.blockHeader {
+    display: grid;
+    gap: var(--space-2, 8px);
+    align-items: start;
+    justify-items: center;
+    /* center title + divider + tagline */
+}
+
+.blockTitle {
+    margin: 0;
+    font: var(--font-h3, 700 1.375rem/1.2 var(--font-heading, Aldrich, system-ui));
+    color: var(--text-primary);
+    text-wrap: balance;
+    text-align: center;
+}
+
+.blockDivider {
+    inline-size: clamp(120px, 40cqi, 560px);
+    /* centered underline width */
+    margin-inline: auto;
+}
+
+.blockTagline {
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: clamp(0.95rem, 0.92rem + 0.3vw, 1.05rem);
+    line-height: 1.6;
+    text-wrap: pretty;
+    text-align: left;
+    /* centered block with left-aligned text content */
+}
+
+/* Features & Outcomes spacing hooks */
 .features {
     margin-block: var(--space-3, 0.75rem) var(--space-4, 1rem);
 }
 
 .outcomes {
-    margin-block-start: var(--space-3, 0.75rem);
+    margin-block-start: var(--space-2, 8px);
 }
 
-/* Fallback includes table heading */
+/* Fallback includes table heading (legacy) */
 .includes {
     margin-block-start: var(--space-4, 1rem);
 }
 
+/* Optional footnote under includes */
+.includesFootnote {
+    margin-block-start: var(--space-3, 12px);
+    color: var(--text-secondary);
+    font-size: clamp(0.9rem, 0.2vw + 0.9rem, 1rem);
+    line-height: 1.55;
+    text-wrap: pretty;
+}
+
+/* Subhead helper when needed (kept for compatibility) */
 .subhead {
     margin: 0 0 var(--space-2, 0.5rem);
     font-family: var(--font-heading, Aldrich, sans-serif);
@@ -60,15 +112,25 @@
     text-wrap: balance;
 }
 
-/* Below-grid band (CTAs + Extras) */
+/* Below-grid slot (extras, full-width band) */
 .belowGrid {
-    margin-block-start: clamp(1rem, 3cqi, 1.5rem);
+    margin-block-start: var(--space-8, 32px);
+    display: grid;
+    gap: var(--space-6, 24px);
+}
+
+/* Readable notes emphasis */
+.notesEmphasis {
+    font-size: clamp(0.95rem, 0.92rem + 0.3vw, 1.05rem);
+    line-height: 1.6;
+    color: var(--text-secondary);
 }
 
 /* ------------------------ RESPONSIVE / CONTAINERS ----------------------- */
 @container (max-width: 62rem) {
     .grid {
         grid-template-columns: 1fr;
+        /* stack rail under content */
     }
 }
 
@@ -97,74 +159,4 @@
         border-radius: 0;
         padding: 1rem;
     }
-}
-
-/* -------------------------- SECTION HEADER STACK ------------------------ */
-/* Generic section block with header (Title + Divider + Tagline) */
-.block {
-    display: grid;
-    gap: var(--space-3, 12px);
-    margin-block: var(--space-6, 24px) 0;
-}
-
-.blockHeader {
-    display: grid;
-    gap: var(--space-2, 8px);
-    align-items: start;
-    justify-items: center;
-    /* center title + divider + tagline */
-}
-
-.blockHeaderCenter {
-    display: grid;
-    gap: var(--space-2, 8px);
-    justify-items: center;
-}
-
-.blockTitle {
-    margin: 0;
-    font: var(--font-h3, 700 1.375rem/1.2 var(--font-heading, Aldrich, system-ui));
-    color: var(--text-primary);
-    text-wrap: balance;
-    text-align: center;
-}
-
-.blockDivider {
-    inline-size: clamp(120px, 40cqi, 560px);
-    /* centered underline width */
-    margin-inline: auto;
-}
-
-.blockTagline {
-    margin: 0;
-    color: var(--text-secondary);
-    font-size: clamp(0.95rem, 0.92rem + 0.3vw, 1.05rem);
-    line-height: 1.6;
-    text-wrap: pretty;
-    text-align: left;
-    /* centered block with left-aligned text content */
-}
-
-.center {
-    justify-self: center;
-    text-align: center;
-}
-
-/* Outcomes grid spacing hook (OutcomesBlock uses its own layout; we just space it nicely) */
-.outcomes {
-    margin-block-start: var(--space-2, 8px);
-}
-
-/* Readable notes emphasis */
-.notesEmphasis {
-    font-size: clamp(0.95rem, 0.92rem + 0.3vw, 1.05rem);
-    line-height: 1.6;
-    color: var(--text-secondary);
-}
-
-/* Below-grid slot (extras) */
-.belowGrid {
-    margin-block-start: var(--space-8, 32px);
-    display: grid;
-    gap: var(--space-6, 24px);
 }

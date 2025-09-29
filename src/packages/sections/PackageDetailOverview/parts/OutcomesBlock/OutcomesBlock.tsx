@@ -3,40 +3,22 @@
 import * as React from "react";
 import styles from "./OutcomesBlock.module.css";
 import Divider from "@/components/ui/atoms/Divider/Divider";
-import { OutcomeList, type OutcomeItem } from "@/components/ui/molecules/OutcomeList";
+/* ⬇️ Correct: default component import + typed re-export */
+import OutcomeList, { type OutcomeItem } from "@/components/ui/molecules/OutcomeList";
 
 export type OutcomesBlockProps = {
-  /** Array of simple strings or OutcomeList items */
   outcomes?: Array<string | OutcomeItem>;
-
-  /** Optional heading shown above the list (ignored when hideHeading is true) */
   title?: string;
-
-  /** When true, suppress the local title + divider and render only the list grid */
   hideHeading?: boolean;
-
-  /** Grid columns for the list (defaults to 2; use CSS/container queries to bump on xl) */
-  columns?: 2 | 3 | 4;
-
-  /** Size token forwarded to OutcomeList (defaults to "sm") */
-  size?: "sm" | "md" | "lg";
-
-  /** Visual variant forwarded to OutcomeList (defaults to "check") */
-  variant?: "check" | "bullet" | "dot";
-
-  /** Render a divider under the heading (default true when a title is provided and hideHeading is false) */
+  columns?: 1 | 2 | 3;
+  size?: "sm" | "md";
+  variant?: "check" | "bullet" | "dot" | "arrow";
   showDivider?: boolean;
-
-  /** Compact spacing if needed */
   compact?: boolean;
-
-  /** Optional ids / testing / styling hooks */
   id?: string;
   "data-testid"?: string;
   className?: string;
   style?: React.CSSProperties;
-
-  /** Aria label for the section wrapper (defaults to "Expected outcomes") */
   ariaLabel?: string;
 };
 
@@ -44,7 +26,7 @@ function normalizeOutcomes(items: OutcomesBlockProps["outcomes"]): OutcomeItem[]
   return (items ?? []).map((o, i) =>
     typeof o === "string"
       ? { id: `o-${i}`, label: o }
-      : { id: o.id ?? `o-${i}`, label: o.label }
+      : { id: o.id ?? `o-${i}`, label: o.label, note: o.note, emphasis: o.emphasis, icon: o.icon }
   );
 }
 
@@ -52,7 +34,7 @@ function OutcomesBlock({
   outcomes = [],
   title,
   hideHeading = false,
-  columns = 2,               // default to 2; scale up via container/parent CSS at xl
+  columns = 3,
   size = "sm",
   variant = "check",
   showDivider = true,
@@ -89,7 +71,10 @@ function OutcomesBlock({
         layout="grid"
         columns={columns}
         size={size}
-        variant={variant}
+        variant={variant === "bullet" ? "dot" : variant}
+        align="start"
+        textAlign="left"
+        ariaLabel="Expected outcomes"
       />
     </section>
   );

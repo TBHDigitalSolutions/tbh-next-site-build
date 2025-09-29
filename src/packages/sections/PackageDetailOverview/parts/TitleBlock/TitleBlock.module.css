@@ -58,7 +58,7 @@
 }
 
 /* Divider under main heading --------------------------------------------- */
-/* We keep it container-aware; centering handled by parent alignment */
+/* Keep it container-aware; centering handled by parent alignment */
 .divider {
     inline-size: 100%;
     max-inline-size: 100%;

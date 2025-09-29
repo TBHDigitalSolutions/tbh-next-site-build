@@ -1,75 +1,50 @@
-/* src/components/ui/molecules/OutcomeList/OutcomeList.module.css
-   Brand-aligned, responsive, container-query enhanced.
+/* OutcomeList — responsive, container-query aware, alignment-friendly */
 
-   Consumes tokens from packages-unified.module.css → unified-theme.css/root.css.
-   TSX contract: root, md|sm, list|inline|grid, cols1|cols2|cols3,
-                 item, iconWrap, icon, content, label, emphasis, note
-   + NEW: alignStart|alignCenter|alignEnd, textLeft|textCenter|textRight
-*/
-
-/* ============================== ROOT ==================================== */
 .root {
-    /* Brand mappings (safe fallbacks) */
-    --outcome-fg: var(--pkg-text, var(--text-primary, #f4f6f7));
-    --outcome-fg-dark: var(--pkg-text, var(--text-primary, #f4f6f7));
-    --outcome-accent: var(--text-accent, var(--pkg-text-accent, var(--brand-blue, #0EAFFB)));
-    --outcome-muted: var(--text-secondary, var(--pkg-text-muted, #c9ced1));
-
+    list-style: none;
     margin: 0;
     padding: 0;
-    list-style: none;
 
-    color: var(--outcome-fg);
-    font-variant-numeric: tabular-nums;
-    text-wrap: pretty;
+    /* Grid shell by default so we can justify items easily */
+    display: grid;
+    gap: var(--ol-gap, var(--spacing-sm, 0.75rem));
 
-    /* Scale by the column/card it lives in (not the viewport) */
+    /* Let the list respond to the width of the column it lives in */
     container-type: inline-size;
 }
 
-/* ============================== DENSITY ================================ */
-.md,
+/* Size tokens */
 .sm {
-    display: grid;
+    --ol-gap: 0.5rem;
+    --ol-icon: 1rem;
+    --ol-font: clamp(0.95rem, 0.2vw + 0.95rem, 1.05rem);
 }
 
 .md {
-    --gap-row: 0.5rem;
-    --gap-col: 1rem;
-    --icon-size: 0.95rem;
-    --label-size: clamp(0.98rem, 0.6cqi + 0.92rem, 1.0625rem);
-    --note-size: clamp(0.875rem, 0.4cqi + 0.82rem, 0.95rem);
+    --ol-gap: 0.6rem;
+    --ol-icon: 1.125rem;
+    --ol-font: clamp(1rem, 0.2vw + 1rem, 1.1rem);
 }
 
-.sm {
-    --gap-row: 0.375rem;
-    --gap-col: 0.75rem;
-    --icon-size: 0.85rem;
-    --label-size: clamp(0.92rem, 0.5cqi + 0.86rem, 1rem);
-    --note-size: clamp(0.8125rem, 0.3cqi + 0.78rem, 0.9rem);
-}
-
-/* ============================== LAYOUTS ================================ */
+/* Layouts */
 .list {
-    display: grid;
-    row-gap: var(--gap-row);
+    grid-template-columns: 1fr;
 }
 
 .inline {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--gap-row) var(--gap-col);
-    align-items: baseline;
+    gap: var(--ol-gap);
 }
 
 .grid {
     display: grid;
-    grid-auto-rows: minmax(min-content, max-content);
-    row-gap: var(--gap-row);
-    column-gap: var(--gap-col);
+    gap: var(--ol-gap);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    /* default 2 cols */
 }
 
-/* column presets (TSX picks one of these) */
+/* Column overrides (explicit) */
 .cols1 {
     grid-template-columns: 1fr;
 }
@@ -82,8 +57,14 @@
     grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
-/* ============================ ALIGNMENT (NEW) =========================== */
-/* Affects item alignment inside the list/grid */
+/* Container-query: bump 2→3 cols when there's room */
+@container (min-width: 1120px) {
+    .grid.cols2 {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+/* Block alignment of items within the UL */
 .alignStart {
     justify-items: start;
 }
@@ -96,7 +77,7 @@
     justify-items: end;
 }
 
-/* Text alignment for the content cell (label/note) */
+/* Text alignment (only the textual column) */
 .textLeft .content {
     text-align: left;
 }
@@ -109,98 +90,49 @@
     text-align: right;
 }
 
-/* =============================== ITEM ================================== */
+/* Items */
 .item {
     display: grid;
     grid-template-columns: auto 1fr;
-    column-gap: 0.5rem;
+    /* icon + content */
     align-items: start;
-    min-inline-size: 0;
-    /* avoid overflow in tight grids */
+    gap: var(--ol-gap);
 }
 
-/* Icon cell --------------------------------------------------------------- */
 .iconWrap {
-    line-height: 1;
-    inline-size: var(--icon-size);
-    block-size: var(--icon-size);
+    inline-size: var(--ol-icon, 1.125rem);
+    block-size: var(--ol-icon, 1.125rem);
     display: inline-grid;
     place-items: center;
-    color: var(--outcome-accent);
-    border-radius: var(--radius-sm, 6px);
-    /* improves focus visuals if wrapped in a button later */
 }
 
 .icon {
-    inline-size: var(--icon-size);
-    block-size: var(--icon-size);
+    inline-size: 100%;
+    block-size: 100%;
 }
 
-/* Content ---------------------------------------------------------------- */
 .content {
     display: grid;
-    gap: 0.125rem;
-    min-inline-size: 0;
+    gap: calc(var(--ol-gap) * 0.25);
 }
 
 .label {
-    font-size: var(--label-size);
-    font-weight: 600;
-    color: var(--text-primary, currentColor);
-    text-wrap: balance;
+    font-size: var(--ol-font);
+    line-height: 1.4;
+    color: var(--text-primary);
 }
 
 .emphasis {
-    font-weight: 800;
+    font-weight: 700;
+    color: var(--text-primary);
 }
 
 .note {
-    font-size: var(--note-size);
-    color: var(--outcome-muted);
-    opacity: 0.92;
+    color: var(--text-secondary);
+    font-size: clamp(0.9rem, 0.15vw + 0.9rem, 0.98rem);
 }
 
-/* =========================== CONTAINER QUERIES ========================== */
-/* Scale nicely inside wider columns/cards */
-@container (min-width: 36rem) {
-    .md {
-        --gap-row: 0.6rem;
-        --gap-col: 1.1rem;
-    }
-
-    .sm {
-        --gap-row: 0.45rem;
-        --gap-col: 0.9rem;
-    }
-
-    .icon {
-        inline-size: calc(var(--icon-size) + 0.05rem);
-        block-size: calc(var(--icon-size) + 0.05rem);
-    }
-}
-
-@container (min-width: 56rem) {
-    .grid {
-        column-gap: calc(var(--gap-col) + 0.25rem);
-    }
-
-    .cols3 {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-}
-
-/* Viewport fallback when container queries aren’t supported --------------- */
-@media (max-width: 640px) {
-    .grid.cols2 {
-        grid-template-columns: 1fr;
-    }
-
-    .grid.cols3 {
-        grid-template-columns: 1fr;
-    }
-}
-
-/* ============================== ACCESSIBILITY =========================== */
+/* A11y & motion */
 @media (prefers-reduced-motion: reduce) {
     .root * {
         transition: none !important;
@@ -208,22 +140,7 @@
 }
 
 @media (forced-colors: active) {
-    .iconWrap {
-        color: Highlight;
-    }
-}
-
-/* ============================== DARK HOOK =============================== */
-@media (prefers-color-scheme: dark) {
-    .root {
-        color: var(--outcome-fg-dark);
-    }
-}
-
-/* ================================ PRINT ================================= */
-@media print {
-    .grid {
-        column-gap: 0.5rem;
-        row-gap: 0.4rem;
+    .icon {
+        forced-color-adjust: auto;
     }
 }

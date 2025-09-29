@@ -11,7 +11,7 @@
     display: block;
     color: var(--pkg-text, var(--text-primary));
     container-type: inline-size;
-    /* enable container queries if supported */
+    /* enable container queries */
 }
 
 .header {
@@ -63,6 +63,8 @@
     --grid-gap: var(--spacing-md, 1rem);
     display: grid;
     gap: var(--grid-gap);
+    grid-auto-rows: 1fr;
+    /* equal-height rows across the grid */
 }
 
 .gridAuto {
@@ -100,6 +102,9 @@
     padding: clamp(12px, 2vw, 18px);
     transition: box-shadow .2s ease, border-color .2s ease, transform .2s ease, background .2s ease;
     will-change: transform;
+    display: flex;
+    /* equal-height interior */
+    flex-direction: column;
 }
 
 .card:hover,
@@ -260,9 +265,10 @@
 }
 
 /* Container queries when supported */
-@container (min-width: 720px) {
+@container (min-width: 760px) {
     .grid {
         --card-min-w: 300px;
+        gap: var(--spacing-lg, 1.5rem);
     }
 }
 

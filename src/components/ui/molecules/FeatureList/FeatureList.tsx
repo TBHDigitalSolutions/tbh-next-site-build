@@ -1,4 +1,3 @@
-// src/components/ui/molecules/FeatureList/FeatureList.tsx
 "use client";
 
 import * as React from "react";
@@ -99,15 +98,14 @@ const FeatureList: React.FC<FeatureListProps> = ({
   className,
   style,
 }) => {
-  const visible = showExcluded ? items : items.filter((it) => it.included !== false);
+  const visible = React.useMemo(
+    () => (showExcluded ? items : items.filter((it) => it.included !== false)),
+    [items, showExcluded],
+  );
 
   return (
     <ul
-      className={[
-        styles.root,
-        size === "sm" ? styles.sm : styles.md,
-        className,
-      ]
+      className={[styles.root, size === "sm" ? styles.sm : styles.md, className]
         .filter(Boolean)
         .join(" ")}
       style={style}
@@ -158,5 +156,3 @@ const FeatureList: React.FC<FeatureListProps> = ({
 };
 
 export default FeatureList;
-/* ⬇️ IMPORTANT: remove the duplicate re-export that caused the conflict */
-// export type { FeatureListProps };  // <-- DELETE THIS LINE

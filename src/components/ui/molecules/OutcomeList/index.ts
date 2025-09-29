@@ -1,1 +1,2 @@
-export { OutcomeList, type OutcomeListProps, type OutcomeItem } from "./OutcomeList";
+export { default } from "./OutcomeList";
+export type { OutcomeItem, OutcomeListProps } from "./OutcomeList";

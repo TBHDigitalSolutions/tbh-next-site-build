@@ -46,7 +46,6 @@ export type OutcomeListProps = {
 };
 
 /* ---- Small inline SVGs (no external deps) ---- */
-
 const DotIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg viewBox="0 0 8 8" aria-hidden="true" {...props}>
     <circle cx="4" cy="4" r="3" fill="currentColor" />
@@ -83,12 +82,12 @@ function defaultIcon(variant: NonNullable<OutcomeListProps["variant"]>) {
  * - Optional check/arrow/dot icons
  * - Align items and text independently via props
  */
-export const OutcomeList: React.FC<OutcomeListProps> = ({
+const OutcomeList: React.FC<OutcomeListProps> = ({
   items,
   size = "md",
-  layout = "list",
+  layout = "grid",
   columns = 2,
-  variant = "dot",
+  variant = "check",
   align = "start",
   textAlign = "left",
   ariaLabel,
@@ -135,6 +134,9 @@ export const OutcomeList: React.FC<OutcomeListProps> = ({
       style={style}
       aria-label={ariaLabel}
       data-testid={testId}
+      data-columns={columns}
+      data-variant={variant}
+      data-layout={layout}
     >
       {items.map((item) => {
         const labelText = typeof item.label === "string" ? item.label : undefined;
@@ -155,9 +157,7 @@ export const OutcomeList: React.FC<OutcomeListProps> = ({
               {item.note ? (
                 <span
                   className={styles.note}
-                  aria-label={
-                    labelText ? `${labelText}: ${item.note}` : undefined
-                  }
+                  aria-label={labelText ? `${labelText}: ${item.note}` : undefined}
                 >
                   {item.note}
                 </span>
@@ -171,3 +171,4 @@ export const OutcomeList: React.FC<OutcomeListProps> = ({
 };
 
 export default OutcomeList;
+/* IMPORTANT: do NOT re-export the types here; doing so duplicates declarations and triggers TS2484. */

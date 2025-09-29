@@ -1,123 +1,102 @@
 /* src/packages/sections/PackageDetailOverview/parts/PriceTeaser/PriceTeaser.module.css */
 
-/* Root: single-row, no wrapping */
 .wrap {
-    display: inline-flex;
-    flex-wrap: nowrap;
-    /* ← enforce one line */
+    --teaser-fg: var(--pkg-text, var(--text-primary));
+    --teaser-muted: var(--pkg-text-muted, var(--text-secondary));
+    --teaser-accent: var(--pkg-text-accent, var(--brand-blue));
+    --teaser-bg: color-mix(in oklab, var(--teaser-accent) 10%, transparent);
+
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: max-content;
     align-items: baseline;
-    gap: var(--_gap, var(--spacing-sm, 0.75rem));
-    color: var(--pkg-text, var(--text-primary));
-    white-space: nowrap;
-    /* prevent teaser + notes from stacking */
+    gap: .5rem;
+
+    color: var(--teaser-fg);
     container-type: inline-size;
 }
 
-/* alignment + density */
+.sizeSm {
+    font-size: clamp(.95rem, .25cqi + .92rem, 1.02rem);
+}
+
+.sizeMd {
+    font-size: clamp(1rem, .35cqi + .96rem, 1.08rem);
+}
+
 .alignStart {
-    justify-content: flex-start;
-    text-align: start;
+    justify-content: start;
 }
 
 .alignCenter {
     justify-content: center;
-    text-align: center;
 }
 
 .alignEnd {
-    justify-content: flex-end;
-    text-align: end;
+    justify-content: end;
 }
 
-.sizeSm {
-    --_gap: var(--spacing-xs, 0.5rem);
-    row-gap: var(--spacing-2xs, 0.25rem);
+.emphasis {
+    padding: .35rem .6rem;
+    border-radius: var(--radius-full, 999px);
+    background: var(--teaser-bg);
+    box-shadow: 0 0 0 1px color-mix(in oklab, var(--teaser-accent) 28%, transparent);
 }
 
-.sizeMd {
-    --_gap: var(--spacing-sm, 0.75rem);
-    row-gap: var(--spacing-xs, 0.5rem);
-}
-
-/* teaser label */
+/* Single-line, no-wrap label with graceful truncation */
 .label {
-    font-family: var(--font-body, Newsreader, serif);
     font-weight: 800;
-    letter-spacing: 0.02em;
-    color: var(--pkg-card-fg, var(--text-primary));
-    font-size: var(--font-size-body, clamp(0.95rem, 0.4vw + 0.9rem, 1rem));
-    line-height: 1.2;
+    color: var(--teaser-accent);
     white-space: nowrap;
-}
-
-.emphasis .label {
-    padding: 0.12rem 0.38rem;
-    border-radius: var(--radius-sm, 6px);
-    background: color-mix(in oklab, var(--brand-blue, var(--pkg-brand, #0EAFFB)) 12%, var(--bg-surface, transparent));
-    border: 1px solid color-mix(in oklab, var(--brand-blue, var(--pkg-brand, #0EAFFB)) 28%, var(--border-subtle, currentColor));
-}
-
-/* optional small print */
-.notes {
-    opacity: 0.92;
-    color: var(--text-tertiary, var(--pkg-text-muted, #94a3b8));
-    font-family: var(--font-body, Newsreader, serif);
-    font-size: var(--font-size-caption, clamp(0.85rem, 0.3vw + 0.82rem, 0.95rem));
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-wrap: nowrap;
     line-height: 1.2;
-    overflow-wrap: anywhere;
+    letter-spacing: .01em;
 }
 
-@container (min-width: 380px) {
-    .label {
-        font-size: clamp(1rem, 1cqi + 0.9rem, 1.0625rem);
-    }
-
-    .notes {
-        font-size: clamp(0.9rem, 0.6cqi + 0.84rem, 0.975rem);
-    }
+/* Optional notes — remain on one line, truncate if needed */
+.notes {
+    color: var(--teaser-muted);
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.2;
 }
 
-@container (min-width: 640px) {
+/* Narrow containers: keep columns but allow equal widths to avoid overflow */
+@container (max-width: 420px) {
     .wrap {
-        gap: var(--_gap, var(--spacing-md, 1rem));
-    }
-
-    .label {
-        font-size: clamp(1.025rem, 1cqi + 0.95rem, 1.1rem);
-    }
-
-    .notes {
-        font-size: clamp(0.95rem, 0.6cqi + 0.88rem, 1rem);
+        grid-auto-columns: 1fr;
     }
 }
 
-@media (max-width: 640px) {
+/* Gentle scaling in wider containers */
+@container (min-width: 40rem) {
     .wrap {
-        gap: var(--_gap, 0.6rem);
+        gap: .6rem;
+    }
+
+    .label {
+        letter-spacing: .012em;
     }
 }
 
 @media (prefers-reduced-motion: reduce) {
+
+    .wrap,
     .wrap * {
         transition: none !important;
     }
 }
 
 @media (forced-colors: active) {
-    .emphasis .label {
-        background: Canvas;
-        border-color: Highlight;
-        color: Highlight;
-    }
-}
-
-@media print {
-    .wrap {
-        gap: 0.4rem;
+    .label {
+        color: LinkText;
     }
 
-    .emphasis .label {
-        background: transparent;
-        border: none;
+    .notes {
+        color: GrayText;
     }
 }

@@ -1,9 +1,57 @@
-/* =========================================
-   TBH Unified Theme (tokens + base recipes)
-   Single source of truth for: colors, type,
-   spacing, radii, shadows, motion, z-index,
-   + shared patterns used on services pages
-========================================= */
+/* =============================================================================
+   TBH Unified Theme (global tokens + base recipes)
+   - Source of truth for colors, type, spacing, radii, shadows, motion, z-index
+   - Global helpers for containers, cards, grids, and accessibility
+   - Intentionally neutral about alignment (no global left-align on headings)
+   - Uses logical properties for RTL safety; prefers container queries
+============================================================================= */
+
+/* ---------------------------
+   0) Global foundations
+---------------------------- */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html:focus-within {
+    scroll-behavior: smooth;
+}
+
+html {
+    hanging-punctuation: first last;
+}
+
+body {
+    margin: 0;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+}
+
+img,
+svg,
+video,
+canvas,
+audio,
+iframe {
+    display: block;
+    max-inline-size: 100%;
+    block-size: auto;
+}
+
+:where(ul[role="list"], ol[role="list"]) {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+:where(button) {
+    font: inherit;
+}
 
 /* -------------------------------
    1) Design tokens (from root.css)
@@ -40,29 +88,23 @@
     --font-size-2xl: clamp(1.50rem, 1.30rem + 0.80vw, 1.875rem);
     --font-size-3xl: clamp(1.875rem, 1.50rem + 1.20vw, 2.50rem);
 
-    /* Color system (deep navy + charcoal cards) */
+    /* Color system */
     --bg-primary: #060512;
     /* page background (deep navy) */
     --bg-surface: #1B1B1F;
     /* charcoal cards/panels */
     --bg-elevated: #0E1730;
-    /* headers, bars */
+    /* headers, bands */
     --bg-secondary: #F8F9FA;
-    /* light surface (when needed) */
+    /* light surface when needed */
 
     --text-primary: #F4F6F7;
-    /* off white */
     --text-secondary: #D7DBDD;
-    /* muted text */
     --text-tertiary: #8A8F98;
-    /* captions/meta */
     --text-inverse: #060512;
-    /* text on bright backgrounds */
     --text-accent: #0EAFFB;
-    /* headings / accents */
 
     --brand-blue: #0EAFFB;
-    /* CTAs / links */
     --accent-primary: var(--brand-blue);
     --accent-hover: #5AC8FA;
 
@@ -75,7 +117,8 @@
     --gradient-light: linear-gradient(180deg, #FFFFFF 0%, #F8F9FA 100%);
     --gradient-section: var(--gradient-dark);
 
-    /* Spacing */
+    /* Spacing (global) */
+    --spacing-2xs: 0.25rem;
     --spacing-xs: 0.375rem;
     /* 6px */
     --spacing-sm: 0.5rem;
@@ -96,6 +139,7 @@
     --radius-md: 8px;
     --radius-lg: 12px;
     --radius-xl: 16px;
+    --radius-2xl: 20px;
     --radius-full: 9999px;
 
     /* Shadows */
@@ -123,78 +167,50 @@
     --section-pad-block: clamp(2rem, 6vw, 3.75rem);
     --section-pad-block-lg: clamp(2.5rem, 7vw, 5rem);
 
-    /* Layering */
-    --modal-z: var(--z-index-modal, 9999);
-
-    /* Surface & text */
-    --modal-surface: var(--surface-elevated, #ffffff);
-    --modal-text: var(--text-primary, #121417);
-    --modal-muted: var(--text-muted, #6b7280);
-
-    /* Brand (TBH) */
-    --modal-brand: var(--brand, #0ea5e9);
-    --modal-brand-strong: var(--brand-600, #0284c7);
-
-    /* Borders & elevation */
-    --modal-border: var(--border-subtle, rgba(17, 24, 39, 0.08));
-    --modal-shadow: var(--shadow-lg, 0 24px 48px rgba(0, 0, 0, 0.18), 0 0 0 1px rgba(0, 0, 0, 0.04));
-    --modal-radius: var(--radius-2xl, 16px);
-
-    /* Spacing & sizing */
-    --modal-pad: var(--space-6, 24px);
-    --modal-pad-sm: var(--space-4, 16px);
-    --modal-gap: var(--space-4, 16px);
+    /* Modal / overlay (global opts for shared components) */
+    --modal-surface: #ffffff;
+    --modal-text: #121417;
+    --modal-muted: #6b7280;
+    --modal-brand: #0ea5e9;
+    --modal-brand-strong: #0284c7;
+    --modal-border: rgba(17, 24, 39, 0.08);
+    --modal-shadow: 0 24px 48px rgba(0, 0, 0, 0.18), 0 0 0 1px rgba(0, 0, 0, 0.04);
+    --modal-radius: 16px;
+    --modal-pad: 24px;
+    --modal-pad-sm: 16px;
+    --modal-gap: 16px;
     --modal-max-h: 90vh;
     --modal-width-vw: 92vw;
-
-    /* Typography */
-    --modal-title-size: var(--font-size-2xl, 1.5rem);
-    --modal-title-size-sm: var(--font-size-xl, 1.25rem);
-    --modal-content-size: var(--font-size-md, 1rem);
-    --modal-line: var(--line-height-md, 1.6);
-
-    /* Motion */
-    --modal-ease: var(--ease-standard, cubic-bezier(.2, .8, .2, 1));
-    --modal-dur: var(--duration-fast, 200ms);
-
-    /* Overlay */
-    --modal-scrim: var(--overlay-scrim, color-mix(in oklab, black 68%, transparent));
-    --modal-blur: var(--blur-backdrop, 6px);
-
-    /* Close button */
+    --modal-title-size: 1.5rem;
+    --modal-title-size-sm: 1.25rem;
+    --modal-content-size: 1rem;
+    --modal-line: 1.6;
+    --modal-ease: cubic-bezier(.2, .8, .2, 1);
+    --modal-dur: 200ms;
+    --modal-scrim: color-mix(in oklab, black 68%, transparent);
+    --modal-blur: 6px;
     --modal-close-size: 40px;
     --modal-close-pad: 8px;
     --modal-close-bg-hover: color-mix(in oklab, var(--modal-brand) 10%, transparent);
-
-    /* Focus ring */
     --focus-ring: 0 0 0 3px color-mix(in oklab, var(--modal-brand) 45%, white);
 
- }
-
-/* ----------------------------------------------------------
-   1.a) Aliases used by the services modules (compat layer)
-   (so their existing module CSS “just works”)
------------------------------------------------------------ */
-:root {
+    /* Legacy aliases used by older modules (compat layer) */
     --off-white: #ffffff;
-    /* used in several cards */
     --charcoal-grey: var(--text-secondary);
     --light-grey: var(--text-secondary);
     --border-grey: var(--border-subtle);
     --light-hover: var(--accent-hover);
     --deep-navy: var(--bg-primary);
     --charcoal-navy: var(--bg-elevated);
+
+    /* Package accents */
+    --package-ring: color-mix(in oklab, var(--brand-blue) 70%, white);
+    --package-selected: color-mix(in oklab, var(--brand-blue) 82%, #274d8c);
 }
 
 /* ----------------------------------------
-   2) Base text color & heading defaults
+   2) Base text + heading defaults
 ----------------------------------------- */
-html,
-body {
-    background: var(--bg-primary);
-    color: var(--text-primary);
-}
-
 body,
 p,
 span,
@@ -203,6 +219,7 @@ div {
     font-size: var(--font-size-body);
     line-height: var(--line-height-body);
     color: var(--text-primary);
+    text-wrap: pretty;
 }
 
 h1,
@@ -215,6 +232,7 @@ h6 {
     line-height: var(--line-height-heading);
     color: var(--text-accent);
     margin: 0 0 0.5em 0;
+    text-wrap: balance;
 }
 
 h1 {
@@ -234,8 +252,7 @@ h4 {
 }
 
 /* ----------------------------------------
-   3) Section + Container rhythm (shared)
-   (used by all services pages)
+   3) Section + container rhythm (global)
 ----------------------------------------- */
 .tbh-section {
     background: var(--bg-primary);
@@ -248,21 +265,25 @@ h4 {
 }
 
 .tbh-container {
-    width: min(calc(100% - 2 * var(--container-pad-inline)), var(--container-max));
+    inline-size: min(calc(100% - 2 * var(--container-pad-inline)), var(--container-max));
     margin-inline: auto;
     padding-inline: var(--container-pad-inline);
     box-sizing: border-box;
+    min-inline-size: 0;
+    /* Container queries ready */
+    container-type: inline-size;
+    container-name: page;
 }
 
 /* Deep-navy gradient band helper */
 .gradient-section {
     background: var(--gradient-section);
     color: var(--text-primary);
+    border-radius: var(--radius-xl);
 }
 
 /* ----------------------------------------
    4) Unified charcoal card recipe
-   (used by ServiceCard, CaseStudy, etc.)
 ----------------------------------------- */
 .card {
     background: var(--bg-surface);
@@ -274,8 +295,8 @@ h4 {
     flex-direction: column;
     gap: var(--spacing-md);
     padding: var(--spacing-xl);
-    width: 100%;
-    height: 100%;
+    inline-size: 100%;
+    block-size: 100%;
     overflow: hidden;
     transition:
         transform var(--transition-fast),
@@ -291,7 +312,6 @@ h4 {
     border-color: var(--border-accent);
 }
 
-/* Titles/subtitles with built-in truncation */
 .card__title {
     font-family: var(--font-heading);
     font-weight: 800;
@@ -320,7 +340,7 @@ h4 {
     color: var(--text-secondary);
     line-height: var(--line-height-body);
     margin: 0;
-    min-height: 0;
+    min-block-size: 0;
 }
 
 .card a,
@@ -350,10 +370,11 @@ h4 {
 }
 
 .cards-equalizer>* {
-    height: 100%;
-    min-width: 0;
+    block-size: 100%;
+    min-inline-size: 0;
 }
 
+/* Attribute-driven columns (JS/TS can set data-cols) */
 .cards-equalizer[data-cols="2"] {
     grid-template-columns: repeat(2, minmax(0, 1fr));
 }
@@ -366,6 +387,7 @@ h4 {
     grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
+/* Viewport fallbacks (when container queries aren't used) */
 @media (min-width: 640px) {
     .cards-equalizer.cols-2 {
         grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -378,9 +400,7 @@ h4 {
         grid-template-columns: repeat(3, minmax(0, 1fr));
         gap: var(--spacing-xl);
     }
-}
 
-@media (min-width: 1024px) {
     .cards-equalizer.cols-4 {
         grid-template-columns: repeat(4, minmax(0, 1fr));
         gap: var(--spacing-xl);
@@ -392,7 +412,7 @@ h4 {
 ----------------------------------------- */
 .centered-header {
     text-align: center;
-    max-width: 960px;
+    max-inline-size: 60ch;
     margin: 0 auto var(--spacing-xl);
 }
 
@@ -401,60 +421,70 @@ h4 {
     clip: rect(1px, 1px, 1px, 1px);
     padding: 0;
     border: 0;
-    height: 1px;
-    width: 1px;
+    block-size: 1px;
+    inline-size: 1px;
     overflow: hidden;
 }
 
-/* Package-specific accents */
-:root {
-    --package-ring: color-mix(in oklab, var(--brand-blue) 70%, white);
-    --package-selected: color-mix(in oklab, var(--brand-blue) 82%, #274d8c);
-}
-/* 5) ---------- Universal heading stack utilities ---------- */
-/* Generic utilities so any section can render: Title + Divider + Tagline,
-   centered as a group, with the tagline’s text left-aligned. */
-.hgroup {
-    display: grid;
-    justify-items: center;
-    /* centers the whole header group */
-    gap: var(--space-2, var(--pkg-space-xs, 0.5rem));
-    margin-block: var(--space-4, var(--pkg-space-md, 1rem)) var(--space-3, var(--pkg-space-sm, 0.75rem));
+/* ----------------------------------------
+   7) Accessibility, motion & print
+----------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation: none !important;
+        transition: none !important;
+    }
 }
 
-.hpair {
-    display: inline-grid;
-    justify-items: center;
-    /* centers title + divider inside */
-    inline-size: max-content;
-    /* makes Divider match the title width */
-    max-inline-size: 100%;
+@media (forced-colors: active) {
+    .gradient-section {
+        background: Canvas !important;
+        color: CanvasText !important;
+        border: 1px solid CanvasText;
+    }
+
+    .card {
+        background: Canvas !important;
+        border-color: CanvasText !important;
+        box-shadow: none !important;
+    }
 }
 
-.hTitle {
-    margin: 0;
+@media print {
+
+    .gradient-section,
+    .card {
+        background: none !important;
+        box-shadow: none !important;
+    }
+
+    .tbh-container {
+        inline-size: 100%;
+        padding-inline: 0;
+        container-type: normal;
+    }
+}
+
+/* ----------------------------------------
+   8) Safe guards for the new heading stack
+   (low specificity, opt-in; will not affect
+    legacy sections that don’t use .hgroup)
+----------------------------------------- */
+/* These allow global CSS to coexist with the Package heading stack.
+   Keep them here so future global rules never stretch the divider. */
+:where(.hgroup) .hTitle {
     text-align: center;
-    text-wrap: balance;
 }
 
-.hRule {
+:where(.hRule) {
     inline-size: clamp(120px, 40cqi, 560px);
-    /* centered underline sized by container */
     margin-inline: auto;
 }
 
-.hTaglineWrap {
-    display: grid;
-    justify-items: center;
-    /* centers the block itself */
-}
-
-.hTagline {
-    margin: 0;
-    max-inline-size: 68ch;
-    text-align: left;
-    /* centered block, left-aligned text content */
-    color: var(--text-secondary, var(--pkg-text-muted));
-    line-height: 1.6;
-    font-size: clamp(0.95rem, 0.2vw + 0.95rem, 1.05rem);
+/* If a raw <hr> or .divider appears inside the title+divider pair,
+   size it to the pair (which is max-content around the title). */
+:where(.hpair) :is(hr, .divider) {
+    inline-size: 100%;
+    margin-inline: auto;
+    block-size: var(--divider-thickness, 4px);
 }

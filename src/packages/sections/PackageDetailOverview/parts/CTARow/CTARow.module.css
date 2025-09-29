@@ -1,27 +1,29 @@
 /* Brand-aligned CTA row using the shared Button atom.
    Consumes tokens from packages-unified.module.css → unified-theme.css/root.css.
-   TSX contract: row, alignStart|alignCenter|alignEnd, sizeSm|sizeMd
+   Contract classes: row, alignStart|alignCenter|alignEnd, sizeSm|sizeMd
 */
 
-/* Root layout ------------------------------------------------------------- */
+/* Root layout — grid, never stacks --------------------------------------- */
 .row {
     /* spacing scale (overridden by sizeSm/sizeMd) */
     --_gap: var(--spacing-sm, 0.75rem);
 
-    display: flex;
+    display: grid;
+    grid-auto-flow: column;
+    /* keep items in one row */
+    grid-auto-columns: max-content;
+    /* shrink-wrap by default */
     align-items: center;
     justify-content: flex-start;
     gap: var(--_gap);
-    flex-wrap: wrap;
+
     inline-size: 100%;
+    min-inline-size: 0;
     color: var(--pkg-text, var(--text-primary));
     text-wrap: pretty;
 
-    /* Let children (Buttons) scale by container width, not viewport */
+    /* Container queries to adapt sizing without stacking */
     container-type: inline-size;
-
-    /* Avoid accidental overflow when nested in tight grids */
-    min-inline-size: 0;
 }
 
 /* Alignment helpers ------------------------------------------------------ */
@@ -51,38 +53,32 @@
 
 /* Button children (via Button atom → .btn class) ------------------------- */
 .row> :global(.btn) {
-    /* Ensure consistent min sizing but allow compression in tight spaces */
+    /* Prevent ultra-narrow buttons but allow compression in tight spaces */
     min-inline-size: clamp(9.5rem, 28cqi, 12.5rem);
     inline-size: auto;
-    flex: 0 1 auto;
+    align-self: center;
+    justify-self: stretch;
     text-align: center;
 }
 
-/* Prefer accent for primary and outline for secondary; theme controls colors */
-.row> :global(.btn.primary) {
-    /* Example: uncomment to locally tweak hue/intensity
-   --btn-bg: var(--accent-primary, #0EAFFB); */
-}
+/* Tight containers: keep side-by-side, make columns equal width ---------- */
+@container (max-width: 26.25rem) {
 
-.row> :global(.btn.secondary) {
-    /* Example: local outline strength
-   --btn-border: color-mix(in oklab, var(--accent-primary, #0EAFFB) 40%, black); */
-}
-
-/* Compact stack on very narrow containers -------------------------------- */
-@container (max-width: 36rem) {
+    /* ≈420px */
     .row {
+        grid-auto-columns: 1fr;
+        /* equal columns, still one row */
         gap: var(--spacing-xs, 0.5rem);
     }
 
     .row> :global(.btn) {
-        min-inline-size: 100%;
+        min-inline-size: auto;
+        /* let grid control width */
         inline-size: 100%;
-        flex-basis: 100%;
     }
 }
 
-/* Wider containers: slightly increase affordance ------------------------- */
+/* Wider containers: small affordance bump -------------------------------- */
 @container (min-width: 48rem) {
     .row {
         gap: var(--spacing-md, 1rem);
@@ -94,27 +90,28 @@
 }
 
 /* Viewport fallback when container queries aren’t supported -------------- */
-@media (max-width: 560px) {
+@media (max-width: 420px) {
     .row {
-        gap: var(--spacing-xs, 0.6rem);
+        grid-auto-columns: 1fr;
+        gap: var(--spacing-xs, 0.5rem);
     }
 
     .row :global(.btn) {
         inline-size: 100%;
+        min-inline-size: auto;
     }
 }
 
-/* Safe areas (iOS) — helpful if CTAs sit near the bottom on mobile ------- */
+/* Safe areas (iOS) ------------------------------------------------------- */
 @supports (padding: max(0px)) {
     .row {
         padding-inline: max(0px, env(safe-area-inset-left));
     }
 }
 
-/* High-contrast / forced colors ------------------------------------------ */
+/* High-contrast / forced colors ----------------------------------------- */
 @media (forced-colors: active) {
     .row> :global(.btn) {
-        /* Let OS manage button contrasts; avoid extra shadows/borders here */
         box-shadow: none;
     }
 }

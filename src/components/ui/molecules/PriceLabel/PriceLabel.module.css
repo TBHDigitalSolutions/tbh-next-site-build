@@ -1,5 +1,4 @@
 /* src/components/ui/molecules/PriceLabel/PriceLabel.module.css */
-
 .root {
     /* brand + layout */
     --price-fg: var(--pkg-card-fg, var(--text-primary, #f4f6f7));

@@ -31,6 +31,7 @@ export type PriceLabelProps = {
   };
 };
 
+/** Locale-safe currency formatter with graceful fallback */
 export function formatMoney(
   amount: number,
   currency: string = "USD",
@@ -62,7 +63,7 @@ function buildAriaLabel(
   return parts.join(" plus ");
 }
 
-export const PriceLabel: React.FC<PriceLabelProps> = ({
+const PriceLabel: React.FC<PriceLabelProps> = ({
   price,
   currency = "USD",
   locale = "en-US",
@@ -72,11 +73,14 @@ export const PriceLabel: React.FC<PriceLabelProps> = ({
   style,
   labels
 }) => {
-  const cfg = {
-    monthlySuffix: labels?.monthlySuffix ?? "/mo",
-    oneTimeSuffix: labels?.oneTimeSuffix ?? "setup",
-    plusSeparator: labels?.plusSeparator ?? " + "
-  };
+  const cfg = React.useMemo(
+    () => ({
+      monthlySuffix: labels?.monthlySuffix ?? "/mo",
+      oneTimeSuffix: labels?.oneTimeSuffix ?? "setup",
+      plusSeparator: labels?.plusSeparator ?? " + ",
+    }),
+    [labels]
+  );
 
   const hasMonthly = typeof price?.monthly === "number";
   const hasOneTime = typeof price?.oneTime === "number";
@@ -141,6 +145,7 @@ export const PriceLabel: React.FC<PriceLabelProps> = ({
       style={style}
       role="text"
       aria-label={ariaLabel}
+      data-component="PriceLabel"
     >
       {parts}
       {price.notes ? <span className={styles.notes}> {price.notes}</span> : null}
@@ -148,4 +153,5 @@ export const PriceLabel: React.FC<PriceLabelProps> = ({
   );
 };
 
-export default PriceLabel;
+export default React.memo(PriceLabel);
+export type { Money, PriceLabelProps };

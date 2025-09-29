@@ -27,7 +27,7 @@ import StickyRail from "./parts/StickyRail";
 import PackageIncludesTable from "@/packages/components/PackageIncludesTable";
 
 /* Highlights (molecule) */
-import { FeatureList } from "@/components/ui/molecules/FeatureList";
+import FeatureList from "@/components/ui/molecules/FeatureList/FeatureList";
 /* Underlines for section headers */
 import Divider from "@/components/ui/atoms/Divider/Divider";
 
@@ -124,7 +124,7 @@ export default function PackageDetailOverview({
   includesCaption, // if undefined, we’ll set a sensible default below
 
   includesVariant = "cards",
-  includesMaxCols = 2,
+  includesMaxCols = 3,
   includesDense = false,
   includesShowIcons = true,
   includesFootnote,
@@ -219,12 +219,12 @@ export default function PackageDetailOverview({
           {/* ------------------------- What’s included ------------------------ */}
           {hasGroups ? (
             <section className={styles.block} aria-labelledby={`${id ?? title}-includes`}>
-              <div className={styles.blockHeaderCenter}>
-                <h2 id={`${id ?? title}-includes`} className={[styles.blockTitle, styles.center].join(" ")}>
+              <div className={styles.blockHeader}>
+                <h2 id={`${id ?? title}-includes`} className={styles.blockTitle}>
                   {includesTitle}
                 </h2>
-                <Divider className={[styles.blockDivider, styles.center].join(" ")} />
-                <p className={[styles.blockTagline, styles.center].join(" ")}>{includesTagline}</p>
+                <Divider className={styles.blockDivider} />
+                <p className={styles.blockTagline}>{includesTagline}</p>
               </div>
               <IncludesFromGroups
                 packageName={title}
@@ -239,13 +239,16 @@ export default function PackageDetailOverview({
                 ariaLabel="What's included"
                 data-testid="includes-from-groups"
               />
+              {includesFootnote ? (
+                <p className={styles.includesFootnote}>{includesFootnote}</p>
+              ) : null}
             </section>
           ) : hasTable ? (
             <section className={styles.block} aria-label="What's included">
-              <div className={styles.blockHeaderCenter}>
-                <h2 className={[styles.blockTitle, styles.center].join(" ")}>{includesTitle}</h2>
-                <Divider className={[styles.blockDivider, styles.center].join(" ")} />
-                <p className={[styles.blockTagline, styles.center].join(" ")}>{includesTagline}</p>
+              <div className={styles.blockHeader}>
+                <h2 className={styles.blockTitle}>{includesTitle}</h2>
+                <Divider className={styles.blockDivider} />
+                <p className={styles.blockTagline}>{includesTagline}</p>
               </div>
               <PackageIncludesTable {...(includesTable as PackageIncludesTableProps)} />
               {includesFootnote ? <p className={styles.includesFootnote}>{includesFootnote}</p> : null}

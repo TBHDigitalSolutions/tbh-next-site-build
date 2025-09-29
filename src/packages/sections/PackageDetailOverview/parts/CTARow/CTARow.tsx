@@ -36,9 +36,9 @@ export type CTARowProps = {
 
 /**
  * CTARow — standardized CTA pair using the shared Button atom.
- * - Primary uses variant="primary" (accent-blue bg, off-white text per theme).
+ * - Primary uses variant="primary" (accent-blue).
  * - Secondary uses variant="secondary".
- * - Mobile-first: CTAs stack full-width at narrow container widths (CSS).
+ * - Layout is grid-based and **never stacks**; on tight containers columns become equal-width.
  */
 export default function CTARow({
   primary,
