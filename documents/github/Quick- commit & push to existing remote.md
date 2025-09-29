@@ -1,4 +1,40 @@
 Got you. Here are the exact commands you’ll use from Terminal on macOS.
+Great—one tidy commit coming up. Here’s a safe, minimal sequence and a solid conventional commit message you can paste.
+
+## 1) (Optional but recommended) sanity checks
+
+```bash
+pnpm lint && pnpm typecheck && pnpm build
+```
+
+## 2) Stage everything and commit as one
+
+```bash
+git add -A
+
+git commit -m "feat(packages): polish PackageDetailOverview + UI molecules and theme"
+git commit --amend -m "feat(packages): polish PackageDetailOverview + UI molecules and theme" \
+  -m "• Centered TitleBlock; improved typography hierarchy
+• Grid-based highlights via FeatureList (desktop 2-col; mobile stack)
+• Tightened Outcomes/Includes/Notes blocks and CTA/Price presentation
+• Tweaks to OutcomeList/PriceLabel styles for consistency
+• Updated PackagesDetailTemplate glue + unified-theme tokens
+• No breaking API changes; visual and layout refinements only"
+```
+
+> The second command adds a detailed body (kept as one commit). If you prefer a single-line message, skip the `--amend` block.
+
+## 3) Push to `main`
+
+```bash
+git push origin main
+```
+
+### Notes
+
+* You’re on `main` and in sync with `origin/main`, so this will fast-forward without conflicts.
+* If your repo uses commit linting (Conventional Commits), the `feat(packages): …` scope should pass.
+* Want a signed commit? Replace `git commit` with `git commit -S` (if GPG/S/MIME is set up).
 
 # Quick: commit & push to existing remote
 

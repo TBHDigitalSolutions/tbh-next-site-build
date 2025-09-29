@@ -19,8 +19,8 @@ import TitleBlock from "./parts/TitleBlock";
 import OutcomesBlock from "./parts/OutcomesBlock";
 import IncludesFromGroups, { type IncludesGroup } from "./parts/IncludesFromGroups";
 import NotesBlock from "./parts/NotesBlock";
-import PriceTeaser from "./parts/PriceTeaser";
-import CTARow from "./parts/CTARow";
+/* ⬇️ Replaced PriceTeaser + CTARow with PriceActionsBand */
+import PriceActionsBand from "./parts/PriceActionsBand";
 import StickyRail from "./parts/StickyRail";
 
 /* Fallback table renderer (used only when groups aren't provided) */
@@ -53,7 +53,7 @@ export type PackageDetailOverviewProps = {
   /** Pricing — pass canonical Money only; teaser is derived */
   packagePrice?: Money;
 
-  /** Calls to action (rendered below grid; left column owns them) */
+  /** Calls to action (rendered inside PriceActionsBand on the left) */
   ctaPrimary?: CTA;
   ctaSecondary?: CTA;
 
@@ -88,6 +88,9 @@ export type PackageDetailOverviewProps = {
   /** Notes under includes; extras below CTAs */
   notes?: React.ReactNode;
   extras?: React.ComponentProps<typeof PackageDetailExtras>;
+
+  /** Optional: pricing fine print line (e.g., "3-month minimum • + ad spend") */
+  priceFinePrint?: string;
 
   className?: string;
   style?: React.CSSProperties;
@@ -133,6 +136,8 @@ export default function PackageDetailOverview({
 
   notes,
   extras,
+  priceFinePrint,
+
   className,
   style,
 }: PackageDetailOverviewProps) {
@@ -156,6 +161,14 @@ export default function PackageDetailOverview({
       .filter(Boolean)
       .slice(0, 6);
   }, [features, hasGroups, includesGroups]);
+
+  /* ------------------------------ Price logic ---------------------------- */
+  const isHybrid = !!(packagePrice?.monthly && packagePrice?.oneTime);
+  const bandVariant = isHybrid ? "detail-hybrid" : "detail-oneTime" as const;
+  const baseNote = isHybrid ? "proposal" : "final" as const;
+
+  // Fine print: pass through if provided, otherwise omit (band will hide the row)
+  const finePrint = priceFinePrint && priceFinePrint.trim().length > 0 ? priceFinePrint : undefined;
 
   /* -------------------------------- Render -------------------------------- */
   return (
@@ -232,7 +245,7 @@ export default function PackageDetailOverview({
                 /* Parent owns header; child renders grid only */
                 hideHeading
                 variant={includesVariant}    // default "cards"
-                maxCols={includesMaxCols}    // 2-up “boom boom”
+                maxCols={includesMaxCols}    // 2-up / 3-up as configured
                 dense={includesDense}
                 showIcons={includesShowIcons}
                 footnote={includesFootnote}
@@ -258,17 +271,28 @@ export default function PackageDetailOverview({
           {/* ------------------------------- Notes ---------------------------- */}
           <NotesBlock className={styles.notesEmphasis}>{notes}</NotesBlock>
 
-          {/* --------------------------- Price teaser ------------------------- */}
-          {/* PriceTeaser derives the teaser from Money → consistent with right card */}
-          <PriceTeaser price={packagePrice} />
-
-          {/* ------------------------------- CTAs ----------------------------- */}
-          <CTARow primary={ctaPrimary} secondary={ctaSecondary} />
+          {/* ========================= Price + Actions ======================== */}
+          {/* Duplication guard: band is the ONLY pricing area on the left. */}
+          {packagePrice && (
+            <div className={styles.bandArea}>
+              <PriceActionsBand
+                variant={bandVariant}
+                price={packagePrice}
+                tagline={valueProp /* marketing line, optional */}
+                baseNote={baseNote}
+                finePrint={finePrint}
+                ctaPrimary={{ label: "Request proposal", href: "/contact" }}
+                ctaSecondary={{ label: "Book a call", href: "/book" }}
+                showDivider
+                align="center"
+              />
+            </div>
+          )}
         </div>
 
         {/* =============================== RIGHT ============================== */}
         <aside className={styles.right} aria-label="Selected package">
-          {/* True compact/pinned card — summary (clamped) + price punchline + CTAs */}
+          {/* Compact/pinned card — summary (clamped) + price + CTAs */}
           <StickyRail
             card={{
               ...pinnedPackageCard,
@@ -277,6 +301,7 @@ export default function PackageDetailOverview({
               hideOutcomes: true,
               hideIncludes: true,
               descriptionMaxLines: 3,
+              /* Card continues to show its own price area in the rail. */
             }}
           />
         </aside>

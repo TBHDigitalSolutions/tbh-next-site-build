@@ -7,31 +7,32 @@ import styles from "./PriceLabel.module.css";
 export type Money = {
   oneTime?: number | null;
   monthly?: number | null;
-  currency?: string; // e.g. "USD"
-  notes?: string;    // e.g. "Billed annually", "From …"
+  currency?: string;
+  notes?: string;
 };
 
 export type PriceLabelProps = {
-  /** Preferred source of truth for currency/notes. If undefined or empty, we'll show `contactText`. */
   price?: Money;
-  /** Fallbacks if price.currency is absent */
-  currency?: string;              // default "USD"
-  locale?: string;                // default "en-US"
-  /** Text used when no numeric price is provided */
-  contactText?: string;           // default "Contact for pricing"
-  /** Visual arrangement */
-  variant?: "inline" | "block";   // default "inline"
+  currency?: string;
+  locale?: string;
+  contactText?: string;
+  variant?: "inline" | "block";
+  appearance?: "chip" | "plain";
+  order?: "monthly-first" | "oneTime-first";
   className?: string;
   style?: React.CSSProperties;
-  /** Label customization */
   labels?: {
-    monthlySuffix?: string;       // default "/mo"
-    oneTimeSuffix?: string;       // default "setup"
-    plusSeparator?: string;       // default " + "
+    monthlySuffix?: string;
+    oneTimeSuffix?: string;
+    plusSeparator?: string;
+    setupPrefix?: string;
   };
 };
 
-/** Locale-safe currency formatter with graceful fallback */
+function cx(...parts: Array<string | undefined | null | false>) {
+  return parts.filter(Boolean).join(" ");
+}
+
 export function formatMoney(
   amount: number,
   currency: string = "USD",
@@ -51,14 +52,14 @@ function buildAriaLabel(
   monthly: number | null | undefined,
   currency: string,
   locale: string,
-  labels: Required<NonNullable<PriceLabelProps["labels"]>>
+  monthlySuffixWord: string
 ): string {
   const parts: string[] = [];
-  if (typeof oneTime === "number") {
-    parts.push(`${formatMoney(oneTime, currency, locale)} ${labels.oneTimeSuffix}`);
-  }
   if (typeof monthly === "number") {
-    parts.push(`${formatMoney(monthly, currency, locale)} per month`);
+    parts.push(`${formatMoney(monthly, currency, locale)} per ${monthlySuffixWord.replace("/", "")}`);
+  }
+  if (typeof oneTime === "number") {
+    parts.push(`${formatMoney(oneTime, currency, locale)} setup`);
   }
   return parts.join(" plus ");
 }
@@ -69,15 +70,18 @@ const PriceLabel: React.FC<PriceLabelProps> = ({
   locale = "en-US",
   contactText = "Contact for pricing",
   variant = "inline",
+  appearance = "chip",
+  order = "monthly-first",
   className,
   style,
-  labels
+  labels,
 }) => {
   const cfg = React.useMemo(
     () => ({
       monthlySuffix: labels?.monthlySuffix ?? "/mo",
       oneTimeSuffix: labels?.oneTimeSuffix ?? "setup",
       plusSeparator: labels?.plusSeparator ?? " + ",
+      setupPrefix: labels?.setupPrefix ?? "",
     }),
     [labels]
   );
@@ -85,11 +89,10 @@ const PriceLabel: React.FC<PriceLabelProps> = ({
   const hasMonthly = typeof price?.monthly === "number";
   const hasOneTime = typeof price?.oneTime === "number";
 
-  // Render contact text if no numeric price was provided
   if (!price || (!hasMonthly && !hasOneTime)) {
     return (
       <span
-        className={[styles.root, styles[variant], className].filter(Boolean).join(" ")}
+        className={cx(styles.root, styles[variant], className)}
         style={style}
         role="text"
         aria-label={contactText}
@@ -100,54 +103,70 @@ const PriceLabel: React.FC<PriceLabelProps> = ({
     );
   }
 
-  const parts: React.ReactNode[] = [];
+  const monthlyNode = hasMonthly ? (
+    <span key="mo" className={cx(styles.group, appearance === "chip" && styles.chip)}>
+      <span className={styles.amount} aria-hidden="true">
+        {formatMoney(price.monthly as number, price.currency ?? currency, locale)}
+      </span>
+      <span className={styles.suffix} aria-hidden="true">{cfg.monthlySuffix}</span>
+    </span>
+  ) : null;
+
+  const oneTimeNode = hasOneTime ? (
+    <span key="ot" className={cx(styles.group, appearance === "chip" && styles.chip)}>
+      <span className={styles.amount} aria-hidden="true">
+        {formatMoney(price.oneTime as number, price.currency ?? currency, locale)}
+      </span>
+      <span className={styles.suffix} aria-hidden="true">{cfg.oneTimeSuffix}</span>
+    </span>
+  ) : null;
+
+  const renderOrder =
+    order === "oneTime-first"
+      ? [
+          oneTimeNode,
+          hasOneTime && hasMonthly ? (
+            <span key="sep" className={styles.separator} aria-hidden="true">
+              {cfg.plusSeparator}
+            </span>
+          ) : null,
+          monthlyNode,
+        ]
+      : [
+          monthlyNode,
+          hasOneTime && hasMonthly ? (
+            <span key="sep" className={styles.separator} aria-hidden="true">
+              {cfg.plusSeparator}
+            </span>
+          ) : null,
+          oneTimeNode,
+        ];
+
   const ariaLabel = buildAriaLabel(
     price.oneTime,
     price.monthly,
     price.currency ?? currency,
     locale,
-    cfg
+    cfg.monthlySuffix
   );
 
-  if (hasOneTime) {
-    parts.push(
-      <span key="ot" className={styles.group}>
-        <span className={styles.amount} aria-hidden="true">
-          {formatMoney(price!.oneTime as number, price!.currency ?? currency, locale)}
-        </span>
-        <span className={styles.suffix} aria-hidden="true"> {cfg.oneTimeSuffix}</span>
-      </span>
-    );
-  }
-
-  if (hasOneTime && hasMonthly) {
-    parts.push(
-      <span key="sep" className={styles.separator} aria-hidden="true">
-        {cfg.plusSeparator}
-      </span>
-    );
-  }
-
-  if (hasMonthly) {
-    parts.push(
-      <span key="mo" className={styles.group}>
-        <span className={styles.amount} aria-hidden="true">
-          {formatMoney(price!.monthly as number, price!.currency ?? currency, locale)}
-        </span>
-        <span className={styles.suffix} aria-hidden="true"> {cfg.monthlySuffix}</span>
-      </span>
-    );
-  }
+  const rootClass = cx(
+    styles.root,
+    styles[variant],
+    appearance === "chip" ? styles.appearanceChip : styles.appearancePlain,
+    className
+  );
 
   return (
     <span
-      className={[styles.root, styles[variant], className].filter(Boolean).join(" ")}
+      className={rootClass}
       style={style}
       role="text"
       aria-label={ariaLabel}
       data-component="PriceLabel"
+      data-appearance={appearance}
     >
-      {parts}
+      {renderOrder}
       {price.notes ? <span className={styles.notes}> {price.notes}</span> : null}
     </span>
   );

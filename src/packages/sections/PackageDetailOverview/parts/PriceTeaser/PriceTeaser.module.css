@@ -1,21 +1,45 @@
-/* src/packages/sections/PackageDetailOverview/parts/PriceTeaser/PriceTeaser.module.css */
-
+/* Base wrapper */
 .wrap {
     --teaser-fg: var(--pkg-text, var(--text-primary));
     --teaser-muted: var(--pkg-text-muted, var(--text-secondary));
     --teaser-accent: var(--pkg-text-accent, var(--brand-blue));
     --teaser-bg: color-mix(in oklab, var(--teaser-accent) 10%, transparent);
 
-    display: grid;
-    grid-auto-flow: column;
-    grid-auto-columns: max-content;
-    align-items: baseline;
-    gap: .5rem;
-
     color: var(--teaser-fg);
     container-type: inline-size;
 }
 
+/* Modes */
+.band {
+    display: grid;
+    justify-items: start;
+    gap: .35rem;
+}
+
+.inline {
+    display: inline-flex;
+    gap: .5rem;
+    align-items: baseline;
+    white-space: nowrap;
+}
+
+/* Alignment */
+.alignStart {
+    justify-items: start;
+    text-align: left;
+}
+
+.alignCenter {
+    justify-items: center;
+    text-align: center;
+}
+
+.alignEnd {
+    justify-items: end;
+    text-align: right;
+}
+
+/* Density */
 .sizeSm {
     font-size: clamp(.95rem, .25cqi + .92rem, 1.02rem);
 }
@@ -24,62 +48,81 @@
     font-size: clamp(1rem, .35cqi + .96rem, 1.08rem);
 }
 
-.alignStart {
-    justify-content: start;
-}
-
-.alignCenter {
-    justify-content: center;
-}
-
-.alignEnd {
-    justify-content: end;
-}
-
+/* Optional emphasis background (subtle chip) */
 .emphasis {
-    padding: .35rem .6rem;
-    border-radius: var(--radius-full, 999px);
+    padding: .5rem .75rem;
+    border-radius: var(--radius-xl, 14px);
     background: var(--teaser-bg);
     box-shadow: 0 0 0 1px color-mix(in oklab, var(--teaser-accent) 28%, transparent);
 }
 
-/* Single-line, no-wrap label with graceful truncation */
+/* Visible label / badge text */
 .label {
+    font-family: var(--font-heading, ui-sans-serif);
     font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .04em;
     color: var(--teaser-accent);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    text-wrap: nowrap;
     line-height: 1.2;
-    letter-spacing: .01em;
 }
 
-/* Optional notes — remain on one line, truncate if needed */
-.notes {
+/* Amounts & suffixes */
+.amount {
+    font-family: var(--font-heading, ui-sans-serif);
+    font-weight: 800;
+    line-height: 1.1;
+    color: var(--teaser-fg);
+    font-size: clamp(1.1rem, 1.2cqi + 1rem, 1.5rem);
+}
+
+.suffix {
+    font-family: var(--font-body, ui-sans-serif);
+    font-weight: 600;
+    color: var(--teaser-muted);
+    font-size: clamp(.9rem, .6cqi + .85rem, 1rem);
+    line-height: 1.1;
+}
+
+/* Stacked lines (band mode) */
+.monthlyLine {
+    display: inline-flex;
+    align-items: baseline;
+    gap: .35rem;
+}
+
+.setupLine {
     color: var(--teaser-muted);
     font-weight: 500;
-    white-space: nowrap;
+    font-size: clamp(.95rem, .2cqi + .9rem, 1rem);
+}
+
+.setupWord {
+    font-weight: 600;
+}
+
+.oneTimeLine {
+    display: inline-flex;
+    align-items: baseline;
+    gap: .35rem;
+}
+
+/* Accessibility */
+.srOnly {
+    position: absolute !important;
+    inline-size: 1px;
+    block-size: 1px;
+    padding: 0;
+    margin: -1px;
     overflow: hidden;
-    text-overflow: ellipsis;
-    line-height: 1.2;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
 }
 
-/* Narrow containers: keep columns but allow equal widths to avoid overflow */
-@container (max-width: 420px) {
-    .wrap {
-        grid-auto-columns: 1fr;
-    }
-}
-
-/* Gentle scaling in wider containers */
+/* Container tweaks */
 @container (min-width: 40rem) {
-    .wrap {
-        gap: .6rem;
-    }
-
-    .label {
-        letter-spacing: .012em;
+    .amount {
+        font-size: clamp(1.2rem, 1.4cqi + 1rem, 1.65rem);
     }
 }
 
@@ -96,7 +139,7 @@
         color: LinkText;
     }
 
-    .notes {
+    .suffix {
         color: GrayText;
     }
 }

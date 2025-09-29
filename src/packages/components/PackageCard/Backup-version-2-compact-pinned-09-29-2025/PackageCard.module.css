@@ -168,7 +168,7 @@
     flex-wrap: nowrap !important;
 }
 
-/* ------------------------------ Legacy Price Row ------------------------- */
+/* -------------------------------- Price Row ------------------------------ */
 .priceRow {
     display: block;
     text-align: center;
@@ -183,51 +183,6 @@
     padding-block: 0.25rem;
     border-radius: var(--radius-md, 10px);
     background: color-mix(in oklab, var(--brand-blue, #0EAFFB) 8%, transparent);
-}
-
-/* ------------------------------ New Price Band --------------------------- */
-.priceBand {
-    display: grid;
-    justify-items: center;
-    gap: var(--space-2, 0.5rem);
-    text-align: center;
-    color: var(--text-primary, #e6eaee);
-}
-
-.priceBadge {
-    --_bg: color-mix(in oklab, var(--brand-blue, #0EAFFB) 10%, transparent);
-    --_bd: color-mix(in oklab, var(--brand-blue, #0EAFFB) 24%, transparent);
-    background: var(--_bg);
-    box-shadow: 0 0 0 1px var(--_bd) inset;
-    color: var(--text-secondary, #c9ced1);
-    border-radius: var(--radius-full, 999px);
-    padding: 2px 10px;
-
-    font-weight: 800;
-    letter-spacing: 0.04em;
-    font-size: 0.75rem;
-    text-transform: uppercase;
-}
-
-.priceInline {
-    display: inline-flex;
-    align-items: baseline;
-    gap: 0.35rem;
-    white-space: nowrap;
-}
-
-/* If using PriceLabel, tighten the look slightly */
-.priceInline [data-component="PriceLabel"] {
-    --price-font-size: clamp(1.05rem, 0.8cqi + 0.95rem, 1.25rem);
-    --price-suffix-size: clamp(0.85rem, 0.4cqi + 0.82rem, 0.95rem);
-}
-
-.priceMeta {
-    color: var(--text-secondary, #c9ced1);
-    font-weight: 600;
-    font-size: 0.875rem;
-    line-height: 1.25;
-    text-wrap: pretty;
 }
 
 /* ------------------------------- CTA section ----------------------------- */
@@ -246,10 +201,13 @@
     grid-template-columns: 1fr 1fr;
 }
 
+/* two buttons → side-by-side */
 .actionsOne {
     grid-template-columns: 1fr;
     justify-items: center;
 }
+
+/* one button → centered */
 
 .actions>* {
     min-inline-size: 0;
@@ -264,6 +222,7 @@
 }
 
 /* -------------------------- Container responsiveness --------------------- */
+/* Scale up typography & spacing based on card/container width */
 @container (min-width: 440px) {
     .card {
         gap: var(--space-5, 1.25rem);

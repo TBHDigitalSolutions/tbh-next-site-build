@@ -8,11 +8,15 @@ import Button from "@/components/ui/atoms/Button/Button";
 export type CTA = { label: string; href: string; ariaLabel?: string };
 
 export type CTARowProps = {
-  /** Primary CTA — policy-standard: “Request proposal” */
+  /** Primary CTA — policy standard on detail: “Request proposal” */
   primary?: CTA;
+  /** Back-compat with existing callers that use primaryCta */
+  primaryCta?: CTA;
 
-  /** Secondary CTA — policy-standard: “Book a call” */
+  /** Secondary CTA — policy standard: “Book a call” */
   secondary?: CTA;
+  /** Back-compat with existing callers that use secondaryCta */
+  secondaryCta?: CTA;
 
   /** Horizontal alignment for the row (defaults to "start"). */
   align?: "start" | "center" | "end";
@@ -20,13 +24,16 @@ export type CTARowProps = {
   /** Visual density (spacing between CTAs). */
   size?: "sm" | "md";
 
+  /** Optional entity/package title used to build default aria-labels when none provided. */
+  entityTitle?: string;
+
   /** Optional test id for e2e testing. */
   "data-testid"?: string;
 
   className?: string;
   style?: React.CSSProperties;
 
-  /** Optional analytics hook (adds data-* attributes) */
+  /** Optional analytics hook (adds data-* attributes on the container) */
   analytics?: {
     category?: string;
     action?: string;
@@ -36,25 +43,38 @@ export type CTARowProps = {
 
 /**
  * CTARow — standardized CTA pair using the shared Button atom.
- * - Primary uses variant="primary" (accent-blue).
- * - Secondary uses variant="secondary".
- * - Layout is grid-based and **never stacks**; on tight containers columns become equal-width.
+ * - Visuals unchanged (delegated to Button.css)
+ * - Adds per-button data-cta="primary|secondary"
+ * - Builds default aria-labels when missing (uses entityTitle when provided)
+ * - Keeps grid row that never stacks; equal-width columns on tight containers
  */
 export default function CTARow({
   primary,
+  primaryCta,
   secondary,
+  secondaryCta,
   align = "start",
   size = "md",
+  entityTitle,
   "data-testid": testId = "cta-row",
   className,
   style,
   analytics,
 }: CTARowProps) {
-  if (!primary && !secondary) return null;
+  // Back-compat: prefer explicit props, fall back to *Cta variants
+  const primaryFinal = primary ?? primaryCta;
+  const secondaryFinal = secondary ?? secondaryCta;
+
+  if (!primaryFinal && !secondaryFinal) return null;
 
   const alignClass =
     align === "center" ? styles.alignCenter : align === "end" ? styles.alignEnd : styles.alignStart;
   const sizeClass = size === "sm" ? styles.sizeSm : styles.sizeMd;
+
+  const defaultPrimaryAria =
+    entityTitle ? `Request proposal for ${entityTitle}` : "Request proposal";
+  const defaultSecondaryAria =
+    entityTitle ? `Book a call about ${entityTitle}` : "Book a call";
 
   return (
     <div
@@ -71,25 +91,27 @@ export default function CTARow({
           }
         : {})}
     >
-      {primary ? (
+      {primaryFinal ? (
         <Button
-          href={primary.href}
+          href={primaryFinal.href}
           variant="primary"
-          ariaLabel={primary.ariaLabel ?? primary.label}
+          ariaLabel={primaryFinal.ariaLabel ?? defaultPrimaryAria}
+          data-cta="primary"
           data-testid={`${testId}__primary`}
         >
-          {primary.label}
+          {primaryFinal.label}
         </Button>
       ) : null}
 
-      {secondary ? (
+      {secondaryFinal ? (
         <Button
-          href={secondary.href}
+          href={secondaryFinal.href}
           variant="secondary"
-          ariaLabel={secondary.ariaLabel ?? secondary.label}
+          ariaLabel={secondaryFinal.ariaLabel ?? defaultSecondaryAria}
+          data-cta="secondary"
           data-testid={`${testId}__secondary`}
         >
-          {secondary.label}
+          {secondaryFinal.label}
         </Button>
       ) : null}
     </div>

@@ -112,6 +112,13 @@
     text-wrap: balance;
 }
 
+/* Slot below includes/notes for the new pricing + actions band */
+.bandArea {
+    margin-block: var(--space-6, 24px) var(--space-5, 20px);
+    display: grid;
+    justify-items: center;
+}
+
 /* Below-grid slot (extras, full-width band) */
 .belowGrid {
     margin-block-start: var(--space-8, 32px);

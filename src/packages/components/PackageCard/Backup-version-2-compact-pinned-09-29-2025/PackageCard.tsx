@@ -10,7 +10,7 @@ import Button from "@/components/ui/atoms/Button/Button";
 import Divider from "@/components/ui/atoms/Divider/Divider";
 
 // Molecules
-import PriceLabel, { type Money as PriceMoney } from "@/components/ui/molecules/PriceLabel";
+import { type Money as PriceMoney } from "@/components/ui/molecules/PriceLabel";
 import { FeatureList } from "@/components/ui/molecules/FeatureList";
 import { ServiceChip } from "@/components/ui/molecules/ServiceChip";
 import TagChips from "@/components/ui/molecules/TagChips";
@@ -26,11 +26,7 @@ export type ServiceSlug = React.ComponentProps<typeof ServiceChip>["service"];
 /** @deprecated Prefer the canonical Money shape on `price` */
 export type LegacyPrice = { setup?: number; monthly?: number; currency?: string };
 
-export type PackageCardVariant = "default" | "rail" | "pinned-compact";
-
-/** New additive props for price band + policy */
-type PriceFlavor = "label" | "band";
-type PriceBandVariant = "card-hybrid" | "card-oneTime";
+type PackageCardVariant = "default" | "rail" | "pinned-compact";
 
 export type PackageCardProps = {
   id?: string;
@@ -100,19 +96,6 @@ export type PackageCardProps = {
 
   /** Clamp summary lines (used in pinned-compact); defaults to 3 when pinned */
   descriptionMaxLines?: number;
-
-  /* --------------------------- New band controls -------------------------- */
-  /** Default "label" keeps today’s single-line .priceRow */
-  priceFlavor?: PriceFlavor;
-  /** Only used when priceFlavor="band": choose the card band recipe */
-  priceVariant?: PriceBandVariant;
-  /** Override for the micro-line under price */
-  priceMetaLine?: string;
-
-  /** Apply card CTA policy automatically (View details / Book a call). Defaults to true. */
-  useCardCtaPolicy?: boolean;
-  /** When variant="pinned-compact", use Request proposal / Book a call. Defaults to true. */
-  usePinnedCtaPolicy?: boolean;
 };
 
 /* --------------------------------- Utils ---------------------------------- */
@@ -187,13 +170,6 @@ export default function PackageCard(props: PackageCardProps) {
     hideIncludes, // eslint-disable-line @typescript-eslint/no-unused-vars
 
     descriptionMaxLines,
-
-    // New band controls (all optional / additive)
-    priceFlavor = "label",
-    priceVariant,
-    priceMetaLine,
-    useCardCtaPolicy = true,
-    usePinnedCtaPolicy = true,
   } = props;
 
   const isPinned = variant === "pinned-compact";
@@ -210,13 +186,12 @@ export default function PackageCard(props: PackageCardProps) {
 
   // Hrefs
   const defaultHref = href ?? detailsHref ?? (slug ? ROUTES.package(slug) : "#");
+  const primaryHref = primaryCta?.href ?? defaultHref;
+  const secondaryHref = secondaryCta?.href ?? ROUTES.book;
 
   // Money & teaser
   const money = normalizeMoney(price);
   const startingTeaser = money ? startingAtLabel(money) : "";
-
-  const isHybrid = !!(money && money.monthly && money.oneTime);
-  const isOneTimeOnly = !!(money && money.oneTime && !money.monthly);
 
   // Badge/tier discipline
   const computedBadge = badge ?? (popular ? "Most Popular" : tier ?? undefined);
@@ -262,37 +237,6 @@ export default function PackageCard(props: PackageCardProps) {
     fire("package_secondary_cta_click");
     secondaryCta?.onClick?.(slug);
   }, [fire, secondaryCta, slug]);
-
-  /* ============================== CTA policy ============================== */
-
-  const cardPrimaryDefaultLabel = CTA_LABEL?.VIEW_DETAILS ?? "View details";
-  const cardPrimaryDefaultHref = defaultHref;
-
-  const pinnedPrimaryDefaultLabel = CTA_LABEL?.REQUEST_PROPOSAL ?? "Request proposal";
-  const pinnedPrimaryDefaultHref = ROUTES?.contact ?? "/contact";
-
-  const secondaryDefaultLabel = CTA_LABEL?.BOOK_A_CALL ?? "Book a call";
-  const secondaryDefaultHref = ROUTES?.book ?? "/book";
-
-  // Apply policy by context (allow explicit overrides via props)
-  const primaryLabel =
-    primaryCta?.label ??
-    (isPinned && usePinnedCtaPolicy ? pinnedPrimaryDefaultLabel : cardPrimaryDefaultLabel);
-
-  const primaryHref =
-    primaryCta?.href ??
-    (isPinned && usePinnedCtaPolicy ? pinnedPrimaryDefaultHref : cardPrimaryDefaultHref);
-
-  const secondaryLabel = secondaryCta?.label ?? secondaryDefaultLabel;
-  const secondaryHref = secondaryCta?.href ?? secondaryDefaultHref;
-
-  const primaryAria =
-    isPinned && usePinnedCtaPolicy
-      ? `Request proposal for ${displayTitle}`
-      : `View details for ${displayTitle}`;
-  const secondaryAria = `Book a call about ${displayTitle}`;
-
-  /* ================================ Render ================================= */
 
   return (
     <PackageCardFrame
@@ -351,11 +295,7 @@ export default function PackageCard(props: PackageCardProps) {
                 cls.summary,
                 clampLines ? cls.summaryClamp : null,
               )}
-              style={
-                clampLines
-                  ? ({ ["--summary-lines" as any]: String(clampLines) } as React.CSSProperties)
-                  : undefined
-              }
+              style={clampLines ? ({ ["--summary-lines" as any]: String(clampLines) } as React.CSSProperties) : undefined}
             >
               {displaySummary}
             </p>
@@ -393,39 +333,11 @@ export default function PackageCard(props: PackageCardProps) {
       ) : null}
 
       {/* ============================== PRICE ============================ */}
-      {money &&
-        (priceFlavor === "band" ? (
-          <div className={cls.priceBand} aria-label="Starting price">
-            <span className={cls.priceBadge} aria-hidden="true">
-              STARTING AT
-            </span>
-
-            <div className={cls.priceInline}>
-              {isHybrid ? (
-                // Variant 2 — hybrid one-liner; chips permitted
-                <PriceLabel price={money} appearance="chip" variant="inline" />
-              ) : (
-                // Variant 4 — one-time; inline bold amount, no suffix
-                <PriceLabel
-                  price={money}
-                  appearance="plain"
-                  variant="inline"
-                  labels={{ oneTimeSuffix: "" }}
-                />
-              )}
-            </div>
-
-            <div className={cls.priceMeta}>
-              {priceMetaLine ??
-                (money.monthly ? "Base price — request proposal" : "Base price — final after scope")}
-            </div>
-          </div>
-        ) : (
-          // Legacy single-line label (kept for rollout safety)
-          <div className={cls.priceRow} aria-label={startingTeaser} title={startingTeaser}>
-            {startingTeaser}
-          </div>
-        ))}
+      {money && (
+        <div className={cls.priceRow} aria-label={startingTeaser} title={startingTeaser}>
+          {startingTeaser}
+        </div>
+      )}
 
       {/* Divider must be directly above the CTA section */}
       <Divider className={cls.actionsDivider} />
@@ -435,23 +347,21 @@ export default function PackageCard(props: PackageCardProps) {
         <Button
           href={primaryHref}
           variant="primary"
-          ariaLabel={primaryAria}
-          data-cta="primary"
+          ariaLabel={`${primaryCta?.label ?? CTA_LABEL.VIEW_DETAILS} — ${displayTitle}`}
           disabled={isLoading}
           onClick={onPrimary as any}
         >
-          {isLoading ? "Loading..." : primaryLabel}
+          {isLoading ? "Loading..." : (primaryCta?.label ?? CTA_LABEL.VIEW_DETAILS)}
         </Button>
 
         {canShowSecondary ? (
           <Button
             href={secondaryHref}
             variant="secondary"
-            ariaLabel={secondaryAria}
-            data-cta="secondary"
+            ariaLabel={`${secondaryCta?.label ?? CTA_LABEL.BOOK_A_CALL} — ${displayTitle}`}
             onClick={onSecondary as any}
           >
-            {secondaryLabel}
+            {secondaryCta?.label ?? CTA_LABEL.BOOK_A_CALL}
           </Button>
         ) : null}
       </div>

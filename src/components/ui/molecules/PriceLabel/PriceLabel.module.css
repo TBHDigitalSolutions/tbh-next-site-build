@@ -1,6 +1,6 @@
 /* src/components/ui/molecules/PriceLabel/PriceLabel.module.css */
+/* Root skeleton and tokens (kept from your existing file, with small additions) */
 .root {
-    /* brand + layout */
     --price-fg: var(--pkg-card-fg, var(--text-primary, #f4f6f7));
     --price-muted: var(--text-secondary, var(--pkg-text-muted, #c9ced1));
     --price-tertiary: var(--text-tertiary, #94a3b8);
@@ -12,24 +12,20 @@
 
     display: inline-flex;
     align-items: baseline;
-
-    /* IMPORTANT: single-line policy */
     flex-wrap: nowrap;
-    /* never wrap onto a 2nd line */
     white-space: nowrap;
-    /* keep whole label on one row */
     overflow: hidden;
-    /* avoid layout overflow */
     text-overflow: ellipsis;
-    /* graceful clip for long notes */
-
     gap: 0.25rem;
     color: var(--price-fg);
     font-variant-numeric: tabular-nums;
     container-type: inline-size;
 }
 
-/* variants */
+.appearanceChip {}
+
+.appearancePlain {}
+
 .inline {
     gap: 0.25rem;
 }
@@ -38,21 +34,28 @@
     display: inline-grid;
     gap: 0.25rem;
     align-items: start;
-    /* NOTE: `block` variant is kept for backward compatibility. If the
-     page enforces "single line always", use `variant="inline"`. */
 }
 
-/* each price 'group' is an unbreakable unit */
 .group {
     display: inline-flex;
     align-items: baseline;
     gap: 0.25rem;
     white-space: nowrap;
-    /* never break inside number+suffix */
     min-inline-size: max-content;
-    /* prefer moving as a whole */
     flex: 0 0 auto;
-    /* do not shrink */
+}
+
+.chip {
+    --chip-bg: var(--surface-1, rgba(148, 163, 184, .06));
+    --chip-border: var(--border-subtle, rgba(148, 163, 184, .25));
+    --chip-radius: var(--radius-lg, 10px);
+    --chip-pad-y: 2px;
+    --chip-pad-x: 8px;
+
+    padding: var(--chip-pad-y) var(--chip-pad-x);
+    border-radius: var(--chip-radius);
+    background: var(--chip-bg);
+    box-shadow: 0 0 0 1px var(--chip-border) inset;
 }
 
 .amount {
@@ -61,7 +64,6 @@
     font-size: var(--price-font-size);
     white-space: nowrap;
     flex: 0 0 auto;
-    /* do not shrink */
 }
 
 .suffix {
@@ -81,10 +83,8 @@
     letter-spacing: .015em;
     white-space: nowrap;
     flex: 0 0 auto;
-    /* prevent shrinking of the separator */
 }
 
-/* notes remain on the same line; truncate if too long */
 .notes {
     margin-inline-start: .25rem;
     color: var(--price-tertiary);
@@ -93,13 +93,9 @@
     font-weight: 500;
     line-height: 1.2;
     white-space: nowrap;
-    /* single-line notes */
     overflow: hidden;
-    /* clip inside the line */
     text-overflow: ellipsis;
-    /* … */
     flex: 1 1 auto;
-    /* take remaining space */
 }
 
 .contact {
@@ -110,7 +106,6 @@
     flex: 0 0 auto;
 }
 
-/* container queries / fallbacks */
 @container (min-width: 28rem) {
     .root {
         gap: .3rem;
@@ -163,12 +158,6 @@
 
     .separator {
         color: GrayText;
-    }
-}
-
-@media (prefers-color-scheme: dark) {
-    .root {
-        color: var(--price-fg-dark, var(--price-fg));
     }
 }
 
