@@ -389,3 +389,24 @@ You can also scope by service: `<SearchBanner types={["service","subservice","po
 - **Canonical “*-services” slugs** everywhere; normalize legacy aliases in adapters at boundaries. 【0†source】  
 - **Typed validators** at the lib layer; **no React in `lib/*`**; enforce import direction with lint rules. 【6†source】  
 - **Search-ready** by default: each domain should export indexer mappers or expose fields the search core can read. 【2†source】
+---
+
+* **Note:** that all Title/Headers & Divider components should be wrapped in a container together.
+
+* For each section in the PackageDetailsOverview the section should have a "universal tagline/description" that can be used across all packages.
+
+➡️ Title block should be excluded from this.
+➡️ Note update: if the Title/Header & Divider for a section includes a "universal tagline/description" all 3 should be wrapped together.
+➡️ All titles/headers should be centered/aligned and all descriptions and summaries should have text right aligned.
+➡️ All bullets should be centered and text/bullets should be right aligned.
+
+---
+
+* **Button notes:** All components with buttons should use the Button.tsx component and apply the buttons’ attrs/links, styling, etc in the component configuration.
+
+  * All CTA buttons
+    ↳ Single buttons are centered
+    ↳ Double buttons are always side by side regardless of screen size or container size.
+    The buttons should scale accordingly as well as the text.
+
+---

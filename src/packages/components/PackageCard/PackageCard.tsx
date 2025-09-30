@@ -1,4 +1,5 @@
 // src/packages/components/PackageCard/PackageCard.tsx
+// src/packages/components/PackageCard/PackageCard.tsx
 "use client";
 
 import * as React from "react";
@@ -11,14 +12,16 @@ import Button from "@/components/ui/atoms/Button/Button";
 import Divider from "@/components/ui/atoms/Divider/Divider";
 
 // Molecules
-import PriceLabel, { type Money as PriceMoney } from "@/components/ui/molecules/PriceLabel";
 import { FeatureList } from "@/components/ui/molecules/FeatureList";
 import { ServiceChip } from "@/components/ui/molecules/ServiceChip";
 import TagChips from "@/components/ui/molecules/TagChips";
 
-// Centralized CTAs and pricing helpers
-import { ROUTES, CTA_LABEL } from "@/packages/lib/cta";
+// Pricing (shared SSOT)
+import type { Money as PriceMoney } from "@/packages/lib/pricing";
 import { startingAtLabel } from "@/packages/lib/pricing";
+
+// Copy constants (labels only; routes are hard-coded here)
+import { CTA } from "@/packages/lib/copy";
 
 // Price band (card variants)
 import PriceActionsBand from "@/packages/sections/PackageDetailOverview/parts/PriceActionsBand";
@@ -215,7 +218,10 @@ export default function PackageCard(props: PackageCardProps) {
   const remaining = Math.max(0, displayFeatures.length - shown.length);
 
   // Hrefs
-  const defaultHref = href ?? detailsHref ?? (slug ? ROUTES.package(slug) : "#");
+  const defaultHref =
+    href ??
+    detailsHref ??
+    (slug ? `/packages/${encodeURIComponent(String(slug))}` : "#");
 
   // Money & teaser (for legacy one-liner fallback)
   const money = normalizeMoney(price);
@@ -269,14 +275,15 @@ export default function PackageCard(props: PackageCardProps) {
 
   /* ============================== CTA policy ============================== */
 
-  const cardPrimaryDefaultLabel = CTA_LABEL?.VIEW_DETAILS ?? "View details";
+  // Labels centralized in copy.ts; routes are explicit here
+  const cardPrimaryDefaultLabel = CTA.VIEW_DETAILS;
   const cardPrimaryDefaultHref = defaultHref;
 
-  const pinnedPrimaryDefaultLabel = CTA_LABEL?.REQUEST_PROPOSAL ?? "Request proposal";
-  const pinnedPrimaryDefaultHref = ROUTES?.contact ?? "/contact";
+  const pinnedPrimaryDefaultLabel = CTA.REQUEST_PROPOSAL;
+  const pinnedPrimaryDefaultHref = "/contact";
 
-  const secondaryDefaultLabel = CTA_LABEL?.BOOK_A_CALL ?? "Book a call";
-  const secondaryDefaultHref = ROUTES?.book ?? "/book";
+  const secondaryDefaultLabel = CTA.BOOK_A_CALL;
+  const secondaryDefaultHref = "/book";
 
   // Apply policy by context (allow explicit overrides via props)
   const primaryLabel =
@@ -417,7 +424,7 @@ export default function PackageCard(props: PackageCardProps) {
         (priceFlavor === "band" && cardBandVariant ? (
           <div className={cls.priceArea} aria-label="Starting price">
             <PriceActionsBand
-              variant={cardBandVariant}
+              variant={priceVariant ?? cardBandVariant}
               price={money}
               align="start"
               /* No tagline/base note/fine print on cards */

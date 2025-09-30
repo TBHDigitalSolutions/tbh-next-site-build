@@ -4,12 +4,12 @@
 import * as React from "react";
 import styles from "./PackageDetailOverview.module.css";
 
-/* Types from shared UI */
-import type { Money } from "@/components/ui/molecules/PriceLabel";
+/* Shared types */
+import type { Money } from "@/packages/lib/pricing";
+
+/* UI types */
 import type { OutcomeItem } from "@/components/ui/molecules/OutcomeList";
 import type { ServiceSlug } from "@/components/ui/molecules/ServiceChip";
-
-/* Types from package components */
 import type { PackageIncludesTableProps } from "@/packages/components/PackageIncludesTable/PackageIncludesTable";
 import type { PackageCardProps } from "@/packages/components/PackageCard";
 
@@ -19,7 +19,6 @@ import TitleBlock from "./parts/TitleBlock";
 import OutcomesBlock from "./parts/OutcomesBlock";
 import IncludesFromGroups, { type IncludesGroup } from "./parts/IncludesFromGroups";
 import NotesBlock from "./parts/NotesBlock";
-/* ⬇️ Replaced PriceTeaser + CTARow with PriceActionsBand */
 import PriceActionsBand from "./parts/PriceActionsBand";
 import StickyRail from "./parts/StickyRail";
 
@@ -31,17 +30,18 @@ import FeatureList from "@/components/ui/molecules/FeatureList/FeatureList";
 /* Underlines for section headers */
 import Divider from "@/components/ui/atoms/Divider/Divider";
 
-/* Optional extras (timeline, ethics, etc.) rendered after CTAs */
-import PackageDetailExtras from "@/packages/sections/PackageDetailExtras";
+/* Shared helpers */
+import { bandPropsFor } from "@/packages/lib/band";
+import { CTA } from "@/packages/lib/copy";
 
 /* -------------------------------------------------------------------------- */
 
-export type CTA = { label: string; href: string };
+export type CTAItem = { label: string; href: string };
 
 export type PackageDetailOverviewProps = {
   id?: string;
 
-  /** Headline + hero meta (left column top) */
+  /** Headline & hero meta (left column top) */
   title: string;
   valueProp: string;
   description?: string;
@@ -50,30 +50,40 @@ export type PackageDetailOverviewProps = {
   tags?: string[];
   showMeta?: boolean;
 
-  /** Pricing — pass canonical Money only; teaser is derived */
+  /** Canonical pricing (SSOT) */
   packagePrice?: Money;
 
-  /** Calls to action (rendered inside PriceActionsBand on the left) */
-  ctaPrimary?: CTA;
-  ctaSecondary?: CTA;
+  /**
+   * Explicit price band copy (detail page only).
+   * Do NOT derive from summary; this is authored separately.
+   */
+  priceBand?: {
+    tagline?: string;                  // marketing line (detail only)
+    baseNote?: "proposal" | "final";   // override; default policy is applied if omitted
+    finePrint?: string;                // e.g., "3-month minimum • + ad spend"
+  };
 
-  /** Highlights (features). If omitted, we derive from includesGroups. */
+  /** Primary/secondary CTAs for the band (labels standardized via copy.ts) */
+  ctaPrimary?: CTAItem;
+  ctaSecondary?: CTAItem;
+
+  /** Highlights (features). If omitted, derived from includesGroups. */
   features?: string[];
 
   /** Outcomes (KPI bullets) */
   outcomes?: Array<string | OutcomeItem>;
 
-  /** What’s included (SSOT) */
+  /** What’s included inputs */
   includesGroups?: IncludesGroup[];
   includesTable?: PackageIncludesTableProps;
 
-  /** Section headings/taglines (overrides are optional) */
-  highlightsTitle?: string;          // default: "Highlights"
-  highlightsTagline?: string;        // default set below
-  outcomesTitle?: string;            // default: "Outcomes you can expect"
-  outcomesTagline?: string;          // default set below
-  includesTitle?: string;            // default: "What’s included"
-  includesCaption?: string;          // used as the tagline under "What’s included"
+  /** Section headings/taglines (optional overrides) */
+  highlightsTitle?: string;
+  highlightsTagline?: string;
+  outcomesTitle?: string;
+  outcomesTagline?: string;
+  includesTitle?: string;
+  includesCaption?: string;
 
   /** Visual knobs forwarded to IncludesFromGroups */
   includesVariant?: "cards" | "list";
@@ -82,15 +92,12 @@ export type PackageDetailOverviewProps = {
   includesShowIcons?: boolean;
   includesFootnote?: React.ReactNode;
 
-  /** Sticky right-rail: the card the user clicked on */
+  /** Sticky right-rail pinned card */
   pinnedPackageCard: PackageCardProps;
 
   /** Notes under includes; extras below CTAs */
   notes?: React.ReactNode;
-  extras?: React.ComponentProps<typeof PackageDetailExtras>;
-
-  /** Optional: pricing fine print line (e.g., "3-month minimum • + ad spend") */
-  priceFinePrint?: string;
+  extras?: React.ComponentProps<typeof import("@/packages/sections/PackageDetailExtras").default>;
 
   className?: string;
   style?: React.CSSProperties;
@@ -109,6 +116,7 @@ export default function PackageDetailOverview({
   showMeta = true,
 
   packagePrice,
+  priceBand,
 
   ctaPrimary,
   ctaSecondary,
@@ -124,7 +132,7 @@ export default function PackageDetailOverview({
   outcomesTitle = "Outcomes you can expect",
   outcomesTagline = "Projected results you can expect to achieve with this package.",
   includesTitle = "What’s included",
-  includesCaption, // if undefined, we’ll set a sensible default below
+  includesCaption,
 
   includesVariant = "cards",
   includesMaxCols = 3,
@@ -136,14 +144,13 @@ export default function PackageDetailOverview({
 
   notes,
   extras,
-  priceFinePrint,
 
   className,
   style,
 }: PackageDetailOverviewProps) {
   /* ----------------------------- Derived strings ------------------------- */
   const includesTagline =
-    typeof includesCaption === "string" && includesCaption.trim().length > 0
+    typeof includesCaption === "string" && includesCaption.trim()
       ? includesCaption
       : "Everything that ships with this package.";
 
@@ -162,13 +169,9 @@ export default function PackageDetailOverview({
       .slice(0, 6);
   }, [features, hasGroups, includesGroups]);
 
-  /* ------------------------------ Price logic ---------------------------- */
-  const isHybrid = !!(packagePrice?.monthly && packagePrice?.oneTime);
-  const bandVariant = isHybrid ? "detail-hybrid" : "detail-oneTime" as const;
-  const baseNote = isHybrid ? "proposal" : "final" as const;
-
-  // Fine print: pass through if provided, otherwise omit (band will hide the row)
-  const finePrint = priceFinePrint && priceFinePrint.trim().length > 0 ? priceFinePrint : undefined;
+  /* ------------------------------ Band props ----------------------------- */
+  // One and only pricing area on the left. Do not render any other “Starting at …”.
+  const band = packagePrice ? bandPropsFor("detail", packagePrice, priceBand) : null;
 
   /* -------------------------------- Render -------------------------------- */
   return (
@@ -182,7 +185,7 @@ export default function PackageDetailOverview({
       <div className={styles.grid}>
         {/* =============================== LEFT =============================== */}
         <div className={styles.left}>
-          {/* Title block (title + value prop + optional long description + ICP) */}
+          {/* Title + value prop + optional long description + ICP */}
           <TitleBlock
             id={id ? `${id}__title` : undefined}
             title={title}
@@ -191,7 +194,7 @@ export default function PackageDetailOverview({
             icp={icp}
           />
 
-          {/* Meta row (service chip + tags). Hide if HERO already shows chips. */}
+          {/* Service chip + tags row */}
           <MetaRow service={service} tags={tags} show={showMeta} />
 
           {/* --------------------------- Highlights --------------------------- */}
@@ -224,7 +227,6 @@ export default function PackageDetailOverview({
                 <Divider className={styles.blockDivider} />
                 <p className={styles.blockTagline}>{outcomesTagline}</p>
               </div>
-              {/* Parent owns header; OutcomesBlock renders grid only */}
               <OutcomesBlock outcomes={outcomes} className={styles.outcomes} hideHeading />
             </section>
           )}
@@ -242,19 +244,16 @@ export default function PackageDetailOverview({
               <IncludesFromGroups
                 packageName={title}
                 groups={includesGroups!}
-                /* Parent owns header; child renders grid only */
                 hideHeading
-                variant={includesVariant}    // default "cards"
-                maxCols={includesMaxCols}    // 2-up / 3-up as configured
+                variant={includesVariant}
+                maxCols={includesMaxCols}
                 dense={includesDense}
                 showIcons={includesShowIcons}
                 footnote={includesFootnote}
                 ariaLabel="What's included"
                 data-testid="includes-from-groups"
               />
-              {includesFootnote ? (
-                <p className={styles.includesFootnote}>{includesFootnote}</p>
-              ) : null}
+              {includesFootnote ? <p className={styles.includesFootnote}>{includesFootnote}</p> : null}
             </section>
           ) : hasTable ? (
             <section className={styles.block} aria-label="What's included">
@@ -272,27 +271,21 @@ export default function PackageDetailOverview({
           <NotesBlock className={styles.notesEmphasis}>{notes}</NotesBlock>
 
           {/* ========================= Price + Actions ======================== */}
-          {/* Duplication guard: band is the ONLY pricing area on the left. */}
-          {packagePrice && (
+          {band ? (
             <div className={styles.bandArea}>
               <PriceActionsBand
-                variant={bandVariant}
-                price={packagePrice}
-                tagline={valueProp /* marketing line, optional */}
-                baseNote={baseNote}
-                finePrint={finePrint}
-                ctaPrimary={{ label: "Request proposal", href: "/contact" }}
-                ctaSecondary={{ label: "Book a call", href: "/book" }}
-                showDivider
-                align="center"
+                {...band}
+                ctaPrimary={ctaPrimary ?? { label: CTA.REQUEST_PROPOSAL, href: "/contact" }}
+                ctaSecondary={ctaSecondary ?? { label: CTA.BOOK_A_CALL, href: "/book" }}
+                /* Divider + alignment come from the band preset; no need to override */
               />
             </div>
-          )}
+          ) : null}
         </div>
 
         {/* =============================== RIGHT ============================== */}
         <aside className={styles.right} aria-label="Selected package">
-          {/* Compact/pinned card — summary (clamped) + price + CTAs */}
+          {/* Compact/pinned card — the mapper builds this; we enforce compact flags */}
           <StickyRail
             card={{
               ...pinnedPackageCard,
@@ -301,7 +294,6 @@ export default function PackageDetailOverview({
               hideOutcomes: true,
               hideIncludes: true,
               descriptionMaxLines: 3,
-              /* Card continues to show its own price area in the rail. */
             }}
           />
         </aside>
@@ -310,7 +302,8 @@ export default function PackageDetailOverview({
       {/* ======================= BELOW GRID (FULL WIDTH) ====================== */}
       {extras ? (
         <div className={styles.belowGrid}>
-          <PackageDetailExtras {...extras} />
+          {/* Loaded lazily by Next; typed above via import() */}
+          {React.createElement(require("@/packages/sections/PackageDetailExtras").default, extras)}
         </div>
       ) : null}
     </section>

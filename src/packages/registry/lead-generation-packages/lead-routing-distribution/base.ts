@@ -1,7 +1,12 @@
 // src/packages/registry/lead-generation-packages/lead-routing-distribution/base.ts
 
-/** Pricing — only source of truth (no startingAt/teasers) */
-export type Money = { oneTime?: number; monthly?: number; currency: "USD" };
+/**
+ * Lead Routing & Distribution — registry base (SSOT)
+ * - UI-agnostic typed data consumed by mappers → PackageCard / PackageDetailOverview
+ * - No JSX, no “Starting at …” strings (derived in UI)
+ */
+
+import type { Money } from "@/packages/lib/pricing";
 
 /** Flexible FAQ item shape (authoring-friendly) */
 export type PackageFaq = {
@@ -24,7 +29,7 @@ export type PackageBase = {
   price: Money;               // ONLY authored price
   tags?: string[];
   badges?: string[];
-  tier?: string;              // optional cosmetic badge (e.g., "Essential")
+  tier?: string;              // cosmetic badge (e.g., "Essential")
 
   /* Media (optional) */
   image?: { src: string; alt: string };
@@ -34,6 +39,16 @@ export type PackageBase = {
   outcomes: string[];         // 3–6 KPI bullets
   includes: Array<{ title: string; items: string[] }>;
 
+  /* Detail Price Band (detail-only copy) */
+  priceBand?: {
+    /** Optional marketing line shown ONLY on details (never falls back to summary) */
+    tagline?: string;
+    /** Override base note policy; default is hybrid/monthly→"proposal", one-time→"final" */
+    baseNote?: "proposal" | "final";
+    /** Fine print (detail only), e.g., “3-month minimum • + ad spend” */
+    finePrint?: string;
+  };
+
   /** Optional deeper details (used by PackageDetailExtras) */
   deliverables?: string[];
   timeline?: { setup?: string; launch?: string; ongoing?: string };
@@ -42,7 +57,7 @@ export type PackageBase = {
   /** FAQs can be authored with q/a or question/answer */
   faqs?: PackageFaq[];
 
-  /** Short notes / caveats */
+  /** Short notes / caveats (shown under includes table) */
   notes?: string;
 
   /* Optional cross-sell / SEO */
@@ -52,25 +67,40 @@ export type PackageBase = {
 };
 
 export const base: PackageBase = {
+  /* ------------------------- Identity & taxonomy ------------------------- */
   id: "leadgen-routing-distribution",
   slug: "lead-routing-distribution",
   service: "leadgen",
   name: "Lead Routing & Distribution",
+  tier: "Essential",
+  badges: [], // e.g., ["Popular"]; first badge may show on cards if enabled
+  tags: ["routing", "assignment", "automation"],
+
+  /* ----------------------------- Positioning ---------------------------- */
   summary:
     "Automated lead routing and distribution so sales reps always get the right leads, faster.",
   description:
     "We configure fair, transparent routing that respects territories and capacity, logs every handoff to your CRM for auditability, and ships with lightweight dashboards so RevOps can track performance and iterate safely.",
-  price: { oneTime: 2500, monthly: 1000, currency: "USD" },
-  tags: ["routing", "assignment", "automation"],
-  badges: [],
-  tier: "Essential",
+
+  /* ------------------------------- Pricing ------------------------------ */
+  // Hybrid: recurring + setup. UI derives all teasers/badges from this.
+  price: { monthly: 1000, oneTime: 2500, currency: "USD" },
+
+  /* -------------- Detail Price Band (detail page only; optional) -------- */
+  priceBand: {
+    tagline: "Fair, fast lead assignment your reps can trust.",
+    baseNote: "proposal",                 // explicit; matches hybrid default policy
+    finePrint: "3-month minimum",         // no ad spend applies here
+  },
+
+  /* -------------------------------- Media ------------------------------- */
   image: {
     src: "/packages/lead-generation/lead-routing-distribution-card.png",
     alt: "Lead routing assignment previews",
   },
 
+  /* --------------------------- Audience & value ------------------------- */
   icp: "Sales teams using a CRM who need automated, fair, and fast lead assignment.",
-
   outcomes: [
     "Faster speed-to-lead",
     "Fair distribution across reps",
@@ -96,7 +126,7 @@ export const base: PackageBase = {
     },
   ],
 
-  /** Optional deeper details (rendered when present) */
+  /* ------------------------- Deeper detail (extras) --------------------- */
   deliverables: [
     "Configured routing rules and primary territory model",
     "Routing event logging into CRM with basic dashboards",
@@ -109,10 +139,10 @@ export const base: PackageBase = {
   },
   ethics: [
     "Routing follows declared territory/assignment rules",
-    "AI-based optimization and custom integrations are out-of-scope for the Essential tier",
+    "AI optimization and custom integrations are out-of-scope for the Essential tier",
   ],
 
-  // Public FAQs (optional)
+  /* --------------------------------- FAQs ------------------------------- */
   faqs: [
     {
       id: "skills",
@@ -148,7 +178,7 @@ export const base: PackageBase = {
       id: "fairness",
       question: "How do you keep distribution fair?",
       answer:
-        "We use a round-robin rotation and guardrails to prevent double-assignments and account-owner conflicts.",
+        "We use round-robin rotation and guardrails to prevent double-assignments and account-owner conflicts.",
     },
     {
       id: "ai",
@@ -170,12 +200,13 @@ export const base: PackageBase = {
     },
   ],
 
+  /* ------------------------------ Footnotes ----------------------------- */
   notes:
     "Initial setup includes configuration for one CRM and one primary territory model.",
 
-  addOnRecommendations: [],
-  relatedSlugs: [],
-
+  /* -------------------------- Cross-sell / SEO -------------------------- */
+  addOnRecommendations: [], // e.g., ["lead-enrichment", "crm-data-quality"]
+  relatedSlugs: [],         // e.g., ["inbound-lead-forms", "sales-handshake-playbook"]
   seo: {
     title: "Lead Routing & Distribution",
     description:

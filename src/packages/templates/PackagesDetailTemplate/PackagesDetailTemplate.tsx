@@ -6,12 +6,6 @@
    - Page-level composition for a single package/bundle
    - Renders the hero, overview (super card), extras, add-ons, related, CTA band,
      and FAQ with consistent containers.
-   - Important fixes included:
-     • Pass `description` to PackageDetailOverview → TitleBlock.
-     • Pass `includesGroups={bundle.includes}` (SSOT) to PackageDetailOverview.
-     • Keep table fallback for legacy/matrix includes (will be removed later).
-     • Normalize authored FAQs (supports both legacy `faq.faqs` and flat `faqs`).
-     • Use FullWidthSection wrappers with requested container sizing.
 ============================================================================= */
 
 import * as React from "react";
@@ -21,7 +15,7 @@ import styles from "./PackagesDetailTemplate.module.css";
 import type { PackageBundle } from "@/packages/lib/types";
 import { emitServiceJsonLd } from "@/packages/lib/jsonld";
 import { toPackageCard } from "@/packages/lib/adapters";
-import { sectionCtas, cardCtas } from "@/packages/lib/cta";
+import { buildCardCtas, buildDetailCtas } from "@/packages/lib/registry/mappers"; // ✅ use builders from mappers
 import { startingAtLabel } from "@/packages/lib/pricing";
 
 /* --------------------------------- Layout --------------------------------- */
@@ -148,20 +142,34 @@ export default function PackagesDetailTemplate({
     rows: [],
   };
 
-  // Pinned rail card & related rails (adapted from bundle)
+  /* ------------------------------------------------------------------------ *
+   * PINNED CARD & RELATED
+   * ------------------------------------------------------------------------ */
   const pinnedCardBase = toPackageCard(bundle);
-  const { primary, secondary } = cardCtas(bundle.slug ?? "");
-  const pinnedCard = { ...pinnedCardBase, variant: "rail", primaryCta: primary, secondaryCta: secondary };
+
+  // ✅ Use mappers builders (card CTA policy lives there)
+  const {
+    primaryCta: pinnedPrimary,
+    secondaryCta: pinnedSecondary,
+  } = buildCardCtas(bundle.name ?? bundle.slug ?? "", bundle.slug ?? "");
+
+  const pinnedCard = {
+    ...pinnedCardBase,
+    variant: "rail" as const,
+    primaryCta: pinnedPrimary,
+    secondaryCta: pinnedSecondary,
+  };
+
   const relatedRailItems = React.useMemo(
-    () => related.map((b) => ({ ...toPackageCard(b), variant: "rail" })),
+    () => related.map((b) => ({ ...toPackageCard(b), variant: "rail" as const })),
     [related],
   );
 
   // Schema.org JSON-LD for SEO
   const jsonLd = emitServiceJsonLd(bundle);
 
-  // CTAs (policy standard)
-  const { primary: sectionPrimaryCta, secondary: sectionSecondaryCta } = sectionCtas();
+  // ✅ Detail section CTAs from mappers (labels+href+aria policy)
+  const { primary: sectionPrimaryCta, secondary: sectionSecondaryCta } = buildDetailCtas(heroTitle);
 
   // CTA band subtitle derived from canonical price
   const priceSubtitle = bundle.price ? startingAtLabel(bundle.price as any) : undefined;
@@ -229,37 +237,29 @@ export default function PackagesDetailTemplate({
           valueProp={heroSubtitle}
           description={(bundle as any).description}  // long blurb into TitleBlock
           icp={(bundle as any).icp}
-
           /* De-dup meta: let the HERO show chips; hide them in overview */
           service={undefined as any}
           tags={undefined}
           showMeta={false}
-
           /* Canonical price only (renderer derives “Starting at …”) */
           packagePrice={(bundle as any).price}
-
           /* CTAs (policy standard for detail pages) */
           ctaPrimary={sectionPrimaryCta}       // "Request proposal" → /contact
           ctaSecondary={sectionSecondaryCta}   // "Book a call" → /book
-
           /* Outcomes & Includes */
           outcomes={outcomes}
-
-          /* ✅ NEW: Pass SSOT groups directly from base.ts */
+          /* ✅ Pass SSOT groups directly from base.ts */
           includesGroups={(bundle as any).includes}
           includesTitle="What’s included"
           includesVariant="cards"              // default; explicit for clarity
-          includesMaxCols={3}                  // three-up grid on desktop (“boom, boom”)
+          includesMaxCols={3}                  // three-up grid on desktop
           includesDense={false}
           includesShowIcons
           includesFootnote={(bundle as any).notes}
-
           /* Optional fallback table (legacy/matrix cases) */
           includesTable={(includesTable as any) ?? emptyIncludes}
-
           /* Right sticky card */
           pinnedPackageCard={pinnedCard as any}
-
           /* Page-level notes (if you choose to keep a separate NotesBlock) */
           notes={undefined}
         />
@@ -361,7 +361,7 @@ export default function PackagesDetailTemplate({
               <FAQSection
                 id="bundle-faq"
                 title={title}
-                faqs={list}                 // FAQSection expects `faqs`
+                faqs={list}
                 variant="default"
                 allowMultiple={false}
                 enableSearch={true}

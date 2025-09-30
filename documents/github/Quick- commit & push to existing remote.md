@@ -255,3 +255,201 @@ git push
   ```
 
 If you want, I can produce a one-shot command block that safely untracks only what’s currently committed and leaves the rest alone.
+Nice push! That last error came from pasting a multi-line commit message directly into the shell: the leading `>` started a redirection, and zsh then choked (“illegal modifier”). Two safe ways to fix the message you already pushed:
+
+---
+
+## Option A — amend with two `-m` flags (quick & copy-paste safe)
+
+```bash
+git commit --amend \
+  -m "feat!: centralize registry mappers, unify pricing utils, add band helper" \
+  -m "Highlights
+- Add /packages/lib/registry with mappers.ts and types.ts (CTA policy, card/detail props, includes table, safe footnotes).
+- Unify pricing in src/packages/lib/pricing.ts (named + default export).
+- Add band helpers in src/packages/lib/band.ts including bandPropsFor().
+- Centralize copy in src/packages/lib/copy.ts (CTA, BASE_NOTE, BADGE).
+- Remove legacy price.ts and cta.ts (superseded by pricing.ts + mappers + copy.ts).
+- Align PriceActionsBand / PriceTeaser / PriceLabel / PackageCard / PackageDetailOverview to shared Money type and helpers.
+
+Details
+- pricing.ts: normalizeMoney, formatMoney, srPriceSentence, startingAtLabel, isHybrid/isMonthlyOnly/isOneTimeOnly.
+- band.ts: resolveBandVariant, defaultBaseNote, resolveBaseNoteText, bandPropsFor(ctx, price, copy).
+- mappers.ts: normalizeFootnote; buildIncludesTable; cardCtas/sectionCtas; buildPackageCardProps; buildPackageDetailOverviewProps; pinned card builder.
+
+UX/Policy
+- Cards: badge-left + inline or chips; no base note or fine print.
+- Detail: badge-above + stacked figure + base note + fine print + divider.
+- No tagline fallback from summary; only priceBand.tagline when provided.
+
+BREAKING CHANGE
+- Remove src/packages/lib/price.ts and src/packages/lib/cta.ts.
+
+Migration
+- Replace imports from lib/price -> lib/pricing; lib/cta -> lib/copy and mappers.ts CTA builders.
+- Use buildPackageCardProps(base, { variant }) and buildPackageDetailOverviewProps(base) in registry folders."
+```
+
+Because it’s two separate `-m` arguments, the shell won’t interpret the internal quotes or newlines.
+
+Then update the remote (since you already pushed):
+
+```bash
+git push --force-with-lease origin main
+```
+
+---
+
+## Option B — open the editor (safest for longer bodies)
+
+```bash
+git commit --amend
+# paste the message template, save, exit
+git push --force-with-lease origin main
+```
+
+---
+
+### Pro tips to avoid this again
+
+* Don’t paste raw multi-line text starting with `>` in your terminal—that’s a redirect.
+* Prefer `-m "subject" -m "body"` or `git commit --amend` to open your editor.
+* If you need full control, use a here-doc:
+
+```bash
+git commit --amend -F - <<'MSG'
+feat!: centralize registry mappers, unify pricing utils, add band helper
+
+Highlights
+- …
+MSG
+```
+
+You’re all set—run Option A or B and your history will be clean and documented.
+Great timing—your draft is solid, but a couple tweaks will make it crystal-clear and also keep your history clean (you currently have staged **and** unstaged edits to the same files).
+
+Below is a polished Conventional Commit message that matches what’s **already staged**, plus a quick plan/commands to (a) include the additional unstaged changes or (b) split them into a follow-up commit.
+
+---
+
+## ✅ Recommended commit message (matches your staged files)
+
+> Use this exact text for the commit you’re making right now.
+
+```
+feat(pricing,band,price-components): unify Money + helpers; integrate PriceActionsBand
+
+- pricing.ts: add normalizeMoney, formatMoney, srPriceSentence, startingAtLabel,
+  and predicates (isHybrid/isMonthlyOnly/isOneTimeOnly). Provide both named and
+  default exports to avoid import drift.
+- band.ts: add resolveBandVariant, defaultBaseNote, resolveBaseNoteText.
+- copy.ts: centralize CTA/BADGE/BASE_NOTE labels.
+- PriceTeaser: support band vs inline modes, chip appearance for hybrids,
+  shared Money import, SR-only phrasing, no tagline/fine-print leakage.
+- PriceTeaser.module.css: tokenized colors, container-aware alignment.
+- PriceLabel: inline/block modes, chip appearance for hybrids, SR sentence,
+  index export hygiene, token-only CSS.
+
+Policy:
+- Cards use badge-left + inline (chips for hybrid); no base note or fine print.
+- Detail page uses badge-above + stacked figure + base note + fine print.
+
+Refs: README for PriceActionsBand.
+```
+
+---
+
+## 🧭 You also have unstaged changes (decide now)
+
+Your status shows **unstaged** edits to files you already staged (`band.ts`, `pricing.ts`, `copy.ts`) plus registry and deletion of `cta.ts`. If you commit right now, those extra edits won’t be included.
+
+You have two good options:
+
+### Option A — include everything in this commit
+
+```bash
+git add -A
+git commit --amend -F - <<'MSG'
+feat(pricing,band,price-components): unify Money + helpers; integrate PriceActionsBand
+
+- pricing.ts: add normalizeMoney, formatMoney, srPriceSentence, startingAtLabel,
+  and predicates (isHybrid/isMonthlyOnly/isOneTimeOnly). Provide both named and
+  default exports to avoid import drift.
+- band.ts: add resolveBandVariant, defaultBaseNote, resolveBaseNoteText, bandPropsFor().
+- copy.ts: centralize CTA/BADGE/BASE_NOTE labels + ARIA helpers.
+- PriceTeaser: support band vs inline modes, chip appearance for hybrids,
+  shared Money import, SR-only phrasing, no tagline/fine-print leakage.
+- PriceTeaser.module.css: tokenized colors, container-aware alignment.
+- PriceLabel: inline/block modes, chip appearance for hybrids, SR sentence,
+  index export hygiene, token-only CSS.
+
+Policy:
+- Cards use badge-left + inline (chips for hybrid); no base note or fine print.
+- Detail page uses badge-above + stacked figure + base note + fine print.
+
+BREAKING CHANGE: remove src/packages/lib/cta.ts (use copy.ts + mappers in registry)
+
+Refs: README for PriceActionsBand.
+MSG
+
+# If you had already pushed this commit before amending:
+git push --force-with-lease origin main
+```
+
+### Option B — keep this commit small; follow with a focused registry commit
+
+1. Finish the current commit with the “Recommended commit message” above.
+2. Then stage & commit the registry and deletions:
+
+```bash
+# Stage the rest (registry + deleted cta.ts + any lingering lib edits)
+git add -A
+
+git commit -m "feat(registry): add mappers/types and migrate CTA policy
+- Add /packages/lib/registry with mappers.ts and types.ts
+- Centralize CTA builders (cardCtas/sectionCtas) and includes-table mapper
+- Map priceBand copy (no tagline fallback from summary)
+- Normalize footnotes to avoid [object Object]
+- Update registry card/details to call builders
+BREAKING CHANGE: remove src/packages/lib/cta.ts; import CTA labels from copy.ts and CTA builders from mappers.ts
+"
+
+git push origin main
+```
+
+---
+
+## 🧹 Quick sanity checklist
+
+* **Imports**
+
+  * No references to `src/packages/lib/price.ts` (it’s deleted).
+  * Use `import { formatMoney, isHybrid, ... } from "@/packages/lib/pricing"` or
+    `import pricing from "@/packages/lib/pricing"` (default object) if legacy paths remain.
+  * No imports from `lib/cta.ts`; use `copy.ts` for labels and `mappers.ts` CTA builders.
+
+* **Band rules**
+
+  * Monthly-only default `baseNote = "proposal"` (hybrid also “proposal”, one-time “final”).
+  * Only **detail** surfaces pass `tagline`/`finePrint`.
+  * No duplicate divider lines (band uses `<Divider/>` only).
+
+* **Registry**
+
+  * `priceBand.tagline` never falls back to `summary`.
+  * `normalizeFootnote()` applied anywhere footnotes are shown.
+  * `buildPackageCardProps(base, { variant })` and
+    `buildPackageDetailOverviewProps(base)` used in per-package folders (or
+    reduce local `card.ts`/`details.ts` to thin wrappers that call these).
+
+---
+
+If you want a single command to drop in your final message without fighting the editor, use the here-doc pattern:
+
+```bash
+git commit -F - <<'MSG'
+<paste the Recommended commit message here>
+MSG
+```
+
+You’re good to go.
