@@ -1,0 +1,381 @@
+{
+  "version": "1.0",
+  "internalOnly": true,
+  "package": {
+    "id": "leadgen-routing-distribution",
+    "slug": "lead-routing-distribution",
+    "service": "lead-generation",
+    "subservice": "lead-management-qualification",
+    "name": "Lead Routing & Distribution"
+  },
+
+  "owner": {
+    "product": "Conor Hovis",
+    "revops": "TBD",
+    "lastUpdated": "2025-09-30"
+  },
+
+  "currency": "USD",
+
+  "pricing": {
+    "public": {
+      "oneTime": 2500,
+      "monthly": 1000
+    },
+    "tiers": [
+      {
+        "sku": "LRD-ESS",
+        "name": "Essential",
+        "description": "Core routing with territory/round-robin, conflict checks, basic telemetry.",
+        "minTermMonths": 3,
+        "price": { "oneTime": 2500, "monthly": 1000 },
+        "targetMarginPct": 0.55,
+        "includes": [
+          "Territory routing",
+          "Round-robin assignment",
+          "Basic rule library",
+          "Account-owner conflict checks",
+          "CRM write-backs (routing events)",
+          "Starter performance dashboard",
+          "Change governance log"
+        ],
+        "supportSLA": {
+          "responseHours": 24,
+          "changeWindowDays": 3,
+          "timezone": "US/PT",
+          "channels": ["Email", "Asana/Jira ticket"]
+        }
+      },
+      {
+        "sku": "LRD-PRO",
+        "name": "Professional",
+        "description": "Everything in Essential plus caps/load-balancing, OOO automation, experiments.",
+        "minTermMonths": 3,
+        "price": { "oneTime": 6000, "monthly": 2500 },
+        "targetMarginPct": 0.6,
+        "includes": [
+          "All Essential features",
+          "Daily caps & load balancing",
+          "OOO automation & catch-up",
+          "Controlled A/B routing experiments",
+          "SLA monitoring dashboard",
+          "Quarterly routing review workshop"
+        ],
+        "supportSLA": {
+          "responseHours": 8,
+          "changeWindowDays": 2,
+          "timezone": "US/PT",
+          "channels": ["Email", "Asana/Jira ticket", "Slack shared channel (optional)"]
+        }
+      },
+      {
+        "sku": "LRD-ENT",
+        "name": "Enterprise",
+        "description": "Advanced scaling: multi-team models, multi-CRM options, warehouse/CDP inputs.",
+        "minTermMonths": 6,
+        "price": { "oneTime": 12000, "monthly": 5000 },
+        "targetMarginPct": 0.62,
+        "includes": [
+          "All Professional features",
+          "Multi-team models (SDR/AE/AM)",
+          "Warehouse/CDP signal ingestion",
+          "Multi-stage routing (lead → contact → opp)",
+          "Custom dashboards & alerting",
+          "Change advisory board cadence"
+        ],
+        "supportSLA": {
+          "responseHours": 4,
+          "changeWindowDays": 1,
+          "timezone": "US/PT",
+          "channels": ["Email", "Ticketing", "Slack shared channel", "Emergency on-call (best-effort)"]
+        }
+      }
+    ],
+    "discounts": {
+      "prepayAnnualPct": 0.1,
+      "startupNonprofitPct": 0.15,
+      "maxStackPct": 0.2,
+      "requiresApprovalRoles": ["Product", "Finance"]
+    },
+    "notes": "Public price is sourced from public.mdx; tiers power future tiered pricing UI. Discounts are non-stacking unless explicitly approved."
+  },
+
+  "featureMatrix": {
+    "rows": [
+      { "id": "territory-routing", "label": "Territory routing" },
+      { "id": "round-robin", "label": "Round-robin assignment" },
+      { "id": "daily-caps", "label": "Daily caps / load balancing" },
+      { "id": "ooo", "label": "OOO handling & catch-up" },
+      { "id": "owner-conflict", "label": "Account-owner conflict checks" },
+      { "id": "duplicate-suppression", "label": "Duplicate suppression / DNR lists" },
+      { "id": "ab-tests", "label": "A/B test routing rules" },
+      { "id": "multi-crm", "label": "Multi-CRM support" },
+      { "id": "warehouse-cdp", "label": "Warehouse/CDP integration" },
+      { "id": "routing-events", "label": "CRM routing events (write-backs)" },
+      { "id": "sla-dashboard", "label": "SLA monitoring dashboard" },
+      { "id": "governance-log", "label": "Change governance log" }
+    ],
+    "tiers": {
+      "LRD-ESS": {
+        "territory-routing": true,
+        "round-robin": true,
+        "daily-caps": "limit",
+        "ooo": "limit",
+        "owner-conflict": true,
+        "duplicate-suppression": true,
+        "ab-tests": "add-on",
+        "multi-crm": false,
+        "warehouse-cdp": false,
+        "routing-events": true,
+        "sla-dashboard": "add-on",
+        "governance-log": true
+      },
+      "LRD-PRO": {
+        "territory-routing": true,
+        "round-robin": true,
+        "daily-caps": true,
+        "ooo": true,
+        "owner-conflict": true,
+        "duplicate-suppression": true,
+        "ab-tests": true,
+        "multi-crm": "limit",
+        "warehouse-cdp": "limit",
+        "routing-events": true,
+        "sla-dashboard": true,
+        "governance-log": true
+      },
+      "LRD-ENT": {
+        "territory-routing": true,
+        "round-robin": true,
+        "daily-caps": true,
+        "ooo": true,
+        "owner-conflict": true,
+        "duplicate-suppression": true,
+        "ab-tests": true,
+        "multi-crm": true,
+        "warehouse-cdp": true,
+        "routing-events": true,
+        "sla-dashboard": true,
+        "governance-log": true
+      }
+    }
+  },
+
+  "addOns": [
+    {
+      "sku": "ADD-ENRICH",
+      "name": "Lead Enrichment",
+      "description": "3rd-party enrichment on create/update, mapped to routing fields.",
+      "price": { "monthly": 400, "oneTime": 300 },
+      "dependencies": ["API access to enrichment provider"],
+      "notes": "Pass-through vendor fees not included."
+    },
+    {
+      "sku": "ADD-SCORE",
+      "name": "Account Scoring Starter",
+      "description": "Fit/intent scoring to bias routing; simple linear model + thresholds.",
+      "price": { "oneTime": 4500 },
+      "dependencies": ["Event tracking or MAP/CDP signals"],
+      "notes": "Advanced ML models are out-of-scope."
+    },
+    {
+      "sku": "ADD-SLA",
+      "name": "SLA Monitoring",
+      "description": "Live SLA compliance dashboard + alerts to owners/managers.",
+      "price": { "monthly": 600, "oneTime": 500 },
+      "dependencies": ["Inbox/engagement events or CRM activities"],
+      "notes": "Email/SMS alert costs billed at cost if applicable."
+    }
+  ],
+
+  "effortModel": {
+    "roles": [
+      { "role": "Solutions Architect", "rate": 185 },
+      { "role": "RevOps Consultant", "rate": 165 },
+      { "role": "Engineer (Automation)", "rate": 175 },
+      { "role": "Data Analyst", "rate": 150 },
+      { "role": "Project Manager", "rate": 140 }
+    ],
+    "essential": {
+      "oneTimeHours": [
+        { "role": "Solutions Architect", "hours": 1.0 },
+        { "role": "RevOps Consultant", "hours": 4.0 },
+        { "role": "Engineer (Automation)", "hours": 2.0 },
+        { "role": "Data Analyst", "hours": 0.5 },
+        { "role": "Project Manager", "hours": 1.0 }
+      ],
+      "monthlyHours": [
+        { "role": "RevOps Consultant", "hours": 1.25 },
+        { "role": "Data Analyst", "hours": 0.5 },
+        { "role": "Project Manager", "hours": 0.3 },
+        { "role": "Engineer (Automation)", "hours": 0.7 }
+      ],
+      "assumedCost": { "oneTime": 1410, "monthly": 446 }
+    },
+    "professional": {
+      "oneTimeHours": [
+        { "role": "Solutions Architect", "hours": 2.0 },
+        { "role": "RevOps Consultant", "hours": 6.0 },
+        { "role": "Engineer (Automation)", "hours": 4.0 },
+        { "role": "Data Analyst", "hours": 1.5 },
+        { "role": "Project Manager", "hours": 2.0 }
+      ],
+      "monthlyHours": [
+        { "role": "RevOps Consultant", "hours": 3.0 },
+        { "role": "Data Analyst", "hours": 1.0 },
+        { "role": "Project Manager", "hours": 0.6 },
+        { "role": "Engineer (Automation)", "hours": 1.5 }
+      ],
+      "assumedCost": { "oneTime": 3320, "monthly": 1110 }
+    },
+    "enterprise": {
+      "oneTimeHours": [
+        { "role": "Solutions Architect", "hours": 4.0 },
+        { "role": "RevOps Consultant", "hours": 10.0 },
+        { "role": "Engineer (Automation)", "hours": 8.0 },
+        { "role": "Data Analyst", "hours": 4.0 },
+        { "role": "Project Manager", "hours": 4.0 }
+      ],
+      "monthlyHours": [
+        { "role": "RevOps Consultant", "hours": 6.0 },
+        { "role": "Data Analyst", "hours": 2.0 },
+        { "role": "Project Manager", "hours": 1.0 },
+        { "role": "Engineer (Automation)", "hours": 2.5 }
+      ],
+      "assumedCost": { "oneTime": 7420, "monthly": 2410 }
+    },
+    "notes": "Assumed costs are guidance for margin tracking; update after discovery if effort varies."
+  },
+
+  "delivery": {
+    "phases": [
+      {
+        "id": "setup",
+        "title": "Setup",
+        "window": "Week 1",
+        "tasks": [
+          "Discovery: territories, ownership model, exceptions",
+          "Sandbox setup and access validation",
+          "Field mapping: routing inputs & outputs",
+          "Initial rule library installation"
+        ],
+        "deliverables": [
+          "Routing design doc v1",
+          "Sandbox build & mappings",
+          "Change governance log initialized"
+        ],
+        "exitCriteria": [
+          "All required inputs received",
+          "Sandbox rules pass unit tests"
+        ]
+      },
+      {
+        "id": "pilot",
+        "title": "Pilot & Launch",
+        "window": "Week 2",
+        "tasks": [
+          "Pilot with sampled leads",
+          "Conflict guardrails & caps configured",
+          "Write-backs and dashboards verified",
+          "Go-live in production"
+        ],
+        "deliverables": [
+          "Production routing rules",
+          "Telemetry events in CRM",
+          "Starter dashboard"
+        ],
+        "exitCriteria": [
+          "Pilot error rate < 2%",
+          "Stakeholder sign-off"
+        ]
+      },
+      {
+        "id": "stabilize",
+        "title": "Stabilize & Optimize",
+        "window": "Ongoing (monthly)",
+        "tasks": [
+          "Monthly performance review",
+          "Rule adjustments via CAB",
+          "SLA monitoring & alerts (if enabled)"
+        ],
+        "deliverables": [
+          "Monthly dashboard snapshot",
+          "Change log updates"
+        ],
+        "exitCriteria": [
+          "SLA breach rate trending down",
+          "No unresolved P1 issues"
+        ]
+      }
+    ]
+  },
+
+  "requirements": [
+    "CRM admin access (Salesforce or HubSpot)",
+    "Active reps list with emails & territories",
+    "Territory model / ownership source-of-truth",
+    "Business rules for assignment (owners, queues, exceptions)",
+    "Sandbox access & API credentials (if applicable)",
+    "Named approver for routing changes"
+  ],
+
+  "assumptions": [
+    "Single CRM instance for Essential; additional CRMs require add-on or higher tier",
+    "Standard lead object model without heavy custom triggers",
+    "Client provides timely approvals within 2 business days"
+  ],
+
+  "risks": [
+    { "risk": "Missing/dirty territory data", "mitigation": "Run hygiene pass; block go-live until fixed" },
+    { "risk": "Custom triggers conflict", "mitigation": "Sandbox regression tests; code freeze window" },
+    { "risk": "Low rep adoption", "mitigation": "Training + comms; governance log transparency" }
+  ],
+
+  "dependencies": [
+    "Stable user/owner directory",
+    "Accurate account ownership",
+    "Access to activity/engagement data (for caps/SLA)"
+  ],
+
+  "governance": {
+    "changeLog": {
+      "storage": "CRM custom object or shared sheet",
+      "fields": ["id", "timestamp", "actor", "reason", "before", "after", "approvedBy"]
+    },
+    "cadence": "Monthly CAB for non-urgent changes; emergency path for P1 issues"
+  },
+
+  "reporting": {
+    "kpis": [
+      "Speed-to-lead (median & 90th percentile)",
+      "Ownership coverage (unassigned rate)",
+      "Lead distribution fairness (Gini coefficient or std dev)",
+      "SLA breach rate",
+      "Time to first touch"
+    ],
+    "dashboards": [
+      "Routing performance (lead-to-owner latency)",
+      "Assignment distribution by rep/team",
+      "SLA compliance trends"
+    ]
+  },
+
+  "legalSecurity": {
+    "dataProcessing": "No PII leaves client systems; we configure in client-owned SaaS",
+    "dpaRequired": false,
+    "accessModel": "Least privilege; dedicated sandbox where possible"
+  },
+
+  "uiPlan": {
+    "tieredPricing": {
+      "enabled": true,
+      "component": "TieredPricingTable",
+      "footnote": "Pricing excludes third-party vendor fees and taxes."
+    }
+  },
+
+  "internalNotes": [
+    "Do not share this file publicly.",
+    "Use assumed costs for margin tracking; update after discovery if outlier complexity is detected."
+  ]
+}

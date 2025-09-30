@@ -1,4 +1,5 @@
 // app/packages/[bundles]/page.tsx
+// app/packages/[bundles]/page.tsx
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import styles from "../packages.module.css";
@@ -9,7 +10,7 @@ import { BUNDLES, getBundleBySlug, ADDONS_BY_ID } from "@/data/packages";
 // Template (concrete import)
 import PackagesDetailTemplate from "@/packages/templates/PackagesDetailTemplate/PackagesDetailTemplate";
 
-// Revalidate every hour (ISR). Adjust as needed.
+// Revalidate every hour (ISR)
 export const revalidate = 3600;
 
 type Params = { bundles: string };
@@ -25,11 +26,19 @@ type MinimalBundle = {
   service?: string;
   primaryService?: string;
   tags?: string[];
-  services?: string[];
+  services?: string[]; // legacy alt for tags
   seo?: { title?: string; description?: string };
   image?: { src?: string; alt?: string };
   cardImage?: { src?: string; alt?: string };
   addOnRecommendations?: string[];
+};
+
+const SITE = (process.env.NEXT_PUBLIC_SITE_URL || "").trim();
+const abs = (path?: string) => {
+  if (!path) return undefined;
+  if (/^https?:\/\//i.test(path)) return path;
+  if (!SITE) return undefined;
+  return `${SITE.replace(/\/+$/, "")}/${path.replace(/^\/+/, "")}`;
 };
 
 /* -------------------------------------------------------------------------- */
@@ -52,21 +61,13 @@ export function generateMetadata({ params }: { params: Params }): Metadata {
     return {
       title: "Package not found",
       description: "The requested package could not be found.",
-      robots: { index: false },
+      robots: { index: false, follow: false },
     };
   }
 
-  const site = (process.env.NEXT_PUBLIC_SITE_URL || "").trim();
-  const toAbsoluteUrl = (src?: string): string | undefined => {
-    if (!src) return undefined;
-    if (/^https?:\/\//i.test(src)) return src;
-    if (!site) return undefined; // no site configured → skip OG image to avoid invalid URL
-    return `${site.replace(/\/+$/, "")}/${src.replace(/^\/+/, "")}`;
-  };
-
   const heroTitle =
     bundle.seo?.title ??
-    `${(bundle.title ?? bundle.name ?? "Package")} • Integrated Growth Package`;
+    `${bundle.title ?? bundle.name ?? "Package"} • Integrated Growth Package`;
 
   const heroDescription =
     bundle.seo?.description ??
@@ -76,17 +77,19 @@ export function generateMetadata({ params }: { params: Params }): Metadata {
     "Package details";
 
   const image = bundle.image ?? bundle.cardImage;
-  const imageUrl = toAbsoluteUrl(image?.src);
+  const imageUrl = abs(image?.src);
+  const canonicalPath = `/packages/${bundle.slug}`;
+  const canonicalUrl = abs(canonicalPath);
 
   return {
     title: heroTitle,
     description: heroDescription,
-    alternates: { canonical: `/packages/${bundle.slug}` },
+    alternates: { canonical: canonicalUrl ?? canonicalPath },
     openGraph: {
       title: heroTitle,
       description: heroDescription,
       type: "website",
-      url: `/packages/${bundle.slug}`,
+      url: canonicalUrl ?? canonicalPath,
       siteName: "TBH Digital",
       ...(imageUrl && {
         images: [{ url: imageUrl, alt: image?.alt || bundle.name || "Package image" }],
@@ -109,24 +112,27 @@ function pickRelated(current: MinimalBundle, all: MinimalBundle[], max = 8) {
   const currentSlug = current.slug;
   const currentTags: string[] = current.tags ?? current.services ?? [];
 
-  const byService = all.filter(
+  // 1) Same service first
+  const sameService = all.filter(
     (b) => b.slug !== currentSlug && (b.service ?? b.primaryService) === service,
   );
 
-  if (byService.length >= max) return byService.slice(0, max);
-
-  const byTags = all
+  // 2) Then tag overlap, weighted by intersection size
+  const byTagOverlap = all
     .filter((b) => b.slug !== currentSlug)
-    .filter((b) => {
-      const tags: string[] = b.tags ?? b.services ?? [];
-      return tags.some((t) => currentTags.includes(t));
-    });
+    .map((b) => {
+      const tags = b.tags ?? b.services ?? [];
+      const score = tags.filter((t) => currentTags.includes(t)).length;
+      return { b, score };
+    })
+    .filter(({ score }) => score > 0)
+    .sort((a, z) => z.score - a.score)
+    .map(({ b }) => b);
 
-  const merged: MinimalBundle[] = [...byService];
-  for (const r of byTags) {
-    if (!merged.find((m) => m.slug === r.slug)) {
-      merged.push(r);
-    }
+  // Merge (preserve order, de-dupe)
+  const merged: MinimalBundle[] = [];
+  for (const r of [...sameService, ...byTagOverlap]) {
+    if (!merged.find((m) => m.slug === r.slug)) merged.push(r);
     if (merged.length >= max) break;
   }
   return merged.slice(0, max);
@@ -152,8 +158,8 @@ export default function PackageDetailPage({ params }: { params: Params }) {
   // Optional: inject extra FAQs (beyond bundle.faq)
   const faqs: Array<{ id?: string | number; question: string; answer: string }> = [];
 
-  // NOTE: PackagesDetailTemplate now passes bundle.image.{src,alt} → ServiceHero,
-  // so the hero correctly renders the authored image from base.ts.
+  // NOTE: PackagesDetailTemplate passes bundle.image.{src,alt} → ServiceHero,
+  // ensuring the hero renders the authored image from base.ts / registry.
   return (
     <main className={styles.page} data-route="packages/[bundles]">
       <PackagesDetailTemplate

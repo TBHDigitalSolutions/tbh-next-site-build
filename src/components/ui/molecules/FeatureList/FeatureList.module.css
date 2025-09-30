@@ -8,6 +8,15 @@
 */
 
 /* ============================== ROOT LIST =============================== */
+/* Brand-aligned, responsive, container-query enhanced.
+
+   Consumes tokens from packages-unified.module.css → unified-theme.css/root.css.
+   TSX contract: root, sm|md, item, iconWrap, icon, content, label, note,
+                 hasTooltip, infoBtn, infoIcon, tooltip,
+                 and state classes: included, limited, addon, excluded.
+*/
+
+/* ============================== ROOT LIST =============================== */
 .root {
     /* Design-system mappings (override via parent island if needed) */
     --feature-fg: var(--pkg-text, var(--text-primary, #f4f6f7));

@@ -1,0 +1,335 @@
+{
+  "schemaVersion": "1.0",
+  "packageId": "content-editorial-calendar-sprint",
+  "slug": "editorial-calendar-sprint",
+  "service": "content",
+  "subservice": "writing-editorial",
+  "name": "Editorial Calendar Sprint",
+  "status": "active",
+  "authoring": {
+    "docsPath": "docs/packages/catalog/content-production/writing-editorial/editorial-calendar-sprint/",
+    "publicFile": "public.mdx",
+    "internalFile": "internal.json",
+    "assetsDir": "assets"
+  },
+
+  "pricing": {
+    "currency": "USD",
+    "tiers": [
+      {
+        "id": "starter",
+        "label": "Starter",
+        "isDefault": true,
+        "oneTime": 3200,
+        "monthly": 0,
+        "effortDays": 6,
+        "deliveryWindow": "10 business days",
+        "scope": [
+          "90-day editorial calendar (weekly cadence)",
+          "Topic backlog with priorities & acceptance criteria",
+          "4 content briefs (outline, SEO notes, references, CTA)",
+          "Distribution notes per asset (SEO/email/social)",
+          "Lightweight governance: RACI + review SLAs + checklists",
+          "Final handoff walkthrough"
+        ],
+        "assumptions": [
+          "One brand and one locale",
+          "Up to two stakeholder reviewers",
+          "Client provides inputs within 48 hours of request",
+          "GA4/GSC read-only access for top content list preferred"
+        ],
+        "notes": "Best for teams establishing an executable plan for the next quarter."
+      },
+      {
+        "id": "pro",
+        "label": "Pro",
+        "oneTime": 5800,
+        "monthly": 0,
+        "effortDays": 10,
+        "deliveryWindow": "15 business days",
+        "scope": [
+          "Everything in Starter",
+          "8 content briefs total",
+          "Deeper SERP scan + opportunity sizing for top 10 topics",
+          "Light internal linking map for first 6 posts",
+          "Notion or Asana project template setup"
+        ],
+        "assumptions": [
+          "One brand, up to two locales OR two product pillars",
+          "Tool access for workspace template setup (viewer/editor)"
+        ],
+        "notes": "Recommended when the team wants to start publishing immediately with more briefs in hand."
+      },
+      {
+        "id": "enterprise",
+        "label": "Enterprise",
+        "oneTime": 9500,
+        "monthly": 0,
+        "effortDays": 16,
+        "deliveryWindow": "20 business days",
+        "scope": [
+          "Everything in Pro",
+          "12 content briefs total",
+          "Stakeholder workshop (2 hrs) + enablement session (1 hr)",
+          "Governance deep-dive (workflow map + escalation paths)",
+          "Quarterly refresh playbook + measurement plan draft"
+        ],
+        "assumptions": [
+          "Up to four stakeholder reviewers",
+          "Workshop scheduled within first 5 business days"
+        ],
+        "notes": "Best for multi-team orgs needing alignment and a stronger governance baseline."
+      }
+    ],
+    "paymentTerms": "50% to start, 50% on delivery",
+    "inclusions": "All tiers include planning artifacts (calendar, backlog, briefs, governance docs) delivered via Google Drive unless otherwise specified.",
+    "exclusions": [
+      "Full article writing (available via Blog Article Pack add-on)",
+      "Translation/localization",
+      "Paid promotion and media spend",
+      "Complex keyword research projects (available as add-on)"
+    ]
+  },
+
+  "operations": {
+    "staffing": [
+      { "role": "Content Strategist", "allocationFTE": 0.35, "notes": "Leads discovery, calendar, backlog, briefs QC" },
+      { "role": "SEO Specialist", "allocationFTE": 0.2, "notes": "Intent mapping, SERP scan, distribution notes" },
+      { "role": "Project Manager", "allocationFTE": 0.15, "notes": "Coordination, reviews, timeline, handoff" },
+      { "role": "Design Support (as needed)", "allocationFTE": 0.05, "notes": "Templates/checklists visuals" }
+    ],
+    "meetings": [
+      { "type": "Kickoff", "duration": "45 min", "attendees": ["Client PM", "Marketing Lead", "Strategist", "PM"] },
+      { "type": "Mid-sprint Review", "duration": "45 min", "attendees": ["Client PM", "Strategist", "PM"] },
+      { "type": "Final Handoff", "duration": "45 min", "attendees": ["Client PM", "Marketing Lead", "Strategist", "PM"] }
+    ],
+    "delivery": {
+      "workspace": "Google Drive (or client Notion/Asana for Pro/Enterprise)",
+      "artifacts": [
+        "Editorial calendar (Google Sheet)",
+        "Topic backlog (Sheet/Notion)",
+        "Briefs (Docs)",
+        "Governance sheet (RACI, SLAs)",
+        "Publishing checklist (Doc)"
+      ]
+    }
+  },
+
+  "timeline": {
+    "phases": [
+      {
+        "id": "kickoff-intake",
+        "label": "Kickoff & Inputs",
+        "duration": "Days 1–2",
+        "deliverables": [
+          "Goals/ICP intake doc",
+          "Top content list (GA4/GSC preferred)",
+          "Seed keyword/theme alignment"
+        ]
+      },
+      {
+        "id": "calendar-backlog",
+        "label": "Calendar & Backlog",
+        "duration": "Days 3–5",
+        "deliverables": [
+          "90-day calendar (weekly cadence)",
+          "Prioritized topic backlog with acceptance criteria"
+        ]
+      },
+      {
+        "id": "briefs-governance",
+        "label": "Briefs & Governance",
+        "duration": "Days 7–8",
+        "deliverables": [
+          "4 briefs (Starter) / 8 (Pro) / 12 (Enterprise)",
+          "RACI + review SLAs",
+          "Publishing checklist"
+        ]
+      },
+      {
+        "id": "handoff",
+        "label": "Final Handoff",
+        "duration": "Day 10–20 (per tier)",
+        "deliverables": [
+          "Walkthrough session",
+          "Final artifacts delivery & next-steps plan"
+        ]
+      }
+    ]
+  },
+
+  "risks": [
+    { "risk": "Slow input turnaround from stakeholders", "mitigation": "Time-boxed intake; proceed with best-available data and mark TBD items" },
+    { "risk": "No analytics access", "mitigation": "Client to export top pages; use GSC public URLs + third-party SERP checks" },
+    { "risk": "Review churn", "mitigation": "Single consolidated reviewer; limit to two revision cycles" }
+    ],
+
+  "quality": {
+    "checklist": [
+      "Each topic has explicit intent, angle, target reader, and success measure",
+      "Calendar cadence is realistic to resource constraints",
+      "Briefs include outline, SEO notes, references, and CTA",
+      "Governance covers roles, SLAs, and escalation path",
+      "Distribution notes added for SEO/email/social"
+    ],
+    "definitionOfDone": "All artifacts approved by the single consolidated reviewer; handoff recorded and docs accessible."
+  },
+
+  "integrations": {
+    "required": [],
+    "optional": [
+      "Google Analytics 4 (read-only)",
+      "Google Search Console (read-only)",
+      "Notion or Asana (for Pro/Enterprise template setup)"
+    ]
+  },
+
+  "dataMeasurement": {
+    "baselineInputs": [
+      "Top 50–100 URLs by traffic",
+      "Top landing pages by non-brand search",
+      "Existing topic clusters/pillars (if any)"
+    ],
+    "successSignals": [
+      "Calendar adherence in first 60 days",
+      "Brief adoption rate",
+      "Growth in non-brand search impressions for targeted themes (90–120 days)"
+    ]
+  },
+
+  "governance": {
+    "reviewModel": "Single consolidated approver; 2 revision cycles",
+    "storage": "Client Drive/Notion as source of truth",
+    "handoff": "Recorded walkthrough + index doc with links"
+  },
+
+  "legalCompliance": {
+    "data": "No PII collected; read-only analytics preferred",
+    "ip": "All deliverables transfer upon final payment",
+    "confidentiality": "Mutual NDA recommended for product roadmap context"
+  },
+
+  "discounting": {
+    "rules": [
+      { "name": "Prepay", "description": "5% off if prepaid in full", "maxPercent": 5 },
+      { "name": "Bundle", "description": "5–10% with Blog Article Pack or CMS Publishing add-on", "maxPercent": 10 }
+    ],
+    "floorMarginPercent": 35
+  },
+
+  "sowTemplate": {
+    "summary": "Editorial Calendar Sprint to produce a 90-day plan with briefs and governance.",
+    "deliverables": [
+      "90-day calendar, topic backlog with acceptance criteria",
+      "Briefs (qty per tier), governance artifacts, distribution notes",
+      "Handoff walkthrough"
+    ],
+    "timeline": "10–20 business days dependent on tier",
+    "clientResponsibilities": [
+      "Provide inputs and reviewer availability",
+      "Grant read-only analytics access (preferred)"
+    ],
+    "paymentSchedule": "50% to start, 50% on delivery",
+    "acceptanceCriteria": "Single consolidated approver sign-off via email"
+  },
+
+  "rolloutPlan": [
+    "Create Drive/Notion workspace and index doc",
+    "Schedule kickoff and mid-sprint review",
+    "Complete intake + baseline analysis",
+    "Draft calendar/backlog → review",
+    "Create briefs + governance",
+    "Final handoff + next-step options"
+  ],
+
+  "changeRequests": {
+    "includedRevisions": 2,
+    "sla": "2–3 business days per revision cycle",
+    "outOfScopeExamples": [
+      "Full article writing",
+      "Additional locales beyond tier scope",
+      "Complex keyword research projects",
+      "Marketing automation builds"
+    ]
+  },
+
+  "extensionsAddOns": [
+    { "id": "blog-article-pack-4", "label": "Blog Article Pack (4/month)", "type": "recurring" },
+    { "id": "cms-publishing", "label": "CMS Publishing", "type": "recurring" },
+    { "id": "internal-linking-refresh", "label": "Internal Linking Refresh", "type": "one-time" },
+    { "id": "calendar-refresh-monthly", "label": "Monthly Calendar Refresh", "type": "recurring" }
+  ],
+
+  "internalFlags": {
+    "showTieredPricing": true,
+    "eligibleForBundles": true,
+    "priorityOffering": true
+  },
+
+  "marginsCosts": {
+    "estimatedDeliveryHours": 48,
+    "blendedRate": 135,
+    "hardCosts": 0,
+    "targetGrossMarginPercent": 55
+  },
+
+  "finance": {
+    "revRec": "One-time upon delivery",
+    "invoiceSchedule": ["Deposit on signature", "Balance on delivery"],
+    "sku": "CP-WE-EDCAL-S"
+  },
+
+  "repository": {
+    "templates": [
+      "Editorial_Calendar_Template.xlsx",
+      "Content_Brief_Template.docx",
+      "Governance_RACI_Template.docx",
+      "Publishing_Checklist.docx"
+    ],
+    "location": "Drive:/Templates/Content-Production/Editorial-Calendar-Sprint"
+  },
+
+  "knowledgeBase": [
+    "How to run a 45-minute content kickoff",
+    "Acceptance criteria examples by intent (TOFU/MOFU/BOFU)",
+    "Brief anatomy and common pitfalls",
+    "Governance patterns for small vs. large teams"
+  ],
+
+  "salesEnablement": {
+    "talkTracks": [
+      "This sprint turns goals into an executable 90-day plan with briefs and governance so your team can start publishing next week.",
+      "We limit reviewers to keep momentum—two cycles, one approver—so your calendar doesn’t stall."
+    ],
+    "qualification": [
+      "Do you have a single decision-maker who can sign off on the plan?",
+      "Which channels drive the most qualified demand today?",
+      "Do you have GA4/GSC or at least a list of top content?"
+    ],
+    "competitiveAngles": [
+      "We deliver briefs and governance, not just a slide deck of ideas.",
+      "Calendar cadence fits your actual capacity to avoid early failure."
+    ],
+    "objectionHandling": [
+      {
+        "objection": "We can make a calendar internally.",
+        "response": "Many teams do, but it slips without acceptance criteria, briefs, and clear review SLAs. We deliver those scaffolds so execution sticks."
+      },
+      {
+        "objection": "We need more than 4 briefs.",
+        "response": "Great—step up to Pro/Enterprise or add more briefs à la carte without slowing the sprint."
+      }
+    ]
+  },
+
+  "serviceMapping": {
+    "taxonomyService": "content-production",
+    "taxonomySubservice": "writing-editorial",
+    "filters": {
+      "contentType": ["planning", "briefs", "governance"],
+      "objective": ["consistency", "pipeline", "efficiency"],
+      "funnelStage": ["awareness", "consideration", "decision"],
+      "industry": ["b2b-saas", "b2b-services", "ecommerce"]
+    }
+  }
+}

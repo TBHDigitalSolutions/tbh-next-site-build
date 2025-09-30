@@ -1,0 +1,333 @@
+# SEO Services — Directory Structure
+
+This document maps the complete SEO services taxonomy using clear level separation.
+
+---
+
+## Level 1: Service Root
+
+```
+/seo-services
+```
+
+---
+
+## Level 2: Subservices (3 Core Categories)
+
+```
+/seo-services
+├── ai-seo
+├── marketing
+└── technical
+```
+
+---
+
+## Level 3: Subsubservices (Service Groupings)
+
+### AI SEO
+```
+/seo-services/ai-seo
+├── ai-search-optimization
+├── llm-answer-seo
+└── visibility-engineering
+```
+
+### Marketing
+```
+/seo-services/marketing
+├── community-seo
+├── content-hubs
+├── content-syndication
+├── digital-pr
+├── ecommerce-seo
+├── keyword-strategy
+├── local-seo
+├── marketplace-seo
+├── on-page
+└── video-seo
+```
+
+### Technical
+```
+/seo-services/technical
+├── core-web-vitals
+├── indexation-routing
+├── international-seo
+├── migration-seo
+├── schema
+└── technical-audit
+```
+
+---
+
+## Level 4: Capabilities (Package Types/Tags)
+
+These are **not** additional taxonomy levels but represent specific capabilities, techniques, or focus areas within each Level 3 grouping.
+
+### AI SEO
+
+#### AI Search Optimization
+```
+/seo-services/ai-seo/ai-search-optimization
+├── sge-optimization
+├── ai-powered-search-positioning
+└── ml-algorithm-adaptation
+```
+
+#### LLM Answer SEO
+```
+/seo-services/ai-seo/llm-answer-seo
+├── llm-response-optimization
+├── featured-snippet-ai-optimization
+└── conversational-search-optimization
+```
+
+#### Visibility Engineering
+```
+/seo-services/ai-seo/visibility-engineering
+├── ai-search-visibility-strategy
+├── algorithm-specific-optimization
+└── emerging-search-future-proofing
+```
+
+### Marketing
+
+#### Community SEO
+```
+/seo-services/marketing/community-seo
+├── forum-platform-optimization
+├── ugc-seo
+└── social-proof-engagement-optimization
+```
+
+#### Content Hubs
+```
+/seo-services/marketing/content-hubs
+├── topic-cluster-development
+├── hub-spoke-architecture
+└── authority-building-content-depth
+```
+
+#### Content Syndication
+```
+/seo-services/marketing/content-syndication
+├── multi-platform-distribution
+├── syndication-network-optimization
+└── cross-platform-seo-coordination
+```
+
+#### Digital PR
+```
+/seo-services/marketing/digital-pr
+├── link-building-pr-campaigns
+├── brand-mention-optimization
+└── authority-site-relationships
+```
+
+#### Ecommerce SEO
+```
+/seo-services/marketing/ecommerce-seo
+├── product-page-optimization
+├── category-page-structure
+└── shopping-search-optimization
+```
+
+#### Keyword Strategy
+```
+/seo-services/marketing/keyword-strategy
+├── keyword-research-analysis
+├── search-intent-mapping
+└── competitive-keyword-analysis
+```
+
+#### Local SEO
+```
+/seo-services/marketing/local-seo
+├── google-business-profile-optimization
+├── local-search-visibility
+└── location-based-ranking
+```
+
+#### Marketplace SEO
+```
+/seo-services/marketing/marketplace-seo
+├── amazon-marketplace-optimization
+├── product-listing-optimization
+└── marketplace-ranking-factors
+```
+
+#### On-Page
+```
+/seo-services/marketing/on-page
+├── title-meta-optimization
+├── header-content-optimization
+└── internal-linking-strategy
+```
+
+#### Video SEO
+```
+/seo-services/marketing/video-seo
+├── youtube-optimization
+├── video-content-search-optimization
+└── video-schema-markup
+```
+
+### Technical
+
+#### Core Web Vitals
+```
+/seo-services/technical/core-web-vitals
+├── page-speed-optimization
+├── lcp-improvement
+├── cls-reduction
+└── fid-optimization
+```
+
+#### Indexation Routing
+```
+/seo-services/technical/indexation-routing
+├── crawl-path-optimization
+├── url-structure-hierarchy
+└── sitemap-optimization
+```
+
+#### International SEO
+```
+/seo-services/technical/international-seo
+├── hreflang-implementation
+├── multi-language-optimization
+└── geographic-targeting
+```
+
+#### Migration SEO
+```
+/seo-services/technical/migration-seo
+├── migration-planning-execution
+├── redirect-mapping
+└── traffic-preservation
+```
+
+#### Schema
+```
+/seo-services/technical/schema
+├── structured-data-implementation
+├── rich-snippet-optimization
+└── knowledge-graph-optimization
+```
+
+#### Technical Audit
+```
+/seo-services/technical/technical-audit
+├── comprehensive-site-analysis
+├── technical-issue-identification
+└── performance-bottleneck-analysis
+```
+
+---
+
+## Complete Flattened Tree
+
+```
+/seo-services
+├── ai-seo
+│   ├── ai-search-optimization
+│   │   ├── sge-optimization
+│   │   ├── ai-powered-search-positioning
+│   │   └── ml-algorithm-adaptation
+│   ├── llm-answer-seo
+│   │   ├── llm-response-optimization
+│   │   ├── featured-snippet-ai-optimization
+│   │   └── conversational-search-optimization
+│   └── visibility-engineering
+│       ├── ai-search-visibility-strategy
+│       ├── algorithm-specific-optimization
+│       └── emerging-search-future-proofing
+├── marketing
+│   ├── community-seo
+│   │   ├── forum-platform-optimization
+│   │   ├── ugc-seo
+│   │   └── social-proof-engagement-optimization
+│   ├── content-hubs
+│   │   ├── topic-cluster-development
+│   │   ├── hub-spoke-architecture
+│   │   └── authority-building-content-depth
+│   ├── content-syndication
+│   │   ├── multi-platform-distribution
+│   │   ├── syndication-network-optimization
+│   │   └── cross-platform-seo-coordination
+│   ├── digital-pr
+│   │   ├── link-building-pr-campaigns
+│   │   ├── brand-mention-optimization
+│   │   └── authority-site-relationships
+│   ├── ecommerce-seo
+│   │   ├── product-page-optimization
+│   │   ├── category-page-structure
+│   │   └── shopping-search-optimization
+│   ├── keyword-strategy
+│   │   ├── keyword-research-analysis
+│   │   ├── search-intent-mapping
+│   │   └── competitive-keyword-analysis
+│   ├── local-seo
+│   │   ├── google-business-profile-optimization
+│   │   ├── local-search-visibility
+│   │   └── location-based-ranking
+│   ├── marketplace-seo
+│   │   ├── amazon-marketplace-optimization
+│   │   ├── product-listing-optimization
+│   │   └── marketplace-ranking-factors
+│   ├── on-page
+│   │   ├── title-meta-optimization
+│   │   ├── header-content-optimization
+│   │   └── internal-linking-strategy
+│   └── video-seo
+│       ├── youtube-optimization
+│       ├── video-content-search-optimization
+│       └── video-schema-markup
+└── technical
+    ├── core-web-vitals
+    │   ├── page-speed-optimization
+    │   ├── lcp-improvement
+    │   ├── cls-reduction
+    │   └── fid-optimization
+    ├── indexation-routing
+    │   ├── crawl-path-optimization
+    │   ├── url-structure-hierarchy
+    │   └── sitemap-optimization
+    ├── international-seo
+    │   ├── hreflang-implementation
+    │   ├── multi-language-optimization
+    │   └── geographic-targeting
+    ├── migration-seo
+    │   ├── migration-planning-execution
+    │   ├── redirect-mapping
+    │   └── traffic-preservation
+    ├── schema
+    │   ├── structured-data-implementation
+    │   ├── rich-snippet-optimization
+    │   └── knowledge-graph-optimization
+    └── technical-audit
+        ├── comprehensive-site-analysis
+        ├── technical-issue-identification
+        └── performance-bottleneck-analysis
+```
+
+---
+
+## Structure Summary
+
+- **L1:** 1 service (`seo-services`)
+- **L2:** 3 subservices (AI SEO, Marketing, Technical)
+- **L3:** 19 subsubservices (service groupings)
+- **Capabilities:** 57 specific capabilities/techniques
+
+**Total nodes:** 80
+
+---
+
+## Notes
+
+- Capabilities are derived from the detailed descriptions in the structure overview
+- Capability slugs follow kebab-case convention for consistency
+- These L4 items should be used as package tags, filter values, or content topics—not as additional taxonomy levels
+- The structure maintains SEO best practices with clear hierarchy and semantic naming

@@ -1,0 +1,306 @@
+{
+  "version": "1.0",
+  "packageId": "content-upload-retainer",
+  "internalName": "Content Upload Retainer",
+  "service": "content",
+  "subservice": "production-publishing",
+  "lifecycle": {
+    "status": "active",
+    "since": "2025-01-01",
+    "owners": ["content-ops@tbh.digital"],
+    "playbookVersion": "2025.02"
+  },
+
+  "pricing": {
+    "currency": "USD",
+    "model": "retainer",
+    "list": {
+      "monthly": 2400
+    },
+    "caps": {
+      "publishActionsPerMonth": 18,
+      "opsHoursPerMonth": 20,
+      "whicheverFirst": true
+    },
+    "setupFee": 0,
+    "overage": {
+      "ratePerHour": 145,
+      "minIncrementHours": 0.25,
+      "requiresPreapproval": true
+    },
+    "discounts": {
+      "annualPrepayPercent": 10,
+      "nonProfitPercent": 10
+    },
+    "notes": [
+      "Month-to-month. Billed in advance on the 1st.",
+      "Cap applies to any mix of uploads, updates, or operational tasks.",
+      "Template/dev work is not included and requires a separate SOW."
+    ]
+  },
+
+  "tieredPricing": {
+    "enabled": true,
+    "tiers": [
+      {
+        "id": "essential",
+        "label": "Essential",
+        "monthly": 2400,
+        "caps": { "publishActions": 18, "opsHours": 20 },
+        "targets": { "medianTimeToPublishHours": 48 },
+        "overageRatePerHour": 145,
+        "recommendedFor": "≤8 content items/month plus light page updates"
+      },
+      {
+        "id": "standard",
+        "label": "Standard",
+        "monthly": 3600,
+        "caps": { "publishActions": 30, "opsHours": 32 },
+        "targets": { "medianTimeToPublishHours": 36 },
+        "overageRatePerHour": 140,
+        "recommendedFor": "Weekly posts + ongoing landing page ops"
+      },
+      {
+        "id": "pro",
+        "label": "Pro",
+        "monthly": 5600,
+        "caps": { "publishActions": 50, "opsHours": 56 },
+        "targets": { "medianTimeToPublishHours": 24 },
+        "overageRatePerHour": 135,
+        "recommendedFor": "High-throughput programs and multi-locale sites"
+      },
+      {
+        "id": "enterprise",
+        "label": "Enterprise",
+        "monthly": null,
+        "custom": true,
+        "caps": { "publishActions": null, "opsHours": null },
+        "notes": "Dedicated squad, multi-brand, or multi-CMS operations"
+      }
+    ],
+    "ui": {
+      "plannedComponent": "TieredPricingTable",
+      "showPublicly": false,
+      "internalToggleDefault": true
+    }
+  },
+
+  "team": {
+    "roles": [
+      { "role": "Content Ops Manager", "allocationFTE": 0.2, "notes": "Intake, planning, QA spot-checks, reporting" },
+      { "role": "CMS Publisher", "allocationFTE": 0.5, "notes": "Formatting, uploads, link hygiene" },
+      { "role": "QA Analyst", "allocationFTE": 0.15, "notes": "Pre/post-publish checks" },
+      { "role": "SEO Specialist (Lite)", "allocationFTE": 0.05, "notes": "Meta, canonicals, schema lite" },
+      { "role": "Project Manager", "allocationFTE": 0.1, "notes": "Comms, scheduling, approvals" }
+    ],
+    "timezoneCoverage": ["Americas"],
+    "holidayBlackouts": ["US-Federal"]
+  },
+
+  "sdlc": {
+    "intake": [
+      "Client submits brief + draft copy + assets to Intake lane",
+      "Ops validates Definition of Ready (DOR) within 1 business day",
+      "Item slotted on publishing calendar"
+    ],
+    "workflow": [
+      "Format in CMS → internal link pass → media optimization",
+      "SEO hygiene (titles/meta/canonicals/schema-lite)",
+      "Pre-publish QA (layout, links, forms, mobile)",
+      "Client review/approval",
+      "Go-live → post-publish checks (indexability/GSC spot-check)"
+    ],
+    "cadence": {
+      "weeklyAsyncStatus": "Every Tue",
+      "monthlyOpsReview": "First week of month"
+    },
+    "definitions": {
+      "ready": [
+        "Final copy doc or approved draft",
+        "Assets in shared library (with alt text or captions)",
+        "Target URL, template, and section/category",
+        "Internal stakeholder for approvals"
+      ],
+      "done": [
+        "Published in production",
+        "Checked in all breakpoints",
+        "Links verified; no 404s",
+        "Release note posted on board"
+      ]
+    }
+  },
+
+  "scope": {
+    "in": [
+      "Create/format posts and pages in supported CMS",
+      "Image optimization (resize/compress) + descriptive alt text",
+      "SEO basics: titles, meta, canonicals, schema-lite (Article/WebPage)",
+      "Internal link pass + outbound rel attributes",
+      "Accessibility hygiene (headings order, alt text, color spot-check)",
+      "Pre/post-publish QA (links, forms, layout, responsive)",
+      "Publishing calendar alignment and status board updates",
+      "Monthly ops reporting (throughput, defects, time-to-publish)"
+    ],
+    "out": [
+      "Net-new templates/components or redesign work",
+      "Longform editing/ghostwriting or keyword research",
+      "Complex data/app migrations",
+      "Performance engineering beyond standard media optimization",
+      "Localization program management (can be scoped separately)"
+    ],
+    "assumptions": [
+      "Client provides approved copy and assets",
+      "CMS roles: Editor (min) on staging + production",
+      "Single brand/site unless otherwise scoped",
+      "English-only unless localization add-on is contracted"
+    ]
+  },
+
+  "deliverables": [
+    "Published posts/pages meeting DOD",
+    "Release notes per publish",
+    "Monthly ops report with metrics and recommendations",
+    "Backlog grooming and process improvement items"
+  ],
+
+  "requirements": [
+    "Editor/Admin access to CMS (staging + prod)",
+    "Shared asset library with naming conventions",
+    "Brand/content guidelines and component usage rules",
+    "Read access to GA4 + GSC",
+    "Approver roster with SLA"
+  ],
+
+  "sla": {
+    "intakeValidation": { "targetHours": 24, "businessHours": true },
+    "publishTurnaround": {
+      "standard": { "targetHours": 48, "businessHours": true, "maxItemsParallel": 2 },
+      "fastLane": { "targetHours": 24, "businessHours": true, "quotaPerWeek": 2 }
+    },
+    "reviewCycles": { "clientReviewTargetHours": 24, "internalFixTargetHours": 24 },
+    "bugFixes": { "p0": "same-day", "p1": "next business day", "p2": "within 3 business days" }
+  },
+
+  "metrics": {
+    "kpis": [
+      { "id": "throughput", "label": "Published items/month", "target": 18 },
+      { "id": "ttp-median", "label": "Median time-to-publish (hours)", "target": 48 },
+      { "id": "defect-rate", "label": "Post-publish defect rate", "target": "<=2% of items" }
+    ],
+    "reporting": [
+      "Monthly throughput and time-to-publish distribution",
+      "Top defect categories and recurrence",
+      "Queue aging and bottleneck analysis"
+    ]
+  },
+
+  "risks": [
+    "Incomplete briefs/assets causing rework and delays",
+    "Approver bottlenecks extending cycle time",
+    "CMS theme limitations restricting a11y fixes",
+    "Uncommunicated template changes breaking layouts"
+  ],
+
+  "changeManagement": {
+    "policy": "Material scope changes require written approval and may trigger a change order.",
+    "triggers": [
+      "New template/component work",
+      "Multi-brand or multi-locale expansion",
+      "Throughput needs >20% above contracted cap for 2 consecutive months"
+    ],
+    "approvals": ["Client Owner", "TBH PM", "Content Ops Manager"]
+  },
+
+  "qualification": {
+    "ideal": [
+      "Stable CMS with staging and promotion workflow",
+      "Cadence of at least 4 items/month",
+      "Named approvers with business-day SLAs"
+    ],
+    "disqualifiers": [
+      "No CMS access or legal inability to publish",
+      "Expectations for strategy/authoring inside an ops-only retainer",
+      "Frequent last-minute scope shifts without approvals"
+    ]
+  },
+
+  "dependencies": {
+    "integrations": ["WordPress", "Webflow", "Contentful", "Sanity", "HubSpot CMS", "Next.js (headless)"],
+    "tools": ["GA4", "GSC", "Link checker", "Image optimizer", "Board (Linear/Jira/Trello)"]
+  },
+
+  "tech": {
+    "environments": ["staging", "production"],
+    "gitFlowForHeadless": {
+      "enabled": true,
+      "branches": ["main", "content-release/*"],
+      "notes": "Content PRs merge windows: Tue/Thu 10:00–14:00 local"
+    }
+  },
+
+  "playbook": {
+    "board": {
+      "columns": ["Backlog", "Intake", "Formatting", "Review", "Ready to Publish", "Published", "Blocked"],
+      "labels": ["fast-lane", "translation", "redirects", "a11y", "schema"]
+    },
+    "calendar": { "tool": "Google Calendar or Notion", "visibility": "shared" },
+    "checklists": {
+      "prePublish": [
+        "Correct template/blocks used",
+        "Alt text + captions present",
+        "Title/meta/canonical set",
+        "Internal link pass completed",
+        "Forms/CTAs tested on staging",
+        "Mobile preview verified",
+        "Release note prepared"
+      ],
+      "postPublish": [
+        "Spot-check live URL",
+        "Links re-verified",
+        "Sitemap updated/pinged",
+        "GSC URL Inspect (sample)",
+        "Board moved to Published with note"
+      ]
+    }
+  },
+
+  "qa": {
+    "a11y": ["Headings order H1→H2→H3", "Alt text meaningful", "Color contrast spot-checks"],
+    "seo": ["Unique title/meta", "Canonical accuracy", "Schema-lite valid where applicable"],
+    "links": ["No 404s", "External rel attributes as needed", "UTM patterns verified"]
+  },
+
+  "compliance": {
+    "pii": "Do not publish PII. Forms tested with non-PII data.",
+    "copyright": "Client must own or license assets provided.",
+    "accessibility": "WCAG 2.1 AA best-effort within CMS/theme constraints."
+  },
+
+  "billing": {
+    "frequency": "monthly-in-advance",
+    "paymentTermsNet": 15,
+    "overageBilling": "monthly-in-arrears",
+    "timekeeping": "0.25h increments",
+    "holidaysPause": true
+  },
+
+  "approvals": {
+    "requiredFromClient": ["Content Owner", "Brand/Legal (as applicable)"],
+    "requiredFromTBH": ["Content Ops Manager", "PM"]
+  },
+
+  "opportunities": [
+    "Editorial Calendar Sprint",
+    "Schema Upgrade",
+    "Template Kits",
+    "Performance Hardening",
+    "Localization Enablement"
+  ],
+
+  "related": ["editorial-calendar-sprint", "website-copy-refresh", "asset-packaging-kit"],
+
+  "notes": [
+    "If the client needs heavy editing or writing, bundle with Editorial or Web Copy packages.",
+    "If recurring template work emerges, move to a mixed ops + dev retainer or project SOW."
+  ]
+}

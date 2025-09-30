@@ -1,0 +1,100 @@
+{
+  "version": 1,
+  "services": {
+    "marketing-services": {
+      "label": "Marketing Services",
+      "description": "Performance creative, paid media, analytics, and automation that compound growth.",
+      "aliases": ["marketing"],
+      "hubSlug": "marketing-services",
+      "packagesHubSlug": "marketing-packages",
+
+      "routes": {
+        "serviceHub": "/services/marketing-services",
+        "serviceSubservice": "/services/marketing-services/{subservice}",
+        "serviceLeaf": "/services/marketing-services/{subservice}/{subsubservice}",
+        "canonicalPackagePath": "/packages/{slug}",
+        "friendlyPackagePath": "/packages/marketing-services/{subservice}/{slug}",
+        "packagesByLeaf": "/packages/catalog/{service}/{subservice}/{slug}"
+      },
+
+      "authoring": {
+        "docsPathTemplate": "docs/packages/catalog/{service}/{subservice}/{slug}/",
+        "mdxFile": "public.mdx",
+        "internalPricingFile": "internal.json",
+        "assetsDir": "assets"
+      },
+
+      "filters": {
+        "dimensions": ["channel", "objective", "funnelStage"],
+        "defaultSort": "alpha"
+      },
+
+      "subservices": [
+        {
+          "slug": "digital-advertising",
+          "label": "Digital Advertising",
+          "description": "Performance-driven paid media across all digital channels.",
+          "subsubservices": [
+            { "slug": "paid-search", "label": "Paid Search" },
+            { "slug": "paid-social", "label": "Paid Social" },
+            { "slug": "programmatic", "label": "Programmatic" },
+            { "slug": "ctv-ott", "label": "CTV-OTT" },
+            { "slug": "remarketing", "label": "Remarketing" },
+            { "slug": "shopping-retail-media", "label": "Shopping/Retail Media" }
+          ]
+        },
+        {
+          "slug": "content-creative",
+          "label": "Content & Creative",
+          "subsubservices": [
+            { "slug": "content-marketing", "label": "Content Marketing" },
+            { "slug": "online-video", "label": "Online Video" },
+            { "slug": "influencer-affiliate", "label": "Influencer/Affiliate" }
+          ]
+        },
+        {
+          "slug": "marketing-technology-automation",
+          "label": "Marketing Technology & Automation",
+          "subsubservices": [
+            { "slug": "platform-setup", "label": "Platform Setup" },
+            { "slug": "data-model", "label": "Data Model" },
+            { "slug": "dashboards", "label": "Dashboards" },
+            { "slug": "attribution-oci", "label": "Attribution/OCI" },
+            { "slug": "lead-scoring", "label": "Lead Scoring" },
+            { "slug": "lifecycle-nurtures", "label": "Lifecycle Nurtures" },
+            { "slug": "templates", "label": "Templates" },
+            { "slug": "consent-management", "label": "Consent Management" }
+          ]
+        },
+        {
+          "slug": "analytics-optimization",
+          "label": "Analytics & Optimization",
+          "subsubservices": [
+            { "slug": "measurement", "label": "Measurement" },
+            { "slug": "experimentation", "label": "Experimentation" }
+          ]
+        },
+        {
+          "slug": "public-relations-communications",
+          "label": "Public Relations & Communications",
+          "subsubservices": [
+            { "slug": "pr", "label": "PR" },
+            { "slug": "crisis-communications", "label": "Crisis Communications" },
+            { "slug": "media-relations", "label": "Media Relations" },
+            { "slug": "press-release-distribution", "label": "Press Release Distribution" }
+          ]
+        },
+        {
+          "slug": "strategy-consulting",
+          "label": "Strategy & Consulting",
+          "subsubservices": [
+            { "slug": "marketing-strategy", "label": "Marketing Strategy" },
+            { "slug": "competitive-analysis", "label": "Competitive Analysis" },
+            { "slug": "market-research", "label": "Market Research" },
+            { "slug": "campaign-planning", "label": "Campaign Planning" }
+          ]
+        }
+      ]
+    }
+  }
+}

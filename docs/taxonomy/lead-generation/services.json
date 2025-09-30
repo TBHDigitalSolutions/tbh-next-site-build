@@ -1,0 +1,84 @@
+{
+  "version": 1,
+  "services": {
+    "lead-generation": {
+      "label": "Lead Generation",
+      "description": "Systems that turn attention into qualified pipeline: strategy, conversion, management, remarketing, and event-driven demand.",
+      "aliases": ["leadgen", "demand-gen", "demand-generation"],
+      "hubSlug": "lead-generation-services",
+      "packagesHubSlug": "lead-generation-packages",
+
+      "routes": {
+        "serviceHub": "/services/lead-generation-services",
+        "serviceSubservice": "/services/lead-generation-services/{subservice}",
+        "serviceLeaf": "/services/lead-generation-services/{subservice}/{subsubservice}",
+        "canonicalPackagePath": "/packages/{slug}",
+        "friendlyPackagePath": "/packages/lead-generation/{subservice}/{slug}",
+        "packagesByLeaf": "/packages/catalog/{service}/{subservice}/{slug}"
+      },
+
+      "authoring": {
+        "docsPathTemplate": "docs/packages/catalog/{service}/{subservice}/{slug}/",
+        "mdxFile": "public.mdx",
+        "internalPricingFile": "internal.json",
+        "assetsDir": "assets"
+      },
+
+      "filters": {
+        "dimensions": ["motion", "channel", "offerType", "testType", "qualification", "funnelStage"],
+        "defaultSort": "alpha"
+      },
+
+      "subservices": [
+        {
+          "slug": "strategy-planning",
+          "label": "Strategy & Planning",
+          "description": "Foundation strategy and channel optimization for lead generation.",
+          "subsubservices": [
+            { "slug": "channel-planning", "label": "Channel Planning" },
+            { "slug": "offer-strategy", "label": "Offer Strategy" }
+          ]
+        },
+        {
+          "slug": "conversion-optimization",
+          "label": "Conversion Optimization",
+          "description": "Landing page optimization and conversion rate improvement.",
+          "subsubservices": [
+            { "slug": "landing-pages", "label": "Landing Pages" },
+            { "slug": "optimization", "label": "Optimization" },
+            { "slug": "ab-testing", "label": "A/B Testing" }
+          ]
+        },
+        {
+          "slug": "lead-management-qualification",
+          "label": "Lead Management & Qualification",
+          "description": "Lead scoring, routing, and nurturing systems.",
+          "subsubservices": [
+            { "slug": "lead-scoring", "label": "Lead Scoring" },
+            { "slug": "routing", "label": "Routing" },
+            { "slug": "lead-nurturing", "label": "Lead Nurturing" }
+          ]
+        },
+        {
+          "slug": "remarketing-retention",
+          "label": "Remarketing & Retention",
+          "description": "Re-engagement campaigns and audience retargeting.",
+          "subsubservices": [
+            { "slug": "remarketing-entry", "label": "Remarketing Entry" },
+            { "slug": "retargeting-campaigns", "label": "Retargeting Campaigns" }
+          ]
+        },
+        {
+          "slug": "event-experience-marketing",
+          "label": "Event & Experience Marketing",
+          "description": "Webinar and event-driven lead generation.",
+          "subsubservices": [
+            { "slug": "webinars-events", "label": "Webinars & Events" },
+            { "slug": "virtual-events", "label": "Virtual Events" },
+            { "slug": "trade-shows", "label": "Trade Shows" }
+          ]
+        }
+      ]
+    }
+  }
+}

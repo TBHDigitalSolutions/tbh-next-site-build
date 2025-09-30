@@ -1,0 +1,294 @@
+{
+  "version": 1,
+  "package": {
+    "id": "content-creative-product-photo-studio-day",
+    "sku": "CP-CS-PPSD-001",
+    "slug": "product-photo-studio-day",
+    "name": "Product Photo — Studio Day",
+    "service": "content",
+    "subservice": "creative-services",
+    "tier": "Professional"
+  },
+
+  "pricing": {
+    "currency": "USD",
+    "list": { "oneTime": 3000 },
+    "tiered": [
+      {
+        "id": "essential",
+        "label": "Essential (Half-Day)",
+        "list": { "oneTime": 2200 },
+        "delta": {
+          "shootHours": 4,
+          "retouchedSelects": 10,
+          "notes": "Compact setup; best for small SKU batches or reshoots."
+        }
+      },
+      {
+        "id": "professional",
+        "label": "Professional (Full Day)",
+        "list": { "oneTime": 3000 },
+        "delta": {
+          "shootHours": 8,
+          "retouchedSelects": 20,
+          "notes": "Baseline package; matches public listing."
+        }
+      },
+      {
+        "id": "enterprise",
+        "label": "Enterprise (Two Days)",
+        "list": { "oneTime": 5200 },
+        "delta": {
+          "shootHours": 16,
+          "retouchedSelects": 40,
+          "notes": "Two studio days + expanded retouching, additional angles/variants."
+        }
+      }
+    ],
+    "targets": {
+      "minGrossMargin": 0.35,
+      "targetGrossMargin": 0.5
+    },
+    "billing": {
+      "depositPctToBook": 0.5,
+      "terms": "Net 15 on delivery",
+      "lateFeePctMonthly": 0.015,
+      "cancellationPolicy": "≥7 business days: full refund of deposit; 3–6 days: 50% of deposit; <3 days: deposit non-refundable plus pass-throughs."
+    },
+    "passThroughs": [
+      { "id": "studio-rental", "label": "Studio rental (day)", "estimateUsd": "300–800", "billType": "at-cost" },
+      { "id": "surfaces-props", "label": "Surfaces/props", "estimateUsd": "50–300", "billType": "at-cost" },
+      { "id": "shipping-returns", "label": "SKU shipping & returns", "estimateUsd": "variable", "billType": "at-cost" },
+      { "id": "parking-loading", "label": "Parking/loading permits", "estimateUsd": "0–75", "billType": "at-cost" }
+    ]
+  },
+
+  "rateCard": {
+    "currency": "USD",
+    "roles": {
+      "photographer": { "costRate": 75, "billRate": 175 },
+      "producer":    { "costRate": 60, "billRate": 145 },
+      "digitalTech": { "costRate": 50, "billRate": 130 },
+      "assistant":   { "costRate": 35, "billRate": 95 },
+      "retoucher":   { "costRate": 45, "billRate": 120 }
+    }
+  },
+
+  "effort": {
+    "units": "hours",
+    "phases": [
+      {
+        "id": "pre",
+        "label": "Pre-production",
+        "roles": {
+          "producer": 3,
+          "photographer": 1,
+          "retoucher": 0.5
+        },
+        "outputs": [
+          "Creative brief + references",
+          "Shot list & angles per SKU",
+          "Studio booking + call sheet",
+          "Color target & brand calibration plan"
+        ]
+      },
+      {
+        "id": "production",
+        "label": "Studio Day",
+        "roles": {
+          "photographer": 8,
+          "assistant": 8,
+          "digitalTech": 4,
+          "producer": 1
+        },
+        "outputs": [
+          "Tethered capture with live approvals",
+          "Consistent lighting & background per standard",
+          "On-set culling flags"
+        ]
+      },
+      {
+        "id": "post",
+        "label": "Post-production",
+        "roles": {
+          "retoucher": 6,
+          "producer": 1,
+          "photographer": 0.5
+        },
+        "outputs": [
+          "Culling + global balance pass",
+          "20 retouched selects",
+          "Web JPG (sRGB) + print TIFF exports",
+          "Private gallery + delivery package"
+        ]
+      }
+    ],
+    "nonLaborOverhead": [
+      { "id": "equipment-wear", "label": "Equipment wear & tear", "cost": 100 },
+      { "id": "insurance", "label": "Insurance/COI admin", "cost": 50 },
+      { "id": "file-hosting", "label": "Proofing/transfer hosting", "cost": 20 },
+      { "id": "misc", "label": "Consumables/misc", "cost": 45 }
+    ],
+    "summaryAtList": {
+      "listOneTimeUsd": 3000,
+      "estInternalCostUsd": 2000,
+      "estGrossMarginPct": 0.3333,
+      "notes": "Margin improves with higher SKU throughput, add-ons, or client-provided studio."
+    }
+  },
+
+  "throughput": {
+    "baselineSkusPerDay": { "min": 12, "max": 20, "assumptions": "Standard pack shots, 3–5 angles per SKU." },
+    "retouchedSelectsIncluded": 20,
+    "additionalSelectPriceUsd": 35,
+    "returnsPolicy": "1 round of retouch notes per select included (light fixes). Additional rounds billed hourly."
+  },
+
+  "addons": [
+    {
+      "id": "ghost-mannequin",
+      "sku": "ADD-RET-GHOST-001",
+      "label": "Ghost-mannequin / flat-lay advanced retouch",
+      "list": { "unit": "per-image", "priceUsd": 75 },
+      "estCostUsd": 35,
+      "notes": "Complex masking/compositing; turnaround +1–2 biz days depending on volume."
+    },
+    {
+      "id": "spin-360",
+      "sku": "ADD-ANIM-360-001",
+      "label": "360° spin / stop-motion clips",
+      "list": { "unit": "per-SKU", "priceUsd": 250 },
+      "estCostUsd": 110,
+      "notes": "Requires turntable; confirm reflective/complex surfaces ahead of time."
+    },
+    {
+      "id": "lifestyle-mini",
+      "sku": "ADD-PROP-LIFE-001",
+      "label": "Lifestyle mini-set",
+      "list": { "unit": "flat", "priceUsd": 400 },
+      "estCostUsd": 180,
+      "notes": "Simple prop set; surfaces/props are pass-through at cost."
+    },
+    {
+      "id": "raw-delivery",
+      "sku": "ADD-RAW-DEL-001",
+      "label": "RAW delivery with usage agreement",
+      "list": { "unit": "flat", "priceUsd": 150 },
+      "estCostUsd": 20,
+      "notes": "Includes checksum manifest; no color guarantees beyond provided profile."
+    },
+    {
+      "id": "rush-48h",
+      "sku": "ADD-RUSH-048-001",
+      "label": "Rush delivery (48h after selects)",
+      "list": { "unit": "flat", "priceUsd": 350 },
+      "estCostUsd": 120,
+      "notes": "Subject to calendar and SKU complexity; confirms at booking."
+    }
+  ],
+
+  "ops": {
+    "milestones": [
+      { "id": "kickoff", "label": "Kickoff", "exitCriteria": "Brief approved; shot list finalized; studio penciled." },
+      { "id": "studio-booked", "label": "Studio booked", "exitCriteria": "COI issued if required; call sheet sent." },
+      { "id": "shoot-complete", "label": "Shoot complete", "exitCriteria": "Take ingested + checksum verified; backups created." },
+      { "id": "proofs", "label": "Proofs delivered", "exitCriteria": "Proof gallery link sent; selects requested." },
+      { "id": "finals", "label": "Finals delivered", "exitCriteria": "Retouched selects delivered; license note sent." }
+    ],
+    "dependencies": [
+      "Confirmed studio date/time",
+      "SKU list & shipping/return labels",
+      "Background color choice",
+      "Decision-maker availability for approvals"
+    ],
+    "tools": {
+      "capture": "Capture One / Lightroom (tethered)",
+      "color": "X-Rite ColorChecker; monitor calibrated",
+      "retouch": "Photoshop with non-destructive layers",
+      "proofing": "Pixieset/PhotoShelter/Frame.io (internal choice)"
+    },
+    "folders": {
+      "clientDrive": "Drive/Clients/{client}/{package}/",
+      "shoot": "01_Shoot/{YYYYMMDD_Studio}/",
+      "selects": "02_Selects/",
+      "finals": "03_Final_Exports/",
+      "admin": "00_Admin/"
+    },
+    "fileNaming": {
+      "pattern": "{client}_{sku}_{view}_{sequence}.{ext}",
+      "examples": [
+        "acme_wtrbottle_front_001.jpg",
+        "acme_wtrbottle_detail-cap_002.tif"
+      ]
+    }
+  },
+
+  "requirements": [
+    "Brand kit (logo/colors/type) & 2–3 visual references",
+    "SKU list with priority order & packaging removal notes",
+    "Shipping/return labels and handling instructions",
+    "Decision-maker available during shoot (remote OK)",
+    "Background color choice before shoot (white/gray/brand)"
+  ],
+
+  "assumptions": [
+    "Standard pack-shot complexity; reflective or transparent items reduce throughput.",
+    "One background color for the day; additional setups reduce throughput.",
+    "Client provides accurate SKU handling and any compliance guidance (e.g., regulated items)."
+  ],
+
+  "risks": [
+    "Late SKU delivery compresses retouch window and jeopardizes deadlines.",
+    "Highly reflective/transparent materials require additional time or specialized surfaces.",
+    "Studio availability can change; holds expire if deposit is delayed."
+  ],
+
+  "acceptanceCriteria": [
+    "20 retouched selects delivered in agreed formats (web JPG sRGB + print TIFF).",
+    "Color alignment within tolerance to provided references and calibration target.",
+    "File naming per standard and delivery to agreed folder or link."
+  ],
+
+  "qaChecklist": [
+    "Camera sensor clean; lenses tested; backup body present.",
+    "ColorChecker reference captured per lighting setup.",
+    "Tether stability verified (cable & port test).",
+    "Focus/DOF confirmed on critical details.",
+    "Checksum/backup completed before leaving studio.",
+    "Deliverables validated against shot list prior to handoff."
+  ],
+
+  "compliance": {
+    "releases": "Model/property releases not expected for product-only shoots; confirm if branded locations appear.",
+    "safety": "Gaffer tape/cable covers; weight bags on stands; no blocked egress; electrical load within studio limits."
+  },
+
+  "relationships": {
+    "relatedSlugs": ["on-location-photo-shoot", "motion-graphics-pack"],
+    "crossSell": ["explainer-video-starter", "brand-identity-starter"]
+  },
+
+  "changeRequests": {
+    "triggers": [
+      "Additional background setups beyond the planned set",
+      "Throughput expansion (more SKUs/angles) after schedule lock",
+      "Advanced retouching requests (compositing/CGI/ghost-mannequin)"
+    ],
+    "process": "Estimate sent via change order; work starts after written approval."
+  },
+
+  "analytics": {
+    "kpis": [
+      "SKUs shot per day",
+      "Retouch hours per select",
+      "Days from selects to finals",
+      "On-time delivery rate"
+    ],
+    "postmortemNotes": "Capture typical throughput by product category to refine quoting tables."
+  },
+
+  "internalFlags": {
+    "showTieredPricing": false,
+    "allowRawDelivery": true
+  }
+}

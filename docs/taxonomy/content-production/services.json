@@ -1,0 +1,74 @@
+{
+  "version": 1,
+  "services": {
+    "content-production": {
+      "label": "Content Production",
+      "description": "Strategy, copy, and creative that fuel every channel across the funnel.",
+      "aliases": ["content"],
+      "hubSlug": "content-production-services",
+      "packagesHubSlug": "content-production-packages",
+
+      "routes": {
+        "serviceHub": "/services/content-production-services",
+        "serviceSubservice": "/services/content-production-services/{subservice}",
+        "serviceLeaf": "/services/content-production-services/{subservice}/{subsubservice}",
+        "canonicalPackagePath": "/packages/{slug}",
+        "friendlyPackagePath": "/packages/content-production/{subservice}/{slug}",
+        "packagesByLeaf": "/packages/catalog/{service}/{subservice}/{slug}"
+      },
+
+      "authoring": {
+        "docsPathTemplate": "docs/packages/catalog/{service}/{subservice}/{slug}/",
+        "mdxFile": "public.mdx",
+        "internalPricingFile": "internal.json",
+        "assetsDir": "assets"
+      },
+
+      "filters": {
+        "dimensions": ["contentType", "objective", "funnelStage", "industry"],
+        "defaultSort": "alpha"
+      },
+
+      "subservices": [
+        {
+          "slug": "creative-services",
+          "label": "Creative Services",
+          "description": "Visual content creation and multimedia production.",
+          "subsubservices": [
+            { "slug": "design", "label": "Design" },
+            { "slug": "photography", "label": "Photography" },
+            { "slug": "video-production", "label": "Video Production" }
+          ]
+        },
+        {
+          "slug": "writing-editorial",
+          "label": "Writing & Editorial",
+          "description": "Strategic writing and content planning services.",
+          "subsubservices": [
+            { "slug": "copywriting", "label": "Copywriting" },
+            { "slug": "editorial-strategy", "label": "Editorial Strategy" }
+          ]
+        },
+        {
+          "slug": "production-publishing",
+          "label": "Production & Publishing",
+          "description": "Content management and distribution systems.",
+          "subsubservices": [
+            { "slug": "cms-publishing", "label": "CMS Publishing" },
+            { "slug": "packaging", "label": "Packaging" }
+          ]
+        },
+        {
+          "slug": "sales-marketing-materials",
+          "label": "Sales & Marketing Materials",
+          "description": "Business-focused collateral and promotional assets.",
+          "subsubservices": [
+            { "slug": "sales-materials", "label": "Sales Materials" },
+            { "slug": "brand-collateral", "label": "Brand Collateral" },
+            { "slug": "presentation-design", "label": "Presentation Design" }
+          ]
+        }
+      ]
+    }
+  }
+}

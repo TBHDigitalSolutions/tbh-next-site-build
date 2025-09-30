@@ -1,0 +1,213 @@
+{
+  "id": "content-creative-on-location-photo-shoot",
+  "slug": "on-location-photo-shoot",
+  "service": "content",
+  "subservice": "creative-services",
+
+  "tiering": {
+    "tier": "Professional",
+    "internalToggle": true,
+    "phases": [
+      "Phase1HeroSection",
+      "Phase2WhySection",
+      "Phase3WhatSection",
+      "Phase4DetailsSection",
+      "Phase5NextSection"
+    ]
+  },
+
+  "pricing": {
+    "currency": "USD",
+    "oneTime": 3500,
+    "monthly": 0,
+    "minTermMonths": 0,
+    "paymentTerms": "50% deposit to book; remaining 50% Net 15 after shoot day",
+    "inclusionsSummary": "Full-day on-location photo shoot (up to 8 hours) with lead photographer + assistant, single location (up to 2 setups), culling & color, 20 retouched selects, web + print exports, online gallery.",
+    "notes": [
+      "Travel within 20 miles of city center included; beyond billed at mileage + travel time.",
+      "Permits, location fees, talent, HMU/wardrobe, props, and studio rental are pass-through or add-ons.",
+      "One weather reschedule with 24-hour notice at no charge; subsequent reschedules may incur fees."
+    ],
+
+    "discounts": [
+      { "id": "nonprofit-10", "label": "Nonprofit", "type": "percent", "value": 10 },
+      { "id": "bundle-creative-10", "label": "Bundle with video or design package", "type": "percent", "value": 10 },
+      { "id": "prepay-5", "label": "Prepay in full", "type": "percent", "value": 5 }
+    ],
+
+    "addons": [
+      { "id": "extra-hour", "label": "Additional on-site hour", "type": "fixed", "price": 300, "unit": "per hour" },
+      { "id": "second-location", "label": "Second nearby location (same day)", "type": "fixed", "price": 500 },
+      { "id": "extra-selects-10", "label": "Additional retouched selects (10)", "type": "fixed", "price": 300 },
+      { "id": "raw-delivery", "label": "RAW file delivery (with usage agreement)", "type": "fixed", "price": 750 },
+      { "id": "hmu-day", "label": "Hair & Makeup artist (day rate)", "type": "fixed", "price": 600 },
+      { "id": "talent-casting", "label": "Talent sourcing & casting (excludes day rates)", "type": "fixed", "price": 800 },
+      { "id": "drone", "label": "Drone / aerial add-on (licensed pilot)", "type": "fixed", "price": 750, "notes": "Weather and airspace restrictions apply" },
+      { "id": "studio-rental", "label": "Studio rental (pass-through)", "type": "pass-through" },
+      { "id": "travel-mileage", "label": "Travel mileage beyond 20 miles", "type": "rate", "price": 0.75, "unit": "per mile" },
+      { "id": "travel-time", "label": "Travel time beyond 20 miles", "type": "rate", "price": 100, "unit": "per hour" },
+      { "id": "rush-48h", "label": "Rush delivery (48h after selects)", "type": "percent", "value": 25 },
+      { "id": "second-assistant", "label": "Second assistant (day rate)", "type": "fixed", "price": 350 },
+      { "id": "extra-day", "label": "Additional shoot day", "type": "fixed", "price": 2500 },
+      { "id": "coi", "label": "Certificate of Insurance (COI)", "type": "fixed", "price": 50 }
+    ],
+
+    "tiers": [
+      {
+        "id": "essential-half-day",
+        "label": "Essential (Half-Day)",
+        "oneTime": 2500,
+        "summary": "Up to 4 hours on-site, single location, 10 retouched selects, solo photographer.",
+        "differences": [
+          "Photographer only (no assistant)",
+          "Single setup (interior OR exterior)",
+          "10 retouched selects; full take culled & color-corrected"
+        ]
+      },
+      {
+        "id": "professional-full-day",
+        "label": "Professional (Full Day)",
+        "oneTime": 3500,
+        "summary": "Up to 8 hours on-site, single location (2 setups), 20 retouched selects, photographer + assistant.",
+        "differences": [
+          "Lead photographer + photo assistant",
+          "Two setups (e.g., interior & exterior or AM/PM)",
+          "20 retouched selects; live review on key shots"
+        ],
+        "recommended": true
+      },
+      {
+        "id": "enterprise-two-day",
+        "label": "Enterprise (Two Days)",
+        "oneTime": 6500,
+        "summary": "Two shoot days, multi-setup coverage, 40 retouched selects, producer support.",
+        "differences": [
+          "Producer support and expanded shot coordination",
+          "Multiple setups across days",
+          "40 retouched selects + CSV of filenames/alt-text starter"
+        ]
+      }
+    ],
+
+    "effortModel": {
+      "units": "hours",
+      "roles": [
+        { "role": "Photographer", "halfDay": 4, "fullDay": 8, "twoDay": 16 },
+        { "role": "Photo Assistant", "halfDay": 0, "fullDay": 8, "twoDay": 16 },
+        { "role": "Producer (coordination)", "halfDay": 1.5, "fullDay": 3, "twoDay": 6 },
+        { "role": "Retoucher", "halfDay": 4, "fullDay": 6, "twoDay": 12 }
+      ],
+      "postProdPerSelectHours": 0.25,
+      "cullingAndColorHours": { "halfDay": 1.5, "fullDay": 2, "twoDay": 3.5 }
+    }
+  },
+
+  "ops": {
+    "inputs": [
+      "Brand kit (logo, colors, typography) and visual references",
+      "Subject list (people/products/locations) and availability",
+      "Ownership/usage requirements and any embargo dates",
+      "Location access details; permit requirements if applicable",
+      "Model/property release authorization contact",
+      "Stakeholder list & decision-maker for on-site approvals"
+    ],
+    "outputs": [
+      "Creative brief + prioritized shot list",
+      "Call sheet with schedule, contacts, and roles",
+      "Single-location shoot (up to 2 setups) with lighting kit",
+      "Culled & color-corrected gallery (typically 150–300 images)",
+      "20 retouched selects (web JPG + print TIFF)",
+      "Private online gallery & download links",
+      "Usage guide and filenames/alt-text starter (CSV optional)"
+    ],
+    "staffing": [
+      { "role": "Photographer", "responsibility": "Lead creative, composition, lighting decisions" },
+      { "role": "Photo Assistant", "responsibility": "Lighting, grip, tethering, logistics" },
+      { "role": "Producer (as needed)", "responsibility": "Scheduling, permits, call sheet, releases" },
+      { "role": "Retoucher", "responsibility": "Selects cleanup, color, export, delivery" }
+    ],
+    "equipment": [
+      "Dual camera bodies + prime/zoom lens kit",
+      "Portable strobes/LEDs, stands, modifiers, flags",
+      "Tethering kit and calibrated monitor (as needed)",
+      "Backup media and power",
+      "Release forms (digital/paper)"
+    ],
+    "scheduleTemplate": [
+      "Pre-pro (2–4 biz days): brief, shot list, call sheet",
+      "Shoot day (4–8 hrs): setup → production → wrap",
+      "Proofs: gallery in 2 biz days",
+      "Finals: 3–5 biz days after selects"
+    ],
+    "sla": {
+      "responseTime": "1 business day",
+      "proofsDelivery": "Within 2 business days of shoot",
+      "finalsDelivery": "Within 3–5 business days after selects",
+      "reschedulePolicy": "One weather reschedule with 24-hour notice at no cost",
+      "cancellation": "≥7 days: refund deposit minus non-recoverables; <7 days: 50% fee; <48h: 75% fee"
+    },
+    "risks": [
+      { "risk": "Weather disruptions", "mitigation": "Weather hold + one complimentary reschedule" },
+      { "risk": "Permit/access delays", "mitigation": "Early permit checks; backup indoor option" },
+      { "risk": "Subject no-shows", "mitigation": "Confirmations and backups on call sheet" },
+      { "risk": "Location power constraints", "mitigation": "Battery-powered lighting & power backup" }
+    ],
+    "assumptions": [
+      "Client provides location access and on-site contact",
+      "All subjects sign releases prior to shooting",
+      "Client selects retouch list within 5 business days of proofs",
+      "Brand guidelines provided before pre-pro"
+    ],
+    "qa": [
+      "Consistent exposure and white balance across sets",
+      "Sharpening and noise control appropriate to output",
+      "Color-managed exports (sRGB for web, AdobeRGB/TIFF for print)",
+      "File naming: YYYYMMDD_client_project_sequence",
+      "Spot check legal/documents: permits & releases archived"
+    ]
+  },
+
+  "sales": {
+    "idealCustomers": [
+      "B2B SaaS and services brands needing refreshed people/product imagery",
+      "E-commerce brands updating lifestyle and product context photography",
+      "Corporate communications and employer-brand teams"
+    ],
+    "objections": [
+      { "concern": "“We need more than 20 retouched images”", "response": "Add retouched selects in blocks of 10; full gallery still delivered color-corrected." },
+      { "concern": "“Can we have RAW files?”", "response": "Available as an add-on with usage agreement; most teams prefer curated, color-managed exports." },
+      { "concern": "“We’re worried about weather”", "response": "One free weather reschedule with 24-hour notice; we also propose backup indoor options." }
+    ],
+    "talkingPoints": [
+      "Speed: proofs in 2 business days; finals in 3–5 business days after selects.",
+      "Quality: consistent brand look through briefed lighting and grading.",
+      "Safety & compliance: permits, releases, and insurance handled properly."
+    ],
+    "caseStudies": [],
+    "landAndExpand": [
+      "Motion Graphics Pack for social cutdowns and animated posts",
+      "Explainer Video Starter to extend the campaign",
+      "Website Copy Refresh + CMS Upload Retainer to ship faster"
+    ]
+  },
+
+  "legal": {
+    "scopeExclusions": [
+      "Hazardous environments without written approval and appropriate PPE",
+      "Restricted facilities without prior clearance",
+      "Content requiring special regulatory compliance without advance notice"
+    ],
+    "ip": [
+      "Client receives a perpetual, worldwide, non-exclusive marketing license for delivered images.",
+      "No resale or third-party sublicensing without written permission.",
+      "Creator retains authorship; behind-the-scenes usage by creator allowed unless NDA."
+    ],
+    "privacySecurity": [
+      "Obtain model/property releases prior to shooting.",
+      "Remove or obscure sensitive information visible on screens/documents."
+    ]
+  },
+
+  "version": "2025-09-30",
+  "internalOnly": true
+}

@@ -1,0 +1,78 @@
+.wrap {
+    margin-block: var(--space-8, 3rem);
+}
+
+.header {
+    text-align: center;
+    margin-bottom: var(--space-4, 1.25rem);
+}
+
+.h2 {
+    font-size: clamp(1.25rem, 1vw + 1.1rem, 1.75rem);
+    line-height: 1.2;
+    letter-spacing: 0.2px;
+    margin: 0;
+}
+
+.subtitle {
+    margin-top: var(--space-2, .5rem);
+    color: var(--text-secondary, #64748b);
+    font-size: clamp(.95rem, .5vw + .85rem, 1.05rem);
+}
+
+.body {
+    display: grid;
+    place-items: center;
+}
+
+.rich,
+.paragraph {
+    /* readable measure */
+    max-width: 72ch;
+    width: 100%;
+    color: var(--text-primary, #e2e8f0);
+    font-size: clamp(1rem, .5vw + .95rem, 1.0625rem);
+    line-height: 1.7;
+}
+
+/* Spacing for common HTML from MDX */
+.rich p+p {
+    margin-top: var(--space-3, .75rem);
+}
+
+.rich ul,
+.rich ol {
+    margin: var(--space-3, .75rem) 0;
+    padding-left: 1.25rem;
+}
+
+.rich li+li {
+    margin-top: .35rem;
+}
+
+.rich a {
+    color: var(--link, #60a5fa);
+    text-decoration-color: color-mix(in srgb, currentColor 40%, transparent);
+    text-underline-offset: 2px;
+}
+
+.rich strong {
+    color: var(--text-strong, #f1f5f9);
+}
+
+.rich em {
+    font-style: italic;
+}
+
+/* Light callout style when authors include blockquotes in MDX */
+.rich blockquote {
+    margin: var(--space-4, 1.25rem) 0;
+    padding: var(--space-3, .75rem) var(--space-4, 1rem);
+    border-left: 3px solid var(--border-accent, #334155);
+    background: var(--surface-1, rgba(148, 163, 184, .06));
+    border-radius: var(--radius-md, 10px);
+}
+
+.paragraph {
+    margin: 0;
+}

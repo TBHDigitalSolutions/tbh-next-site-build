@@ -1,0 +1,333 @@
+{
+  "meta": {
+    "internalOnly": true,
+    "id": "brand-collateral-kit",
+    "sku": "CP-SMM-BCK-STD",
+    "service": "content",
+    "serviceLabel": "Content Production",
+    "subservice": "sales-marketing-materials",
+    "slug": "brand-collateral-kit",
+    "name": "Brand Collateral Kit",
+    "status": "active",
+    "owner": "Creative Director",
+    "version": "1.0.0",
+    "lastUpdated": "2025-10-01"
+  },
+
+  "pricing": {
+    "base": {
+      "currency": "USD",
+      "oneTime": 3200,
+      "monthly": 0,
+      "billingModel": "fixed-fee",
+      "paymentTerms": "50% deposit, 50% on delivery",
+      "includes": [
+        "Two structured review rounds across the collateral set",
+        "Press-ready PDFs + optimized web assets",
+        "Editable sources (Figma and/or Adobe, as available)"
+      ],
+      "excludes": [
+        "Stock photography & illustration licenses (pass-through at cost)",
+        "New logo design or full rebrand",
+        "Copywriting beyond light edits",
+        "Advanced print finishes (foil, emboss, spot UV) — add-on"
+      ],
+      "finePrint": "Two review rounds included. Additional rounds billed as a change request."
+    },
+    "discounts": {
+      "nonProfitPct": 0.1,
+      "commitment": [
+        { "months": 3, "pct": 0.05 },
+        { "months": 6, "pct": 0.08 }
+      ]
+    },
+    "changeRequests": {
+      "extraReviewRound": {
+        "unit": "per round",
+        "price": 250,
+        "notes": "Applies to the entire collateral set."
+      },
+      "additionalTemplateLayout": {
+        "unit": "per layout",
+        "price": 300,
+        "notes": "New template master beyond scope matrix."
+      },
+      "complexPrintPrep": {
+        "unit": "per item",
+        "price": 200,
+        "notes": "Foil/emboss/spot UV separation checks & proofs."
+      }
+    },
+    "targets": {
+      "targetMargin": 0.35,
+      "minimumMargin": 0.2
+    },
+    "effortModel": {
+      "units": "hours",
+      "roles": [
+        { "role": "Brand Strategist", "hours": 1, "rate": 150 },
+        { "role": "Design Lead", "hours": 3, "rate": 160 },
+        { "role": "Visual Designer", "hours": 10, "rate": 120 },
+        { "role": "Production Designer", "hours": 3, "rate": 100 },
+        { "role": "Project Manager", "hours": 2, "rate": 95 },
+        { "role": "QA", "hours": 1, "rate": 85 }
+      ],
+      "tooling": [
+        { "item": "Figma Professional seat (internal)", "cost": 0 },
+        { "item": "Adobe CC (internal)", "cost": 0 }
+      ],
+      "assumptions": [
+        "One primary language (EN) and one region.",
+        "Single brand family; no sub-brands.",
+        "Printer specs provided by client (if print items required)."
+      ]
+    }
+  },
+
+  "delivery": {
+    "milestones": [
+      {
+        "id": "kickoff-intake",
+        "label": "Kickoff & Intake",
+        "eta": "2–3 business days",
+        "outputs": [
+          "Brand audit (logos, colors, type, usage)",
+          "Use-case intake (Sales/Marketing)",
+          "Collateral matrix (print vs digital) finalized"
+        ]
+      },
+      {
+        "id": "design-round-1",
+        "label": "Design Round 1",
+        "eta": "4–5 business days",
+        "outputs": [
+          "Initial set of template masters",
+          "Preview exports for review"
+        ]
+      },
+      {
+        "id": "design-round-2",
+        "label": "Design Round 2",
+        "eta": "2–3 business days",
+        "outputs": [
+          "Revisions across the set",
+          "Pre-press checks initiated for print items"
+        ]
+      },
+      {
+        "id": "final-exports-handoff",
+        "label": "Final Exports & Handoff",
+        "eta": "1–2 business days",
+        "outputs": [
+          "Press-ready PDFs and web-optimized assets",
+          "Editable sources (Figma/Adobe) organized",
+          "30-minute live handoff + recording"
+        ]
+      }
+    ],
+    "timelineSummary": "2–3 weeks total (typical) with standard SLAs.",
+    "sla": {
+      "responseTime": "1 business day",
+      "reviewTurnaround": "2 business days for minor changes",
+      "expeditePolicy": "Rush (≤ 7 days) +20% fee; subject to capacity"
+    }
+  },
+
+  "scope": {
+    "inclusions": [
+      "Business card (front/back) — print + digital",
+      "Letterhead — print + PDF fillable",
+      "Email signature template",
+      "Social headers (LinkedIn, X, YouTube) — desktop & mobile-safe",
+      "One-pager template (A4/US-Letter) — up to 2 layout variants",
+      "Case study template — cover + content pages",
+      "Proposal/quote template — cover, TOC, terms page",
+      "Slide master (6–8 master layouts)",
+      "Logo lockups (primary, reversed, mono) — SVG/PNG/PDF",
+      "Brand guide lite (color, type, spacing, usage) — 3–6 pp",
+      "Icon/illustration starter (up to 12 glyphs)"
+    ],
+    "exclusions": [
+      "New logo identity or full rebrand",
+      "Copywriting beyond light edits/placeholders",
+      "Stock imagery/illustration licensing",
+      "Complex print finishing without add-on"
+    ],
+    "variants": {
+      "regions": 1,
+      "languages": 1,
+      "socialHeaders": ["LinkedIn", "X", "YouTube"]
+    },
+    "handoff": {
+      "sources": ["Figma", "Adobe (AI/ID/PSD as applicable)"],
+      "deliverables": ["Press-ready PDF", "SVG/PNG/WEBP"],
+      "structure": [
+        "01_Sources/",
+        "02_PressReady/",
+        "03_WebAssets/",
+        "04_Guide/"
+      ]
+    }
+  },
+
+  "ops": {
+    "requirements": [
+      "Brand assets: logos (vector), color values, typography (font files or license details)",
+      "Printer specs (if known): bleed, trim, safe margins, color profile",
+      "Stakeholder list and approval SLAs",
+      "Recent examples of collateral in market"
+    ],
+    "tooling": {
+      "design": ["Figma", "Adobe CC"],
+      "handoff": ["Google Drive or client DAM"],
+      "collab": ["Slack/Email", "Zoom"]
+    },
+    "approvals": {
+      "roundsIncluded": 2,
+      "reviewWindow": "2 business days per round",
+      "signoff": "Creative Director + Client Marketing Lead"
+    }
+  },
+
+  "risks": {
+    "items": [
+      {
+        "risk": "Missing or unlicensed brand fonts",
+        "impact": "Delays and redesign for font substitution",
+        "mitigation": "Advise licensing or propose open-source alternatives"
+      },
+      {
+        "risk": "Printer specs not provided",
+        "impact": "Potential re-exports or improper bleed settings",
+        "mitigation": "Use standard specs; confirm with printer before finalization"
+      },
+      {
+        "risk": "Extended stakeholder review cycles",
+        "impact": "Timeline creep and additional costs",
+        "mitigation": "Enforce review SLAs; limit combined rounds to two"
+      }
+    ]
+  },
+
+  "qa": {
+    "checklist": [
+      "Color profiles embedded; CMYK for print, sRGB for web",
+      "Bleed, trim, and safe margins validated against printer specs",
+      "Text styles and components consistently applied across templates",
+      "Link & asset relinking tested in packaged sources",
+      "Accessibility: contrast for web assets meets WCAG AA where applicable",
+      "File naming conventions and organized folders"
+    ]
+  },
+
+  "tiers": [
+    {
+      "id": "standard",
+      "label": "Standard",
+      "price": { "oneTime": 3200, "currency": "USD" },
+      "differences": [
+        "Baseline set as defined in inclusions",
+        "Two review rounds",
+        "One brand/language"
+      ]
+    },
+    {
+      "id": "professional",
+      "label": "Professional",
+      "price": { "oneTime": 5200, "currency": "USD" },
+      "differences": [
+        "Adds brochure/leave-behind template",
+        "Adds ad creative starter set (3–5 sizes)",
+        "Adds one additional review round",
+        "Optional PPT/Slides export support"
+      ]
+    },
+    {
+      "id": "enterprise",
+      "label": "Enterprise",
+      "price": { "oneTime": 8400, "currency": "USD" },
+      "differences": [
+        "Multi-region and multi-language adaptation (up to 3)",
+        "Extended icon/illustration set (up to 36 glyphs)",
+        "Printer management & proof review",
+        "On-call design support for 2 weeks post-handoff"
+      ]
+    }
+  ],
+
+  "addOns": [
+    {
+      "id": "complex-print-finishes",
+      "label": "Complex Print Finishes",
+      "unitPrice": 450,
+      "unit": "per item",
+      "notes": "Foil, emboss, spot UV; includes vendor proof cycles"
+    },
+    {
+      "id": "template-localization",
+      "label": "Template Localization",
+      "unitPrice": 300,
+      "unit": "per language",
+      "notes": "Applies to standard set; translation content provided by client"
+    },
+    {
+      "id": "extra-icon-pack",
+      "label": "Extra Icon Pack (12)",
+      "unitPrice": 400,
+      "unit": "per 12 glyphs",
+      "notes": "Style aligned to base set"
+    },
+    {
+      "id": "slides-export-support",
+      "label": "PowerPoint/Google Slides Export",
+      "unitPrice": 350,
+      "unit": "fixed",
+      "notes": "Adapt slide master to PPT/Slides and QA"
+    }
+  ],
+
+  "sales": {
+    "icp": [
+      "Seed–Series C B2B SaaS with lean design team",
+      "Mid-market teams needing consistent sales materials fast",
+      "RevOps/Enablement teams standardizing proposals and case studies"
+    ],
+    "discovery": [
+      "What collateral is used most frequently today?",
+      "Do you have printer preferences/specs or vendors on file?",
+      "Which brand fonts are licensed? Any restrictions?",
+      "Who must approve collateral? Typical turnaround?",
+      "Any regional/language needs in the next quarter?"
+    ],
+    "objections": [
+      {
+        "q": "We might rebrand soon—should we wait?",
+        "a": "This kit is modular. We can design with a light brand guide and swap tokens (color/type) later with minimal rework."
+      },
+      {
+        "q": "We need PPT/Slides, not just Figma.",
+        "a": "Professional tier or add-on includes PPT/Slides adaptation with QA; fidelity differences are documented up front."
+      },
+      {
+        "q": "Our printer has special requirements.",
+        "a": "Share specs early; we’ll align bleed/trim/profiles and can manage proofs as an add-on."
+      }
+    ],
+    "proofPoints": [
+      "2–3 week turnaround with two structured reviews",
+      "Press-ready exports + organized source files",
+      "Brand guide lite improves consistency and reduces rework"
+    ],
+    "successMetrics": [
+      "Time-to-ship for new one-pagers/proposals",
+      "Reduction in ad-hoc design requests",
+      "Brand consistency scores from internal review"
+    ],
+    "bundlesCrossSell": [
+      "one-pager-starter",
+      "sales-deck-pro",
+      "pitch-deck-design-sprint",
+      "editorial-calendar-sprint"
+    ]
+  }
+}

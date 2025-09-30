@@ -1,0 +1,80 @@
+{
+  "version": 1,
+  "services": {
+    "web-development": {
+      "label": "Web Development",
+      "description": "Strategy, design, and engineering to build fast, accessible, and reliable web experiences.",
+      "aliases": ["webdev", "web-development-services"],
+      "hubSlug": "web-development-services",
+      "packagesHubSlug": "web-development-packages",
+
+      "routes": {
+        "serviceHubPath": "/services/web-development-services",
+        "packagesHubPath": "/web-development-packages",
+        "canonicalPackagePath": "/packages/${slug}",
+        "friendlyPackagePath": "/packages/web-development/${subService}/${slug}",
+        "subServiceHubPath": "/services/web-development-services/${subService}"
+      },
+
+      "authoring": {
+        "docsPathTemplate": "docs/packages/catalog/${service}/${subService}/${slug}/",
+        "mdxFile": "public.mdx",
+        "internalPricingFile": "internal.json",
+        "assetsDir": "assets"
+      },
+
+      "filters": {
+        "dimensions": ["stack", "framework", "cms", "objective", "performance", "compliance"],
+        "defaultSort": "alpha"
+      },
+
+      "subServices": [
+        {
+          "slug": "applications",
+          "label": "Applications",
+          "description": "Product-like web apps, portals, and internal tools.",
+          "children": [
+            { "slug": "saas-apps", "label": "SaaS Apps" },
+            { "slug": "customer-portals", "label": "Customer Portals" },
+            { "slug": "internal-tools-dashboards", "label": "Internal Tools & Dashboards" },
+            { "slug": "admin-panels", "label": "Admin Panels" },
+            { "slug": "integrations-apis", "label": "Integrations & APIs" },
+            { "slug": "authentication-sso", "label": "Authentication & SSO" },
+            { "slug": "realtime-collaboration", "label": "Realtime & Collaboration" },
+            { "slug": "data-visualization", "label": "Data Visualization" }
+          ]
+        },
+        {
+          "slug": "e-commerce",
+          "label": "E-commerce",
+          "description": "Storefronts, headless commerce, and conversion systems.",
+          "children": [
+            { "slug": "storefronts", "label": "Storefronts" },
+            { "slug": "headless-commerce", "label": "Headless Commerce" },
+            { "slug": "shopify", "label": "Shopify" },
+            { "slug": "payments-checkout", "label": "Payments & Checkout" },
+            { "slug": "subscriptions", "label": "Subscriptions" },
+            { "slug": "pim", "label": "Product Information Management (PIM)" },
+            { "slug": "search-merchandising", "label": "Search & Merchandising" },
+            { "slug": "marketplaces", "label": "Marketplaces" }
+          ]
+        },
+        {
+          "slug": "website",
+          "label": "Website",
+          "description": "Marketing sites and content platforms.",
+          "children": [
+            { "slug": "marketing-sites", "label": "Marketing Sites" },
+            { "slug": "landing-pages", "label": "Landing Pages" },
+            { "slug": "microsites-campaigns", "label": "Microsites & Campaigns" },
+            { "slug": "documentation-portals", "label": "Documentation Portals" },
+            { "slug": "blogs-publications", "label": "Blogs & Publications" },
+            { "slug": "multilingual-i18n", "label": "Multilingual & i18n" },
+            { "slug": "accessibility-compliance", "label": "Accessibility & Compliance" },
+            { "slug": "site-migrations", "label": "Site Migrations" }
+          ]
+        }
+      ]
+    }
+  }
+}

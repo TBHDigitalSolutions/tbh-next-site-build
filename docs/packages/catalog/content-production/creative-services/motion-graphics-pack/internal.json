@@ -1,0 +1,211 @@
+{
+  "id": "content-creative-motion-graphics-pack",
+  "slug": "motion-graphics-pack",
+  "service": "content",
+  "subservice": "creative-services",
+  "tier": "Professional",
+  "sku": "CNT-MG-PRO-001",
+  "status": "active",
+  "owner": {
+    "product": "Conor Hovis",
+    "deliveryLead": "Motion Lead (TBD)",
+    "salesEngineer": "Creative Producer (TBD)"
+  },
+
+  "opsNotes": "Reusable motion system (logo sting, lower thirds, bumpers, transitions, end cards) packaged as editable templates + pre-renders. One brand. Source files included. Social variants (1:1, 9:16) included at Pro tier.",
+  "internalToggle": true,
+  "tieredPricingReady": true,
+
+  "pricing": {
+    "currency": "USD",
+    "oneTime": 5900,
+    "monthly": 0,
+    "setupNotes": "One brand; deliverables include logo sting (3–5s), lower thirds (long/short), chapter/segment bumpers, 2 transitions, 2–3 end cards, 16:9 + social variants (1:1, 9:16), template pack + pre-renders.",
+    "costAssumptions": [
+      { "role": "Motion Designer/Animator", "rate": 120, "hours": 20, "subtotal": 2400 },
+      { "role": "Template Engineer (Premiere/Resolve)", "rate": 110, "hours": 8, "subtotal": 880 },
+      { "role": "Brand Designer (style frames)", "rate": 110, "hours": 4, "subtotal": 440 },
+      { "role": "Project Manager/Producer", "rate": 95, "hours": 5, "subtotal": 475 },
+      { "role": "QA (a11y + loudness + export)", "rate": 80, "hours": 3, "subtotal": 240 },
+      { "role": "Sound Designer (sting SFX, whooshes)", "rate": 100, "hours": 2, "subtotal": 200 }
+    ],
+    "contingencyPercent": 10,
+    "discountPolicy": {
+      "volume": "10% off when purchased with Explainer Video Starter or Product Demo Templates in the same SOW.",
+      "nonprofit": "Up to 15% with valid 501(c)(3) documentation.",
+      "payment": "2% prepay discount if paid in full at kickoff."
+    },
+    "tieredOptions": [
+      {
+        "id": "starter",
+        "name": "Starter",
+        "oneTime": 3200,
+        "monthly": 0,
+        "summary": "Core motion essentials for a single format (16:9).",
+        "includesDelta": [
+          "Logo sting (3–4s)",
+          "Lower thirds (single variant)",
+          "1 transition style",
+          "1 end card",
+          "16:9 only",
+          "One revision round"
+        ],
+        "notes": "Fastest turnaround; best for teams validating a motion system."
+      },
+      {
+        "id": "pro",
+        "name": "Pro",
+        "oneTime": 5900,
+        "monthly": 0,
+        "summary": "Complete motion system with social variants and docs.",
+        "includesDelta": [
+          "Logo sting (3–5s)",
+          "Lower thirds (long/short) + optional handle",
+          "2 transition styles",
+          "2–3 end cards (CTA variants)",
+          "Chapter/segment bumpers",
+          "16:9, 1:1, 9:16",
+          "Usage guide + handover",
+          "One revision round"
+        ],
+        "notes": "Recommended. Matches public package description."
+      },
+      {
+        "id": "premium",
+        "name": "Premium",
+        "oneTime": 8500,
+        "monthly": 0,
+        "summary": "Expanded variants, complex animation, and enhanced handover.",
+        "includesDelta": [
+          "Advanced logo sting (complex 2D or light 3D look)",
+          "3 transition styles",
+          "Stream overlay kit (optional)",
+          "Additional language or brand variant (x1)",
+          "Two revision rounds",
+          "Custom SFX polish"
+        ],
+        "notes": "Best for high-volume content teams and event/stream usage."
+      }
+    ]
+  },
+
+  "delivery": {
+    "estimates": {
+      "setupDays": 3,
+      "totalWeeks": "2–3",
+      "revisionRoundsIncluded": 1,
+      "extraRevisionTurnaroundDays": 3
+    },
+    "staffing": [
+      { "role": "Motion Designer/Animator", "allocation": "Primary", "hours": 20 },
+      { "role": "Template Engineer (Premiere/Resolve)", "allocation": "Secondary", "hours": 8 },
+      { "role": "Brand Designer (Style Frames)", "allocation": "Support", "hours": 4 },
+      { "role": "Producer/PM", "allocation": "Support", "hours": 5 },
+      { "role": "QA (A11y/Loudness/Export)", "allocation": "Support", "hours": 3 },
+      { "role": "Sound Designer (SFX)", "allocation": "Support", "hours": 2 }
+    ],
+    "tools": [
+      "Adobe After Effects 2024",
+      "Adobe Premiere Pro 2024",
+      "DaVinci Resolve 19 (optional)",
+      "Adobe Illustrator / Photoshop",
+      "Figma (style frames)",
+      "ffmpeg",
+      "Youlean Loudness Meter or equivalent"
+    ],
+    "environments": [
+      "macOS (Sonoma or later) reference environment",
+      "Adobe Creative Cloud 2024 project format",
+      "Resolve 19 project format (if selected)"
+    ],
+    "assumptions": [
+      "Client provides a current brand kit (logo vectors, color tokens, typography) before kickoff.",
+      "Client confirms preferred NLE (Premiere/Resolve/FCP) and version.",
+      "CTA copy/URLs and social handles are provided prior to build.",
+      "One consolidated feedback round per milestone (style frames, first preview).",
+      "Music licensing is out-of-scope; pack includes simple SFX only."
+    ]
+  },
+
+  "scope": {
+    "inScope": [
+      "Logo sting (3–5s) tailored to brand",
+      "Lower thirds (long/short variants) with safe areas",
+      "Chapter/segment bumpers",
+      "2 transition styles (cross-platform compatible)",
+      "2–3 end cards (CTA variations)",
+      "Template pack for chosen NLE + pre-renders (MOV/PNG sequences)",
+      "Social variants: 16:9, 1:1, 9:16",
+      "Usage guide (PDF/MDX) and one 30-minute handover"
+    ],
+    "outOfScope": [
+      "Character animation or fully rigged 3D scenes",
+      "Live-action capture or editing of client footage",
+      "Music licensing or composition (available as add-on)",
+      "Localization beyond one language (add-on available)",
+      "Multi-brand systems (additional brands are add-ons)"
+    ]
+  },
+
+  "risks": {
+    "top": [
+      "Delayed approvals on style frames can push timeline.",
+      "Brand kit inconsistencies (missing fonts/logo variants) may cause rework.",
+      "NLE mismatch (client version older than ours) can require back-ports."
+    ],
+    "mitigations": [
+      "Lock review windows and approvers in kickoff.",
+      "Run a brand asset audit at day 1 and request missing items immediately.",
+      "Deliver both project files and pre-renders to ensure compatibility."
+    ],
+    "slas": {
+      "firstPreview": "5–7 business days after style-frame approval",
+      "revisionTurnaround": "3 business days from consolidated feedback",
+      "handover": "Within 2 business days after final approval"
+    }
+  },
+
+  "analytics": {
+    "targets": {
+      "cycleTimeDays": 14,
+      "onTimeDeliveryRate": 0.9,
+      "csat": 4.7,
+      "iterationCount": "<= 2 passes",
+      "assetReuseRate": ">= 75% of videos using motion pack within 60 days"
+    },
+    "tracking": [
+      "Jira/Linear tickets for milestones",
+      "Rendered preview links (Frame.io/Drive)",
+      "CSAT pulse after delivery"
+    ]
+  },
+
+  "approvals": {
+    "required": [
+      "Brand owner sign-off (style frames)",
+      "Marketing approver (first preview)",
+      "Final approver (delivery package)"
+    ],
+    "signers": [],
+    "legal": {
+      "ndaRequired": false,
+      "usageRights": "Perpetual, worldwide use for the client; no resale of templates outside the client organization.",
+      "thirdParty": "Client is responsible for any third-party font or music licenses."
+    }
+  },
+
+  "attachments": [
+    {
+      "label": "Style-Frame Brief (template)",
+      "path": "documents/domains/packages/templates/style-frame-brief.md"
+    },
+    {
+      "label": "Motion QA Checklist",
+      "path": "documents/domains/packages/checklists/motion-qa.md"
+    },
+    {
+      "label": "Template Usage Guide (sample)",
+      "path": "documents/domains/packages/guides/template-usage-guide.mdx"
+    }
+  ]
+}

@@ -1,0 +1,278 @@
+{
+  "schemaVersion": "1.1",
+  "packageId": "one-pager-starter",
+  "slug": "one-pager-starter",
+  "internalName": "One-Pager Starter",
+  "service": "content",
+  "subservice": "sales-marketing-materials",
+  "status": "active",
+  "owner": {
+    "org": "TBH Digital",
+    "group": "Creative Studio"
+  },
+  "contacts": {
+    "productManager": { "name": "Package Owner – Creative", "email": "creative@tbh.digital" },
+    "deliveryManager": { "name": "Producer – Studio", "email": "producer@tbh.digital" },
+    "designLead": { "name": "Design Lead", "email": "design@tbh.digital" }
+  },
+  "flags": {
+    "internalPricingVisible": true,
+    "tieredPricingPlanned": true,
+    "variableScopeAllowed": false
+  },
+
+  "pricing": {
+    "currency": "USD",
+    "defaultTier": "essential",
+    "assumptions": [
+      "Scope includes one (1) one-pager, one language, one size (US-Letter or A4).",
+      "Light copy polish only; no ground-up copywriting or translations.",
+      "Two review rounds total from the selected concept.",
+      "Stock assets and licensed fonts billed at cost when applicable."
+    ],
+    "paymentPolicy": {
+      "underThreshold": { "threshold": 3000, "terms": "100% upfront to reserve sprint slot" },
+      "overThreshold": { "depositPct": 50, "balance": "Net 7 from final files delivery" },
+      "lateFee": "1.5% per 30 days"
+    },
+    "discounts": [
+      { "code": "NONPROFIT10", "label": "Nonprofit", "percent": 10, "stackable": false },
+      { "code": "MULTIPACK10", "label": "Multi-package order (2+)", "percent": 10, "stackable": true }
+    ],
+    "tiers": {
+      "essential": {
+        "label": "Essential",
+        "oneTime": 1200,
+        "monthly": null,
+        "minTermMonths": 0,
+        "roundsIncluded": 2,
+        "concepts": 2,
+        "deliverablesDelta": [
+          "One selected concept refined through two rounds",
+          "Press-ready PDF + Web-optimized PDF",
+          "Editable source (Figma or Adobe)"
+        ],
+        "hoursPlan": {
+          "pm": 0.5,
+          "producer": 0.3,
+          "designer": 5.0,
+          "copyEditor": 0.5,
+          "qa": 0.3
+        },
+        "rateCard": {
+          "pm": 95,
+          "producer": 90,
+          "designer": 110,
+          "copyEditor": 100,
+          "qa": 80
+        },
+        "estimatedCost": 698.5,
+        "targetMarginPct": 42,
+        "breakeven": 698.5
+      },
+      "professional": {
+        "label": "Professional",
+        "oneTime": 1800,
+        "monthly": null,
+        "minTermMonths": 0,
+        "roundsIncluded": 3,
+        "concepts": 2,
+        "deliverablesDelta": [
+          "Extra review round (3 total)",
+          "Up to 2 CTA/footer variants (e.g., QR vs. URL)",
+          "Light data point refresh post-handoff (≤ 30 min)"
+        ],
+        "hoursPlan": {
+          "pm": 0.75,
+          "producer": 0.5,
+          "designer": 7.5,
+          "copyEditor": 0.75,
+          "qa": 0.4
+        },
+        "rateCard": {
+          "pm": 95,
+          "producer": 90,
+          "designer": 110,
+          "copyEditor": 100,
+          "qa": 80
+        },
+        "estimatedCost": 1001.25,
+        "targetMarginPct": 44
+      },
+      "enterprise": {
+        "label": "Enterprise",
+        "oneTime": null,
+        "monthly": null,
+        "minTermMonths": 0,
+        "custom": true,
+        "notes": "For legal review, complex brand systems, multi-region variants, or bundled deliverables. Quote after intake."
+      }
+    }
+  },
+
+  "operations": {
+    "deliveryModel": "Design sprint (1 week typical) with structured reviews",
+    "sla": {
+      "kickoffScheduling": "Within 1–2 business days of payment & intake",
+      "firstConcepts": "2–3 business days after kickoff",
+      "reviewTurnarounds": "1–2 business days per round",
+      "finalHandoff": "Within 1 business day of approval"
+    },
+    "timelineTemplate": [
+      { "step": "Intake & asset check", "target": "Day 0–1" },
+      { "step": "Concepts (2)", "target": "Day 2–3" },
+      { "step": "Review 1 → Revise", "target": "Day 4–5" },
+      { "step": "Review 2 → Final", "target": "Day 5–6" },
+      { "step": "Export & handoff", "target": "Day 6–7" }
+    ],
+    "roles": [
+      { "role": "Producer", "responsibilities": ["Schedule, asset intake, approvals gate"], "backups": ["PM"] },
+      { "role": "Designer", "responsibilities": ["Concepts, layout system, production"], "backups": ["Design Lead"] },
+      { "role": "Copy Editor", "responsibilities": ["Light polish, style/consistency"], "backups": ["Designer"] },
+      { "role": "QA", "responsibilities": ["Preflight, accessibility checks"], "backups": ["Producer"] },
+      { "role": "PM", "responsibilities": ["Scope control, risks, escalations"], "backups": ["Producer"] }
+    ],
+    "tooling": {
+      "design": ["Figma", "Adobe InDesign/Illustrator (as required)"],
+      "fileDelivery": ["Google Drive", "Dropbox"],
+      "communication": ["Email", "Slack (shared channel optional)"],
+      "tracking": ["Linear/Jira (internal)", "Notion brief (optional)"],
+      "preflight": ["PDF/X settings, FlightCheck or Acrobat Preflight"]
+    }
+  },
+
+  "scope": {
+    "inScope": [
+      "Two (2) initial design concepts; one selected for refinement",
+      "Two (2) structured review rounds on selected concept",
+      "Light copy polish (headlines, subheads, microcopy)",
+      "Press-ready PDF (CMYK, bleed if needed) and Web PDF (≤ 2MB target)",
+      "Editable source file (Figma or Adobe) with organized layers/components",
+      "CTA/footer including links and/or QR code"
+    ],
+    "outOfScope": [
+      "Ground-up copywriting or messaging workshops",
+      "Custom illustration/photography (stock billed at cost if approved)",
+      "Printing and vendor management (available as add-on)",
+      "Translations/localization and multi-language versions",
+      "Multiple segment/region layout variants (add-on)"
+    ],
+    "acceptanceCriteria": [
+      "Client approval of one concept after Review 1",
+      "All brand/color/typography constraints adhered to",
+      "No critical preflight errors in press PDF",
+      "Web PDF passes size/legibility checks",
+      "Final sign-off captured via email or ticket comment"
+    ]
+  },
+
+  "dependencies": {
+    "requiredFromClient": [
+      "Vector logos (SVG/EPS/PDF), color values, and typography (font files or license)",
+      "Existing bullets or rough copy (we will polish)",
+      "Primary use case and CTA (email send, tradeshow handout, website download)",
+      "Printer specs if printing (bleed/trim/safe margins, color profile)"
+    ],
+    "optional": [
+      "High-resolution product imagery",
+      "Proof points (metrics, quotes) with source/approval"
+    ],
+    "blockedIfMissing": [
+      "No brand assets or licensing details",
+      "No primary CTA/URL confirmed"
+    ]
+  },
+
+  "risks": [
+    { "id": "brand-drift", "desc": "Missing brand assets cause off-brand results", "mitigation": "Gate kickoff until assets received; use temporary neutral system only for wireframes" },
+    { "id": "review-lag", "desc": "Slow review cycles extend timeline", "mitigation": "Timeboxing in SOW; auto-advance after 3 business days unless issues flagged" },
+    { "id": "print-issues", "desc": "Late printer specs trigger re-exports", "mitigation": "Collect specs during intake; add buffer for press proofs" }
+  ],
+
+  "qa": {
+    "checklist": [
+      "Color/contrast meets WCAG AA for body text",
+      "Reading order and tags set for PDFs where applicable",
+      "Links/QR codes verified",
+      "Export presets: CMYK (press) & sRGB (web) meet size targets",
+      "Brand spacing, logo clearspace respected"
+    ],
+    "preflightPresets": {
+      "press": "PDF/X-4 CMYK, bleed 0.125in, crop marks off unless printer requests",
+      "web": "PDF, sRGB, 150–200dpi imagery, ≤ 2MB target"
+    }
+  },
+
+  "delivery": {
+    "artifacts": [
+      "One-pager Press-ready PDF",
+      "One-pager Web-optimized PDF",
+      "Editable source (Figma link or Adobe package)",
+      "ReadMe/Handoff notes (usage, fonts, license notes)"
+    ],
+    "handoff": {
+      "method": "Shared Drive/Dropbox link + email summary",
+      "structure": [
+        "01_Final_PDFs/",
+        "02_Source/",
+        "03_Assets/",
+        "04_Handoff_Notes.txt"
+      ]
+    },
+    "retention": {
+      "archiveMonths": 12,
+      "restoreFee": 150
+    }
+  },
+
+  "changeRequests": {
+    "policy": "Two rounds included; additional revisions billed T&M at rate card.",
+    "estimateDefaults": {
+      "minorCopy": { "hours": 0.25, "role": "Copy Editor" },
+      "layoutTweaks": { "hours": 0.5, "role": "Designer" },
+      "newVariant": { "hours": 2.0, "role": "Designer" }
+    },
+    "approval": "Producer or PM approval required before work starts"
+  },
+
+  "addOns": [
+    { "id": "messaging-playbook", "label": "Messaging & Copy Playbook", "estOneTime": 2500 },
+    { "id": "template-localization", "label": "Template Localization (per language)", "estOneTime": 600 },
+    { "id": "print-management", "label": "Print Vendor Management", "estOneTime": 450 },
+    { "id": "data-sheet-variant", "label": "Data-Sheet Variant (derivative)", "estOneTime": 700 }
+  ],
+
+  "crossSell": {
+    "triggers": [
+      { "if": "Client requests multi-segment versions", "recommend": ["data-sheet-variant"] },
+      { "if": "No clear messaging hierarchy exists", "recommend": ["messaging-playbook"] },
+      { "if": "Needs printed runs or specialty finishes", "recommend": ["print-management"] },
+      { "if": "International go-to-market", "recommend": ["template-localization"] }
+    ]
+  },
+
+  "securityCompliance": {
+    "assetLicensing": "Track stock/font licenses in Handoff Notes; store receipts in project folder",
+    "piiHandling": "No customer PII in design files; redact internal data before share",
+    "brandApprovals": "Obtain written approval for any third-party marks"
+  },
+
+  "analytics": {
+    "kpis": [
+      "Cycle time (kickoff → final handoff)",
+      "Review rounds used (target ≤ 2)",
+      "Client satisfaction (NPS after delivery)",
+      "Rework rate within 14 days (target < 10%)"
+    ],
+    "dashboards": ["Studio Ops — Collateral"]
+  },
+
+  "comms": {
+    "channelNaming": "pkg-one-pager-<client-slug>",
+    "statusUpdates": "At kickoff, after concepts, after each review, and at handoff"
+  },
+
+  "auditLog": [],
+  "createdAt": "2025-10-01T00:00:00.000Z",
+  "updatedAt": "2025-10-01T00:00:00.000Z"
+}

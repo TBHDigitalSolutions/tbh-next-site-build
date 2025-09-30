@@ -1,0 +1,59 @@
+/* Section wrapper */
+.wrap {
+    --gap-x: var(--space-8, 2.5rem);
+    --gap-y: var(--space-6, 1.5rem);
+    margin-block: var(--space-8, 3rem);
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-row-gap: var(--gap-y);
+}
+
+/* Default (desktop split) vs forced stack on desktop */
+.splitDesktop {}
+
+.stackDesktop {}
+
+/* Columns */
+.colA {
+    min-width: 0;
+    /* prevent overflow with long words */
+}
+
+.colB {
+    min-width: 0;
+}
+
+/* MetaRow spacing under TitleBlock */
+.meta {
+    margin-top: var(--space-4, 1.25rem);
+}
+
+/* ≥1024px: two-column layout when splitDesktop is active */
+@media (min-width: 1024px) {
+    .splitDesktop {
+        grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
+        column-gap: var(--gap-x);
+        align-items: start;
+    }
+
+    .splitDesktop .colB {
+        position: sticky;
+        top: var(--space-6, 1.5rem);
+        /* gentle stick for the band if page scrolls */
+        align-self: start;
+    }
+}
+
+/* When stackDesktop is chosen, keep a single column even on wide screens */
+@media (min-width: 1024px) {
+    .stackDesktop {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Minor polish for the band area spacing on mobile */
+@media (max-width: 1023.98px) {
+    .colB {
+        margin-top: var(--space-2, 0.5rem);
+    }
+}

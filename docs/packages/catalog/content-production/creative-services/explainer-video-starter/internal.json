@@ -1,0 +1,387 @@
+{
+  "version": "1.0",
+  "meta": {
+    "id": "content-creative-explainer-video-starter",
+    "slug": "explainer-video-starter",
+    "packageName": "Explainer Video Starter",
+    "serviceKey": "content",
+    "servicePath": "content-production",
+    "subService": "creative-services",
+    "docsPath": "docs/packages/catalog/content-production/creative-services/explainer-video-starter/",
+    "owner": "Content Studio",
+    "lastUpdated": "2025-09-30"
+  },
+
+  "pricing": {
+    "canonical": { "currency": "USD", "oneTime": 6000, "monthly": 0 },
+    "components": {
+      "preProduction": 1800,
+      "production": 3000,
+      "postProduction": 1200
+    },
+    "paymentTerms": {
+      "depositPct": 50,
+      "schedule": [
+        { "milestone": "Kickoff booked", "pct": 50 },
+        { "milestone": "First cut delivered", "pct": 30 },
+        { "milestone": "Final delivery", "pct": 20 }
+      ],
+      "netDays": 7,
+      "lateFeePctMonthly": 2
+    },
+    "discounts": {
+      "nonProfitPct": 10,
+      "prepayPct": 3,
+      "bundleWithLandingPagePct": 5
+    },
+    "taxable": true,
+    "changeOrders": {
+      "policy": "Work outside included scope or after included revisions requires a signed change order.",
+      "hourlyRatesUSD": {
+        "producer": 125,
+        "writer": 120,
+        "designer": 115,
+        "motion": 130,
+        "sound": 110,
+        "qa": 90,
+        "captioning": 85
+      },
+      "flatExamples": {
+        "extraRevisionRound": 650,
+        "additionalCutdownEach": 250,
+        "altVORead": 250,
+        "altMusicTrack": 120
+      }
+    }
+  },
+
+  "tiers": {
+    "enabled": true,
+    "defaultTier": "starter",
+    "items": [
+      {
+        "id": "starter",
+        "label": "Starter",
+        "price": { "oneTime": 6000, "currency": "USD" },
+        "summary": "60–90s 2D explainer, 2 rounds, EN captions, 16:9 + 1:1 + 9:16",
+        "includes": [
+          "Script (≤~180 words), storyboard, 2D motion graphics",
+          "1 VO talent (EN), 1 music track, core SFX",
+          "Captions (EN) SRT + burned-in variant",
+          "Masters: 16:9, 1:1, 9:16",
+          "2 consolidated revision rounds"
+        ],
+        "limits": [
+          "No live-action capture",
+          "No complex character/3D animation",
+          "One brand/language"
+        ]
+      },
+      {
+        "id": "professional",
+        "label": "Professional",
+        "price": { "oneTime": 9500, "currency": "USD" },
+        "summary": "Adds premium VO casting, extra revision, 2x additional cutdowns, extended design",
+        "adds": [
+          "Premium VO casting (3 shortlists) & directed session",
+          "+1 revision round (total 3)",
+          "+2 social cutdowns",
+          "Expanded illustration set"
+        ]
+      },
+      {
+        "id": "premium",
+        "label": "Premium",
+        "price": { "oneTime": 14500, "currency": "USD" },
+        "summary": "Advanced motion system, bespoke illustration kit, light 3D accents",
+        "adds": [
+          "Bespoke illustration kit & motion system",
+          "Light 3D accents (logos/devices)",
+          "Localized caption pack (up to 3 languages)"
+        ]
+      }
+    ]
+  },
+
+  "resourcing": {
+    "targetMarginPct": 0.45,
+    "hoursCap": [
+      { "role": "Producer/PM", "capHours": 4 },
+      { "role": "Writer", "capHours": 3 },
+      { "role": "Designer (style frames)", "capHours": 3 },
+      { "role": "Motion Designer", "capHours": 12 },
+      { "role": "Sound/Mix", "capHours": 2 },
+      { "role": "QA", "capHours": 1 },
+      { "role": "Captioning", "capHours": 1 }
+    ],
+    "externalCosts": {
+      "voiceoverIncluded": true,
+      "voIncludedPickups": 1,
+      "voExpectedCostUSD": 250,
+      "musicLicenseBudgetUSD": 100,
+      "sfxBudgetUSD": 30,
+      "stockFootageBudgetUSD": 0
+    }
+  },
+
+  "slo": {
+    "totalTargetDays": 21,
+    "firstResponseSLA": "1 business day",
+    "reviewTurnaroundSLA": "2 business days per round",
+    "revisionsIncluded": 2,
+    "inputsCutoffPolicy": "Delays in required inputs shift timeline day-for-day."
+  },
+
+  "deliveryPlan": {
+    "phases": [
+      {
+        "id": "discovery-script",
+        "label": "Discovery & Script",
+        "durationDays": 5,
+        "gates": ["Kickoff complete", "Script approved"],
+        "tasks": [
+          "Stakeholder workshop (30–45 min)",
+          "Goal/audience/CTA alignment",
+          "Scriptwriting (≤~180 words) & internal edit",
+          "Client review & consolidation"
+        ],
+        "artifacts": ["Script v1/vFinal (Google Doc/PDF)"]
+      },
+      {
+        "id": "boards-style",
+        "label": "Storyboard & Style Frames",
+        "durationDays": 3,
+        "gates": ["Storyboard approved", "Look & feel aligned"],
+        "tasks": [
+          "Storyboard with annotations",
+          "2–3 style frames exploring the visual approach",
+          "Asset prep (icons/illustrations/typography)"
+        ],
+        "artifacts": ["Storyboard PDF", "Style frames PNG"]
+      },
+      {
+        "id": "animation-vo-music",
+        "label": "Animation, VO & Music",
+        "durationDays": 5,
+        "gates": ["First cut delivered"],
+        "tasks": [
+          "2D motion graphics build",
+          "VO record (1 talent, 1 pickup round)",
+          "Music/SFX bed selection",
+          "First cut render"
+        ],
+        "artifacts": ["First cut MP4 (watermarked)"]
+      },
+      {
+        "id": "revisions-final",
+        "label": "Revisions & Final Delivery",
+        "durationDays": 8,
+        "gates": ["Sign-off obtained", "Finals delivered"],
+        "tasks": [
+          "Up to 2 consolidated revision rounds",
+          "Captions (EN) SRT + burned variant",
+          "Cut-downs for 1:1 and 9:16",
+          "Mix, QC, exports & packaging"
+        ],
+        "artifacts": [
+          "Final MP4 masters (16:9, 1:1, 9:16)",
+          "SRT captions",
+          "Thumbnail key art",
+          "Project archive"
+        ]
+      }
+    ]
+  },
+
+  "technicalDelivery": {
+    "video": {
+      "codec": "H.264 High",
+      "resolution": ["1920x1080", "1080x1080", "1080x1920"],
+      "frameRate": "30fps (or match source)",
+      "targetBitrate": "10–16 Mbps",
+      "color": "sRGB, full range",
+      "container": "MP4"
+    },
+    "audio": {
+      "format": "AAC",
+      "channels": "Stereo",
+      "loudnessTarget": "-14 to -16 LUFS (web)",
+      "peak": "-1.0 dBTP"
+    },
+    "accessibility": {
+      "captions": "EN SRT + burned-in variant",
+      "subtitleStyle": "Readable font ≥ 42px @1080p, 2-line max, safe-area respected"
+    }
+  },
+
+  "requirements": {
+    "inputs": [
+      "Brand kit (logo, colors, typography, guidelines)",
+      "Product one-liner & top 3 benefits",
+      "SME contact for script validation",
+      "UI captures or demo access (if applicable)",
+      "Pronunciation guide & legal disclaimers (if any)",
+      "Stakeholder list + review windows"
+    ],
+    "access": [
+      "Asset folder (Drive/Dropbox)",
+      "Preferred VO tone & example",
+      "Any must-use music/library constraints"
+    ],
+    "deadlines": {
+      "scriptApproval": "End of Week 1",
+      "storyboardApproval": "Mid Week 2"
+    }
+  },
+
+  "reviewPolicy": {
+    "consolidatedFeedbackRequired": true,
+    "roundsIncluded": 2,
+    "turnaroundPerRoundDays": 2,
+    "whatCountsAsRevision": [
+      "Edits to existing script/animation timing",
+      "Swapping like-for-like icons/labels",
+      "VO pickup for minor line changes (1 round)"
+    ],
+    "outOfScopeExamples": [
+      "New narrative or major storyboard rework",
+      "Additional language/brand versions",
+      "Complex character rigging or 3D scenes",
+      "Live-action capture"
+    ]
+  },
+
+  "licensing": {
+    "voiceover": {
+      "included": true,
+      "talentCount": 1,
+      "language": "EN",
+      "pickupsIncluded": 1,
+      "extraPickupFeeUSD": 250,
+      "usage": "Web/social, client-owned channel usage, 3-year term, non-broadcast"
+    },
+    "music": {
+      "licenseBudgetUSD": 100,
+      "notes": "Royalty-free library; premium tracks at cost with approval"
+    },
+    "sfx": { "budgetUSD": 30 },
+    "stock": {
+      "footageIncluded": 0,
+      "unitCostUSD": 79,
+      "notes": "Stock or live-action available via add-ons"
+    },
+    "ownership": {
+      "clientOwnsFinals": true,
+      "sourceFilesProvided": true,
+      "thirdPartyLicenses": "Client-bound, non-transferable; keep proof of license"
+    }
+  },
+
+  "qualityChecks": {
+    "tech": [
+      "No dropped frames or banding on gradients",
+      "Titles within 16:9/1:1/9:16 safe areas",
+      "Audio peak ≤ -1.0 dBTP, LUFS within target"
+    ],
+    "accessibility": [
+      "Captions sync within ±250ms",
+      "SRT spell-check & punctuation",
+      "Color contrast AA for end-cards/subtitles backgrounds"
+    ],
+    "brand": [
+      "Colors & typography match brand kit",
+      "Logo clearspace respected",
+      "Thumbnail key art legible at 320px"
+    ]
+  },
+
+  "analytics": {
+    "successKPIs": [
+      "Landing-page dwell time +20–40%",
+      "Demo requests or free-trial CTR +10–20%",
+      "Video completion rate ≥ 45% for 60–90s"
+    ],
+    "measurementPlan": [
+      "Ensure GA4 video event tracking or player analytics",
+      "If YouTube: optimize title, description, tags, end-screen",
+      "UTM on CTAs from video placements"
+    ]
+  },
+
+  "addOnsCatalog": {
+    "youtube-seo-optimization": {
+      "sku": "vid-youtube-seo",
+      "label": "YouTube SEO Optimization",
+      "price": { "oneTime": 1200, "currency": "USD" },
+      "includes": [
+        "Metadata, keywords, chapters, end-screens",
+        "Thumb variants (A/B) and upload checklist"
+      ]
+    },
+    "landing-page-conversion-pack": {
+      "sku": "lp-cro-pack",
+      "label": "Landing Page Conversion Pack",
+      "price": { "oneTime": 1800, "currency": "USD" },
+      "includes": [
+        "Hero embed, above-the-fold copy, CTA tests",
+        "Schema, load, player best-practices"
+      ]
+    },
+    "localization-subtitle-kit": {
+      "sku": "loc-sub-kit",
+      "label": "Localization Subtitle Kit",
+      "price": { "oneTime": 400, "currency": "USD" },
+      "unit": "per language",
+      "includes": ["Translated SRT, timing pass, burned variant if needed"]
+    },
+    "premium-voiceover-casting": {
+      "sku": "vo-casting-pro",
+      "label": "Premium Voiceover Casting",
+      "price": { "oneTime": 600, "currency": "USD" },
+      "includes": ["3–5 shortlists, directed remote session, engineer patch"]
+    },
+    "live-action-inserts-day": {
+      "sku": "live-inserts-day",
+      "label": "Live-Action Inserts (1 Day)",
+      "price": { "oneTime": 2500, "currency": "USD" },
+      "notes": "Crew+gear, within metro; travel billed at cost"
+    },
+    "paid-social-cutdowns-pro": {
+      "sku": "social-cuts-pro",
+      "label": "Paid Social Cutdowns (Pro)",
+      "price": { "oneTime": 1500, "currency": "USD" },
+      "includes": ["5 additional cutdowns with headline/CTA variants"]
+    },
+    "product-ui-capture-kit": {
+      "sku": "ui-capture-kit",
+      "label": "Product UI Capture Kit",
+      "price": { "oneTime": 900, "currency": "USD" },
+      "includes": ["Lossless screen caps, motion composites, safe-area guides"]
+    }
+  },
+
+  "comms": {
+    "channels": ["Email", "Shared Slack (optional)"],
+    "statusCadence": "2x/week",
+    "reviewWorkshops": ["Script sign-off", "Storyboard", "First cut"],
+    "escalation": "Producer → Account Lead → Practice Lead"
+  },
+
+  "risks": [
+    "Late consolidated feedback pushes timeline",
+    "Major product/UI changes mid-project require storyboard/animation redo",
+    "Music replacement near-final may trigger re-timing costs"
+  ],
+
+  "notesForSales": [
+    "Anchor on speed-to-clarity and multi-channel deliverables (16:9/1:1/9:16).",
+    "Set expectation on two consolidated revision rounds; emphasize script lock in Week 1.",
+    "Position add-ons early (landing page CRO, YouTube SEO, localization)."
+  ],
+
+  "internalToggles": {
+    "tieredPricingPlanned": true,
+    "showTieredPricingUI": false,
+    "eligibleForBundles": true
+  }
+}

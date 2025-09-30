@@ -1,0 +1,70 @@
+.wrap {
+    margin-block: var(--space-10, 4rem);
+    display: grid;
+    grid-template-columns: 1fr;
+    row-gap: var(--space-6, 1.5rem);
+}
+
+/* rows */
+.row {
+    min-width: 0;
+}
+
+/* ICP callout */
+.icp {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: start;
+    gap: var(--space-3, .75rem);
+    border: 1px solid var(--border-subtle, rgba(148, 163, 184, 0.28));
+    background: var(--surface-1, rgba(148, 163, 184, 0.06));
+    border-radius: var(--radius-xl, 14px);
+    padding: var(--space-3, .75rem) var(--space-4, 1rem);
+}
+
+.icpBadge {
+    font-size: .75rem;
+    line-height: 1;
+    font-weight: 600;
+    letter-spacing: .3px;
+    color: var(--text-secondary, #94a3b8);
+    padding: .35rem .5rem;
+    border: 1px solid var(--border-subtle, rgba(148, 163, 184, 0.28));
+    border-radius: var(--radius-md, 10px);
+    background: var(--surface-2, rgba(148, 163, 184, 0.08));
+}
+
+.icpText {
+    margin: 0;
+    color: var(--text-primary, #e2e8f0);
+}
+
+/* lower grid (pain points / outcomes) */
+.gridTwo {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-6, 1.5rem);
+}
+
+.col {
+    min-width: 0;
+}
+
+/* Desktop split vs forced stack */
+.splitDesktop {}
+
+.stackDesktop {}
+
+@media (min-width: 1024px) {
+    .splitDesktop .gridTwo {
+        grid-template-columns: 1fr 1fr;
+        column-gap: var(--space-8, 2rem);
+        align-items: start;
+    }
+}
+
+@media (min-width: 1024px) {
+    .stackDesktop .gridTwo {
+        grid-template-columns: 1fr;
+    }
+}

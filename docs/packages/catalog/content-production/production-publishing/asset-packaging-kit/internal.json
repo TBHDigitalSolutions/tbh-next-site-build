@@ -1,0 +1,323 @@
+{
+  "meta": {
+    "id": "content-asset-packaging-kit",
+    "slug": "asset-packaging-kit",
+    "service": "content",
+    "subservice": "production-publishing",
+    "name": "Asset Packaging Kit",
+    "tier": "Essential",
+    "internalVersion": "1.0.0",
+    "lastUpdated": "2025-09-30",
+    "owner": "Production Ops",
+    "author": "TBH Digital",
+    "visibility": "internal"
+  },
+
+  "pricing": {
+    "currency": "USD",
+    "list": {
+      "oneTime": 1800,
+      "monthly": 0
+    },
+    "marginTargets": {
+      "minGrossMarginPct": 0.45,
+      "targetGrossMarginPct": 0.55
+    },
+    "discountPolicy": {
+      "maxDiscountPct": 0.10,
+      "floorOneTime": 1620,
+      "notes": "Do not discount below floor without Ops approval."
+    },
+    "paymentTerms": {
+      "invoicing": "100% upfront",
+      "netDays": 7,
+      "lateFeePct": 0.015
+    },
+    "isTieredCandidate": true,
+    "tiers": [
+      {
+        "id": "essential",
+        "label": "Essential",
+        "oneTime": 1800,
+        "monthly": 0,
+        "includesDelta": [],
+        "positioning": "Single brand, up to ~100 source files and 10 export presets."
+      },
+      {
+        "id": "plus",
+        "label": "Plus",
+        "oneTime": 2800,
+        "monthly": 0,
+        "includesDelta": [
+          "Covers up to ~250 source files",
+          "Up to 20 export presets",
+          "Light metadata/credits pass"
+        ],
+        "positioning": "For larger libraries with moderate normalization."
+      },
+      {
+        "id": "pro",
+        "label": "Pro",
+        "oneTime": 4200,
+        "monthly": 0,
+        "includesDelta": [
+          "Covers up to ~500 source files",
+          "Up to 30 export presets",
+          "Basic DAM upload & metadata mapping (1 workspace)"
+        ],
+        "positioning": "For complex archives and light DAM handoff."
+      }
+    ],
+    "addOns": [
+      { "id": "content-upload-retainer", "label": "Content Upload Retainer (10 hrs/mo)", "monthly": 1500 },
+      { "id": "cms-migration-lite", "label": "CMS/DAM Migration Lite", "oneTime": 2400 },
+      { "id": "template-kits", "label": "Template Kits (Figma/Canva)", "oneTime": 900 },
+      { "id": "extra-presets-pack-10", "label": "Extra Export Presets (+10)", "oneTime": 300 },
+      { "id": "large-library-addon-250", "label": "Large Library (+250 files)", "oneTime": 600 }
+    ],
+    "adjustments": [
+      { "id": "rush-20", "label": "Rush (≤3 biz days)", "multiplier": 1.2, "appliesTo": "oneTime" },
+      { "id": "rush-35", "label": "Rush (≤48 hours)", "multiplier": 1.35, "appliesTo": "oneTime" },
+      { "id": "multi-brand", "label": "Additional brand (same structure)", "add": 600, "appliesTo": "oneTime" },
+      { "id": "multi-language", "label": "Multi-language packaging", "add": 400, "appliesTo": "oneTime" },
+      { "id": "complex-archive", "label": "Complex/unclean archive factor", "multiplier": 1.25, "appliesTo": "hours" }
+    ]
+  },
+
+  "effortModel": {
+    "rates": {
+      "pm": 120,
+      "contentOps": 95,
+      "designer": 110,
+      "fileOps": 100,
+      "qa": 80
+    },
+    "hoursBase": {
+      "pm": 1.0,
+      "contentOps": 4.0,
+      "designer": 1.5,
+      "fileOps": 1.5,
+      "qa": 0.5
+    },
+    "costBase": 855,
+    "scopeCaps": {
+      "sourceFilesIncluded": 100,
+      "exportPresetsIncluded": 10,
+      "brandsIncluded": 1
+    },
+    "unitCosts": [
+      {
+        "id": "extra-50-files",
+        "label": "Every additional 50 source files",
+        "oneTime": 300,
+        "hoursDelta": { "contentOps": 1.0, "fileOps": 0.5, "qa": 0.25 }
+      },
+      {
+        "id": "extra-5-presets",
+        "label": "Every additional 5 export presets",
+        "oneTime": 150,
+        "hoursDelta": { "designer": 0.5, "fileOps": 0.25 }
+      },
+      {
+        "id": "extra-brand",
+        "label": "Each additional brand",
+        "oneTime": 600,
+        "hoursDelta": { "pm": 0.25, "contentOps": 1.0, "designer": 0.5, "qa": 0.25 }
+      }
+    ],
+    "timelineDays": {
+      "setup": 2,
+      "delivery": 5,
+      "buffer": 2
+    },
+    "phases": [
+      { "id": "audit-plan", "label": "Audit & Plan", "days": 2, "exit": "Approved structure & naming spec" },
+      { "id": "normalize-organize", "label": "Normalize & Organize", "days": 2, "exit": "Canonical folder tree & filenames" },
+      { "id": "exports-presets", "label": "Exports & Presets", "days": 1, "exit": "Preset groups + batch exports" },
+      { "id": "docs-handoff", "label": "Docs & Handoff", "days": 1, "exit": "README + shared folder/ZIP + walkthrough" }
+    ]
+  },
+
+  "scope": {
+    "included": [
+      "Inventory of current brand & content assets",
+      "Gap list and consolidation plan",
+      "Canonical folder tree & naming conventions",
+      "Light source cleanup (layers/artboards tidy)",
+      "Export presets (PNG/JPG/SVG/WEBP/PDF as needed)",
+      "Size matrix for top platforms (social/web/ads)",
+      "Batch export for key variants",
+      "README with structure, naming & export rules",
+      "Delivery via shared folder + downloadable ZIP",
+      "30-minute walkthrough call"
+    ],
+    "requirements": [
+      "Access to asset repositories (Drive/Dropbox/SharePoint)",
+      "Brand kit (logo, colors, fonts) & usage guidelines",
+      "Priority channels & required sizes (if any)",
+      "Primary contact for consolidated feedback within 24–48 hours"
+    ],
+    "limits": [
+      "Covers one brand, ~100 source files, and 10 export presets",
+      "Light source cleanup only (no redesign)",
+      "Not a full DAM implementation or migration"
+    ],
+    "outOfScope": [
+      "Comprehensive re-design or re-brand",
+      "Complex license remediation for third-party assets",
+      "Full DAM taxonomy, metadata, and workflow buildout",
+      "Video/motion pipeline packaging (separate package)"
+    ],
+    "assumptions": [
+      "Client confirms ownership or license for supplied assets",
+      "Client provides timely access and approvals",
+      "No protected PII is contained in assets"
+    ]
+  },
+
+  "delivery": {
+    "artifacts": [
+      "Canonical folder structure with normalized filenames",
+      "Export presets (Figma/Adobe/Canva as applicable)",
+      "Platform size matrix (CSV/MD)",
+      "Batch-exported assets for top channels",
+      "README (structure, naming, export workflow)",
+      "One compressed ZIP + cloud share (Drive/Dropbox)"
+    ],
+    "handoff": {
+      "method": "Shared folder + ZIP",
+      "walkthrough": "30-minute Zoom with screenshare",
+      "ownerTraining": "Admin playbook (short)"
+    },
+    "acceptanceCriteria": [
+      "README present with agreed conventions",
+      "All agreed export presets exist and are functional",
+      "Sample exports pass visual QA and naming checks",
+      "Cloud share and ZIP download accessible"
+    ],
+    "warranty": {
+      "windowDays": 14,
+      "coverage": [
+        "Preset or export errors introduced by our changes",
+        "Minor naming convention fixes"
+      ],
+      "exclusions": [
+        "New scope (channels, sizes, re-designs)",
+        "New brand additions"
+      ]
+    }
+  },
+
+  "operations": {
+    "roles": [
+      { "id": "pm", "label": "Project Manager", "rate": 120, "hours": 1.0 },
+      { "id": "contentOps", "label": "Content Ops", "rate": 95, "hours": 4.0 },
+      { "id": "designer", "label": "Designer", "rate": 110, "hours": 1.5 },
+      { "id": "fileOps", "label": "File Ops/Tech", "rate": 100, "hours": 1.5 },
+      { "id": "qa", "label": "QA", "rate": 80, "hours": 0.5 }
+    ],
+    "tooling": [
+      "Google Drive/Dropbox/SharePoint",
+      "Figma and/or Adobe CC",
+      "ImageOptim/Squoosh (lossless/lossy)",
+      "MD/Markdown for README",
+      "Optional: basic scripting for batch exports"
+    ],
+    "templates": [
+      "README.md (structure & naming)",
+      "Export size matrix (CSV/MD)",
+      "Preset definitions (JSON/screenshot set)"
+    ],
+    "qaChecklist": [
+      "Folder tree matches approved spec",
+      "Filenames conform to convention",
+      "Preset exports pass visual QA (bleed/alpha/quality)",
+      "ZIP integrity check",
+      "Access permissions verified on shared folder"
+    ],
+    "riskFlags": [
+      "Extremely messy archive / duplicate sources",
+      "Missing original/source files",
+      "Ambiguous brand ownership or licensing",
+      "Slow approvals or multi-stakeholder sign-off"
+    ],
+    "mitigations": [
+      "Escalate to Large Library add-on pricing",
+      "Provide gap list and placeholders",
+      "Require license confirmation in writing",
+      "Align expectations in kickoff; weekly check-ins"
+    ],
+    "approvals": {
+      "requiredFromClient": [
+        "Structure & naming spec sign-off",
+        "Preset list & target platforms",
+        "Final acceptance of deliverables"
+      ],
+      "internal": [
+        "Ops review for discounts/bespoke terms",
+        "QA lead sign-off before delivery"
+      ]
+    }
+  },
+
+  "legal": {
+    "confidentiality": "All assets treated as confidential. NDA on request.",
+    "ip": "Client retains ownership of supplied assets; TBH retains rights to internal templates/scripts.",
+    "dataHandling": {
+      "pii": "No PII expected; if present, client must notify and redact.",
+      "retentionDays": 30,
+      "storage": "Encrypted at rest in approved cloud storage."
+    },
+    "cancellation": {
+      "policy": "If canceled after kickoff, 35% of fee retained; after delivery of plan, 60% retained.",
+      "reschedule": "Rush fees are non-refundable once work begins."
+    },
+    "changeRequests": {
+      "process": "Submit CR with deltas; time & materials or add-on SKUs applied.",
+      "rateCard": { "pm": 120, "contentOps": 95, "designer": 110, "fileOps": 100, "qa": 80 }
+    }
+  },
+
+  "upsell": {
+    "recommended": [
+      { "slug": "content-upload-retainer", "why": "Keep bundle fresh; quarterly hygiene" },
+      { "slug": "cms-migration-lite", "why": "Move packaged assets into CMS/DAM" },
+      { "slug": "template-kits", "why": "Enable self-serve content creation" }
+    ],
+    "crossSell": [
+      { "slug": "brand-collateral-kit" },
+      { "slug": "one-pager-starter" }
+    ]
+  },
+
+  "mapping": {
+    "detail": {
+      "components": [
+        "Phase1HeroSection",
+        "Phase2WhySection",
+        "Phase3WhatSection",
+        "Phase4DetailsSection",
+        "Phase5NextSection"
+      ],
+      "sections": {
+        "highlights": "features",
+        "outcomes": "outcomes",
+        "includesGroups": "scope.included (grouped via public.mdx)",
+        "requirements": "scope.requirements",
+        "ethics": "legal & scope.limits (public ethics/limits)",
+        "notes": "footnotes/small print"
+      },
+      "priceBand": {
+        "internalToggle": true,
+        "variant": "detail",
+        "baseNotePolicy": "final for one-time; proposal for hybrid"
+      }
+    }
+  },
+
+  "internalNotes": [
+    "Protect margin by enforcing scope caps and unit pricing.",
+    "If archive is messy, apply complex-archive multiplier or move to Plus/Pro tier.",
+    "Encourage add-on for ongoing upload hygiene to keep assets current."
+  ]
+}

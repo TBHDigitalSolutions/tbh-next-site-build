@@ -1,0 +1,340 @@
+{
+  "meta": {
+    "id": "content-creative-brand-identity-starter",
+    "sku": "CP-CS-BIS-001",
+    "version": "1.0.0",
+    "packageSlug": "brand-identity-starter",
+    "service": "content-production",
+    "subservice": "creative-services",
+    "tier": "Starter",
+    "created": "2025-09-30",
+    "updated": "2025-09-30",
+    "internalOnly": true
+  },
+  "pricing": {
+    "currency": "USD",
+    "listPrice": {
+      "oneTime": 3500,
+      "monthly": 0
+    },
+    "taxesIncluded": false,
+    "paymentTerms": "50% deposit, 50% on delivery",
+    "rushFeePct": 0.2,
+    "floorPrice": 3000,
+    "discountPolicy": "Max discretionary discount 10% with PM + Director approval",
+    "tieredPricing": {
+      "enabled": false,
+      "phasesPlanned": [
+        {
+          "id": "pro",
+          "label": "Brand Identity Pro",
+          "notes": "Expanded guidelines (12–20pp), more variants, research"
+        }
+      ]
+    }
+  },
+  "effort": {
+    "roles": [
+      {
+        "role": "Brand Designer",
+        "hoursPlanned": 10,
+        "hourCap": 12,
+        "hourlyRate": 110,
+        "costPlanned": 1100
+      },
+      {
+        "role": "Design Director (Review)",
+        "hoursPlanned": 1.5,
+        "hourCap": 2,
+        "hourlyRate": 150,
+        "costPlanned": 225
+      },
+      {
+        "role": "Producer / PM",
+        "hoursPlanned": 1.5,
+        "hourCap": 2,
+        "hourlyRate": 95,
+        "costPlanned": 142.5
+      },
+      {
+        "role": "Illustrator (Icons)",
+        "hoursPlanned": 0.5,
+        "hourCap": 1,
+        "hourlyRate": 120,
+        "costPlanned": 60
+      },
+      {
+        "role": "QA",
+        "hoursPlanned": 0.75,
+        "hourCap": 1,
+        "hourlyRate": 85,
+        "costPlanned": 63.75
+      }
+    ],
+    "totalHoursPlanned": 13.25,
+    "laborCostPlanned": 1591.25,
+    "softwareCogs": [
+      {
+        "item": "Figma seat (amortized)",
+        "cost": 20
+      },
+      {
+        "item": "Contrast/Accessibility tooling (amortized)",
+        "cost": 10
+      },
+      {
+        "item": "Stock/icon references (if used)",
+        "cost": 5
+      }
+    ],
+    "externalCogs": [],
+    "cogsTotal": 35,
+    "totalCostPlanned": 1626.25,
+    "grossMargin": {
+      "amount": 1873.75,
+      "pct": 53.54
+    },
+    "overagePolicy": "If any role approaches 85% of hourCap, PM initiates change order before exceeding."
+  },
+  "scope": {
+    "deliverables": [
+      "Logo system: primary, horizontal, and mark variants (vector)",
+      "Accessible color palette (core + neutrals) with AA/AAA guidance",
+      "Typography pairing (display + body) with usage notes",
+      "Spacing grid and safe-area recommendations",
+      "One-pager brand usage guide (PDF + Figma)",
+      "Social avatar & header templates (Figma exports)",
+      "Basic iconography starter (up to 8 glyphs)",
+      "Organized Figma file + packaged exports (SVG/PNG)",
+      "Handoff call (30–45 min) + recording"
+    ],
+    "requirements": [
+      "Completed brand questionnaire",
+      "3–5 visual references (mood/competitors/inspiration)",
+      "Finalized company/product name",
+      "Any legacy assets (logos, colors, fonts) if applicable",
+      "Top 3 primary use-cases (website, deck, social, product)",
+      "Stakeholders list + review availability"
+    ],
+    "outOfScope": [
+      "Naming and trademark clearance",
+      "Complex mascot/character illustration",
+      "Full brand guidelines book (12–20 pp) — available as add-on",
+      "Custom font licensing purchases (client to procure)",
+      "More than 2 consolidated revision rounds",
+      "Multiple logo families beyond one primary"
+    ],
+    "assumptions": [
+      "Two-week sprint with timely feedback within 1 business day",
+      "Two consolidated revision rounds included",
+      "One primary logo family; up to 8 basic icons",
+      "Delivery in English; single brand/primary product line"
+    ]
+  },
+  "executionPlan": {
+    "timeline": [
+      {
+        "id": "discovery",
+        "title": "Discovery & Direction",
+        "window": "Days 1–2",
+        "notes": "Questionnaire review, references, goals, constraints, success metrics"
+      },
+      {
+        "id": "concepts",
+        "title": "Design Sprint & Concepts",
+        "window": "Days 3–6",
+        "notes": "Logo explorations, palette & type pairing, initial guide scaffold"
+      },
+      {
+        "id": "revisions",
+        "title": "Revisions & Polish",
+        "window": "Days 7–9",
+        "notes": "Two structured rounds; consolidate feedback; finalize selections"
+      },
+      {
+        "id": "handoff",
+        "title": "Finalization & Handoff",
+        "window": "Day 10",
+        "notes": "Exports, Figma cleanup, guide PDF, handoff call + recording"
+      }
+    ],
+    "milestones": [
+      {
+        "id": "direction-approval",
+        "title": "Brand Direction Approval",
+        "exitCriteria": [
+          "Signed off mood/reference",
+          "Agreed constraints and goals documented"
+        ]
+      },
+      {
+        "id": "concept-approval",
+        "title": "Concept Selection",
+        "exitCriteria": [
+          "Primary logo family selected",
+          "Palette & type pairing selected"
+        ]
+      },
+      {
+        "id": "final-approval",
+        "title": "Final Artwork Approval",
+        "exitCriteria": [
+          "Logo system final",
+          "Guide one-pager approved",
+          "Templates verified"
+        ]
+      }
+    ]
+  },
+  "qa": {
+    "checklist": [
+      "Text and UI color pairs meet WCAG AA (AAA where practical)",
+      "Logo mark legible at 16–24 px (favicon/social avatar test)",
+      "Safe-area and spacing rules documented",
+      "All exports provided in SVG + PNG @1x/@2x",
+      "Figma file layers named and grouped; components used",
+      "Guide PDF accessible tags (headings, alt text for examples)",
+      "Spell check (US English) on guide and assets",
+      "File paths and naming match export presets",
+      "Icon grid and stroke weights consistent"
+    ],
+    "signoffRoles": [
+      "Design Director",
+      "Producer / PM"
+    ]
+  },
+  "changeRequests": {
+    "policy": "Changes outside the included two revision rounds or beyond scope require written approval via change order.",
+    "units": [
+      {
+        "id": "extra-revision-round",
+        "label": "Extra revision round",
+        "price": 400
+      },
+      {
+        "id": "additional-logo-family",
+        "label": "Additional logo family",
+        "price": 750
+      },
+      {
+        "id": "extra-icons-each",
+        "label": "Additional icon (each)",
+        "price": 60
+      },
+      {
+        "id": "brand-guidelines-pro-upgrade",
+        "label": "Upgrade to Brand Guidelines Pro (12–20pp)",
+        "price": 1800
+      },
+      {
+        "id": "logo-animation-sting",
+        "label": "Logo animation sting",
+        "price": 600
+      },
+      {
+        "id": "rush",
+        "label": "Rush fee (applies to list price)",
+        "pricePct": 0.2
+      }
+    ],
+    "triggers": [
+      "New decision-maker introduced mid-project",
+      "Company/product rename after concept approval",
+      "Scope increase (more icons, multiple families, additional language)"
+    ]
+  },
+  "approvals": {
+    "requiredAt": [
+      "Direction & constraints",
+      "Concept selection",
+      "Final artwork & exports"
+    ],
+    "approverRoles": [
+      "Primary stakeholder",
+      "Marketing/Brand lead"
+    ],
+    "turnaroundExpectation": "1 business day per review cycle"
+  },
+  "tooling": {
+    "design": [
+      "Figma"
+    ],
+    "accessibility": [
+      "Stark or built-in contrast checker"
+    ],
+    "export": [
+      "SVGOMG or Figma export presets"
+    ],
+    "storage": [
+      "Repo: /docs/packages/catalog/content-production/creative-services/brand-identity-starter",
+      "Assets: /docs/packages/catalog/content-production/creative-services/brand-identity-starter/assets"
+    ],
+    "templates": [
+      "Brand questionnaire",
+      "One-pager guide template",
+      "Export naming & preset config"
+    ]
+  },
+  "communications": {
+    "cadence": "Progress updates at concept handoff and prior to each review",
+    "channel": "Email + optional shared Slack/Teams",
+    "handoff": "30–45 min call with recording and Q&A"
+  },
+  "risks": [
+    {
+      "id": "indecision",
+      "risk": "Stakeholder indecision or conflicting feedback",
+      "mitigation": "Require consolidated feedback and a single decision-maker"
+    },
+    {
+      "id": "rename",
+      "risk": "Late-stage company/product rename",
+      "mitigation": "Confirm naming status at kickoff; treat later change as CO"
+    },
+    {
+      "id": "trademark",
+      "risk": "Trademark conflict discovered",
+      "mitigation": "Client responsible for clearance; provide alternate marks if required via CO"
+    }
+  ],
+  "legalEthics": {
+    "assetsAndLicensing": [
+      "No plagiarism or reuse of proprietary marks",
+      "Only licensed or original iconography",
+      "Paid fonts/licenses are client-procured unless otherwise agreed"
+    ],
+    "dataRetention": "Design sources retained for 12 months unless contract specifies otherwise"
+  },
+  "crossSell": {
+    "recommendations": [
+      "brand-guidelines-pro",
+      "logo-animation-sting",
+      "messaging-playbook",
+      "social-graphics-kit"
+    ],
+    "triggers": [
+      "Team requests more usage examples → suggest Guidelines Pro",
+      "Desire for motion/launch assets → suggest Logo Animation",
+      "Need for narrative/voice → suggest Messaging Playbook"
+    ]
+  },
+  "analytics": {
+    "kpis": [
+      "Cycle time (days) from kickoff to approval",
+      "Revision rounds used (<=2 target)",
+      "Post-delivery requests within 30 days"
+    ],
+    "tracking": "Log milestones and approvals in project tracker; attach final assets and recording links"
+  },
+  "uiToggles": {
+    "showTieredPricingComponent": false,
+    "experimental": {
+      "internalPricingToggle": true
+    }
+  },
+  "notesInternal": [
+    "Protect hour caps to maintain >50% margin.",
+    "If client expects full guideline book, pivot to Pro upgrade early.",
+    "Keep icon scope simple; propose icon set add-on if style grows."
+  ]
+}

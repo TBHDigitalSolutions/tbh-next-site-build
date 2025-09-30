@@ -1,0 +1,340 @@
+{
+  "version": "1.0",
+  "packageId": "content-blog-article-pack-4",
+  "slug": "blog-article-pack-4",
+  "service": "content",
+  "subservice": "writing-editorial",
+  "internalToggle": {
+    "enableTieredPricing": true,
+    "notes": "When public tiered pricing is enabled, expose Essential/Pro/Premium as selectable quantities with friendly per-article math."
+  },
+
+  "tiering": {
+    "unit": "monthly",
+    "currency": "USD",
+    "tiers": [
+      {
+        "id": "essential",
+        "name": "Essential",
+        "description": "4 SEO-ready blog posts/month (≈800–1,200 words). Two review rounds each.",
+        "price": 2400,
+        "setup": 0,
+        "limits": {
+          "articlesPerMonth": 4,
+          "wordsPerArticle": "800–1200",
+          "reviewRoundsPerArticle": 2,
+          "topicsPerMonth": 4,
+          "smeInterviewsIncluded": 0
+        },
+        "staffing": {
+          "contentStrategist": 0.25,
+          "seoSpecialist": 0.1,
+          "writer": 0.6,
+          "editor": 0.2,
+          "projectManager": 0.1
+        }
+      },
+      {
+        "id": "pro",
+        "name": "Pro",
+        "description": "6 SEO-ready posts/month with incremental SEO/PM time.",
+        "price": 3480,
+        "setup": 0,
+        "limits": {
+          "articlesPerMonth": 6,
+          "wordsPerArticle": "800–1200",
+          "reviewRoundsPerArticle": 2,
+          "topicsPerMonth": 6,
+          "smeInterviewsIncluded": 1
+        },
+        "staffing": {
+          "contentStrategist": 0.35,
+          "seoSpecialist": 0.15,
+          "writer": 0.9,
+          "editor": 0.3,
+          "projectManager": 0.15
+        }
+      },
+      {
+        "id": "premium",
+        "name": "Premium",
+        "description": "8 SEO-ready posts/month; adds more strategist/editorial time for depth.",
+        "price": 4400,
+        "setup": 0,
+        "limits": {
+          "articlesPerMonth": 8,
+          "wordsPerArticle": "800–1200",
+          "reviewRoundsPerArticle": 2,
+          "topicsPerMonth": 8,
+          "smeInterviewsIncluded": 2
+        },
+        "staffing": {
+          "contentStrategist": 0.45,
+          "seoSpecialist": 0.2,
+          "writer": 1.2,
+          "editor": 0.4,
+          "projectManager": 0.2
+        }
+      }
+    ],
+    "calculation": {
+      "notes": "Volume discount baked into Pro/Premium (implied per-article rate decreases with quantity)."
+    }
+  },
+
+  "ops": {
+    "scope": [
+      "Monthly editorial calendar with prioritized topics (equal to article count)",
+      "SEO content briefs per article (query intent, outline, entities/terms, SERP notes)",
+      "Original draft writing (≈800–1,200 words) with two structured review rounds",
+      "Copyediting/proofing and on-page optimization (title, H-structure, meta, internal links recommendations)",
+      "Deliverables in Google Doc + Markdown/MDX (CMS-ready option via add-on)",
+      "Weekly status and trackers (briefs, drafts, approvals)"
+    ],
+    "assumptions": [
+      "Client provides brand voice guidance, ICP and product positioning (or recent content examples).",
+      "One consolidated reviewer; feedback within 3 business days per round.",
+      "Topics confirmed during monthly planning; minor swaps allowed before drafting begins.",
+      "Access to GA4/GSC (read-only) improves targeting but is optional."
+    ],
+    "exclusions": [
+      "Original survey-based research, proprietary data analysis, or expert panel coordination.",
+      "Legal/compliance review and industry counsel.",
+      "Custom illustration/photography and stock image licensing.",
+      "Localization/translation and CMS template creation."
+    ],
+    "access": [
+      "Google Workspace (Docs/Drive) for drafts and briefs.",
+      "Optional SEO tools access (e.g., GSC/GA4 read-only; Clearscope/Surfer if client-licensed).",
+      "CMS staging access (if Publishing add-on is purchased).",
+      "Slack/Teams channel for async approvals (optional)."
+    ]
+  },
+
+  "delivery": {
+    "sla": {
+      "firstDraftFromBriefApproval": "5–7 business days/article",
+      "revisionTurnaround": "2–3 business days/round",
+      "cadence": "Weekly article delivery",
+      "calendarRefresh": "Monthly"
+    },
+    "scheduleTemplate": [
+      "Week 1: Kickoff + topics + briefs; Draft #1 delivery",
+      "Week 2: Draft #2 delivery; Rev #1 for Draft #1 (if returned)",
+      "Week 3: Draft #3 delivery; Rev #1/2 as needed",
+      "Week 4: Draft #4 delivery; Final edits & packaging"
+    ],
+    "roles": {
+      "contentStrategist": "Topic strategy, briefs, SEO alignment, calendar",
+      "seoSpecialist": "SERP/keyword validation, on-page recommendations",
+      "writer": "Draft creation, SME interview (if included)",
+      "editor": "Developmental edit, copyedit, proofing",
+      "projectManager": "Timeline, approvals, comms, QA checkpoints"
+    },
+    "tools": [
+      "Google Docs/Drive",
+      "Grammarly/LanguageTool (as available)",
+      "Hemingway/Readability tools",
+      "Clearscope/Surfer (client-licensed, optional)",
+      "Trello/Jira/Asana (client-preferred, optional)"
+    ],
+    "qa": [
+      "Plagiarism screen and citation check",
+      "Fact check for claims and outbound links",
+      "Style/voice consistency pass",
+      "On-page elements validated (title/H-tags/meta/links)"
+    ]
+  },
+
+  "pricing": {
+    "model": "retainer",
+    "defaultTier": "essential",
+    "paymentTerms": "Net 15 (credit card/ACH). First month due at kickoff.",
+    "rushPolicy": {
+      "applies": true,
+      "fee": "25%",
+      "definition": "Requests requiring <3 business days from brief approval."
+    },
+    "discounts": [
+      { "type": "term", "commit": "3-month", "percent": 5 },
+      { "type": "term", "commit": "6-month", "percent": 8 },
+      { "type": "term", "commit": "12-month", "percent": 12 }
+    ],
+    "addons": [
+      {
+        "id": "cms-publishing",
+        "label": "CMS Publishing (staging + format + meta)",
+        "type": "per-article",
+        "price": 75,
+        "currency": "USD",
+        "notes": "Assumes existing template; no template creation."
+      },
+      {
+        "id": "sme-interview",
+        "label": "SME Interview (30–45 min) + transcript",
+        "type": "per-article",
+        "price": 150,
+        "currency": "USD"
+      },
+      {
+        "id": "custom-diagram",
+        "label": "Custom Diagram/Graphic",
+        "type": "per-asset",
+        "price": 150,
+        "currency": "USD",
+        "notes": "Simple line/shape diagrams; complex illustration out of scope."
+      },
+      {
+        "id": "header-og-image",
+        "label": "Header/OG Image Design",
+        "type": "per-article",
+        "price": 120,
+        "currency": "USD",
+        "notes": "Stock licensing billed at cost."
+      },
+      {
+        "id": "topic-cluster-research",
+        "label": "Topic Cluster Research (one-time)",
+        "type": "one-time",
+        "price": 800,
+        "currency": "USD",
+        "notes": "Feeds 2–3 months of content themes."
+      },
+      {
+        "id": "editorial-style-guide",
+        "label": "Editorial Style Guide (one-time)",
+        "type": "one-time",
+        "price": 500,
+        "currency": "USD",
+        "notes": "Voice/tone, formatting, links, approval protocol."
+      },
+      {
+        "id": "internal-linking-refresh",
+        "label": "Internal Linking Refresh",
+        "type": "monthly",
+        "price": 200,
+        "currency": "USD",
+        "notes": "Add/update internal links across new posts + 5 most relevant legacy posts."
+      },
+      {
+        "id": "regulated-fact-check",
+        "label": "Enhanced Fact-Checking (regulated)",
+        "type": "per-article",
+        "price": 300,
+        "currency": "USD",
+        "notes": "Healthcare/finance/legal; requires client legal reviewer."
+      }
+    ],
+    "internalPricingNotes": [
+      "Implied per-article rate: Essential $600; Pro ~$580; Premium ~$550.",
+      "If articles <800 words or >1200 words, adjust capacity or price accordingly.",
+      "One SME interview included at Pro; two at Premium."
+    ]
+  },
+
+  "salesNotes": {
+    "idealCustomer": [
+      "B2B SaaS or services with defined ICP and mid-funnel content gaps",
+      "Teams publishing <4x/month wanting predictable cadence with SEO rigor",
+      "Stakeholders able to provide consolidated feedback on time"
+    ],
+    "discoveryQuestions": [
+      "Which products/personas are priority this quarter?",
+      "What are your north-star SEO metrics (keywords, pages, conversions)?",
+      "Who will review drafts and how quickly can they respond?",
+      "Do you have brand voice/style guidance or exemplars?",
+      "Which CMS do you use, and do you want us to publish?"
+    ],
+    "commonObjections": [
+      "‘We tried freelancers and quality varied.’",
+      "‘We need thought leadership, not just SEO.’",
+      "‘We can’t keep up with reviews.’"
+    ],
+    "counters": [
+      "Brief-led system + editor QA ensures consistency; samples and trial article available.",
+      "We layer POV + SME interviews; add Thought Leadership upgrades as needed.",
+      "We plan cadence around reviewer availability; clear SLAs and consolidated feedback."
+    ],
+    "landAndExpand": [
+      "Upgrade to Pro/Premium for volume",
+      "Add Hub/cornerstone content & internal linking refreshes",
+      "Spin off into newsletters/social, or add video summaries"
+    ],
+    "competitors": [
+      "Freelance marketplaces",
+      "Content mills (low-cost, variable quality)",
+      "Boutique content studios"
+    ]
+  },
+
+  "metrics": {
+    "leading": [
+      "Brief approvals on time",
+      "Readability score ≥ target range",
+      "On-page checklist complete",
+      "Internal links added per post"
+    ],
+    "lagging": [
+      "Rank improvements for target keywords",
+      "Organic sessions to new posts",
+      "CTR from SERP (title/meta tests)",
+      "Assisted conversions/SQLs (model-dependent)"
+    ],
+    "reporting": {
+      "cadence": "Monthly",
+      "artifacts": [
+        "Publishing tracker",
+        "Keyword/rank snapshot",
+        "Highlights & next-month plan"
+      ]
+    }
+  },
+
+  "risks": [
+    "Delayed feedback causing schedule slip",
+    "Insufficient SME access for technical topics",
+    "Brand/positioning changes mid-month"
+  ],
+
+  "approvals": {
+    "requiredFromClient": [
+      "Topics & briefs",
+      "Draft approvals",
+      "Final copy sign-off"
+    ],
+    "internalReview": [
+      "Strategist + Editor QA",
+      "SEO checklist",
+      "PM completeness check"
+    ]
+  },
+
+  "changePolicy": {
+    "includedRevisions": "Two rounds per article.",
+    "outOfScopeTriggers": [
+      "Major topic pivot after draft started",
+      "Wordcount expansion >1,400 words",
+      "Adding net-new sections that change article intent"
+    ],
+    "process": "PM raises a change request with time/cost impact; client approval required before work continues."
+  },
+
+  "legal": {
+    "sow": "Content production retainer for monthly article pack.",
+    "ip": "Upon full payment, client owns final approved content.",
+    "warranties": [
+      "Original work; no plagiarism.",
+      "All third-party assets licensed by client or pre-approved for fair use."
+    ],
+    "dataHandling": [
+      "No storage of production credentials in unsecured docs.",
+      "PII not required; if provided, treat as confidential."
+    ]
+  },
+
+  "roadmap": [
+    "Optional Thought Leadership variant (1,500–2,500 words, interview-led)",
+    "Programmatic content pilots (template + data source governance)",
+    "Repurpose blog posts into short social/video variants"
+  ]
+}

@@ -2,6 +2,7 @@
 "use client";
 
 import * as React from "react";
+import dynamic from "next/dynamic";
 import styles from "./PackageDetailOverview.module.css";
 
 /* Shared types */
@@ -22,17 +23,19 @@ import NotesBlock from "./parts/NotesBlock";
 import PriceActionsBand from "./parts/PriceActionsBand";
 import StickyRail from "./parts/StickyRail";
 
+/* New blocks */
+import HighlightsBlock from "./parts/HighlightsBlock";
+import PainPointsBlock from "./parts/PainPointsBlock";
+import PurposeBlock from "./parts/PurposeBlock";
+
 /* Fallback table renderer (used only when groups aren't provided) */
 import PackageIncludesTable from "@/packages/components/PackageIncludesTable";
 
-/* Highlights (molecule) */
-import FeatureList from "@/components/ui/molecules/FeatureList/FeatureList";
 /* Underlines for section headers */
 import Divider from "@/components/ui/atoms/Divider/Divider";
 
-/* Shared helpers */
-import { bandPropsFor } from "@/packages/lib/band";
-import { CTA } from "@/packages/lib/copy";
+/* Optional extras (timeline, ethics, etc.) rendered after CTAs */
+import PackageDetailExtras from "@/packages/sections/PackageDetailExtras";
 
 /* -------------------------------------------------------------------------- */
 
@@ -67,7 +70,7 @@ export type PackageDetailOverviewProps = {
   ctaPrimary?: CTAItem;
   ctaSecondary?: CTAItem;
 
-  /** Highlights (features). If omitted, derived from includesGroups. */
+  /** Highlights (features). If omitted, we derive from includesGroups. */
   features?: string[];
 
   /** Outcomes (KPI bullets) */
@@ -97,7 +100,10 @@ export type PackageDetailOverviewProps = {
 
   /** Notes under includes; extras below CTAs */
   notes?: React.ReactNode;
-  extras?: React.ComponentProps<typeof import("@/packages/sections/PackageDetailExtras").default>;
+  extras?: React.ComponentProps<typeof PackageDetailExtras>;
+
+  /** Optional: pricing fine print line (e.g., "3-month minimum • + ad spend") */
+  priceFinePrint?: string;
 
   className?: string;
   style?: React.CSSProperties;
@@ -120,6 +126,10 @@ export default function PackageDetailOverview({
 
   ctaPrimary,
   ctaSecondary,
+
+  /* Phase 2 additions */
+  painPoints,
+  purposeHtml,
 
   features,
   outcomes = [],
@@ -160,20 +170,27 @@ export default function PackageDetailOverview({
     !!includesTable && (Array.isArray(includesTable.rows) ? includesTable.rows.length > 0 : true);
 
   /* --------------------------- Derived highlights ------------------------ */
-  const derivedHighlights: string[] = React.useMemo(() => {
-    if (features?.length) return features;
-    if (!hasGroups) return [];
-    return (includesGroups ?? [])
-      .flatMap((g) => (g.items ?? []).map((it: any) => (typeof it === "string" ? it : it?.label ?? "")))
-      .filter(Boolean)
-      .slice(0, 6);
-  }, [features, hasGroups, includesGroups]);
+  const derivedHighlights: Array<string | { label: string; icon?: React.ReactNode }> =
+    React.useMemo(() => {
+      if (features?.length) return features;
+      if (!hasGroups) return [];
+      const fromGroups = (includesGroups ?? [])
+        .flatMap((g) =>
+          (g.items ?? []).map((it: any) =>
+            typeof it === "string" ? it : it?.label ?? ""
+          )
+        )
+        .filter(Boolean);
+      return fromGroups.slice(0, 6);
+    }, [features, hasGroups, includesGroups]);
 
   /* ------------------------------ Band props ----------------------------- */
   // One and only pricing area on the left. Do not render any other “Starting at …”.
   const band = packagePrice ? bandPropsFor("detail", packagePrice, priceBand) : null;
 
   /* -------------------------------- Render -------------------------------- */
+  const headingBase = id ?? title;
+
   return (
     <section
       id={id}
@@ -197,31 +214,68 @@ export default function PackageDetailOverview({
           {/* Service chip + tags row */}
           <MetaRow service={service} tags={tags} show={showMeta} />
 
-          {/* --------------------------- Highlights --------------------------- */}
-          {derivedHighlights.length > 0 && (
-            <section className={styles.block} aria-labelledby={`${id ?? title}-highlights`}>
+          {/* --------------------------- Phase 2: WHY ------------------------- */}
+          {purposeHtml ? (
+            <section
+              className={styles.block}
+              aria-labelledby={`${headingBase}-purpose`}
+              data-block="purpose"
+            >
               <div className={styles.blockHeader}>
-                <h2 id={`${id ?? title}-highlights`} className={styles.blockTitle}>
+                <h2 id={`${headingBase}-purpose`} className={styles.blockTitle}>
+                  Purpose
+                </h2>
+                <Divider className={styles.blockDivider} />
+                <p className={styles.blockTagline}>What good looks like</p>
+              </div>
+              <PurposeBlock html={purposeHtml} />
+            </section>
+          ) : null}
+
+          {(painPoints?.length ?? 0) > 0 && (
+            <section
+              className={styles.block}
+              aria-labelledby={`${headingBase}-pain-points`}
+              data-block="pain-points"
+            >
+              <div className={styles.blockHeader}>
+                <h2 id={`${headingBase}-pain-points`} className={styles.blockTitle}>
+                  Why you need this
+                </h2>
+                <Divider className={styles.blockDivider} />
+                <p className={styles.blockTagline}>Common pain points this solves</p>
+              </div>
+              <PainPointsBlock items={painPoints!} />
+            </section>
+          )}
+
+          {/* --------------------------- Highlights --------------------------- */}
+          {(derivedHighlights?.length ?? 0) > 0 && (
+            <section
+              className={styles.block}
+              aria-labelledby={`${headingBase}-highlights`}
+              data-block="highlights"
+            >
+              <div className={styles.blockHeader}>
+                <h2 id={`${headingBase}-highlights`} className={styles.blockTitle}>
                   {highlightsTitle}
                 </h2>
                 <Divider className={styles.blockDivider} />
                 <p className={styles.blockTagline}>{highlightsTagline}</p>
               </div>
-              <FeatureList
-                items={derivedHighlights.map((f, i) => ({ id: `hl-${i}`, label: f }))}
-                size="md"
-                align="center"
-                textAlign="right"
-                ariaLabel="Key highlights"
-              />
+              <HighlightsBlock items={derivedHighlights} />
             </section>
           )}
 
           {/* ---------------------------- Outcomes ---------------------------- */}
           {(outcomes?.length ?? 0) > 0 && (
-            <section className={styles.block} aria-labelledby={`${id ?? title}-outcomes`}>
+            <section
+              className={styles.block}
+              aria-labelledby={`${headingBase}-outcomes`}
+              data-block="outcomes"
+            >
               <div className={styles.blockHeader}>
-                <h2 id={`${id ?? title}-outcomes`} className={styles.blockTitle}>
+                <h2 id={`${headingBase}-outcomes`} className={styles.blockTitle}>
                   {outcomesTitle}
                 </h2>
                 <Divider className={styles.blockDivider} />
@@ -233,9 +287,13 @@ export default function PackageDetailOverview({
 
           {/* ------------------------- What’s included ------------------------ */}
           {hasGroups ? (
-            <section className={styles.block} aria-labelledby={`${id ?? title}-includes`}>
+            <section
+              className={styles.block}
+              aria-labelledby={`${headingBase}-includes`}
+              data-block="includes"
+            >
               <div className={styles.blockHeader}>
-                <h2 id={`${id ?? title}-includes`} className={styles.blockTitle}>
+                <h2 id={`${headingBase}-includes`} className={styles.blockTitle}>
                   {includesTitle}
                 </h2>
                 <Divider className={styles.blockDivider} />
@@ -256,14 +314,16 @@ export default function PackageDetailOverview({
               {includesFootnote ? <p className={styles.includesFootnote}>{includesFootnote}</p> : null}
             </section>
           ) : hasTable ? (
-            <section className={styles.block} aria-label="What's included">
+            <section className={styles.block} aria-label="What's included" data-block="includes-table">
               <div className={styles.blockHeader}>
                 <h2 className={styles.blockTitle}>{includesTitle}</h2>
                 <Divider className={styles.blockDivider} />
                 <p className={styles.blockTagline}>{includesTagline}</p>
               </div>
               <PackageIncludesTable {...(includesTable as PackageIncludesTableProps)} />
-              {includesFootnote ? <p className={styles.includesFootnote}>{includesFootnote}</p> : null}
+              {includesFootnote ? (
+                <p className={styles.includesFootnote}>{includesFootnote}</p>
+              ) : null}
             </section>
           ) : null}
 
@@ -274,10 +334,15 @@ export default function PackageDetailOverview({
           {band ? (
             <div className={styles.bandArea}>
               <PriceActionsBand
-                {...band}
-                ctaPrimary={ctaPrimary ?? { label: CTA.REQUEST_PROPOSAL, href: "/contact" }}
-                ctaSecondary={ctaSecondary ?? { label: CTA.BOOK_A_CALL, href: "/book" }}
-                /* Divider + alignment come from the band preset; no need to override */
+                variant={bandVariant}
+                price={packagePrice}
+                tagline={valueProp /* marketing line, optional */}
+                baseNote={baseNote}
+                finePrint={finePrint}
+                ctaPrimary={{ label: "Request proposal", href: "/contact" }}
+                ctaSecondary={{ label: "Book a call", href: "/book" }}
+                showDivider
+                align="center"
               />
             </div>
           ) : null}
@@ -302,8 +367,7 @@ export default function PackageDetailOverview({
       {/* ======================= BELOW GRID (FULL WIDTH) ====================== */}
       {extras ? (
         <div className={styles.belowGrid}>
-          {/* Loaded lazily by Next; typed above via import() */}
-          {React.createElement(require("@/packages/sections/PackageDetailExtras").default, extras)}
+          <PackageDetailExtras {...extras} />
         </div>
       ) : null}
     </section>

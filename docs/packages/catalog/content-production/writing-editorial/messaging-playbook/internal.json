@@ -1,0 +1,265 @@
+{
+  "meta": {
+    "id": "content-messaging-playbook",
+    "slug": "messaging-playbook",
+    "service": "content",
+    "subservice": "writing-editorial",
+    "name": "Messaging Playbook",
+    "tier": "Essential",
+    "status": "active",
+    "owner": "Content Practice",
+    "createdAt": "2025-10-01",
+    "updatedAt": "2025-10-01",
+    "notes": "Authoring reference for sales/ops only. Not shipped."
+  },
+
+  "pricing": {
+    "currency": "USD",
+    "oneTime": 5200,
+    "monthly": null,
+    "minTermMonths": 0,
+    "depositPct": 0.5,
+    "paymentSchedule": [
+      { "when": "kickoff", "amountPct": 50, "notes": "Due to schedule sprint dates" },
+      { "when": "final-delivery", "amountPct": 50, "notes": "Payable on approval/acceptance" }
+    ],
+    "priceNotes": "10 business-day sprint. Two stakeholder interviews included. Rush (<7 biz days) +20%."
+  },
+
+  "scope": {
+    "summary": "10-day messaging sprint to produce a practical, team-ready playbook (positioning, pillars, voice & tone, headline/CTA bank, objection handling) with a live walkthrough.",
+    "assumptions": [
+      "Client provides a single consolidated reviewer for each feedback round.",
+      "Two stakeholder interviews (45 min each) scheduled by client within Days 2–3.",
+      "Existing materials provided Day 0 (website, decks, product notes, ICP docs).",
+      "Light competitor/SERP scan only (not a full market study).",
+      "English-language deliverable; US spelling by default."
+    ],
+    "inclusions": [
+      "Discovery: 2 stakeholder interviews (45 min each), existing collateral review, light competitive/SERP scan.",
+      "Messaging Foundations: positioning statement + elevator pitch (short/long), 3–5 value pillars with outcomes & proof points, objection handling (top 5).",
+      "Playbook Assets: voice & tone guide with do/don’t examples, headline & CTA bank mapped to funnel stages, example homepage & product section messaging.",
+      "Outputs: Google Doc (source of truth) + branded PDF, live handoff walkthrough."
+    ],
+    "exclusions": [
+      "Full website copywriting (page-by-page) — available as an add-on.",
+      "Formal legal review or regulated-industry compliance review.",
+      "In-depth primary research studies (surveys, focus groups, >3 interviews).",
+      "Localization/translation and adaptation for non-English markets.",
+      "New visual brand/identity development (handled in Brand Identity packages)."
+    ],
+    "deliverables": [
+      "Messaging Playbook Google Doc (editable) + branded PDF export.",
+      "Positioning statement & elevator pitch (short/long).",
+      "3–5 value pillars with outcomes & proof points.",
+      "Voice & tone guide with do/don’t examples.",
+      "Headline/CTA bank organized by funnel stage.",
+      "Objection handling snippets (top 5).",
+      "Example messaging for homepage & one product page section.",
+      "Handoff call (recorded) with action checklist."
+    ],
+    "requirements": [
+      "Access to latest brand/product deck(s), website, and sales collateral.",
+      "List of 3–5 key competitors and differentiators.",
+      "ICP notes and target segments (if available).",
+      "Two stakeholder interview slots (45 min each).",
+      "One consolidated reviewer identified before kickoff."
+    ],
+    "outOfScopeNotes": "Complex market research, multi-language production, and full-site copy are not included in Essential; see add-ons/tiers."
+  },
+
+  "ops": {
+    "teamRoles": [
+      { "role": "Engagement Lead / Strategist", "allocation": "0.4 FTE, 2 weeks", "notes": "Owns interviews, foundations, enablement." },
+      { "role": "Content Strategist / Copy Lead", "allocation": "0.4 FTE, 2 weeks", "notes": "Builds playbook, headline bank, examples." },
+      { "role": "Project Manager", "allocation": "0.2 FTE, 2 weeks", "notes": "Schedules interviews, manages reviews & deadlines." },
+      { "role": "Designer (Support)", "allocation": "4–6 hrs", "notes": "Branded PDF layout of the playbook." }
+    ],
+    "tools": [
+      "Google Docs (authoring)",
+      "Google Drive (file delivery)",
+      "Zoom or Meet (interviews & handoff)",
+      "Loom (recorded walkthrough)",
+      "Figma or Canva (PDF layout export)",
+      "Grammarly/LanguageTool (QA)"
+    ],
+    "inputs": [
+      "Brand/product deck(s), website URL(s), sales collateral",
+      "ICP/persona notes (if available)",
+      "Competitor list and differentiators",
+      "Current messaging pain points and goals"
+    ],
+    "outputs": [
+      "Editable Google Doc + branded PDF",
+      "Recording link for the handoff walkthrough",
+      "Action checklist for implementation"
+    ],
+    "dependencies": [
+      "Stakeholder availability Days 2–3",
+      "Timely review within 24–48h for each draft cycle"
+    ],
+    "risks": [
+      "Multiple reviewers without consolidation extend timeline.",
+      "Interview scheduling delays push the sprint.",
+      "Scope creep (adding new products/segments mid-sprint)."
+    ],
+    "qaChecklist": [
+      "No unverifiable claims or fabricated proof points.",
+      "Voice & tone matches brand values and audience expectations.",
+      "Positioning and pillars are mutually exclusive & collectively exhaustive.",
+      "Headlines emphasize outcomes and clarity over jargon.",
+      "Grammar/spelling pass; links validated."
+    ]
+  },
+
+  "workflow": {
+    "timeline": [
+      { "title": "Kickoff & Inputs", "window": "Day 1", "notes": "Goals, scope, source materials, reviewer alignment." },
+      { "title": "Discovery & Interviews", "window": "Days 2–3", "notes": "2 stakeholder calls + lightweight scan." },
+      { "title": "Draft Foundations", "window": "Days 4–6", "notes": "Positioning, pillars, proof, objections." },
+      { "title": "Playbook Build", "window": "Days 7–8", "notes": "Voice/tone, headline/CTA bank, examples, PDF layout." },
+      { "title": "Review & Finalize", "window": "Days 9–10", "notes": "Revisions, handoff call, final Doc/PDF." }
+    ],
+    "milestones": [
+      "M1: Foundations draft approved",
+      "M2: Playbook draft approved",
+      "M3: Final delivery & handoff complete"
+    ],
+    "communication": [
+      "Slack/Email updates at start of each phase",
+      "Mid-sprint check-in (Day 6)",
+      "Handoff + Q&A (Day 10)"
+    ]
+  },
+
+  "sales": {
+    "idealCustomers": [
+      "Seed–Series C B2B SaaS",
+      "Professional services & agencies",
+      "Product-led growth teams needing clearer messaging"
+    ],
+    "triggers": [
+      "Website redesign or CMS migration starting soon",
+      "Sales enablement revamp (new deck/one-pagers)",
+      "Entering new vertical/persona",
+      "Mixed or low conversion on key pages"
+    ],
+    "discoveryQuestions": [
+      "Which pages or assets are suffering most from inconsistent messaging?",
+      "Who owns final approval on brand messaging?",
+      "Which personas/segments should be prioritized first?",
+      "What proof points are strongest (logos, metrics, case studies)?",
+      "What’s your review cadence and who consolidates feedback?"
+    ],
+    "objections": [
+      { "q": "We already have messaging—why redo it?", "a": "We build on what works, resolving inconsistencies and adding practical artifacts (headline bank, voice guide) that accelerate production." },
+      { "q": "Can you do this faster than 10 days?", "a": "Yes, with a Rush add-on (+20%) if interviews and materials are ready." },
+      { "q": "Will this include all website copy?", "a": "No—this sprint ships foundations and examples. Add our Website Copy Refresh for full pages." }
+    ],
+    "talkTracks": [
+      "Practical artifacts, not theory: your team ships faster with fewer reviews.",
+      "Outcome-led messaging improves conversion and sales velocity.",
+      "Single source of truth reduces ‘rewrite loops’ across teams."
+    ],
+    "proof": [
+      "Before/after headline examples with conversion lift (if available)",
+      "Customer quotes about clarity & speed",
+      "Sample sanitized playbook pages"
+    ],
+    "competitors": [
+      "Generalist brand agencies pitching lengthy strategy decks",
+      "Freelance copywriters without enablement deliverables"
+    ],
+    "positioning": "A compact, implementation-ready sprint that unifies positioning and equips teams with reusable messaging assets."
+  },
+
+  "tiers": {
+    "Essential": {
+      "price": { "oneTime": 5200, "currency": "USD" },
+      "revisionCycles": 2,
+      "interviewsIncluded": 2,
+      "personasCovered": 1,
+      "deliverableDelta": [
+        "Foundations + playbook (Doc + PDF)",
+        "Headline/CTA bank (core funnel)"
+      ]
+    },
+    "Professional": {
+      "price": { "oneTime": 7800, "currency": "USD" },
+      "revisionCycles": 3,
+      "interviewsIncluded": 4,
+      "personasCovered": 2,
+      "deliverableDelta": [
+        "Persona mini-briefs (2)",
+        "Expanded headline/CTA bank (per persona)",
+        "Sales one-pager messaging module"
+      ]
+    },
+    "Premium": {
+      "price": { "oneTime": 11500, "currency": "USD" },
+      "revisionCycles": 4,
+      "interviewsIncluded": 6,
+      "personasCovered": 3,
+      "deliverableDelta": [
+        "Buyer-journey messaging map",
+        "Web section outlines (home + product) for implementation",
+        "Live enablement workshop (90 min)"
+      ]
+    }
+  },
+
+  "addOns": [
+    { "id": "website-copy-refresh", "label": "Website Copy Refresh", "price": { "oneTime": 6800, "currency": "USD" } },
+    { "id": "editorial-calendar-sprint", "label": "Editorial Calendar Sprint", "price": { "oneTime": 3800, "currency": "USD" } },
+    { "id": "sales-deck-pro", "label": "Sales Deck Pro", "price": { "oneTime": 6200, "currency": "USD" } },
+    { "id": "brand-identity-starter", "label": "Brand Identity Starter", "price": { "oneTime": 5400, "currency": "USD" } },
+    { "id": "research-interviews-pack", "label": "Additional Stakeholder Interviews (x3)", "price": { "oneTime": 1500, "currency": "USD" } },
+    { "id": "translations-localization", "label": "Translations & Localization", "price": { "oneTime": null, "currency": "USD" }, "notes": "Per language; quote on request." },
+    { "id": "enablement-workshop", "label": "Messaging Enablement Workshop (90 min)", "price": { "oneTime": 1200, "currency": "USD" } }
+    ],
+
+  "sla": {
+    "kickoffLeadTime": "3–5 business days from signature & deposit",
+    "draftTurnaround": "Foundations by Day 6; full playbook by Day 8",
+    "revisionSLA": "24–48h per consolidated feedback round",
+    "responseTime": "Same-day acknowledgment; <1 business day response",
+    "businessHours": "Mon–Fri 9a–6p local team time"
+  },
+
+  "legal": {
+    "acceptanceCriteria": [
+      "Deliverables provided per inclusions with two revision cycles within sprint timeline.",
+      "Client provides consolidated feedback within agreed windows."
+    ],
+    "changeRequests": "Changes outside inclusions (extra interviews, personas, pages) are handled via add-ons or change orders.",
+    "ipOwnership": "Upon full payment, client owns final messaging deliverables; agency retains rights to process frameworks and non-client specific templates.",
+    "confidentiality": "Mutual NDA applies; interviews are recorded only with consent.",
+    "warranties": "No warranty of specific business outcomes; best-effort professional services."
+  },
+
+  "tracking": {
+    "successMetrics": [
+      "Reduction in rounds to approve new content/assets",
+      "Time-to-publish for key pages/assets",
+      "Lift in conversion rate on pages where messaging is applied",
+      "Sales cycle feedback: clarity, objection handling effectiveness"
+    ],
+    "eventsToLog": [
+      "Playbook delivered",
+      "Handoff completed",
+      "30-day implementation check",
+      "60-day impact review (optional)"
+    ],
+    "dashboards": [
+      "Content velocity (pages/assets shipped per month)",
+      "Key page conversion (pre/post messaging update)"
+    ]
+  },
+
+  "internalFlags": {
+    "eligibleForHighlights": true,
+    "eligibleForCaseStudy": true,
+    "requiresPracticeLeadReview": true,
+    "tieredPricingToggleReady": true
+  }
+}

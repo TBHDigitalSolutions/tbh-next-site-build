@@ -1,0 +1,324 @@
+{
+  "metadata": {
+    "id": "content-creative-social-graphics-kit",
+    "slug": "social-graphics-kit",
+    "name": "Social Graphics Kit",
+    "service": "content",
+    "subservice": "creative-services",
+    "tier": "Essential",
+    "owner": "Design Lead",
+    "status": "active",
+    "version": "1.0.0",
+    "createdAt": "2025-09-30",
+    "updatedAt": "2025-09-30",
+    "notesInternal": [
+      "Deliver ready-to-post examples + editable sources (Figma or Canva).",
+      "Keep scope tight: 12 static templates + headers/avatars + guide.",
+      "Two consolidated review rounds included."
+    ]
+  },
+  "routing": {
+    "docsPath": "docs/packages/catalog/content-production/creative-services/social-graphics-kit/",
+    "publicMdx": "docs/packages/catalog/content-production/creative-services/social-graphics-kit/public.mdx",
+    "internalJson": "docs/packages/catalog/content-production/creative-services/social-graphics-kit/internal.json",
+    "assetsDir": "docs/packages/catalog/content-production/creative-services/social-graphics-kit/assets/"
+  },
+  "pricing": {
+    "currency": "USD",
+    "model": "one-time",
+    "oneTime": 1500,
+    "monthly": 0,
+    "minTermMonths": 0,
+    "inclusions": "Two consolidated review rounds; source files; export presets; usage guide.",
+    "exclusions": "Motion/animation, complex illustration/3D, stock/font licenses.",
+    "discounts": {
+      "nonprofitPct": 10,
+      "startupPct": 0,
+      "educationPct": 10,
+      "volumePct": 10
+    },
+    "rushOptions": [
+      {
+        "name": "Rush (+2 business days faster)",
+        "fee": 300,
+        "notes": "Requires immediate feedback within 24h per round."
+      }
+    ],
+    "internal": {
+      "targetGrossMargin": 0.55,
+      "expectedCost": 675,
+      "estimatedHours": 11,
+      "blendedRateAssumption": 61.36,
+      "paymentTerms": "50% deposit, 50% at delivery",
+      "invoicing": "Net 7 on final invoice"
+    }
+  },
+  "labor": {
+    "roleRates": {
+      "designDirector": 80,
+      "seniorDesigner": 65,
+      "producerExporter": 45,
+      "projectManager": 50,
+      "qa": 40
+    },
+    "roles": [
+      {
+        "role": "Design Director",
+        "hours": 0.5,
+        "rate": 80,
+        "cost": 40
+      },
+      {
+        "role": "Senior Designer",
+        "hours": 8,
+        "rate": 65,
+        "cost": 520
+      },
+      {
+        "role": "Producer/Exporter",
+        "hours": 1,
+        "rate": 45,
+        "cost": 45
+      },
+      {
+        "role": "Project Manager",
+        "hours": 1,
+        "rate": 50,
+        "cost": 50
+      },
+      {
+        "role": "QA",
+        "hours": 0.5,
+        "rate": 40,
+        "cost": 20
+      }
+    ],
+    "totals": {
+      "hours": 11,
+      "cost": 675,
+      "contingencyPct": 10,
+      "contingencyHours": 1.1,
+      "contingencyCost": 67.5,
+      "hoursWithContingency": 12.1,
+      "costWithContingency": 742.5
+    },
+    "phaseBreakdown": [
+      {
+        "phase": "Kickoff & Direction",
+        "hours": 1.5,
+        "roles": {
+          "Design Director": 0.5,
+          "Project Manager": 1
+        },
+        "deliverables": [
+          "45-min kickoff",
+          "Brand kit intake",
+          "Moodboard + 1 visual direction"
+        ]
+      },
+      {
+        "phase": "Design & Production",
+        "hours": 8.5,
+        "roles": {
+          "Senior Designer": 8,
+          "Producer/Exporter": 0.5
+        },
+        "deliverables": [
+          "12 static templates (announcements, carousels, quotes, stats, promos)",
+          "LinkedIn header + YouTube banner + profile avatars",
+          "Export presets (JPG/PNG) + slice/export setup"
+        ]
+      },
+      {
+        "phase": "QA & Handover",
+        "hours": 1,
+        "roles": {
+          "QA": 0.5,
+          "Producer/Exporter": 0.5
+        },
+        "deliverables": [
+          "Source files (Figma or Canva transfer)",
+          "Ready-to-post exports",
+          "Usage guide (sizes, safe areas, alt text)"
+        ]
+      }
+    ]
+  },
+  "delivery": {
+    "timelineBusinessDays": "6–9",
+    "reviewRoundsIncluded": 2,
+    "milestones": [
+      {
+        "name": "Kickoff & Direction",
+        "eta": "Day 1–2"
+      },
+      {
+        "name": "First Pass Templates",
+        "eta": "Day 3–6"
+      },
+      {
+        "name": "Revisions & Final Delivery",
+        "eta": "Day 7–9"
+      }
+    ],
+    "handoff": {
+      "sourceFiles": [
+        "Figma (preferred)",
+        "Canva transfer (optional)"
+      ],
+      "exports": [
+        "JPG",
+        "PNG"
+      ],
+      "documentation": [
+        "Usage guide (sizes, safe areas, alt text)",
+        "Export presets"
+      ]
+    }
+  },
+  "scope": {
+    "inclusions": [
+      "12 static social templates across agreed channels",
+      "1 LinkedIn header, 1 YouTube banner, profile/avatar set",
+      "Export presets for JPG/PNG",
+      "Usage guide and notes",
+      "Two consolidated revision rounds"
+    ],
+    "exclusions": [
+      "Motion or animated variants",
+      "Complex illustration or 3D",
+      "Stock images and font licenses (at-cost if requested)",
+      "Social scheduling and copywriting (see add-ons)"
+    ],
+    "assumptions": [
+      "Brand assets (logo, colors, type) are provided and approved before design begins.",
+      "Feedback is consolidated per round within 24–48 hours.",
+      "Platform targets agreed during kickoff (e.g., IG, LinkedIn, X/Twitter, Facebook)."
+    ],
+    "dependencies": [
+      "Client provides brand guidelines and asset kit.",
+      "Access to Canva Brand Kit (if Canva delivery).",
+      "Approver list and turnaround expectations confirmed at kickoff."
+    ]
+  },
+  "tooling": {
+    "design": "Figma (preferred) or Canva",
+    "handoff": "Google Drive or Notion document links",
+    "versioning": "Figma version history + change log in handoff doc",
+    "stockPolicy": "At-cost licensing or client-provided assets",
+    "fonts": "Client-provided or Google Fonts; commercial fonts licensed by client"
+  },
+  "risks": [
+    "Brand assets delayed → pushes schedule.",
+    "Scope creep from net-new visual direction requests after first pass.",
+    "Feedback from multiple stakeholders not consolidated."
+  ],
+  "changePolicy": {
+    "minorChangesDefinition": "Color/type tweaks, small layout refinements within existing templates.",
+    "majorChangesTriggers": [
+      "Net-new visual direction after approval of direction",
+      "New template types beyond the 12 included",
+      "Motion/animation requests"
+    ],
+    "outOfScopeExamples": [
+      "Storyboards for motion",
+      "Custom illustration sets",
+      "Long-form carousel copywriting"
+    ],
+    "billableRateForExtras": 125,
+    "authorization": "Email confirmation required prior to additional work."
+  },
+  "acceptanceCriteria": [
+    "All 12 templates delivered in editable source format (Figma or Canva).",
+    "Headers/avatars exported to platform-recommended sizes.",
+    "Usage guide included with export presets and alt-text guidance.",
+    "Two review cycles completed or client signs off early."
+  ],
+  "kpis": [
+    "Turnaround time within 6–9 business days",
+    "≥ 90% of comments resolved by R2",
+    "Client satisfaction ≥ 8/10 on handoff survey"
+  ],
+  "addOns": [
+    {
+      "id": "copy-support",
+      "name": "Caption & headline copy support (5–10 posts)",
+      "price": {
+        "currency": "USD",
+        "oneTime": 450
+      },
+      "hours": {
+        "Writer": 2,
+        "Editor": 0.5,
+        "Project Manager": 0.5
+      },
+      "internalCost": 165,
+      "notes": "Headlines + short captions; aligns with approved voice and pillars."
+    },
+    {
+      "id": "motion-variants",
+      "name": "Motion variants for 4 templates",
+      "price": {
+        "currency": "USD",
+        "oneTime": 600
+      },
+      "hours": {
+        "Motion Designer": 3,
+        "QA": 0.5,
+        "Project Manager": 0.5
+      },
+      "internalCost": 255,
+      "notes": "Light motion: fades, slides, kinetic type; export to MP4/webm."
+    },
+    {
+      "id": "scheduling-setup",
+      "name": "Scheduling setup + content calendar",
+      "price": {
+        "currency": "USD",
+        "oneTime": 400
+      },
+      "hours": {
+        "Producer": 2,
+        "Project Manager": 0.5
+      },
+      "internalCost": 115,
+      "notes": "Tool connection + 4-week calendar skeleton; no ongoing posting."
+    }
+  ],
+  "crossSell": [
+    {
+      "slug": "brand-identity-starter",
+      "reason": "Tighten the brand kit for stronger visuals."
+    },
+    {
+      "slug": "motion-graphics-pack",
+      "reason": "Add lightweight motion for key templates."
+    },
+    {
+      "slug": "editorial-calendar-sprint",
+      "reason": "Plan a 4–6 week content runway."
+    }
+  ],
+  "approvals": {
+    "requiredFromClient": [
+      "Brand assets & guidelines",
+      "Channel list & priorities",
+      "Single point-of-contact for feedback"
+    ],
+    "internal": [
+      "Design Lead",
+      "PM"
+    ],
+    "signOffMethod": "Email summary or Notion approval block"
+  },
+  "securityLegal": {
+    "ipOwnership": "Granted upon full payment; excludes third-party licensed assets.",
+    "licenses": "Stock/Fonts licensed to client’s organization; proof retained.",
+    "confidentiality": "Work-in-progress artifacts are confidential until launch."
+  },
+  "ui": {
+    "showTieredPricing": false,
+    "badges": [],
+    "cardImage": "/packages/content-production/social-graphics-kit-card.png"
+  }
+}

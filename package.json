@@ -3,20 +3,17 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-
     "typecheck": "tsc --noEmit",
     "lint": "eslint . --ext .ts,.tsx",
     "format": "prettier --write .",
-
+    "build:packages": "tsx scripts/build-packages.ts",
     "validate:taxonomy": "tsx scripts/taxonomy/validate-taxonomy.ts",
     "taxonomy:export-slugs": "tsx scripts/taxonomy/export-slugs.ts",
     "taxonomy:export-slugs:minimal": "tsx scripts/taxonomy/export-slugs.ts --format=minimal",
-
     "validate:middleware": "tsx scripts/routing/validate-middleware.ts",
     "validate:middleware:loops": "tsx scripts/routing/validate-middleware.ts --check-loops",
     "validate:middleware:redirects": "tsx scripts/routing/validate-middleware.ts --test-redirects",
     "validate:middleware:full": "tsx scripts/routing/validate-middleware.ts --test-redirects --check-loops",
-
     "validate:services-pages": "tsx scripts/services/validate-services-pages.ts",
     "validate:services-pages:l2": "tsx scripts/services/validate-services-pages.ts --check-l2",
     "validate:services-pages:strict": "tsx scripts/services/validate-services-pages.ts --require-index --check-l2",
@@ -24,13 +21,11 @@
     "scaffold:service-page:minimal": "tsx scripts/services/scaffold-service-page.ts --template=minimal",
     "scaffold:service-page:dry": "tsx scripts/services/scaffold-service-page.ts --dry-run",
     "lint:services:seo": "tsx scripts/services/lint-services-seo.ts",
-
     "validate:packages": "tsx scripts/packages/validate-packages.ts",
     "validate:packages:growth": "tsx scripts/packages/check-growth-embeds.ts",
     "check:packages:featured": "tsx scripts/packages/check-featured-refs.ts",
     "stats:packages": "tsx scripts/packages/packages-stats.ts",
     "doctor:packages": "tsx scripts/packages/doctor.ts",
-
     "validate:portfolio": "tsx scripts/portfolio/validate-portfolio.ts",
     "validate:portfolio:quick": "tsx scripts/portfolio/validate-portfolio.ts --quick",
     "validate:portfolio:verbose": "tsx scripts/portfolio/validate-portfolio.ts --verbose",
@@ -49,7 +44,6 @@
     "migrate:portfolio:dry": "tsx scripts/portfolio/migrate-portfolio.ts --dry-run",
     "migrate:portfolio:verbose": "tsx scripts/portfolio/migrate-portfolio.ts --verbose",
     "migrate:portfolio:json": "tsx scripts/portfolio/migrate-portfolio.ts --json",
-
     "mirror:public": "node tools/mirror-public.js --readme",
     "mirror:public:dry": "node tools/mirror-public.js --readme --dry-run --verbose",
     "mirror:public:prune": "node tools/mirror-public.js --readme --prune",
@@ -57,29 +51,22 @@
     "check:public": "node tools/check-public.js --readme",
     "fix:public": "npm run mirror:public && npm run check:public",
     "verify:public": "npm run mirror:public:prune:dry && node tools/check-public.js --readme",
-
     "dev:validate": "npm run data:quick-check",
     "build:validate": "npm run validate:portfolio:quick",
     "precommit:data": "npm run data:quick-check",
     "precommit:portfolio": "npm run validate:portfolio:quick && npm run health:portfolio:ping",
     "prebuild:validate": "npm run data:foundation",
     "test:portfolio": "npm run portfolio:quick-check",
-
     "data:quick-check": "npm run validate:packages && npm run check:packages:featured && npm run validate:portfolio:quick && npm run health:portfolio:ping && npm run validate:taxonomy && npm run validate:services-pages",
     "data:ci": "npm-run-all -p validate:packages check:packages:featured validate:packages:growth doctor:packages",
-
     "data:foundation": "npm run taxonomy:export-slugs && npm run validate:middleware:full && npm run data:quick-check",
-
     "// NOTE_packages_pipeline": "MDX-based scripts removed. Using TS-only SSOT build.",
-
     "data:content:gen": "bash scripts/generate-content-production-index.sh",
     "data:content:check": "bash scripts/check-content-production.sh",
-
     "data:catalog": "tsx scripts/packages/build-catalog-json.ts",
     "data:search": "tsx scripts/packages/build-unified-search.ts",
     "data:build": "pnpm data:catalog && pnpm data:search",
     "data:clean": "rimraf src/data/packages/__generated__/*",
-
     "prebuild": "npm run data:content:gen && npm run data:content:check && npm run data:build"
   },
   "dependencies": {
@@ -97,8 +84,7 @@
     "react-dom": "^19.1.0",
     "react-hook-form": "^7.54.2",
     "react-icons": "^5.5.0",
-    "react-toastify": "^11.0.5",
-    "zod": "^4.1.5"
+    "react-toastify": "^11.0.5"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.12",
@@ -110,14 +96,22 @@
     "eslint": "^9.0.0",
     "eslint-config-next": "^15.2.3",
     "fast-glob": "^3.3.3",
+    "gray-matter": "^4.0.3",
     "npm-run-all": "^4.1.5",
     "postcss": "^8.5.3",
     "prettier": "^3.5.2",
+    "rehype-raw": "^7.0.0",
+    "rehype-stringify": "^10.0.1",
+    "remark-gfm": "^4.0.1",
+    "remark-parse": "^11.0.0",
+    "remark-rehype": "^11.1.2",
     "rimraf": "^6.0.1",
     "tailwindcss": "^4.0.17",
     "ts-node": "^10.9.2",
-    "tsx": "^4.19.1",
-    "typescript": "^5.6.3"
+    "tsx": "^4.20.6",
+    "typescript": "^5.6.3",
+    "unified": "^11.0.5",
+    "zod": "^4.1.11"
   },
   "engines": {
     "node": ">=18.18.0"

@@ -1,0 +1,245 @@
+{
+  "meta": {
+    "id": "content-sales-deck-pro",
+    "slug": "sales-deck-pro",
+    "service": "content",
+    "subservice": "sales-marketing-materials",
+    "sku": "CP-SM-DECKPRO",
+    "tier": "Pro",
+    "owner": {
+      "product": "Creative Director",
+      "delivery": "Presentation Design Lead",
+      "sales": "Engagement Manager"
+    },
+    "version": "1.0.0",
+    "lastUpdated": "2025-10-01"
+  },
+
+  "pricing": {
+    "currency": "USD",
+    "model": "oneTime",
+    "oneTime": 7500,
+    "setup": 0,
+    "monthly": 0,
+    "inclusions": "Up to 30 designed slides, up to 8 data visuals, 2 structured review rounds, exports (screen deck + web PDF), source files (Figma or PowerPoint/Keynote), usage guide.",
+    "paymentTerms": {
+      "depositPercent": 50,
+      "balanceOn": "final-handoff",
+      "netDays": 7
+    },
+    "surcharges": [
+      { "id": "rush-2bd", "label": "Rush (< 2 business days per round)", "percent": 30 },
+      { "id": "expedite", "label": "Expedite (compress total timeline by 30%)", "percent": 18 }
+    ],
+    "options": [
+      { "id": "extra-slide", "label": "Additional designed slide", "uom": "per slide", "price": 180 },
+      { "id": "extra-data-visual", "label": "Additional data visual", "uom": "each", "price": 120 },
+      { "id": "extra-revision", "label": "Additional review round (≤15 slides)", "uom": "per round", "price": 600 },
+      { "id": "heavy-copywriting", "label": "Ground-up copy (per slide)", "uom": "per slide", "price": 90 },
+      { "id": "custom-illustration", "label": "Custom illustration (simple)", "uom": "each", "price": 450 },
+      { "id": "translation", "label": "Translation & language QA (per language, ≤30 slides)", "uom": "per language", "price": 900 },
+      { "id": "doc-analytics", "label": "Document analytics setup (tracking & playbook)", "uom": "fixed", "price": 400 },
+      { "id": "speaker-notes", "label": "Speaker notes coaching session (60 min)", "uom": "session", "price": 350 }
+    ],
+    "discounts": [
+      { "id": "bundle-2", "label": "Bundle with One-Pager Starter", "percent": 7 },
+      { "id": "bundle-3", "label": "Bundle with Motion Graphics Pack", "percent": 10 }
+    ],
+    "notes": [
+      "Taxes, payment processing fees, and foreign exchange are excluded.",
+      "Large procurement portals may require a 3% handling surcharge."
+    ]
+  },
+
+  "ops": {
+    "targetTimeline": {
+      "kickoffToStoryMap": "2–3 business days",
+      "firstDesignPass": "5–7 business days after story approval",
+      "revisions": "≤48 hours per round (two rounds included)",
+      "finalization": "1 business day"
+    },
+    "sprints": [
+      { "name": "Discovery & Story Map", "deliverable": "Narrative architecture + section map", "durationDays": 2 },
+      { "name": "Design System & Patterns", "deliverable": "Deck master + diagram/visual patterns", "durationDays": 3 },
+      { "name": "Deck Production Pass", "deliverable": "Designed slides + data visuals", "durationDays": 4 },
+      { "name": "Review & Polish", "deliverable": "Two review rounds", "durationDays": 4 },
+      { "name": "Handoff", "deliverable": "Screen deck, web PDF, sources, usage guide", "durationDays": 1 }
+    ],
+    "roles": [
+      { "role": "Creative Director", "estHours": 6 },
+      { "role": "Content Strategist / Writer", "estHours": 10 },
+      { "role": "Presentation Designer", "estHours": 32 },
+      { "role": "Data Visualization Designer", "estHours": 10 },
+      { "role": "Project Manager", "estHours": 6 },
+      { "role": "QA (Design/Accessibility)", "estHours": 4 }
+    ],
+    "tools": [
+      "Figma (preferred)",
+      "PowerPoint / Keynote",
+      "Google Slides (optional)",
+      "Adobe Illustrator (vectors)",
+      "Google Drive/SharePoint (assets)",
+      "Lottie/After Effects (motion add-on only)"
+    ],
+    "reviewCadence": {
+      "reviewRoundsIncluded": 2,
+      "clientFeedbackSLA": "2–3 business days per round",
+      "internalQAWindow": "≤24 hours before delivery"
+    },
+    "workCalendar": {
+      "timezone": "America/Los_Angeles",
+      "businessHours": "09:00–17:00",
+      "blackouts": ["US Federal Holidays"]
+    }
+  },
+
+  "scope": {
+    "included": [
+      "Narrative architecture (ICP/use-case aligned)",
+      "Deck master: typography, grid, color, spacing, icon set",
+      "Up to 30 designed slides (content layout + polish)",
+      "Up to 8 data visuals (charts/tables/diagrams)",
+      "Light image sourcing & treatments",
+      "Two structured review rounds with annotated feedback",
+      "Exports: screen deck + web PDF (≤10MB)",
+      "Source files: Figma or PowerPoint/Keynote",
+      "Usage guide for edits & team rollout"
+    ],
+    "limits": [
+      "Complex motion graphics/animation not included",
+      "New custom illustration/3D not included",
+      "Translation/multi-language variants not included",
+      "Advanced data storytelling (custom datasets) not included"
+    ],
+    "assumptions": [
+      "Brand kit (logo, color, type) is provided and approved.",
+      "Customer logos/case studies are cleared for use.",
+      "Product screenshots or sandbox are available for capture.",
+      "One primary stakeholder group consolidates feedback per round."
+    ],
+    "inputsRequired": [
+      "Brand assets & usage guidance",
+      "ICP/persona notes and top use cases",
+      "Metrics, case studies, approved logos",
+      "Legal/compliance rules for claims",
+      "Access to existing decks/sales materials"
+    ],
+    "handoff": {
+      "package": [
+        "Screen deck (.pdf)",
+        "Web-optimized PDF (≤10MB)",
+        "Source file (.fig or .pptx/.key)",
+        "Usage guide (PDF or MDX)"
+      ],
+      "folderStructure": [
+        "01_brief/",
+        "02_story_map/",
+        "03_design_system/",
+        "04_deck_production/",
+        "05_exports/",
+        "06_sources/"
+      ]
+    }
+  },
+
+  "qa": {
+    "acceptanceCriteria": [
+      "≤30 slides designed and proofed; ≤8 data visuals included unless scoped otherwise",
+      "All slides adhere to brand type, color, spacing, and grid rules",
+      "Contrast ratio ≥ 4.5:1 for body text on primary backgrounds",
+      "All customer logos/claims verified or marked with a footnote",
+      "PDF export ≤10MB; all hyperlinks functional"
+    ],
+    "checklists": {
+      "design": [
+        "Consistent layout grid and spacing scale",
+        "Heading hierarchy preserved",
+        "Iconography and diagram styles consistent across slides",
+        "No rasterized text; vectors where possible"
+      ],
+      "content": [
+        "Story flow matches approved architecture",
+        "Claims have sources or are removed/softened",
+        "Presenter notes added where needed",
+        "Objection-handling hooks present in relevant slides"
+      ],
+      "accessibility": [
+        "Color contrast passes (AA body, AAA where feasible)",
+        "Minimum font sizes respected (12pt+ print equivalent)",
+        "Alt text or presenter notes for key visuals where applicable"
+      ]
+    }
+  },
+
+  "securityCompliance": {
+    "pii": "Not required; do not store PII in design files.",
+    "dataResidency": "US/EU cloud storage (client-controlled where possible).",
+    "assetLicensing": "Stock imagery must be licensed to the client; we track licenses in /05_exports/licenses.json.",
+    "retention": "Project files retained for 90 days post-handoff unless under MSA."
+  },
+
+  "changeManagement": {
+    "whatCountsAsRevisionRound": "A consolidated set of comments delivered within the review window.",
+    "outOfScopeTriggers": [
+      "Net-new sections beyond approved story map",
+      "Rebrand or major visual direction change mid-project",
+      "Slide count increases beyond 30",
+      "Additional data visualizations beyond 8"
+    ],
+    "process": [
+      "PM logs scope requests in change log with impact analysis",
+      "Client approves changes & any costs/time deltas in writing",
+      "Revised timeline communicated within 1 business day"
+    ]
+  },
+
+  "analytics": {
+    "kpis": [
+      "Time-to-first-meeting (proxy, if shared by client)",
+      "Deck usage rate by team (if analytics add-on enabled)",
+      "Win rate lift on opportunities using the new deck (lagging)"
+    ],
+    "instrumentation": "If 'doc-analytics' option purchased, we configure a trackable link workflow and include a readme with metrics definitions."
+  },
+
+  "packaging": {
+    "artifactNames": {
+      "screenPdf": "Sales-Deck-Pro_screen.pdf",
+      "webPdf": "Sales-Deck-Pro_web.pdf",
+      "sources": "Sales-Deck-Pro_source.fig|pptx|key",
+      "usageGuide": "Sales-Deck-Pro_usage-guide.pdf"
+    },
+    "versioning": {
+      "scheme": "Semver for internal files (v1.0.0); date-stamp on exports",
+      "changelog": "CHANGELOG.md in project root with date, author, delta summary"
+    }
+  },
+
+  "addOns": [
+    { "id": "motion-graphics-pack", "label": "Motion Graphics Pack", "estPrice": 3500 },
+    { "id": "explainer-video-starter", "label": "Explainer Video Starter", "estPrice": 6000 },
+    { "id": "brand-collateral-kit", "label": "Brand Collateral Kit", "estPrice": 3800 },
+    { "id": "one-pager-starter", "label": "One-Pager Starter", "estPrice": 1500 },
+    { "id": "speaker-notes-coaching", "label": "Speaker Notes Coaching (2 sessions)", "estPrice": 600 }
+  ],
+
+  "crossSell": [
+    "pitch-deck-design-sprint",
+    "one-pager-starter",
+    "brand-collateral-kit"
+  ],
+
+  "risks": [
+    { "risk": "Stakeholder feedback conflicts or expands scope", "mitigation": "Run story map sign-off; consolidate feedback via single owner; apply change log." },
+    { "risk": "Asset delays (logos, screenshots, proof)", "mitigation": "Front-load asset request list at kickoff; PM tracks blockers daily." },
+    { "risk": "Compliance/legal review late in process", "mitigation": "Involve legal in story approval; add pre-final checkpoint before exports." }
+  ],
+
+  "approvals": {
+    "required": [
+      "Brand Owner (visual system)",
+      "Sales Leader (story & sections)",
+      "Legal/Compliance (claims, disclaimers)"
+    ]
+  }
+}

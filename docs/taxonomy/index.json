@@ -1,0 +1,56 @@
+{
+  "version": 1,
+  "spec": {
+    "levels": { "l1": "services", "l2": "subservices", "l3": "subsubservices" }
+  },
+  "services": [
+    {
+      "id": "content-production",
+      "label": "Content Production",
+      "ref": "content-production/services.json",
+      "hubSlug": "content-production-services",
+      "packagesHubSlug": "content-production-packages",
+      "status": "active"
+    },
+    {
+      "id": "lead-generation",
+      "label": "Lead Generation",
+      "ref": "lead-generation/services.json",
+      "hubSlug": "lead-generation-services",
+      "packagesHubSlug": "lead-generation-packages",
+      "status": "active"
+    },
+    {
+      "id": "marketing-services",
+      "label": "Marketing Services",
+      "ref": "marketing/services.json",
+      "hubSlug": "marketing-services",
+      "packagesHubSlug": "marketing-packages",
+      "status": "active"
+    },
+    {
+      "id": "seo",
+      "label": "SEO Services",
+      "ref": "seo/services.json",
+      "hubSlug": "seo-services",
+      "packagesHubSlug": "seo-packages",
+      "status": "active"
+    },
+    {
+      "id": "video-production",
+      "label": "Video Production",
+      "ref": "video-production/services.json",
+      "hubSlug": "video-production-services",
+      "packagesHubSlug": "video-production-packages",
+      "status": "active"
+    },
+    {
+      "id": "web-development",
+      "label": "Web Development",
+      "ref": "web-development/services.json",
+      "hubSlug": "web-development-services",
+      "packagesHubSlug": "web-development-packages",
+      "status": "active"
+    }
+  ]
+}

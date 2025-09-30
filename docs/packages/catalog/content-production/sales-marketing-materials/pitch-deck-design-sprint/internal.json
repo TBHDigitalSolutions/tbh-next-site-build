@@ -1,0 +1,241 @@
+{
+  "version": "1.0",
+  "id": "content-pitch-deck-design-sprint",
+  "slug": "pitch-deck-design-sprint",
+  "sku": "CP-SMM-PDDS-ES",
+  "family": "content-production",
+  "service": "content",
+  "subservice": "sales-marketing-materials",
+  "status": "active",
+
+  "owner": {
+    "product": "Director, Content Production",
+    "email": "ops@tbh.digital",
+    "slack": "#pkg-content"
+  },
+  "contacts": {
+    "salesLead": "AE / Partnerships",
+    "deliveryLead": "Engagement Manager — Content",
+    "designLead": "Design Lead — Presentations"
+  },
+
+  "links": {
+    "runbook": "documents/runbooks/pitch-deck-design-sprint.md",
+    "briefTemplate": "documents/templates/intake/pitch-deck-intake.md",
+    "figmaLibrary": "documents/libraries/presentation-system.fig",
+    "slideMaster": "documents/templates/slide-master.fig",
+    "sampleDeck": "documents/samples/pitch-deck-sample.pdf"
+  },
+
+  "pricing": {
+    "currency": "USD",
+    "model": "fixed",
+    "tierDefault": "Essential",
+    "base": {
+      "oneTime": 4500,
+      "monthly": 0
+    },
+    "caps": {
+      "slidesIncluded": 20,
+      "reviewRoundsIncluded": 2,
+      "dataVisualsIncluded": 5
+    },
+    "addlRates": {
+      "perExtraSlide": 175,
+      "perExtraReviewRound": 600,
+      "advancedDataVizEach": 250,
+      "groundUpCopyPerSlide": 150,
+      "speakerNotesPerSlide": 60,
+      "motionPerSimpleAnim": 200
+    },
+    "options": [
+      {
+        "sku": "CP-SMM-PDDS-PL",
+        "tier": "Plus",
+        "oneTime": 6500,
+        "caps": { "slidesIncluded": 30, "reviewRoundsIncluded": 3, "dataVisualsIncluded": 8 }
+      },
+      {
+        "sku": "CP-SMM-PDDS-PR",
+        "tier": "Pro",
+        "oneTime": 9000,
+        "caps": { "slidesIncluded": 40, "reviewRoundsIncluded": 3, "dataVisualsIncluded": 12 }
+      }
+    ],
+    "policies": {
+      "rushMultiplier": 1.35,
+      "weekendMultiplier": 1.5,
+      "nonProfitDiscount": 0.9,
+      "paymentTerms": "50% deposit, 50% on delivery",
+      "validForDays": 30
+    }
+  },
+
+  "effort": {
+    "assumptions": "Essential tier, 20 slides, 2 review rounds, existing brand system, client supplies metrics & screenshots.",
+    "roles": [
+      { "role": "Engagement Manager / PM", "hours": 6, "blendedRate": 120 },
+      { "role": "Creative Director", "hours": 6, "blendedRate": 165 },
+      { "role": "Presentation Designer", "hours": 22, "blendedRate": 125 },
+      { "role": "Copywriter/Editor", "hours": 6, "blendedRate": 115 },
+      { "role": "Data Viz Designer", "hours": 6, "blendedRate": 130 },
+      { "role": "QA Specialist", "hours": 3, "blendedRate": 95 }
+    ],
+    "calc": {
+      "cogsTotal": 6455,
+      "targetMarginPct": 0.35,
+      "listPriceCheck": 4500,
+      "note": "List price assumes some role overlap and asset reuse. Maintain ≥35% GM by managing scope & rounds."
+    }
+  },
+
+  "delivery": {
+    "timelineDays": 10,
+    "phases": [
+      {
+        "name": "Kickoff & Intake",
+        "days": "0–1",
+        "artifacts": ["Agenda & notes", "Asset checklist", "Success criteria"]
+      },
+      {
+        "name": "Story Map",
+        "days": "2–3",
+        "artifacts": ["Narrative outline", "Section map", "Message hierarchy"]
+      },
+      {
+        "name": "First Design Pass",
+        "days": "3–5",
+        "artifacts": ["Slide master", "Key layouts", "3–5 data visuals"]
+      },
+      {
+        "name": "Review & Iteration",
+        "days": "5–8",
+        "artifacts": ["Annotated PDF", "Round 1 + Round 2 revisions"]
+      },
+      {
+        "name": "Polish & Handoff",
+        "days": "9–10",
+        "artifacts": ["Screen-share deck", "Web PDF (≤8MB)", "Source file", "Handoff notes"]
+      }
+    ],
+    "slo": {
+      "firstResponseHrs": 24,
+      "asynchronousComms": "Slack/Email within 1 business day",
+      "reviewTurnaroundHrs": 48
+    },
+    "tools": ["Figma (default)", "PowerPoint/Keynote (on request)", "Google Drive", "Brandfetch", "Notion/Airtable for intake"]
+  },
+
+  "requirements": [
+    "Brand assets (logo, colors, typography) and usage guidance",
+    "Existing deck/outline, key metrics, and validated proof points",
+    "Product screenshots or access to capture",
+    "Goal of the pitch (e.g., Seed, Series A, enterprise buyer)",
+    "Any legal/compliance constraints for claims"
+  ],
+
+  "scopeRules": {
+    "included": [
+      "Up to 20 designed slides (content + layout + visual system)",
+      "Two structured review rounds",
+      "Up to 5 data visuals or diagrams",
+      "Slide master, section dividers, and spacing rules",
+      "Exports: screen deck + web-optimized PDF",
+      "Source handoff (Figma or PPT/Keynote)"
+    ],
+    "excluded": [
+      "Complex financial modeling",
+      "Custom illustration or 3D",
+      "Advanced motion graphics/animations",
+      "Multi-language variants",
+      "Ground-up messaging platform"
+    ],
+    "acceptanceCriteria": [
+      "Deck compiles and exports without missing fonts/assets",
+      "All charts labeled with sources; numbers match client source",
+      "Color contrast AA for body text on primary backgrounds",
+      "Files open in requested tool without errors"
+    ]
+  },
+
+  "qa": {
+    "design": [
+      "Baseline grid consistent across master/layouts",
+      "Typography scale & spacing consistent across slides",
+      "Color contrast passes AA for body/labels",
+      "Charts/diagrams align to 4/8pt grid"
+    ],
+    "content": [
+      "Headlines follow message hierarchy (H1→support→proof)",
+      "Numbers backed by source link or appendix",
+      "No orphaned bullets; 5×5 rule where applicable"
+    ],
+    "export": [
+      "Web PDF ≤ 8MB, selectable text (no rasterized type)",
+      "No missing fonts; embed or package as needed",
+      "Hyperlinks and email links work"
+    ]
+  },
+
+  "risks": [
+    { "risk": "Late or incomplete assets", "mitigation": "Provide intake checklist and block until critical assets are received" },
+    { "risk": "Stakeholder churn / direction changes", "mitigation": "Lock story map after Review 1; change order for scope shifts" },
+    { "risk": "Last-minute slide increases", "mitigation": "Per-slide pricing + fast quote; enforce caps in SOW" },
+    { "risk": "Confidential metrics require redaction", "mitigation": "Use redacted versions for exports; maintain a private appendix if needed" }
+  ],
+
+  "compliance": {
+    "accessibility": ["Contrast AA target for body text", "No information conveyed by color alone"],
+    "licensing": ["Stock assets billed at cost", "Only licensed fonts/illustrations"],
+    "claims": ["Client provides proof for metrics and market data", "No deceptive charts (axis and scale visible)"]
+  },
+
+  "playbooks": {
+    "workshops": ["Pitch Narrative Workshop (60–90min)", "Review protocol (comment-only, async + live)"],
+    "slides": ["Title → Problem → Solution → Market → Traction → Business Model → Moat → Team → Ask", "Appendix for backups"]
+  },
+
+  "revisionPolicy": {
+    "includedRounds": 2,
+    "turnaroundHoursPerRound": 48,
+    "extraRoundFee": 600,
+    "notes": "Minor polish within 5 business days of handoff is included (≤1hr). Larger changes require a change order."
+  },
+
+  "escalation": {
+    "timelineRisk": "Escalate to Delivery Lead if delays >24h block progress",
+    "qualityRisk": "Creative Director reviews and sets correction plan within 1 business day"
+  },
+
+  "handoff": {
+    "deliverables": ["Screen deck", "Web PDF", "Source file (Figma or PPT/Keynote)", "Handoff notes (fonts/licensing/do’s & don’ts)"],
+    "storage": "Client folder → /Clients/<ClientName>/Deliverables/PitchDeck/<date>",
+    "retentionDays": 365
+  },
+
+  "addOns": [
+    { "id": "messaging-playbook", "label": "Messaging Playbook" },
+    { "id": "financial-model-viz", "label": "Financial Model Visualization" },
+    { "id": "investor-one-pager", "label": "Investor One-Pager" },
+    { "id": "motion-graphics-pack", "label": "Motion Graphics (Lite)" },
+    { "id": "live-pitch-coaching", "label": "Live Pitch Coaching" }
+  ],
+  "crossSell": [
+    { "slug": "sales-deck-pro", "label": "Sales Deck Pro" },
+    { "slug": "one-pager-starter", "label": "One-Pager Starter" },
+    { "slug": "brand-collateral-kit", "label": "Brand Collateral Kit" }
+  ],
+
+  "notesInternal": [
+    "Figma preferred for velocity; only convert to PPT/Keynote after design lock.",
+    "Use the presentation system tokens; avoid ad-hoc colors/spacing."
+  ],
+
+  "changeLog": [
+    {
+      "date": "2025-09-30",
+      "by": "system",
+      "notes": "Initial internal.json created for Pitch Deck Design Sprint (Essential tier)."
+    }
+  ]
+}

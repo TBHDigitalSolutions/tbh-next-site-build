@@ -1,0 +1,59 @@
+.wrap {
+    margin-block: var(--space-12, 4.5rem);
+    display: grid;
+    grid-template-columns: 1fr;
+    row-gap: var(--space-6, 1.5rem);
+}
+
+/* Header */
+.header {
+    text-align: center;
+}
+
+.h2 {
+    margin: 0;
+    font-size: clamp(1.25rem, 1vw + 1.1rem, 1.75rem);
+    line-height: 1.2;
+    letter-spacing: 0.2px;
+}
+
+.subtitle {
+    margin-top: var(--space-2, .5rem);
+    color: var(--text-secondary, #64748b);
+    font-size: clamp(.95rem, .5vw + .85rem, 1.05rem);
+}
+
+/* Rows (CTA + FAQ) */
+.row {
+    min-width: 0;
+}
+
+/* Rails grid (related + add-ons) */
+.railsGrid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-6, 1.5rem);
+}
+
+.railCol {
+    min-width: 0;
+}
+
+/* Desktop toggles */
+.splitDesktop {}
+
+.stackDesktop {}
+
+@media (min-width: 1024px) {
+    .splitDesktop .railsGrid {
+        grid-template-columns: 1fr 1fr;
+        column-gap: var(--space-8, 2rem);
+        align-items: start;
+    }
+}
+
+@media (min-width: 1024px) {
+    .stackDesktop .railsGrid {
+        grid-template-columns: 1fr;
+    }
+}

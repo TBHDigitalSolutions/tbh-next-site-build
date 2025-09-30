@@ -1,0 +1,58 @@
+.wrap {
+    margin-block: var(--space-8, 3rem);
+}
+
+.header {
+    text-align: center;
+    margin-bottom: var(--space-4, 1.25rem);
+}
+
+.h2 {
+    font-size: clamp(1.25rem, 1vw + 1.1rem, 1.75rem);
+    line-height: 1.2;
+    letter-spacing: 0.2px;
+    margin: 0;
+}
+
+.subtitle {
+    margin-top: var(--space-2, .5rem);
+    color: var(--text-secondary, #64748b);
+    font-size: clamp(.95rem, .5vw + .85rem, 1.05rem);
+}
+
+.grid {
+    display: grid;
+}
+
+.list {
+    /* FeatureList renders a UL; we let it be full width and
+     rely on its item blocks to fill columns via CSS below. */
+}
+
+/* Make FeatureList items flow in 2 columns on ≥1024px */
+@media (min-width: 1024px) {
+    .grid :global(ul) {
+        columns: 2;
+        /* lightweight 2-column flow */
+        column-gap: var(--space-6, 1.5rem);
+    }
+
+    .grid :global(ul > li) {
+        break-inside: avoid;
+    }
+}
+
+/* Chip look polish (only when FeatureList applies a chip item class) */
+.grid :global(ul li.FeatureList__item--chip) {
+    border: 1px solid var(--border-subtle, rgba(148, 163, 184, 0.3));
+    border-radius: var(--radius-xl, 14px);
+    padding: var(--space-3, .75rem) var(--space-4, 1rem);
+    background: var(--surface-1, rgba(148, 163, 184, 0.06));
+}
+
+/* Spacing between items (works for both single and multi columns) */
+.grid :global(ul > li + li) {
+    margin-top: var(--space-3, .75rem);
+}
+
+/* Mobile: single column by default; spacing is already good */

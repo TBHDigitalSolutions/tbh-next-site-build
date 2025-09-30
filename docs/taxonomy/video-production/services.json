@@ -1,0 +1,137 @@
+{
+  "version": 1,
+  "services": {
+    "video-production": {
+      "label": "Video Production",
+      "description": "Planning, shooting, and editing video that drives outcomes across channels.",
+      "aliases": ["video", "video-prod", "video-production-services"],
+      "hubSlug": "video-production-services",
+      "packagesHubSlug": "video-production-packages",
+
+      "routes": {
+        "serviceHub": "/services/video-production-services",
+        "serviceSubservice": "/services/video-production-services/{subservice}",
+        "serviceLeaf": "/services/video-production-services/{subservice}/{subsubservice}",
+        "canonicalPackagePath": "/packages/{slug}",
+        "friendlyPackagePath": "/packages/video-production/{subservice}/{slug}",
+        "packagesByLeaf": "/packages/catalog/{service}/{subservice}/{slug}"
+      },
+
+      "authoring": {
+        "docsPathTemplate": "docs/packages/catalog/{service}/{subservice}/{slug}/",
+        "mdxFile": "public.mdx",
+        "internalPricingFile": "internal.json",
+        "assetsDir": "assets"
+      },
+
+      "filters": {
+        "dimensions": ["format", "channel", "objective", "funnelStage"],
+        "defaultSort": "alpha"
+      },
+
+      "subservices": [
+        {
+          "slug": "strategy-pre-production",
+          "label": "Strategy & Pre-Production",
+          "description": "Creative direction, planning, and logistics to set production up for success.",
+          "subsubservices": [
+            { "slug": "creative-brief", "label": "Creative Brief" },
+            { "slug": "scripting-storyboards", "label": "Scripting & Storyboards" },
+            { "slug": "shotlists", "label": "Shotlists" },
+            { "slug": "talent-casting", "label": "Talent & Casting" },
+            { "slug": "location-scouting", "label": "Location Scouting" },
+            { "slug": "production-planning", "label": "Production Planning" }
+          ]
+        },
+        {
+          "slug": "production",
+          "label": "Production",
+          "description": "Capture on set or on location with the right crew, gear, and workflow.",
+          "subsubservices": [
+            { "slug": "studio-production", "label": "Studio Production" },
+            { "slug": "on-location", "label": "On-Location" },
+            { "slug": "remote-recording", "label": "Remote Recording" },
+            { "slug": "live-streaming", "label": "Live Streaming" },
+            { "slug": "multi-camera", "label": "Multi-Camera" },
+            { "slug": "drone", "label": "Drone" }
+          ]
+        },
+        {
+          "slug": "post-production",
+          "label": "Post-Production",
+          "description": "Turn footage into stories: edit, grade, mix, and finish.",
+          "subsubservices": [
+            { "slug": "editing", "label": "Editing" },
+            { "slug": "motion-graphics", "label": "Motion Graphics" },
+            { "slug": "color-grading", "label": "Color Grading" },
+            { "slug": "sound-design-mix", "label": "Sound Design & Mix" },
+            { "slug": "subtitles-captions", "label": "Subtitles & Captions" },
+            { "slug": "localization", "label": "Localization" }
+          ]
+        },
+        {
+          "slug": "animation-motion",
+          "label": "Animation & Motion",
+          "description": "Animated storytelling for clarity and brand recall.",
+          "subsubservices": [
+            { "slug": "2d-animation", "label": "2D Animation" },
+            { "slug": "3d-animation", "label": "3D Animation" },
+            { "slug": "explainer-animation", "label": "Explainer Animation" },
+            { "slug": "logo-stings", "label": "Logo Stings" },
+            { "slug": "lower-thirds", "label": "Lower Thirds" },
+            { "slug": "kinetic-typography", "label": "Kinetic Typography" }
+          ]
+        },
+        {
+          "slug": "formats",
+          "label": "Formats",
+          "description": "Repeatable video types aligned to funnel stages and channels.",
+          "subsubservices": [
+            { "slug": "product-demos", "label": "Product Demos" },
+            { "slug": "customer-testimonials", "label": "Customer Testimonials" },
+            { "slug": "explainer-videos", "label": "Explainer Videos" },
+            { "slug": "ads-promos", "label": "Ads & Promos" },
+            { "slug": "social-shorts", "label": "Social Shorts" },
+            { "slug": "webinars", "label": "Webinars" },
+            { "slug": "training-onboarding", "label": "Training & Onboarding" },
+            { "slug": "event-recaps", "label": "Event Recaps" }
+          ]
+        },
+        {
+          "slug": "activation-distribution",
+          "label": "Activation & Distribution",
+          "description": "Make content work across channels with the right variants and metadata.",
+          "subsubservices": [
+            { "slug": "channel-variants", "label": "Channel Variants" },
+            { "slug": "aspect-ratio-cuts", "label": "Aspect-Ratio Cutdowns" },
+            { "slug": "versioning", "label": "Versioning" },
+            { "slug": "thumbnail-design", "label": "Thumbnail Design" },
+            { "slug": "metadata-optimization", "label": "Metadata Optimization" }
+          ]
+        },
+        {
+          "slug": "studio-ops",
+          "label": "Studio & Ops",
+          "description": "Infrastructure to produce at scale and stay organized.",
+          "subsubservices": [
+            { "slug": "studio-rental", "label": "Studio Rental" },
+            { "slug": "gear-kits", "label": "Gear Kits" },
+            { "slug": "set-design", "label": "Set Design" },
+            { "slug": "pipeline-automation", "label": "Pipeline Automation" },
+            { "slug": "asset-management", "label": "Asset Management" }
+          ]
+        },
+        {
+          "slug": "compliance-accessibility",
+          "label": "Compliance & Accessibility",
+          "description": "Inclusive and compliant by default.",
+          "subsubservices": [
+            { "slug": "ada-captions", "label": "ADA Captions" },
+            { "slug": "brand-safety", "label": "Brand Safety" },
+            { "slug": "legal-clearance", "label": "Legal Clearance" }
+          ]
+        }
+      ]
+    }
+  }
+}

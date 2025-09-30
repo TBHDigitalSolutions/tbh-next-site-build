@@ -1,36 +1,25 @@
 /* src/packages/sections/PackageDetailExtras/PackageDetailExtras.module.css
-   Brand-aligned, responsive, container-query powered styles for the
-   PackageDetailExtras section.
-
-   Implements the “Title + Divider + Tagline” wrapping/alignment rule:
-   - .block       → Section wrapper
-   - .header      → Parent container for header content
-   - .headerTop   → Wraps Title + Divider together
-   - .headerTitle → Title
-   - .headerDivider → Divider directly under Title (inside .headerTop)
-   - .headerTagline → Tagline positioned directly beneath .headerTop
-
-   Tokens come from packages-unified.module.css → unified-theme.css
-   with safe fallbacks for local development.
-*/
-
-/* src/packages/sections/PackageDetailExtras/PackageDetailExtras.module.css
-   Brand-aligned, responsive, container-query powered styles for the
-   PackageDetailExtras section.
-
-   Implements the “Title + Divider + Tagline” wrapping/alignment rule using
-   universal utilities (.hgroup/.hpair/.hTitle/.hRule/.hTaglineWrap/.hTagline).
+/* PackageDetailExtras.module.css
+   Brand-aligned, responsive styles for the PackageDetailExtras section.
+   - Mobile-first vertical timeline
+   - Upgrades to horizontal stepper at wider container widths
+   - “Title + Divider + Tagline” heading pattern
+   - Graceful fallbacks for tokens & features
 */
 
 /* ------------------------------ Root wrap -------------------------------- */
 .wrap {
+    /* layout & spacing */
     display: grid;
     gap: var(--space-6, 1.25rem);
     inline-size: 100%;
     min-inline-size: 0;
+    margin-block: var(--space-10, 4rem);
+
+    /* theming + container queries */
     color: var(--pkg-text, var(--text-primary, #e7edf2));
     container-type: inline-size;
-    /* enable container queries for children */
+    /* enables @container queries below */
 }
 
 /* ------------------------------- Blocks ---------------------------------- */
@@ -38,24 +27,25 @@
     display: grid;
     gap: var(--space-5, 1rem);
     padding-block: var(--space-2, 0.5rem);
+    margin-block: var(--space-10, 4rem);
 }
 
-/* ---------- Universal heading stack utilities (module-local) ------------- */
+/* ---------- Heading group: Title + divider + tagline (module-local) ------ */
 .hgroup {
+    /* centers the whole header group */
     display: grid;
     justify-items: center;
-    /* centers the whole header group */
     gap: var(--space-2, 0.5rem);
     margin-block: var(--space-4, 1rem) var(--space-3, 0.75rem);
     text-wrap: pretty;
 }
 
 .hpair {
+    /* centers title + divider together */
     display: inline-grid;
     justify-items: center;
-    /* centers title + divider inside */
     inline-size: max-content;
-    /* ← makes Divider match the title width */
+    /* Divider width follows title width */
     max-inline-size: 100%;
     gap: var(--space-2, 0.5rem);
 }
@@ -68,13 +58,13 @@
     font-weight: var(--font-weight-extrabold, 800);
     letter-spacing: 0.15px;
     line-height: 1.2;
+    /* brand accent with safe fallback */
     color: var(--text-accent, var(--brand-blue, #0EAFFB));
     font-size: var(--font-size-h3, clamp(1.25rem, 1.2cqi + 1rem, 1.6rem));
 }
 
 .hRule {
     inline-size: clamp(160px, 40cqi, 560px);
-    /* centered underline */
     block-size: 2px;
     border-radius: 999px;
     margin-inline: auto;
@@ -88,7 +78,6 @@
 .hTaglineWrap {
     display: grid;
     justify-items: center;
-    /* centers the block itself */
 }
 
 .hTagline {
@@ -103,20 +92,18 @@
 }
 
 /* ------------------------------ Timeline --------------------------------- */
+/* Base (mobile-first): vertical list */
 .timeline {
-    /* Horizontal stepper: steps with connector items between them */
     display: grid;
-    grid-auto-flow: column;
-    grid-auto-columns: 1fr;
-    align-items: center;
-    gap: var(--space-4, 0.875rem);
-    list-style: none;
+    grid-template-columns: 1fr;
+    gap: var(--space-3, 0.75rem);
+    margin: var(--space-6, 2rem) 0 0;
     padding: 0;
-    margin: 0;
-    overflow: hidden;
+    list-style: none;
 }
 
 .step {
+    list-style: none;
     min-inline-size: 0;
 }
 
@@ -125,19 +112,24 @@
     grid-template-columns: auto 1fr;
     align-items: center;
     gap: var(--space-3, 0.75rem);
-    padding: var(--space-4, 0.875rem) var(--space-5, 1rem);
+
+    /* polished surface w/ safe fallbacks */
+    padding: var(--space-3, 0.75rem) var(--space-4, 1rem);
     background: var(--surface-charcoal, #12141e);
     border: 1px solid color-mix(in oklab, var(--brand-blue, #0EAFFB) 18%, #0b0f17);
-    border-radius: var(--radius-lg, 14px);
+    border-radius: var(--radius-xl, 14px);
     box-shadow: var(--shadow-sm, 0 6px 16px rgba(0, 0, 0, .25));
 }
 
 .stepIndex {
-    inline-size: 2rem;
-    block-size: 2rem;
     display: grid;
     place-items: center;
-    border-radius: 50%;
+    min-inline-size: 1.75rem;
+    inline-size: 1.75rem;
+    block-size: 1.75rem;
+    border-radius: 999px;
+
+    /* filled pill in brand color (fallback: subtle border) */
     color: #0b121a;
     background: var(--brand-blue, #0EAFFB);
     font-weight: 800;
@@ -167,39 +159,45 @@
     line-height: 1.45;
 }
 
-/* Connector (line + chevron) between steps */
+/* Vertical connector (between steps) */
 .connector {
     display: grid;
-    grid-template-columns: 1fr auto;
+    grid-template-columns: 1fr auto 1fr;
     align-items: center;
-    gap: var(--space-2, 0.5rem);
+    gap: 0.5rem;
+    padding: 0.25rem 0;
 }
 
 .line {
-    inline-size: 100%;
-    block-size: 2px;
+    grid-column: 1 / -1;
+    height: 2px;
     background: linear-gradient(90deg,
-            color-mix(in oklab, var(--brand-blue, #0EAFFB) 40%, transparent),
-            color-mix(in oklab, var(--brand-blue, #0EAFFB) 75%, #0e1822));
+            transparent,
+            var(--border-strong, rgba(148, 163, 184, .5)),
+            transparent);
     border-radius: 999px;
 }
 
 .chevron {
-    inline-size: 0.6rem;
-    block-size: 0.6rem;
-    rotate: -45deg;
-    border-inline-end: 2px solid var(--brand-blue, #0EAFFB);
-    border-block-start: 2px solid var(--brand-blue, #0EAFFB);
-    border-radius: 2px;
+    position: relative;
+    inline-size: 0.75rem;
+    block-size: 0.75rem;
+    margin: 0 auto;
+    transform: rotate(45deg);
+    border-right: 2px solid var(--border-strong, rgba(148, 163, 184, .7));
+    border-bottom: 2px solid var(--border-strong, rgba(148, 163, 184, .7));
+    background: transparent;
 }
 
 /* --------------------------- Ethics & Limits ----------------------------- */
 .ethicsList,
 .limitsList {
-    list-style: none;
+    margin: var(--space-4, 1.25rem) 0 0;
     padding: 0;
-    margin: 0;
+    list-style: none;
+
     display: grid;
+    grid-template-columns: 1fr;
     gap: var(--space-2, 0.5rem);
 }
 
@@ -208,15 +206,26 @@
     padding: var(--space-3, 0.75rem) var(--space-4, 0.875rem);
     background: color-mix(in oklab, var(--surface-charcoal, #12141e) 92%, transparent);
     border: 1px solid color-mix(in oklab, var(--brand-blue, #0EAFFB) 15%, #0b0f17);
-    border-radius: var(--radius-md, 12px);
+    border-radius: var(--radius-xl, 14px);
     color: var(--text-secondary, #c9ced1);
     font-family: var(--font-body, Newsreader, ui-serif);
     font-size: clamp(0.95rem, 0.35cqi + 0.9rem, 1.05rem);
     line-height: 1.55;
 }
 
+/* ---------------------------- Media queries ------------------------------ */
+/* Two-column ethics/limits at tablet+ */
+@media (min-width: 768px) {
+
+    .ethicsList,
+    .limitsList {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: var(--space-3, 0.75rem) var(--space-6, 1.5rem);
+    }
+}
+
 /* --------------------------- Container Queries --------------------------- */
-/* Scale title/divider inside their container (not viewport) */
+/* Scale title/divider inside their container (not the viewport) */
 @container (min-width: 520px) {
     .hTitle {
         font-size: clamp(1.35rem, 0.9cqi + 1.1rem, 1.75rem);
@@ -225,19 +234,52 @@
     .hRule {
         inline-size: clamp(220px, 42cqi, 480px);
     }
+}
 
-    .timeline {
-        gap: var(--space-5, 1rem);
+/* Upgrade timeline spacing and step padding on roomier containers */
+@container (min-width: 840px) {
+    .stepCard {
+        padding: var(--space-5, 1rem) var(--space-6, 1.25rem);
     }
 }
 
-@container (min-width: 840px) {
-    .hTitle {
-        font-size: clamp(1.5rem, 1.1cqi + 1.2rem, 2rem);
+/* Switch to horizontal stepper on wide containers */
+@container (min-width: 960px) {
+    .timeline {
+        /* horizontal flow; each step grows evenly */
+        grid-auto-flow: column;
+        grid-auto-columns: 1fr;
+        align-items: center;
+        gap: var(--space-4, 0.875rem);
+        overflow: hidden;
+        margin-top: var(--space-6, 2rem);
     }
 
-    .stepCard {
-        padding: var(--space-5, 1rem) var(--space-6, 1.25rem);
+    .connector {
+        grid-template-columns: 1fr auto;
+        /* line then chevron */
+        gap: var(--space-2, 0.5rem);
+        padding: 0;
+    }
+
+    .line {
+        inline-size: 100%;
+        block-size: 2px;
+        background: linear-gradient(90deg,
+                color-mix(in oklab, var(--brand-blue, #0EAFFB) 40%, transparent),
+                color-mix(in oklab, var(--brand-blue, #0EAFFB) 75%, #0e1822));
+        border-radius: 999px;
+    }
+
+    .chevron {
+        inline-size: 0.6rem;
+        block-size: 0.6rem;
+        rotate: -45deg;
+        border-inline-end: 2px solid var(--brand-blue, #0EAFFB);
+        border-block-start: 2px solid var(--brand-blue, #0EAFFB);
+        border-radius: 2px;
+        margin: 0;
+        /* align inline with the line */
     }
 }
 
@@ -249,6 +291,8 @@
 }
 
 @media print {
+
+    /* force vertical for print with tight spacing */
     .timeline {
         grid-auto-flow: row;
         grid-auto-columns: auto;

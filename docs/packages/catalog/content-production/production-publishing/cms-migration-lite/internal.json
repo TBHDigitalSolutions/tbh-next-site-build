@@ -1,0 +1,239 @@
+{
+  "version": 1,
+  "internalOnly": true,
+
+  "package": {
+    "id": "content-cms-migration-lite",
+    "slug": "cms-migration-lite",
+    "name": "CMS Migration Lite",
+    "service": "content",
+    "subservice": "production-publishing",
+    "tier": "Essential",
+    "owner": "Content Ops",
+    "status": "active"
+  },
+
+  "pricing": {
+    "list": { "currency": "USD", "oneTime": 6800 },
+    "feeModel": "fixed",
+    "minTermMonths": 0,
+    "discountPolicy": "Up to 10% with paired add-on or multi-package purchase.",
+    "paymentTerms": "50% to schedule, 50% at launch window.",
+    "inclusions": [
+      "≤100 URLs migrated",
+      "≤150 301 redirects",
+      "1 primary domain",
+      "2 base templates configured"
+    ],
+    "exclusions": [
+      "Full redesign/theme",
+      "E-commerce/app migrations",
+      "Multi-language/i18n",
+      "Custom automation beyond parity"
+    ],
+    "addOns": [
+      { "id": "redirects-pro", "label": "Redirects Pro", "estRangeUSD": [1200, 3500] },
+      { "id": "schema-upgrade", "label": "Schema Upgrade", "estRangeUSD": [900, 2200] },
+      { "id": "site-performance-hardening", "label": "Site Performance Hardening", "estRangeUSD": [1800, 4800] },
+      { "id": "cms-admin-training", "label": "CMS Admin Training", "estRangeUSD": [600, 1600] },
+      { "id": "i18n-starter", "label": "i18n Starter", "estRangeUSD": [2500, 6500] },
+      { "id": "content-upload-retainer", "label": "Content Upload Retainer", "estMonthlyUSD": [1200, 4000] }
+    ]
+  },
+
+  "ops": {
+    "deliveryModel": "hybrid-sprint",
+    "sops": [
+      "SOP-CMS-INV-001 Content Inventory & Mapping",
+      "SOP-REDIR-002 Redirect Plan & Proofs",
+      "SOP-SEO-003 Metadata/Schema Parity",
+      "SOP-QA-004 Pre/Post Launch QA",
+      "SOP-ROLLOUT-005 Cut-over & Rollback"
+    ],
+    "skillTags": ["content-ops", "seo-tech", "webdev", "analytics", "ga4", "gsc", "redirects", "lighthouse"],
+    "environments": ["staging", "production"],
+    "tools": [
+      "Screaming Frog/HTTP Toolkit for crawl",
+      "GA4 / GSC",
+      "Redirect test harness (node/ci)",
+      "Site diff tool (html/headers)",
+      "Lighthouse"
+    ]
+  },
+
+  "scope": {
+    "caps": {
+      "urls": 100,
+      "redirects": 150,
+      "domains": 1,
+      "templates": 2
+    },
+    "cmsPairsExamples": [
+      "WordPress ⇄ Webflow",
+      "Contentful ⇄ Sanity",
+      "HubSpot CMS → Next.js/Headless"
+    ],
+    "inScope": [
+      "Crawl-based inventory and URL mapping",
+      "Parity matrix for URLs, meta, canonicals, basic schema",
+      "301 redirect map with human-readable proofs",
+      "XML sitemap regeneration & robots.txt update",
+      "GA4 and Search Console validation",
+      "Staging QA (links, images, forms, status codes)",
+      "Launch window support (1–2 hours) and post-launch sweep (24–48h)",
+      "Rollback plan/checkpoints"
+    ],
+    "outOfScope": [
+      "Visual redesign or theme overhaul",
+      "E-commerce catalog/cart/checkout migrations",
+      "Complex app/data migrations",
+      "Multi-brand/multi-domain consolidation",
+      "Multi-language/i18n and hreflang"
+    ],
+    "dependencies": [
+      "Admin access to source and target CMS (incl. staging)",
+      "Hosting/DNS access for go-live",
+      "GA4 & GSC access",
+      "Content type/template list",
+      "Plugin/app inventory from source CMS"
+    ]
+  },
+
+  "requirements": {
+    "access": [
+      "CMS admin (source/target)",
+      "Staging environment",
+      "Hosting & DNS (Cloudflare/Registrar)",
+      "GA4 + GSC"
+    ],
+    "inputs": [
+      "Approved content type & field map (old → new)",
+      "Territories of responsibility for launch window (who can approve cut-over)",
+      "Source CMS plugins/apps list",
+      "Brand/SEO guidelines (if any)"
+    ]
+  },
+
+  "timeline": {
+    "setup": "3–5 business days",
+    "launch": "2–3 weeks end-to-end (size/complexity dependent)",
+    "ongoing": "14-day warranty for migration defects",
+    "milestones": [
+      "M1: Inventory & Mapping Complete",
+      "M2: Parity Matrix Approved",
+      "M3: Redirect Draft + Proofs",
+      "M4: Staging QA Sign-off",
+      "M5: Cut-over Executed",
+      "M6: Post-launch Sweep & Handoff"
+    ]
+  },
+
+  "delivery": {
+    "roles": [
+      { "role": "Project Manager", "hours": 8 },
+      { "role": "SEO Technologist", "hours": 10 },
+      { "role": "Web Engineer", "hours": 14 },
+      { "role": "Content Ops", "hours": 10 }
+    ],
+    "estTotalHours": 42,
+    "acceptanceCriteria": [
+      "≥98% successful redirect proofs for mapped URLs",
+      "≥95% metadata parity across migrated pages",
+      "No critical 4xx/5xx on primary templates post-launch",
+      "GA4 pageview & Search Console index coverage validated",
+      "Sitemaps updated and submitted; robots.txt correct"
+    ]
+  },
+
+  "qa": {
+    "preLaunchChecks": [
+      "HTTP status audit (200/301/404/5xx) on staging",
+      "Meta/canonical parity spot checks",
+      "Schema presence on target templates (Article/WebPage as applicable)",
+      "Noindex/nofollow flags validated",
+      "Sitemap & robots.txt validate"
+    ],
+    "postLaunchChecks": [
+      "Live redirect proofs",
+      "Recrawl high-value sections",
+      "GA4/SC data flow confirmation",
+      "404 report and hotfixes within 48h"
+    ],
+    "thresholds": {
+      "redirectPassRate": 0.98,
+      "metaParityRate": 0.95
+    }
+  },
+
+  "risks": {
+    "items": [
+      {
+        "name": "Unknown legacy paths",
+        "mitigation": "Run deeper historical crawl/log sample; add Redirects Pro if volume high."
+      },
+      {
+        "name": "Plugin-dependent features",
+        "mitigation": "Audit plugin list; identify functional gaps; propose substitutes or de-scope."
+      },
+      {
+        "name": "DNS/hosting propagation delays",
+        "mitigation": "Schedule low-traffic window; prepare temporary cache rules and status page."
+      }
+    ]
+  },
+
+  "analytics": {
+    "events": [
+      "LaunchWindow.Start",
+      "LaunchWindow.End",
+      "Redirect.ProofPass",
+      "Redirect.ProofFail",
+      "QA.PostLaunchFixApplied"
+    ],
+    "dashboards": ["Migration QA", "Redirect Proofs", "Post-Launch Crawl"]
+  },
+
+  "sales": {
+    "idealCustomerProfile": [
+      "≤100 live URLs",
+      "Single brand/domain",
+      "On legacy CMS or moving to headless for workflow gains",
+      "No active cart/checkout"
+    ],
+    "discoveryChecklist": [
+      "Source/target CMS and hosting details",
+      "Exact URL count and high-value pages",
+      "Required templates/components",
+      "Known redirect debt/legacy paths",
+      "Compliance constraints (PII, cookies)"
+    ],
+    "objections": [
+      "“Will we lose rankings?” → Parity-first plan, proofs, and sweep minimize risk.",
+      "“We might find more pages later.” → Scope cap; add Redirects Pro or Pro migration."
+    ],
+    "upsellPaths": [
+      "Site Performance Hardening",
+      "Schema Upgrade",
+      "Content Upload Retainer",
+      "i18n Starter (future locales)"
+    ]
+  },
+
+  "compliance": {
+    "pii": "Do not migrate forms that store sensitive data without DPA review.",
+    "security": "Scan source exports for malware; avoid migrating vulnerable plugins."
+  },
+
+  "experimentFlags": {
+    "useScriptedRedirectTesting": true,
+    "enableParityDiffReport": true
+  },
+
+  "changeLog": [
+    {
+      "date": "2025-10-01",
+      "author": "systems",
+      "change": "Initial internal.json for CMS Migration Lite."
+    }
+    ]
+}

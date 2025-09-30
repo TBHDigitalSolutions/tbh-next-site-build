@@ -1,0 +1,85 @@
+{
+  "version": "1.0",
+  "service": {
+    "id": "seo",
+    "title": "SEO Services",
+    "slug": "seo",
+    "hubSlug": "seo-services",
+    "description": "Complete search engine optimization solutions for maximum visibility.",
+
+    "routes": {
+      "serviceHub": "/services/seo",
+      "serviceSubservice": "/services/seo/{subservice}",
+      "serviceLeaf": "/services/seo/{subservice}/{subsubservice}",
+      "packagesByLeaf": "/packages/catalog/seo/{subservice}/{slug}"
+    },
+
+    "authoring": {
+      "docsPathTemplate": "docs/packages/catalog/${service}/${subService}/${slug}/",
+      "mdxFile": "public.mdx",
+      "internalPricingFile": "internal.json",
+      "assetsDir": "assets"
+    },
+
+    "filters": {
+      "dimensions": ["pillar", "intent", "siteType", "contentType", "technicalArea"],
+      "defaultSort": "alpha"
+    },
+
+    "subservices": [
+      {
+        "id": "ai-seo",
+        "title": "AI SEO",
+        "slug": "ai-seo",
+        "summary": "Optimization for AI-driven search surfaces (SGE, LLM answers, visibility engineering).",
+        "subsubservices": [
+          { "id": "ai-search-optimization", "title": "AI Search Optimization", "slug": "ai-search-optimization" },
+          { "id": "llm-answer-seo", "title": "LLM Answer SEO", "slug": "llm-answer-seo" },
+          { "id": "visibility-engineering", "title": "Visibility Engineering", "slug": "visibility-engineering" }
+        ]
+      },
+      {
+        "id": "marketing",
+        "title": "Marketing",
+        "slug": "marketing",
+        "summary": "Content-driven SEO and promotional amplification.",
+        "subsubservices": [
+          { "id": "community-seo", "title": "Community SEO", "slug": "community-seo" },
+          { "id": "content-hubs", "title": "Content Hubs", "slug": "content-hubs" },
+          { "id": "content-syndication", "title": "Content Syndication", "slug": "content-syndication" },
+          { "id": "digital-pr", "title": "Digital PR", "slug": "digital-pr" },
+          { "id": "ecommerce-seo", "title": "Ecommerce SEO", "slug": "ecommerce-seo" },
+          { "id": "keyword-strategy", "title": "Keyword Strategy", "slug": "keyword-strategy" },
+          { "id": "local-seo", "title": "Local SEO", "slug": "local-seo" },
+          { "id": "marketplace-seo", "title": "Marketplace SEO", "slug": "marketplace-seo" },
+          { "id": "on-page", "title": "On-Page", "slug": "on-page" },
+          { "id": "video-seo", "title": "Video SEO", "slug": "video-seo" }
+        ]
+      },
+      {
+        "id": "technical",
+        "title": "Technical",
+        "slug": "technical",
+        "summary": "Backend, rendering, performance, and indexation discipline.",
+        "subsubservices": [
+          { "id": "core-web-vitals", "title": "Core Web Vitals", "slug": "core-web-vitals" },
+          { "id": "indexation-routing", "title": "Indexation Routing", "slug": "indexation-routing" },
+          { "id": "international-seo", "title": "International SEO", "slug": "international-seo" },
+          { "id": "migration-seo", "title": "Migration SEO", "slug": "migration-seo" },
+          { "id": "schema", "title": "Schema", "slug": "schema" },
+          { "id": "technical-audit", "title": "Technical Audit", "slug": "technical-audit" }
+        ]
+      }
+    ]
+  },
+  "defaults": {
+    "templates": {
+      "hub": "ServicesHubTemplate",
+      "subservice": "ServicesSubHubTemplate",
+      "leaf": "ServiceTemplate"
+    },
+    "catalogPaths": {
+      "byLeaf": "docs/packages/catalog/seo/{subservice}/{slug}"
+    }
+  }
+}
