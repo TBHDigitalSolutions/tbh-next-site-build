@@ -1,13 +1,19 @@
+---
 title: "Prompt Template for Frontmatter Generation"
 domain: "documentation"
 file: "frontmatter-generator_Prompt_2025-10-01.md"
 main: "frontmatter-generator"
 qualifier: "Prompt"
 date: "2025-10-01"
-time: 12:58pm
+time: "12:58pm"
 status: "Approved"
-owners: ["@AI_Assistant"]
-tags: ["prompting","metadata","yaml","standards"]
+owners:
+  - "@TBH_DigitalSolutions"
+tags:
+  - "prompting"
+  - "metadata"
+  - "yaml"
+  - "standards"
 spotlight:
   - "Canonical rules for structure, naming, headers, and cross-linking"
   - "Basis for docs validation and generated indexes"
@@ -15,12 +21,29 @@ spotlight:
 summary: "This handbook defines our documentation operating model: folder roles, filename conventions, required headers, linking rules, lifecycle and status. It is the **single source of truth** for authors and reviewers."
 links:
   related:
-    - "./documents-indexing-linking_Standard_2025-09-21.md"
-    - "./documents-directory_RefactorPlan_2025-09-21.md"
+    - title: "Indexing & Linking Standard"
+      href: "./documents-indexing-linking_Standard_2025-09-21.md"
+    - title: "Refactor Plan & Ideal Structure"
+      href: "./documents-directory_RefactorPlan_2025-09-21.md"
 ---
 
+# ✅ Prompt Template
+
 **Your Task:**
-Review the **Source Document** provided below and generate a complete **YAML frontmatter header** for it.
+Review the **Source Document** provided below and generate a **complete frontmatter header in two formats**:
+
+1. **Markdown Human-Readable Source Metadata Format**
+
+   * Plain Markdown key/value pairs (easy for humans to read and edit).
+   * Use labels like **Official Title**, **Domain**, **File Name**, etc.
+   * Include Spotlight Comments, Summary, and See also links in list format.
+
+2. **YAML Example Target Output Structure**
+
+   * Proper YAML frontmatter block (enclosed in `---` fences).
+   * Keys should follow the defined schema: `title`, `domain`, `file`, `main`, `qualifier`, `date`, `time`, `status`, `owners`, `tags`, `spotlight`, `summary`, `links`.
+   * Related links must be in nested object format with `title` + `href`.
+
 
 **Rules for Generation:**
 
@@ -31,8 +54,11 @@ Review the **Source Document** provided below and generate a complete **YAML fro
 
 -----
 
+## 📌 Example Outputs
+
 **YAML EXAMPLE FORMAT (Source Metadata):**
 
+```markdown
 **Official Title:** Project Documents Handbook
 **Domain:** project
 **File Name:** project-documents\_Handbook\_2025-09-21.md
@@ -54,21 +80,22 @@ This handbook defines our documentation operating model: folder roles, filename 
 
   - \[Indexing & Linking Standard\](./documents-indexing-linking\_Standard\_2025-09-21.md)
   - \[Refactor Plan & Ideal Structure\](./documents-directory\_RefactorPlan\_2025-09-21.md)
-
+```
 -----
 
 **YAML EXAMPLE (Target Output Structure):**
 
 ```yaml
+---
 title: "Project Documents Handbook"
 domain: "project"
 file: "project-documents_Handbook_2025-09-21.md"
 main: "project-documents"
 qualifier: "Handbook"
 date: "2025-09-21"
-time: 12:02pm
+time: "12:02pm"
 status: "Approved"
-owners: ["@conor"]
+owners: ["@TBH_DigitalSolutions"]
 tags: ["docs","standards","indexing"]
 spotlight:
   - "Canonical rules for structure, naming, headers, and cross-linking"
@@ -77,8 +104,11 @@ spotlight:
 summary: "This handbook defines our documentation operating model: folder roles, filename conventions, required headers, linking rules, lifecycle and status. It is the **single source of truth** for authors and reviewers."
 links:
   related:
-    - "./documents-indexing-linking_Standard_2025-09-21.md"
-    - "./documents-directory_RefactorPlan_2025-09-21.md"
+    - title: "Indexing & Linking Standard"
+      href: "./documents-indexing-linking_Standard_2025-09-21.md"
+    - title: "Refactor Plan & Ideal Structure"
+      href: "./documents-directory_RefactorPlan_2025-09-21.md"
+---
 ```
 
 -----
