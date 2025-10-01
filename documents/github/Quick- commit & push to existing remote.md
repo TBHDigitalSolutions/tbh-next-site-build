@@ -453,3 +453,88 @@ MSG
 ```
 
 You’re good to go.
+You’re seeing a classic **non-fast-forward** because you amended local history (`--amend`) while `origin/main` has new commits you don’t have yet. Here’s the safest way to reconcile and push your work.
+
+# Option A (recommended): Rebase onto the latest `origin/main`
+
+```bash
+# 1) Make sure you’re on main and your worktree is clean
+git switch main
+git status
+
+# 2) Fetch the latest remote refs
+git fetch origin
+
+# (optional) See what you’re missing / what you’ve added
+git log --oneline main..origin/main      # commits you need to pull
+git log --oneline origin/main..main      # commits you have locally
+
+# 3) Rebase your amended commit(s) on top of the remote main
+git rebase origin/main
+# If conflicts appear:
+#   - fix files
+#   - git add -A
+#   - git rebase --continue
+#   - repeat until rebase completes
+
+# 4) Sanity check the history
+git log --oneline --graph --decorate -n 15
+
+# 5) Push normally (no force needed after a clean rebase)
+git push origin main
+```
+
+This keeps the remote history intact, puts your amended commit on top, and avoids rewriting anyone else’s work.
+
+---
+
+# Option B (only if you truly intend to rewrite remote history): force-with-lease
+
+Use this **only** if you’re certain no one else’s new commits on `origin/main` should be kept (or you’ve coordinated and branch protection allows it).
+
+```bash
+# Double-check divergence first:
+git fetch origin
+git log --oneline origin/main..main      # your local-only commits
+git log --oneline main..origin/main      # their remote-only commits
+
+# If you still intend to overwrite remote history:
+git push --force-with-lease origin main
+```
+
+`--force-with-lease` is safer than `--force`: it refuses to push if `origin/main` moved in a way you haven’t fetched.
+
+---
+
+## If you prefer a merge (not rebase)
+
+This creates a merge commit instead of replaying your changes:
+
+```bash
+git fetch origin
+git merge origin/main
+# resolve conflicts → git add -A → git commit
+git push origin main
+```
+
+---
+
+## Tips to avoid this next time
+
+* Avoid `--amend` on `main` in shared repos. Use a feature branch/PR:
+
+  ```bash
+  git switch -c feat/content-updates
+  # commits …
+  git push -u origin feat/content-updates
+  ```
+
+* If you must amend locally, **rebase** before pushing:
+
+  ```bash
+  git fetch origin
+  git rebase origin/main
+  git push origin main
+  ```
+
+If you run Option A as-is, your `git push` should succeed.
