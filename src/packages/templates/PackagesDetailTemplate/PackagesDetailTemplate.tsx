@@ -1,44 +1,87 @@
 // src/packages/templates/PackagesDetailTemplate/PackagesDetailTemplate.tsx
 "use client";
 
-/* =============================================================================
-   PackagesDetailTemplate
-   - Page-level composition for a single package/bundle
-   - Renders the hero, overview (super card), extras, add-ons, related, CTA band,
-     and FAQ with consistent containers.
-============================================================================= */
+/**
+ * PackagesDetailTemplate
+ * =============================================================================
+ * Page-level composition for rendering a **single** package/bundle detail page.
+ *
+ * PURPOSE
+ * - Provide a thin, documented shell that wires validated package content into
+ *   the UI sections (Hero, Overview/Super Card, Extras, Add-ons, Related, CTA, FAQ).
+ * - Keep **content rules** and **UI policies** centralized in shared libraries:
+ *     • Pricing rules → "@/packages/lib/pricing"
+ *     • CTA policy    → "@/packages/lib/copy" + "@/packages/lib/registry/mappers"
+ *     • Band variant  → resolved inside PackageDetailOverview via "@/packages/lib/band"
+ * - Avoid authoring/schema logic in this component. It should be dominated by
+ *   composition and light normalization for optional author shapes.
+ *
+ * INPUT SHAPE
+ * - Accepts a flexible **PackageBundle** (domain type) plus a few optional
+ *   authoring conveniences (e.g., `faqs`, `includes`, `image`, etc.).
+ * - For validated “registry” packages you would typically *map* (or load) those
+ *   into this template at the route level.
+ *
+ * KEY IMPLEMENTATION DETAILS
+ * - ✅ Uses **buildIncludesTableFromGroups** from registry mappers to construct an
+ *   optional 1-column “What’s included” fallback table from grouped bullets.
+ *   This guarantees consistent IDs/captions and prevents bespoke, divergent logic.
+ * - ✅ Resolves **CTA policy** via `buildDetailCtas` (detail surfaces) and
+ *   `buildCardCtas` (pinned/rail cards).
+ * - ✅ Uses `startingAtLabel` for the CTA band subtitle (marketing-friendly).
+ * - 🧠 The price band **variant** is NOT decided here; it’s computed within
+ *   `<PackageDetailOverview />` using `bandPropsFor("detail", price, priceBand)`.
+ *
+ * ACCESSIBILITY
+ * - Each major region is labeled with `aria-label`.
+ * - Headings and sections in downstream components (Phase wrappers) provide
+ *   predictable, screen-reader friendly structure.
+ *
+ * PERFORMANCE
+ * - Only uses inexpensive React memoization for derived arrays/props.
+ * - Heavy work (MDX → JSON → Zod validation) happens at build/loader step.
+ */
 
 import * as React from "react";
 import styles from "./PackagesDetailTemplate.module.css";
 
-/* ------------------------------- Data & utils ------------------------------ */
+/* --------------------------------- Types ---------------------------------- */
 import type { PackageBundle } from "@/packages/lib/types";
+import type { PackageIncludesTableProps } from "@/packages/components/PackageIncludesTable/PackageIncludesTable";
+
+/* ------------------------------- Data & utils ------------------------------ */
 import { emitServiceJsonLd } from "@/packages/lib/jsonld";
 import { toPackageCard } from "@/packages/lib/adapters";
-import { buildCardCtas, buildDetailCtas } from "@/packages/lib/registry/mappers"; // ✅ use builders from mappers
 import { startingAtLabel } from "@/packages/lib/pricing";
+import {
+  buildCardCtas,
+  buildDetailCtas,
+  buildIncludesTableFromGroups, // ✅ canonical fallback-table builder
+} from "@/packages/lib/registry/mappers";
 
 /* --------------------------------- Layout --------------------------------- */
 import FullWidthSection from "@/components/sections/section-layouts/FullWidthSection/FullWidthSection";
-
-/* --------------------------- Page-level sections --------------------------- */
 import ServiceHero from "@/components/sections/section-layouts/ServiceHero";
 import CTASection from "@/components/sections/section-layouts/CTASection/CTASection";
 import FAQSection from "@/components/sections/section-layouts/FAQSection";
 
 /* --------------------------------- Detail --------------------------------- */
 import PackageDetailOverview from "@/packages/sections/PackageDetailOverview";
-import type { PackageIncludesTableProps } from "@/packages/components/PackageIncludesTable/PackageIncludesTable";
+import PackageDetailExtras from "@/packages/sections/PackageDetailExtras";
 import AddOnSection from "@/packages/sections/AddOnSection";
 import RelatedItemsRail from "@/packages/components/RelatedItemsRail";
-import PackageDetailExtras from "@/packages/sections/PackageDetailExtras";
 
 /* ----------------------------------------------------------------------------
- * Types
+ * Props
  * -------------------------------------------------------------------------- */
 
 export type PackagesDetailTemplateProps = {
-  /** SSOT bundle; minimal typing + flexible optional fields for authoring */
+  /**
+   * Primary data model for this page. `PackageBundle` is a domain type:
+   * - `price` is canonical Money { monthly?, oneTime?, currency? }
+   * - `includes` is structured groups [{ title, items[] }]
+   * - `outcomes`, `faqs`, `image`, etc. are optional conveniences here
+   */
   bundle: PackageBundle & {
     slug?: string;
     service?: string;
@@ -49,7 +92,7 @@ export type PackagesDetailTemplateProps = {
     name?: string;
     title?: string;
     summary?: string;       // short value prop
-    description?: string;   // longer paragraph used on detail overview
+    description?: string;   // longer paragraph for Detail Overview
     icp?: string;
 
     /** Pricing (canonical Money shape) */
@@ -58,7 +101,7 @@ export type PackagesDetailTemplateProps = {
     /** Content collections */
     outcomes?: Array<string | { label: string }>;
     includes?: Array<{ title: string; items: (string | { label: string; note?: string })[] }>;
-    notes?: string;
+    notes?: string | string[];
 
     /** FAQ — support both legacy and flat shapes */
     faq?: { title?: string; faqs?: Array<{ q?: string; a?: string; id?: string | number }> };
@@ -83,6 +126,44 @@ export type PackagesDetailTemplateProps = {
 };
 
 /* ----------------------------------------------------------------------------
+ * Small helpers (pure)
+ * -------------------------------------------------------------------------- */
+
+/** Normalize an authored FAQ shape to `{ id, question, answer }[]`. */
+function normalizeFaqs(input: unknown, fallback: unknown = []): Array<{ id: string; question: string; answer: string }> {
+  const authored = Array.isArray((input as any)?.faqs)
+    ? (input as any).faqs
+    : Array.isArray(input)
+    ? (input as any)
+    : [];
+
+  const normalizedAuthored = authored.map((f: any, i: number) => ({
+    id: String(f?.id ?? i),
+    question: f?.question ?? f?.q ?? "",
+    answer: f?.answer ?? f?.a ?? "",
+  })).filter((f: any) => f.question || f.answer);
+
+  if (normalizedAuthored.length > 0) return normalizedAuthored;
+
+  const normalizedFallback = (Array.isArray(fallback) ? fallback : []).map((f: any, i: number) => ({
+    id: String(f?.id ?? i),
+    question: f?.question ?? f?.q ?? "",
+    answer: f?.answer ?? f?.a ?? "",
+  })).filter((f: any) => f.question || f.answer);
+
+  return normalizedFallback;
+}
+
+/** Ensure a footnote-like value renders safely; join arrays with bullets. */
+function normalizeFootnote(input?: unknown): string | undefined {
+  if (input == null) return undefined;
+  if (typeof input === "string") return input.trim() || undefined;
+  if (typeof input === "number") return String(input);
+  if (Array.isArray(input)) return input.filter(Boolean).join(" • ") || undefined;
+  return undefined;
+}
+
+/* ----------------------------------------------------------------------------
  * Component
  * -------------------------------------------------------------------------- */
 
@@ -96,8 +177,7 @@ export default function PackagesDetailTemplate({
    * HERO CONTENT
    * ------------------------------------------------------------------------ */
   const heroTitle = bundle.title ?? (bundle as any).name ?? "Package";
-  const heroSubtitle =
-    bundle.summary ?? (bundle as any).valueProp ?? (bundle as any).subtitle ?? "";
+  const heroSubtitle = bundle.summary ?? (bundle as any).valueProp ?? (bundle as any).subtitle ?? "";
 
   // Pass hero image via `media` (expected API for visual/background hero)
   const heroImage = (bundle as any).image as { src?: string; alt?: string } | undefined;
@@ -112,35 +192,23 @@ export default function PackagesDetailTemplate({
   const hasAddOns = (addOns?.length ?? 0) > 0;
   const hasRelated = (related?.length ?? 0) > 0;
 
-  // Build a simple one-column "What's included" table from grouped bullets (fallback only)
+  /**
+   * Optional fallback “What’s included” table.
+   * We prefer *groups* for the “What you get” section. But for legacy renderers
+   * or matrix displays, we can pass a simple 1-column presence table built from
+   * the groups. This builder guarantees consistent IDs/captions across the app.
+   */
   const includesTable: PackageIncludesTableProps | undefined = React.useMemo(() => {
-    const groups = (bundle as any).includes as Array<{ title: string; items: string[] }> | undefined;
-    if (!groups?.length) return undefined;
-
-    const rows =
-      groups.flatMap((group) =>
-        (group.items ?? []).map((item, i) => ({
-          id: `${group.title.toLowerCase().replace(/\s+/g, "-")}-${i}`,
-          label: `${group.title} — ${typeof item === "string" ? item : (item as any)?.label ?? ""}`,
-          values: { pkg: true }, // single checkmark column
-        })),
-      ) ?? [];
-
-    if (!rows.length) return undefined;
-
-    return {
-      caption: "What’s included",
-      columns: [{ id: "pkg", label: heroTitle }],
-      rows,
-    } as PackageIncludesTableProps;
+    const groups = (bundle as any).includes;
+    if (!Array.isArray(groups) || groups.length === 0) return undefined;
+    return buildIncludesTableFromGroups({ name: heroTitle, includes: groups });
   }, [bundle, heroTitle]);
 
-  // Explicit empty fallback (keeps renderer predictable)
-  const emptyIncludes: PackageIncludesTableProps = {
-    caption: "What’s included",
-    columns: [],
-    rows: [],
-  };
+  // Explicit empty fallback (keeps renderer predictable in rigid layouts)
+  const emptyIncludes: PackageIncludesTableProps = React.useMemo(
+    () => ({ caption: "What’s included", columns: [], rows: [] }),
+    [],
+  );
 
   /* ------------------------------------------------------------------------ *
    * PINNED CARD & RELATED
@@ -151,7 +219,7 @@ export default function PackagesDetailTemplate({
   const {
     primaryCta: pinnedPrimary,
     secondaryCta: pinnedSecondary,
-  } = buildCardCtas(bundle.name ?? bundle.slug ?? "", bundle.slug ?? "");
+  } = buildCardCtas(bundle.name ?? bundle.slug ?? heroTitle, bundle.slug ?? "");
 
   const pinnedCard = {
     ...pinnedCardBase,
@@ -174,14 +242,14 @@ export default function PackagesDetailTemplate({
   // CTA band subtitle derived from canonical price
   const priceSubtitle = bundle.price ? startingAtLabel(bundle.price as any) : undefined;
 
-  // Outcomes normalized (strings → {label} → string[])
+  // Outcomes normalized to strings for Overview
   const outcomes: string[] =
     (bundle as any).outcomes?.map((o: any) => (typeof o === "string" ? o : o?.label)).filter(Boolean) ?? [];
 
   // Chips shown in HERO (omit in Overview to avoid duplication)
   const tagChips = (bundle as any).tags ?? (bundle as any).services ?? [];
 
-  // Extras (Timeline / Ethics only — deliverables handled elsewhere by design)
+  // Extras (Timeline / Ethics only — deliverables appear elsewhere by design)
   const extras = React.useMemo(
     () => ({
       timeline: (bundle as any).timeline as
@@ -191,8 +259,18 @@ export default function PackagesDetailTemplate({
     }),
     [bundle],
   );
+
   const hasExtras =
     !!extras.timeline?.setup || !!extras.timeline?.launch || !!extras.timeline?.ongoing || !!extras.ethics?.length;
+
+  // Normalized FAQs (author-provided or page-level fallback)
+  const normalizedFaqs = React.useMemo(
+    () => normalizeFaqs((bundle as any)?.faqs ?? (bundle as any)?.faq?.faqs, faqs),
+    [bundle, faqs],
+  );
+
+  const faqTitle =
+    (bundle as any)?.faq?.title /* optional authored title */ ?? "Frequently asked questions";
 
   /* ------------------------------------------------------------------------ *
    * RENDER
@@ -203,7 +281,7 @@ export default function PackagesDetailTemplate({
       data-template="packages-detail"
       data-bundle={bundle.slug ?? ""}
     >
-      {/* SEO (schema.org) */}
+      {/* ============================== SEO =============================== */}
       {jsonLd}
 
       {/* ============================== HERO ============================== */}
@@ -233,34 +311,36 @@ export default function PackagesDetailTemplate({
       >
         <PackageDetailOverview
           id={bundle.slug}
+          /* Phase 1 (Hero within super-card) */
           title={heroTitle}
           valueProp={heroSubtitle}
-          description={(bundle as any).description}  // long blurb into TitleBlock
+          description={(bundle as any).description}
           icp={(bundle as any).icp}
           /* De-dup meta: let the HERO show chips; hide them in overview */
           service={undefined as any}
           tags={undefined}
           showMeta={false}
-          /* Canonical price only (renderer derives “Starting at …”) */
+          /* Canonical price only (renderer derives band via bandPropsFor internally) */
           packagePrice={(bundle as any).price}
           /* CTAs (policy standard for detail pages) */
           ctaPrimary={sectionPrimaryCta}       // "Request proposal" → /contact
           ctaSecondary={sectionSecondaryCta}   // "Book a call" → /book
-          /* Outcomes & Includes */
+          /* Phase 2+ (Why / What) */
           outcomes={outcomes}
-          /* ✅ Pass SSOT groups directly from base.ts */
+          /* Prefer groups; table is legacy/alt presentation */
           includesGroups={(bundle as any).includes}
           includesTitle="What’s included"
-          includesVariant="cards"              // default; explicit for clarity
-          includesMaxCols={3}                  // three-up grid on desktop
+          includesVariant="cards"
+          includesMaxCols={3}
           includesDense={false}
           includesShowIcons
-          includesFootnote={(bundle as any).notes}
-          /* Optional fallback table (legacy/matrix cases) */
+          includesFootnote={normalizeFootnote((bundle as any).notes)}
+          /* Optional fallback table (legacy/matrix cases). If absent, pass an explicit empty table
+             to keep downstream renderers predictable in strict layouts. */
           includesTable={(includesTable as any) ?? emptyIncludes}
           /* Right sticky card */
           pinnedPackageCard={pinnedCard as any}
-          /* Page-level notes (if you choose to keep a separate NotesBlock) */
+          /* Phase 4 (Details) is rendered separately via PackageDetailExtras */
           notes={undefined}
         />
       </FullWidthSection>
@@ -322,56 +402,25 @@ export default function PackagesDetailTemplate({
       </FullWidthSection>
 
       {/* ============================== FAQ ============================== */}
-      {
-        // Normalize FAQs from either authoring shape:
-        (() => {
-          const rawAuthored =
-            (Array.isArray((bundle as any)?.faqs) && (bundle as any).faqs) ||
-            (Array.isArray((bundle as any)?.faq?.faqs) && (bundle as any).faq.faqs) ||
-            [];
-
-          // → { id, question, answer }
-          const normalizedAuthored = rawAuthored.map((f: any, i: number) => ({
-            id: String(f?.id ?? i),
-            question: f?.question ?? f?.q,
-            answer: f?.answer ?? f?.a,
-          }));
-
-          // Page-level fallback
-          const normalizedFallback = (faqs ?? []).map((f: any, i: number) => ({
-            id: String(f?.id ?? i),
-            question: f?.question ?? f?.q,
-            answer: f?.answer ?? f?.a,
-          }));
-
-          const list = normalizedAuthored.length ? normalizedAuthored : normalizedFallback;
-          const title =
-            (bundle as any)?.faq?.title /* optional authored title */ ??
-            "Frequently asked questions";
-
-          if (list.length === 0) return null;
-
-          return (
-            <FullWidthSection
-              aria-label="Frequently asked questions"
-              containerSize="wide"
-              containerSpacing="sm"
-              className={styles.faqSection}
-            >
-              <FAQSection
-                id="bundle-faq"
-                title={title}
-                faqs={list}
-                variant="default"
-                allowMultiple={false}
-                enableSearch={true}
-                enableCategoryFilter={false}
-                searchPlaceholder="Search FAQs"
-              />
-            </FullWidthSection>
-          );
-        })()
-      }
+      {normalizedFaqs.length > 0 && (
+        <FullWidthSection
+          aria-label="Frequently asked questions"
+          containerSize="wide"
+          containerSpacing="sm"
+          className={styles.faqSection}
+        >
+          <FAQSection
+            id="bundle-faq"
+            title={faqTitle}
+            faqs={normalizedFaqs}
+            variant="default"
+            allowMultiple={false}
+            enableSearch={true}
+            enableCategoryFilter={false}
+            searchPlaceholder="Search FAQs"
+          />
+        </FullWidthSection>
+      )}
     </article>
   );
 }

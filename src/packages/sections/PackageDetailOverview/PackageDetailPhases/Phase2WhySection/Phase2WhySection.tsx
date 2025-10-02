@@ -1,7 +1,6 @@
-// src/packages/sections/PackageDetailOverview/PackageDetailPhases/Phase2WhySection/Phase2WhySection.tsx
 /**
  * Phase 2 — "Why You Need This"
- * -----------------------------------------------------------------------------
+ * =============================================================================
  * PURPOSE
  *  - Presents the rationale for the package using four logical blocks:
  *    1) Purpose (narrative of success / "what good looks like")
@@ -12,7 +11,7 @@
  * ACCESSIBILITY & STRUCTURE
  *  - The *phase* itself has a consistent header — Title → Divider → Tagline —
  *    via <PhaseSectionHeader/> to match your design system.
- *  - Each inner block is wrapped by <SubSection/> which also renders a small
+ *  - Each inner block is wrapped by <SubSection/>, which also renders a small
  *    header (Title → Divider → optional Tagline), keeping a predictable
  *    hierarchy and ARIA semantics (`aria-labelledby` for each group).
  *
@@ -47,7 +46,6 @@ import PhaseSectionHeader from "@/packages/sections/PackageDetailOverview/parts/
 import SubSection from "@/packages/sections/PackageDetailOverview/parts/SubSection/SubSection";
 
 /* ------------------------------- Public types ------------------------------ */
-/** Mirror child prop signatures so we stay in sync with their public APIs. */
 export type PurposeBlockProps = React.ComponentProps<typeof PurposeBlock>;
 export type PainPointsBlockProps = React.ComponentProps<typeof PainPointsBlock>;
 export type OutcomesBlockProps = React.ComponentProps<typeof OutcomesBlock>;
@@ -96,10 +94,6 @@ function Phase2WhySection({
   phaseTitle = "Why you need this",
   phaseTagline = "Common problems, purpose & outcomes",
 }: Phase2WhySectionProps) {
-  /**
-   * Render guard — if nothing meaningful is provided, do not render the phase.
-   * This keeps the page free of empty containers and unnecessary spacing.
-   */
   const hasAny =
     !!purpose ||
     !!icpText ||
@@ -108,7 +102,6 @@ function Phase2WhySection({
 
   if (!hasAny) return null;
 
-  /** Compose the outer class list; allow consumers to append custom classes. */
   const sectionClass = [
     styles.wrap,
     stackOnDesktop ? styles.stackDesktop : styles.splitDesktop,
@@ -124,7 +117,7 @@ function Phase2WhySection({
       data-section="Phase2WhySection"
       aria-labelledby={id ? `${id}__heading` : undefined}
     >
-      {/* ======================= Phase header (title/divider/tagline) ======================= */}
+      {/* ===== Phase header (title/divider/tagline) ===== */}
       <PhaseSectionHeader
         id={id ? `${id}__heading` : undefined}
         title={phaseTitle}
@@ -132,7 +125,7 @@ function Phase2WhySection({
         className={styles.phaseHeader}
       />
 
-      {/* ===================================== Purpose ===================================== */}
+      {/* ================= Purpose ================= */}
       {purpose ? (
         <SubSection
           id={id ? `${id}__purpose` : undefined}
@@ -145,7 +138,7 @@ function Phase2WhySection({
         </SubSection>
       ) : null}
 
-      {/* ======================================= ICP ======================================= */}
+      {/* =================== ICP =================== */}
       {icpText ? (
         <SubSection
           id={id ? `${id}__icp` : undefined}
@@ -154,7 +147,6 @@ function Phase2WhySection({
           className={styles.icp}
           data-block="icp"
         >
-          {/* Keep semantic text in a paragraph; visual badge handled by CSS */}
           <div className={styles.icpBadge} aria-hidden="true">
             Ideal for
           </div>
@@ -162,10 +154,9 @@ function Phase2WhySection({
         </SubSection>
       ) : null}
 
-      {/* ======================== Two-column grid (Pain/Outcomes) ========================= */}
+      {/* ========== Two-column grid (Pain / Outcomes) ========== */}
       {(painPoints || outcomes) ? (
         <div className={styles.gridTwo}>
-          {/* ------------------------------- Pain Points -------------------------------- */}
           <div className={styles.col}>
             {painPoints ? (
               <SubSection
@@ -179,7 +170,6 @@ function Phase2WhySection({
             ) : null}
           </div>
 
-          {/* --------------------------------- Outcomes --------------------------------- */}
           <div className={styles.col}>
             {outcomes ? (
               <SubSection

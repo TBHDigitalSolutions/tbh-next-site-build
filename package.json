@@ -7,6 +7,7 @@
     "lint": "eslint . --ext .ts,.tsx",
     "format": "prettier --write .",
     "build:packages": "tsx scripts/build-packages.ts",
+    "build:registry:lead-routing": "ts-node --transpile-only scripts/packages/mdx-to-registry.ts",
     "validate:taxonomy": "tsx scripts/taxonomy/validate-taxonomy.ts",
     "taxonomy:export-slugs": "tsx scripts/taxonomy/export-slugs.ts",
     "taxonomy:export-slugs:minimal": "tsx scripts/taxonomy/export-slugs.ts --format=minimal",

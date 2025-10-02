@@ -1,21 +1,28 @@
-// src/packages/lib/registry/mappers.ts
-// src/packages/lib/registry/mappers.ts
-/**
- * Registry mappers — single source of truth for:
- * - CTA policy for cards & detail pages
- * - Card props (default/rail/pinned-compact)
- * - Detail overview props (band inputs, pinned card, includes groups/table)
- * - Safe footnote normalization
+/** src/packages/lib/registry/mappers.ts
+ * Registry mappers — bridges validated content → UI props.
+ * =============================================================================
+ * Responsibilities
+ * -----------------------------------------------------------------------------
+ * - Enforce CTA policy (cards vs. detail pages).
+ * - Map PackageMetadata → PackageCardProps / PackageDetailOverviewProps.
+ * - Build derived "What’s included" tables when author forgot to author one.
+ * - Keep fine print / price-band logic **separate** from SSOT price (pricing.ts).
  *
- * Notes:
- * - No summary → tagline fallback. Band copy only comes from `priceBand`.
- * - Do not pass band `variant`; the detail component resolves it from price.
+ * Design constraints
+ * -----------------------------------------------------------------------------
+ * - **No band variant decisions here**. Detail/card surfaces infer variants
+ *   from the canonical price shape or via `bandPropsFor(...)` closer to the UI.
+ * - **No business copy here**. CTA wording, base note text, etc. live in copy.ts.
+ * - **No price math here**. Formatting/labels live in pricing.ts.
+ *
+ * Safety
+ * -----------------------------------------------------------------------------
+ * - Inputs are already validated at build time (MDX → JSON → Zod → PackageMetadata).
+ * - Regardless, we still guard against optional/empty arrays and nullish fields
+ *   to prevent React runtime warnings and to keep DOM/a11y clean.
  */
 
-import type {
-  PackageAuthoringBase,
-  IncludesTableLike,
-} from "./types";
+import type { PackageMetadata } from "@/types/package";
 import type { PackageCardProps } from "@/packages/components/PackageCard/PackageCard";
 import type { PackageDetailOverviewProps } from "@/packages/sections/PackageDetailOverview";
 import type { PackageIncludesTableProps } from "@/packages/components/PackageIncludesTable/PackageIncludesTable";
@@ -27,134 +34,143 @@ import {
   ariaViewDetailsFor,
 } from "@/packages/lib/copy";
 
-/* ==========================================================================
-   Helpers
-   ========================================================================== */
+/* =============================================================================
+ * Small pure helpers (no side-effects)
+ * ============================================================================= */
 
-/** Join footnote variants safely to avoid [object Object] */
+/**
+ * Stable, URL/ID-safe slugifier for row IDs, keys, and test IDs.
+ * - Lowercases
+ * - Replaces non-alphanumerics with "-"
+ * - Trims leading/trailing "-"
+ */
+function idify(s: string, fallback = "row"): string {
+  const base = (s || "")
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+  return base || fallback;
+}
+
+/**
+ * Normalize a "notes" style value to a single small-print string.
+ * - Strings → trimmed string (or undefined if empty)
+ * - Numbers → stringified
+ * - Arrays  → " • " joined
+ * - Other   → undefined
+ */
 export function normalizeFootnote(input?: unknown): string | undefined {
+  if (input == null) return undefined;
   if (typeof input === "string") return input.trim() || undefined;
   if (typeof input === "number") return String(input);
   if (Array.isArray(input)) return input.filter(Boolean).join(" • ") || undefined;
   return undefined;
 }
 
-/** Tiny slug/id helper for local row ids */
-function idify(s: string, fallback = "row"): string {
-  const base = (s || "").toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
-  return base || fallback;
+/**
+ * Extract a human label out of a string | { label: string }.
+ * Returns empty string for anything else (caller typically filters empties).
+ */
+function coerceLabel(item: unknown): string {
+  if (typeof item === "string") return item;
+  if (item && typeof item === "object" && "label" in item) {
+    const v = (item as any).label;
+    return typeof v === "string" ? v : "";
+  }
+  return "";
 }
 
-/** Build a 1-column "What’s included" table from include groups (fallback) */
-export function buildIncludesTableFromGroups(
-  base: Pick<PackageAuthoringBase, "name" | "includes">
-): PackageIncludesTableProps {
-  const caption = "What’s included";
-  const columnId = "pkg";
+/* =============================================================================
+ * Includes builders / adapters
+ * ============================================================================= */
 
+/**
+ * Build a simple, 1-column "What’s included" table from include groups.
+ * Useful as a fallback when authors provided groups but not a table.
+ */
+export function buildIncludesTableFromGroups(
+  base: Pick<PackageMetadata, "name" | "includes">
+): PackageIncludesTableProps {
+  const columnId = "pkg";
   return {
-    caption,
+    caption: "What’s included",
     columns: [{ id: columnId, label: base.name }],
     rows: (base.includes ?? []).flatMap((group) =>
-      (group.items ?? []).map((item, i) => ({
-        id: `${idify(group.title, "group")}-${i}`,
-        label: `${group.title} — ${item}`,
-        values: { [columnId]: true },
-      }))
+      (group.items ?? []).map((item, i) => {
+        const label = coerceLabel(item);
+        return {
+          id: `${idify(group.title, "group")}-${i}`,
+          label: `${group.title} — ${label}`,
+          values: { [columnId]: true },
+        };
+      })
     ),
   };
 }
 
 /**
- * Adapt a loose IncludesTableLike (authoring-friendly) into PackageIncludesTableProps.
- * If no columns are given, uses a single column labeled with the package name.
- * Row convention: first cell is the feature label; subsequent cells map to columns.
+ * Adapt the schema-authored `includesTable` into PackageIncludesTableProps.
+ * We assume it already conforms to the generated type; this function mostly
+ * preserves caption/columns/rows with a default caption fallback.
  */
-export function mapIncludesTableLike(
-  pkgName: string,
-  t?: IncludesTableLike
-): PackageIncludesTableProps | undefined {
+export function mapIncludesTable(pkg: PackageMetadata): PackageIncludesTableProps | undefined {
+  const t = pkg.includesTable;
   if (!t || !Array.isArray(t.rows) || t.rows.length === 0) return undefined;
-
-  const colLabels = Array.isArray(t.columns) && t.columns.length > 0 ? t.columns : [pkgName];
-  const columns = colLabels.map((label, i) => ({
-    id: `c${i}-${idify(label, `c${i}`)}`,
-    label,
-  }));
-
-  const rows = t.rows
-    .map((r, i) => {
-      const cells = Array.isArray(r) ? r : r?.cells;
-      if (!cells || cells.length === 0) return null;
-
-      const label = String(cells[0]).trim();
-      if (!label) return null;
-
-      const values: Record<string, boolean> = {};
-      // Map presence/truthiness from cells → columns (starting at cell index 1)
-      for (let j = 1; j < cells.length && j <= columns.length; j++) {
-        const raw = cells[j];
-        const truthy =
-          raw === true ||
-          (typeof raw === "string" && raw.trim() !== "" && raw.toLowerCase() !== "false" && raw !== "0") ||
-          (typeof raw === "number" && raw > 0);
-        if (truthy) values[columns[j - 1].id] = true;
-      }
-
-      return {
-        id: `row-${i}-${idify(label, "row")}`,
-        label,
-        values,
-      };
-    })
-    .filter(Boolean) as PackageIncludesTableProps["rows"];
-
   return {
     caption: t.caption ?? "What’s included",
-    columns,
-    rows,
+    columns: t.columns,
+    rows: t.rows,
   };
 }
 
-/* ==========================================================================
-   CTA policy (centralized)
-   ========================================================================== */
+/* =============================================================================
+ * CTA policy (centralized)
+ * ============================================================================= */
 
 type Cta = {
   label: string;
   href: string;
-  /** Optional a11y label; renderer can map this to aria-label */
+  /** Optional a11y label; renderer spreads to aria-label when present. */
   ariaLabel?: string;
-  /** Optional analytics tag; renderer can spread as data-cta */
+  /** Optional analytics tag; renderer may spread as data-cta */
   dataCta?: "primary" | "secondary";
 };
+
 type CtaPair = { primary: Cta; secondary: Cta };
 
-/** Cards: Primary = View details; Secondary = Book a call */
+/**
+ * Card surfaces:
+ * - Primary CTA → View details (routes to /packages/[slug])
+ * - Secondary   → Book a call
+ */
 export function buildCardCtas(nameOrSlug: string, slug: string): {
   primaryCta: Cta;
   secondaryCta: Cta;
 } {
   const href = `/packages/${encodeURIComponent(slug)}`;
 
-  const primaryCta: Cta = {
-    label: CTA.VIEW_DETAILS,
-    href,
-    ariaLabel: ariaViewDetailsFor(nameOrSlug),
-    dataCta: "primary",
+  return {
+    primaryCta: {
+      label: CTA.VIEW_DETAILS,
+      href,
+      ariaLabel: ariaViewDetailsFor(nameOrSlug),
+      dataCta: "primary",
+    },
+    secondaryCta: {
+      label: CTA.BOOK_A_CALL,
+      href: "/book",
+      ariaLabel: ariaBookCallAbout(nameOrSlug),
+      dataCta: "secondary",
+    },
   };
-
-  const secondaryCta: Cta = {
-    label: CTA.BOOK_A_CALL,
-    href: "/book",
-    ariaLabel: ariaBookCallAbout(nameOrSlug),
-    dataCta: "secondary",
-  };
-
-  return { primaryCta, secondaryCta };
 }
 
-/** Detail pages: Primary = Request proposal; Secondary = Book a call */
+/**
+ * Detail surfaces:
+ * - Primary CTA → Request proposal
+ * - Secondary   → Book a call
+ */
 export function buildDetailCtas(name?: string): CtaPair {
   return {
     primary: {
@@ -172,25 +188,40 @@ export function buildDetailCtas(name?: string): CtaPair {
   };
 }
 
-/* ==========================================================================
-   Card mappers
-   ========================================================================== */
+/* =============================================================================
+ * Card mappers
+ * ============================================================================= */
 
 type CardVariant = "default" | "rail" | "pinned-compact";
 
 /**
- * Build PackageCard props from authoring base.
- * - Uses card CTA policy
- * - Prefers authored `features`; falls back to top 5 includes
- * - Normalizes footnote
+ * Build `PackageCardProps` from validated content.
+ *
+ * Rules:
+ * - Features: prefer authored `features`; fallback to the first 5 include items.
+ * - Small print: normalize via `normalizeFootnote`.
+ * - CTA: enforced by card policy (View details / Book a call).
+ * - Price: pass canonical `price` as-is (formatting happens downstream).
  */
 export function buildPackageCardProps(
-  base: PackageAuthoringBase,
+  base: PackageMetadata,
   opts?: { variant?: CardVariant; highlight?: boolean }
 ): PackageCardProps {
   const { variant = "default", highlight = false } = opts ?? {};
-  const fromIncludes = (base.includes?.flatMap((g) => g.items) ?? []).slice(0, 5);
-  const features = (base.features && base.features.length > 0 ? base.features : fromIncludes).slice(0, 5);
+
+  // Fallback features (first 5 from grouped includes)
+  const fromIncludes = (base.includes?.flatMap((g) =>
+    (g.items ?? []).map((it) => coerceLabel(it))
+  ) ?? []).filter(Boolean);
+
+  const features = (
+    Array.isArray(base.features) && base.features.length > 0
+      ? base.features.map(coerceLabel)
+      : fromIncludes
+  )
+    .filter(Boolean)
+    .slice(0, 5);
+
   const { primaryCta, secondaryCta } = buildCardCtas(base.name ?? base.slug, base.slug);
 
   return {
@@ -216,7 +247,7 @@ export function buildPackageCardProps(
     badge: base.badges?.[0],
     tags: base.tags,
 
-    // canonical price (band on cards handles badge-left + inline/chips)
+    // canonical price (downstream band/component does formatting)
     price: base.price,
 
     // CTAs (policy)
@@ -235,14 +266,12 @@ export function buildPackageCardProps(
 }
 
 /**
- * Build a pinned card for detail rails.
- * - Same visuals as rail card
- * - BUT primary CTA switches to Request proposal (detail policy)
+ * Build a pinned/rail card for the detail page right rail.
+ * Same visuals as a rail card, but CTA policy switches to detail (Request proposal).
  */
-export function buildPinnedCardForDetail(base: PackageAuthoringBase): PackageCardProps {
+export function buildPinnedCardForDetail(base: PackageMetadata): PackageCardProps {
   const card = buildPackageCardProps(base, { variant: "rail" });
   const { primary, secondary } = buildDetailCtas(base.name);
-
   return {
     ...card,
     primaryCta: primary,
@@ -250,26 +279,42 @@ export function buildPinnedCardForDetail(base: PackageAuthoringBase): PackageCar
   };
 }
 
-/* ==========================================================================
-   Detail overview mapper (super-card)
-   ========================================================================== */
+/* =============================================================================
+ * Detail overview mapper (super-card that feeds phases 1–5)
+ * ============================================================================= */
 
+/**
+ * Map PackageMetadata → PackageDetailOverviewProps
+ *
+ * Scope:
+ * - Phase 1 inputs (title, summary/valueProp, long description, ICP)
+ * - Pricing (canonical) and priceBand (microcopy) passthrough
+ * - CTA policy (detail)
+ * - Phase 2–3 content: features, outcomes, includes (groups/table)
+ * - Right-rail pinned card with detail CTAs
+ * - Phase 4 extras + notes
+ *
+ * Out-of-scope:
+ * - Band variant resolution (done at the detail surface via price shape).
+ * - Price formatting/labels (pricing.ts).
+ */
 export function buildPackageDetailOverviewProps(
-  base: PackageAuthoringBase
+  base: PackageMetadata
 ): PackageDetailOverviewProps {
   const { primary: ctaPrimary, secondary: ctaSecondary } = buildDetailCtas(base.name);
 
-  // Prefer includes groups; only fall back to a table if no groups provided
   const hasGroups = Array.isArray(base.includes) && base.includes.length > 0;
 
-  // If author supplied a loose includesTable shape and no groups, adapt it
-  const adaptedTable = !hasGroups ? mapIncludesTableLike(base.name, (base as any).includesTable) : undefined;
+  // Prefer authoring groups; fall back to authored table only when groups are absent.
+  const adaptedTable = !hasGroups ? mapIncludesTable(base) : undefined;
 
-  // Otherwise, build a simple 1-column presence table as ultimate fallback
+  // As ultimate fallback, synthesize a 1-col table from groups
   const derivedTable =
-    !hasGroups && !adaptedTable ? buildIncludesTableFromGroups({ name: base.name, includes: base.includes }) : undefined;
+    !hasGroups && !adaptedTable
+      ? buildIncludesTableFromGroups({ name: base.name, includes: base.includes })
+      : undefined;
 
-  // Pinned card for the right rail with detail CTA policy
+  // Pinned/rail card adopts detail CTA policy
   const pinnedPackageCard = buildPinnedCardForDetail(base);
 
   return {
@@ -278,66 +323,63 @@ export function buildPackageDetailOverviewProps(
     title: base.name,
     valueProp: base.summary,
     description: base.description,
-    icp: (base as any).icp, // optional in authoring; keep flexible
+    icp: base.icp,
     service: base.service,
     tags: base.tags,
 
-    /* Canonical price ONLY (the component renders the band) */
+    /* Canonical price + band microcopy (detail component decides variant/defaults) */
     packagePrice: base.price,
-
-    /* PriceActionsBand inputs (detail component applies defaults/variant) */
     priceBand: base.priceBand,
 
-    /* CTAs (policy) */
+    /* CTAs (detail policy) */
     ctaPrimary,
     ctaSecondary,
 
-    /* Highlights & outcomes */
-    features: base.features,
+    /* Phase 2 (Why) + Phase 3 (What) */
+    features: Array.isArray(base.features)
+      ? base.features.map(coerceLabel).filter(Boolean)
+      : undefined,
     outcomes: base.outcomes,
 
-    /* What’s included */
+    /* What’s included (groups preferred; table is fallback) */
     includesGroups: hasGroups ? base.includes : undefined,
     includesTable: hasGroups ? undefined : (adaptedTable ?? derivedTable),
 
-    /* Sticky right rail */
+    /* Right sticky rail card */
     pinnedPackageCard,
 
-    /* Notes (plain text; small print under includes table) */
+    /* Phase 4 — Details & Trust (extra bundles + notes) */
     notes: normalizeFootnote(base.notes),
-
-    /* Extras (below grid) */
+    // Keep this shape permissive; PackageDetailExtras is resilient to missing keys.
     extras: {
-      timelineBlocks: (base as any).timelineBlocks,
       timeline: base.timeline,
       ethics: base.ethics,
-      limits: (base as any).limits,
-    },
+      requirements: base.requirements,
+      // If your content includes these, pass them through (harmless if undefined):
+      ...(base as any).limits && { limits: (base as any).limits },
+      ...(base as any).timelineBlocks && { timelineBlocks: (base as any).timelineBlocks },
+    } as any,
 
-    /* Styling hooks */
+    /* Styling hooks (optional in most use-cases) */
     className: undefined,
     style: undefined,
   };
 }
 
-/* ==========================================================================
-   Convenience wrappers per common surfaces
-   ========================================================================== */
+/* =============================================================================
+ * Convenience wrappers (handy in call sites)
+ * ============================================================================= */
 
-export function buildDefaultCard(base: PackageAuthoringBase): PackageCardProps {
-  return buildPackageCardProps(base, { variant: "default" });
-}
-export function buildRailCard(base: PackageAuthoringBase): PackageCardProps {
-  return buildPackageCardProps(base, { variant: "rail" });
-}
-export function buildPinnedCompactCard(base: PackageAuthoringBase): PackageCardProps {
-  return buildPackageCardProps(base, { variant: "pinned-compact" });
-}
+export const buildDefaultCard = (b: PackageMetadata) =>
+  buildPackageCardProps(b, { variant: "default" });
 
-/* ==========================================================================
-   Notes
-   - Do NOT import legacy helpers (price.ts / cta.ts). Use copy.ts + policy here.
-   - No fallback of band.tagline to summary.
-   - Cards never pass band finePrint/baseNote; detail overview may pass priceBand.
-   - CTA copy/targets are centralized (consistent labels & ARIA).
-   ========================================================================== */
+export const buildRailCard = (b: PackageMetadata) =>
+  buildPackageCardProps(b, { variant: "rail" });
+
+export const buildPinnedCompactCard = (b: PackageMetadata) =>
+  buildPackageCardProps(b, { variant: "pinned-compact" });
+
+/* =============================================================================
+ * End of file
+ * =============================================================================
+ */

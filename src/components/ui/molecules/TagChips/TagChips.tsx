@@ -1,4 +1,27 @@
+// src/components/ui/molecules/TagChips/TagChips.tsx
 "use client";
+
+/**
+ * TagChips
+ * =============================================================================
+ * Purpose
+ * -------
+ * Render a compact, accessible chip row for service/category/tags. The order is:
+ *   1) service chips (always first when provided)
+ *   2) category chips
+ *   3) free-form tags
+ *
+ * Design goals
+ * ------------
+ * - SSR/CSR safe (renders nothing when empty)
+ * - Stable keys derived from the chip text (index-suffixed for uniqueness)
+ * - Data-attributes for analytics/search (“service”, “category”, “tags”)
+ *
+ * Notes
+ * -----
+ * - `service` and `category` can be string or string[]; we normalize to arrays.
+ * - `tags` accepts string/number/nullish; we normalize & trim.
+ */
 
 import * as React from "react";
 import clsx from "clsx";
@@ -22,12 +45,6 @@ export type TagChipsProps = {
   testId?: string;
 };
 
-/**
- * TagChips — semantic chips for service/category/tags.
- * - Always renders "service" (if given) first, then "category", then "tags".
- * - Exposes searchable data attributes for analytics or client-side indexing.
- * - SSR/CSR-safe: renders nothing if nothing to render.
- */
 export default function TagChips({
   service,
   category,
@@ -38,31 +55,25 @@ export default function TagChips({
   ariaLabel,
   testId,
 }: TagChipsProps) {
-  const services = React.useMemo(
-    () =>
-      (Array.isArray(service) ? service : [service])
-        .filter(Boolean)
-        .map((s) => String(s).trim())
-        .filter(Boolean),
-    [service],
-  );
+  const services = React.useMemo(() => {
+    const arr = Array.isArray(service) ? service : [service];
+    // normalize, trim, dedupe (case-insensitive)
+    const normalized = arr.filter(Boolean).map((s) => String(s).trim()).filter(Boolean);
+    return Array.from(new Set(normalized.map((s) => s.toLowerCase()))).map((s) => s);
+  }, [service]);
 
-  const categories = React.useMemo(
-    () =>
-      (Array.isArray(category) ? category : [category])
-        .filter(Boolean)
-        .map((c) => String(c).trim())
-        .filter(Boolean),
-    [category],
-  );
+  const categories = React.useMemo(() => {
+    const arr = Array.isArray(category) ? category : [category];
+    const normalized = arr.filter(Boolean).map((c) => String(c).trim()).filter(Boolean);
+    return Array.from(new Set(normalized.map((c) => c.toLowerCase()))).map((c) => c);
+  }, [category]);
 
-  const tagList = React.useMemo(
-    () =>
-      (tags ?? [])
-        .map((t) => (t == null ? "" : String(t).trim()))
-        .filter(Boolean),
-    [tags],
-  );
+  const tagList = React.useMemo(() => {
+    const normalized = (tags ?? [])
+      .map((t) => (t == null ? "" : String(t).trim()))
+      .filter(Boolean);
+    return Array.from(new Set(normalized.map((t) => t.toLowerCase()))).map((t) => t);
+  }, [tags]);
 
   const nothing = services.length === 0 && categories.length === 0 && tagList.length === 0;
   if (nothing) return null;
@@ -73,9 +84,9 @@ export default function TagChips({
       aria-label={ariaLabel ?? "Tags"}
       data-component="TagChips"
       data-testid={testId}
-      data-service={services.join(",").toLowerCase()}
-      data-category={categories.join(",").toLowerCase()}
-      data-tags={tagList.map((t) => t.toLowerCase()).join(",")}
+      data-service={services.join(",")}
+      data-category={categories.join(",")}
+      data-tags={tagList.join(",")}
     >
       {services.map((s, i) => (
         <li key={`svc-${i}-${s}`} className={clsx(styles.chip, styles.serviceChip)} title={`Service: ${s}`}>

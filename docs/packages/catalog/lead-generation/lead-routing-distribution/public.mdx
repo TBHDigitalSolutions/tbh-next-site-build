@@ -1,44 +1,45 @@
 ---
-id: leadgen-routing-distribution
-slug: lead-routing-distribution
-name: Lead Routing & Distribution
-tier: Essential
+id: "leadgen-routing-distribution"
+slug: "lead-routing-distribution"
+service: "leadgen"
+category: "Lead Generation"
+name: "Lead Routing & Distribution"
+tier: "Essential"
+tags:
+  - "routing"
+  - "assignment"
+  - "automation"
+badges: []
 
-# Authoritative taxonomy (must match docs/taxonomy)
-service: lead-generation
-subservice: lead-management-qualification
-subServices:
-  - routing
-
-# Card & hero
-summary: >
-  Automated lead routing so the right rep gets the right lead in seconds —
-  fairly, transparently, and at scale.
+summary: "Automated lead routing so the right rep gets the right lead in seconds — fairly, transparently, and at scale."
 description: >
-  We implement rules-driven routing aligned to your territories and ownership model,
-  prevent double-assignments, log every decision to your CRM for auditability, and
-  ship light dashboards so RevOps can track performance and iterate safely.
-icp: RevOps and Sales teams on Salesforce or HubSpot who need fast, fair, auditable lead assignment.
-tags: [routing, assignment, automation, revops, crm]
-badges: []          # e.g. ["Popular"]
+  We configure fair, transparent routing that respects territories and capacity, logs every handoff to your CRM for
+  auditability, and ships with lightweight dashboards so RevOps can track performance and iterate safely.
 
 image:
-  src: /packages/lead-generation/lead-routing-distribution-card.png
-  alt: Lead routing assignment previews
+  src: "/packages/lead-generation/lead-routing-distribution-card.png"
+  alt: "Lead routing assignment previews"
 
-# Canonical price (UI derives bands/teasers)
 price:
-  monthly: 1000
   oneTime: 2500
-  currency: USD
+  monthly: 1000
+  currency: "USD"
 
-# Detail-only price band copy (never derive tagline from summary)
 priceBand:
-  tagline: Fair, fast lead assignment your reps can trust.
-  baseNote: proposal
-  finePrint: 3-month minimum
+  tagline: "Flat monthly fee with transparent setup — built for RevOps velocity."
+  baseNote: "proposal"
+  finePrint: "3-month minimum • + ad spend (if applicable)"
 
-# Outcomes/KPIs (bullet list)
+painPoints:
+  - "Leads sit idle while reps are busy or off-shift."
+  - "Uneven distribution across territories and teams."
+  - "Duplicate or conflicting assignments create confusion."
+  - "Limited visibility into who got what and why."
+  - "Manual triage doesn't scale and is error-prone."
+
+# The build converts the MDX body to purposeHtml. Keep this frontmatter key for ICP.
+icp: "Sales-led B2B teams running Salesforce or HubSpot that need fair, fast, and auditable lead assignment."
+
 outcomes:
   - "↑ Speed-to-lead (seconds, not minutes)"
   - "↑ Fair distribution across teams/territories"
@@ -46,162 +47,119 @@ outcomes:
   - "↑ SLA adherence and follow-up consistency"
   - "↑ Visibility with CRM-side routing events"
 
-# Optional explicit features (otherwise can be derived from includes)
 features:
-  - Territory routing by region, segment, or book of business
-  - Round-robin with catch-up logic & out-of-office handling
-  - Daily caps / load balancing to prevent over-assignment
-  - Account-owner lookups & conflict guardrails
-  - Duplicate suppression and “do-not-route” lists
-  - CRM write-backs + dashboards for audit & performance
+  - "Territory routing by region, segment, or book of business"
+  - "Round-robin with catch-up logic & out-of-office handling"
+  - "Daily caps / load balancing to prevent over-assignment"
+  - "Account-owner lookups & conflict guardrails"
+  - "Duplicate suppression and “do-not-route” lists"
+  - "CRM write-backs + dashboards for audit & performance"
 
-# “What’s included” (grouped)
 includes:
-  - title: Distribution & Assignment
+  - title: "Distribution & Assignment"
     items:
-      - Territory-based distribution
-      - Round-robin assignment
-      - Assignment rule library (starter set)
-      - Account-owner conflict checks
-  - title: Reporting & Telemetry
+      - "Territory-based distribution"
+      - "Round-robin assignment"
+      - "Assignment rule library (starter set)"
+      - "Account-owner conflict checks"
+  - title: "Reporting & Telemetry"
     items:
-      - Routing decision events written to CRM
-      - Monthly performance dashboard (starter)
-  - title: Scope & Connectivity
+      - "Routing decision events written to CRM"
+      - "Monthly performance dashboard (starter)"
+  - title: "Scope & Connectivity"
     items:
-      - Initial setup for one CRM
-      - Primary territory model included
+      - "Initial setup for one CRM"
+      - "Primary territory model included"
 
-# Extras (rendered in PackageDetailExtras)
+deliverables:
+  - "Configured routing rules & primary territory model"
+  - "CRM-side routing event logging & starter dashboards"
+  - "Admin playbook & training session"
+
 requirements:
-  - CRM admin access (Salesforce or HubSpot)
-  - Active reps list with emails & territories
-  - Territory model / ownership source of truth (spreadsheet or object model)
-  - Business rules for assignment (owner, queues, exceptions)
-  - Sandbox access & API credentials (if applicable)
-  - Change-approver + business hours/holiday calendar
+  - "CRM admin access (Salesforce or HubSpot)"
+  - "Active reps list with emails & territories"
+  - "Territory model / ownership source of truth (spreadsheet or object model)"
+  - "Business rules for assignment (owner, queues, exceptions)"
+  - "Sandbox access & API credentials (if applicable)"
+  - "Change-approver + business hours/holiday calendar"
+
 timeline:
-  setup: 3–5 business days
-  launch: Pilot validation with sample leads, then go-live
-  ongoing: Monthly performance review and rule tweaks
+  setup: "3–5 business days"
+  launch: "Pilot validation with sample leads, then go-live"
+  ongoing: "Monthly performance review and rule tweaks"
+
 ethics:
-  - Routing adheres to declared territory/assignment rules
-  - No discriminatory attributes in rule logic
-limits:
-  - One CRM and one primary territory model included in Essential
-  - Custom ML scoring and multi-CRM syncs are out-of-scope (available as add-ons)
+  - "Routing follows declared territory/assignment rules"
+  - "AI-based optimization and custom integrations are out-of-scope for the Essential tier"
 
-# FAQ (q/a OR question/answer supported by mappers)
-faqs:
-  - id: capacity
-    question: Can we cap leads per rep per day?
-    answer: >
-      Yes. We support daily caps with catch-up logic so fairness is maintained while preventing overload.
-  - id: ooo
-    question: How do you handle vacations or out-of-office?
-    answer: >
-      We toggle OOO on reps and route to alternates with audit logs. The system can catch them up on return if enabled.
-  - id: tools
-    question: Which CRMs are supported?
-    answer: Salesforce and HubSpot out-of-the-box. Others can be scoped as an add-on.
-  - id: testing
-    question: Can we A/B test routing rules?
-    answer: The Professional tier supports controlled experiments without impacting SLAs.
-  - id: governance
-    question: How are changes approved and tracked?
-    answer: All rule changes are versioned (owner, timestamp, reason) with rollback points and a change log.
-
-# Small print under the includes table (NOT the band finePrint)
 notes: >
-  Initial setup includes configuration for one CRM and one primary territory model.
-  Advanced experiments, enrichment, and multi-CRM are add-ons.
+  Initial setup includes configuration for one CRM and one primary territory model. Advanced experiments, enrichment,
+  and multi-CRM are add-ons.
 
-# Relationships
-addOnRecommendations:
-  - lead-enrichment
-  - account-scoring-starter
-  - sla-monitoring
-relatedSlugs:
-  - inbound-forms-optimization
-  - sales-handshake-playbook
+faqs:
+  - id: "capacity"
+    question: "Can we cap leads per rep per day?"
+    answer: "Yes. We support daily caps with catch-up logic so fairness is maintained while preventing overload."
+  - id: "oOO"
+    question: "How do you handle vacations or out-of-office?"
+    answer: "We toggle OOO on reps and route to alternates with audit logs. The system catches them up on return if you enable catch-up."
+  - id: "tools"
+    question: "Which CRMs are supported?"
+    answer: "Salesforce and HubSpot are supported out-of-the-box. Others can be scoped as an add-on."
+  - id: "testing"
+    question: "Can we A/B test routing rules?"
+    answer: "Submit a ticket with new rules/territories. Simple changes land within 1–3 business days."
+  - id: "fairness"
+    question: "How do you keep distribution fair?"
+    answer: "We use a round-robin rotation and guardrails to prevent double-assignments and account-owner conflicts."
+  - id: "ai"
+    question: "What does AI-powered routing mean here?"
+    answer: "We combine intent, fit, and engagement signals to score leads and bias routing toward the highest-propensity rep or team while honoring rules."
+  - id: "integrations"
+    question: "Can you integrate with our data warehouse or CDP?"
+    answer: "Yes. We support MAP/CDP/warehouse/webhooks for scoring inputs and write-backs for audit and analytics."
+  - id: "governance"
+    question: "How are changes approved and tracked?"
+    answer: "All rule changes are versioned with owner, timestamp, and reason. We maintain rollback points and a change log."
 
-# SEO
+# Cross-sell and add-ons — your loader maps these to relatedSlugs and addOnRecommendations
+crossSell:
+  - "lead-scoring"
+  - "marketing-ops-audit"
+
+addOns:
+  - "sla-alerting"
+  - "multi-crm-support"
+
 seo:
-  title: Lead Routing & Distribution
-  description: Automate lead assignment with territories, round-robin, guardrails, and CRM-level audit logging.
+  title: "Lead Routing & Distribution"
+  description: "Automate lead assignment with territories, round-robin, guardrails, and CRM-level audit logging."
+
+# Optional per-phase copy overrides (used by PhaseSectionHeader + SubSection)
+copy:
+  phase1:
+    title: "Lead Routing & Distribution"
+    tagline: "Fair, fast, auditable assignment that scales with your team"
+  phase2:
+    title: "Why you need this"
+    tagline: "Common problems, purpose & outcomes"
+  phase3:
+    title: "What you get"
+    tagline: "Highlights, inclusions, and deliverables"
+    includesTitle: "What’s included"
+    includesSubtitle: "Everything that ships with this package."
+    highlightsTitle: "Highlights"
+    highlightsTagline: "Top features at a glance"
+  phase4:
+    title: "Details & Trust"
+    tagline: "Timeline, requirements, and guardrails"
+  phase5:
+    title: "What’s next"
+    tagline: "How to proceed and what else to explore"
 ---
-
-## Overview
-
-Assign every qualified lead to the best available owner in seconds. This package
-implements transparent, auditable rules that keep workloads balanced, prevent
-duplicates, and improve SLA adherence — all with CRM-level write-backs so RevOps
-has full visibility.
 
 ## Purpose
 
-Ensure fast, fair, and defensible lead assignment that scales with your team.
-We operationalize routing logic, capture every decision as a CRM event, and
-equip RevOps with a lightweight dashboard to iterate safely.
-
-## Pain points we address
-
-- Slow speed-to-lead from manual assignment  
-- Leads slipping through territory/owner exceptions  
-- No audit trail → disputes between reps & ops  
-- Uneven workload distribution across the team  
-- SLA breaches from missing owners or queues  
-- Limited visibility into routing performance  
-
-## Outcomes you can expect
-
-- Faster speed-to-lead and consistent handoffs  
-- Fair distribution across territories and teams  
-- Lower lead leakage and duplicate assignments  
-- Higher SLA adherence and more reliable follow-up  
-- Clear routing telemetry and change governance  
-
-## What’s included (high-level)
-
-- **Distribution & Assignment** — territories, round-robin, starter rule library, conflict checks  
-- **Reporting & Telemetry** — CRM write-backs for routing events, monthly performance dashboard (starter)  
-- **Scope & Connectivity** — initial setup for one CRM; primary territory model included  
-
-## Timeline & Turnaround
-
-1. **Setup** — 3–5 business days  
-2. **Launch** — Pilot validation with sample leads, then go-live  
-3. **Ongoing** — Monthly performance review and rule tweaks  
-
-## Requirements
-
-CRM admin access, active reps/territories list, a territory/ownership source of
-truth, routing business rules, sandbox/API credentials (if applicable), and a
-named change approver.
-
-## Limits & Ethics
-
-- **Ethics** — Adhere to declared territory/assignment rules; no discriminatory attributes in logic.  
-- **Limits** — One CRM + one primary territory model included; custom ML and multi-CRM syncs are out-of-scope (add-ons available).  
-
-## FAQ
-
-**Can we cap leads per rep per day?**  
-Yes. Daily caps with catch-up logic keep workloads balanced without sacrificing fairness.
-
-**How do you handle out-of-office?**  
-We toggle OOO on reps and route to alternates with audit logs; optional catch-up on return.
-
-**Which CRMs are supported?**  
-Salesforce and HubSpot are supported out-of-the-box; others can be scoped as an add-on.
-
-**Can we A/B test routing rules?**  
-Professional tier supports controlled experiments without impacting SLAs.
-
-**How are changes tracked?**  
-All rule changes are versioned with owner, timestamp, and reason — including rollback points.
-
-## Notes
-
-Initial setup includes configuration for one CRM and one primary territory model.
-Advanced experiments, enrichment, and multi-CRM are add-ons.
+**What good looks like:** New leads are assigned within seconds to the *right* rep, capacity is respected, and every decision
+is logged to your CRM for audit and coaching. Revenue teams get speed and fairness; leadership gets visibility and control.

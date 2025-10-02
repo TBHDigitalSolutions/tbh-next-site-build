@@ -1,14 +1,43 @@
 // src/components/ui/molecules/FeatureList/FeatureList.tsx
 "use client";
 
+/**
+ * FeatureList
+ * =============================================================================
+ * Purpose
+ * -------
+ * Render a compact, icon-led list used by “Highlights” and “What’s included”.
+ * Supports tri-state inclusions (included, limited, add-on, excluded).
+ *
+ * Robustness
+ * ----------
+ * 1) Stable React keys
+ *    Some callers normalize from strings and do not pass `id`. We therefore
+ *    accept optional `id` and derive a **safe key** fallback from index + label.
+ *
+ * 2) Rules of Hooks compliance
+ *    We do NOT call `useId()` inside `.map()`. We create one list-scoped id via
+ *    `useId()` and derive predictable tooltip ids: `${listId}-tip-${idx}`.
+ *
+ * Accessibility
+ * -------------
+ * - Semantic <ul> with optional `ariaLabel`.
+ * - Info button uses `aria-describedby` → per-row tooltip id.
+ * - Button `aria-label` uses readable label when available.
+ */
+
 import * as React from "react";
 import styles from "./FeatureList.module.css";
+
+/* ---------------------------------- Types --------------------------------- */
 
 /** Tri-state support for inclusions beyond simple booleans */
 export type FeatureState = boolean | "limit" | "add-on";
 
+/** A single feature row. `id` is optional; a safe key fallback is derived. */
 export type FeatureItem = {
-  id: string;
+  /** Optional stable id; if omitted, a safe key fallback is derived. */
+  id?: string;
   /** Main text; accepts ReactNode for light formatting (e.g., <strong/>) */
   label: React.ReactNode;
   /** Included? true | false | "limit" | "add-on" */
@@ -37,7 +66,7 @@ export type FeatureListProps = {
   style?: React.CSSProperties;
 };
 
-/* ---- Inline SVG icons (no external deps) ---- */
+/* --------------------------------- Icons ---------------------------------- */
 
 const CheckIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" {...props}>
@@ -69,14 +98,13 @@ const InfoIcon = (props: React.SVGProps<SVGSVGElement>) => (
   </svg>
 );
 
-/* ---- Helpers ---- */
+/* -------------------------------- Helpers -------------------------------- */
 
 function stateClass(state: FeatureState | undefined): string {
   if (state === true) return styles.included;
   if (state === "limit") return styles.limited;
   if (state === "add-on") return styles.addon;
   if (state === false) return styles.excluded;
-  // default: included if unspecified
   return styles.included;
 }
 
@@ -87,7 +115,7 @@ function defaultIconForState(state: FeatureState | undefined): React.ReactNode {
   return <XIcon className={styles.icon} />;
 }
 
-/* ---- Component ---- */
+/* ------------------------------- Component -------------------------------- */
 
 const FeatureList: React.FC<FeatureListProps> = ({
   items,
@@ -99,9 +127,12 @@ const FeatureList: React.FC<FeatureListProps> = ({
   className,
   style,
 }) => {
+  // List-scoped id to derive deterministic tooltip ids per row (SSR-safe).
+  const listInstanceId = React.useId();
+
   const visible = React.useMemo(
     () => (showExcluded ? items : items.filter((it) => it.included !== false)),
-    [items, showExcluded],
+    [items, showExcluded]
   );
 
   return (
@@ -114,14 +145,20 @@ const FeatureList: React.FC<FeatureListProps> = ({
       data-align={align}
       data-text={textAlign}
     >
-      {visible.map((item) => {
+      {visible.map((item, idx) => {
         const state = item.included;
         const liClass = [styles.item, stateClass(state)].join(" ");
+
         const labelText = typeof item.label === "string" ? item.label : undefined;
-        const tooltipId = React.useId();
+
+        // ---- KEY FIX: safe, stable key fallback when `id` is not provided ----
+        const keySafe = item.id ?? (labelText ? `${idx}-${labelText}` : `row-${idx}`);
+
+        // Derive tooltip id from the list-scoped id + row index (Rules of Hooks safe)
+        const tooltipId = `${listInstanceId}-tip-${idx}`;
 
         return (
-          <li key={item.id} className={liClass}>
+          <li key={keySafe} className={liClass}>
             <span className={styles.iconWrap}>
               {item.icon ?? defaultIconForState(state)}
             </span>

@@ -1,66 +1,112 @@
 // src/packages/sections/PackageDetailExtras/PackageDetailExtras.tsx
+/**
+ * PackageDetailExtras
+ * =============================================================================
+ * Purpose
+ * -------
+ * Renders the “extras” panel for a Package detail page:
+ *   • Timeline (setup → launch → ongoing)
+ *   • Requirements (access/integrations we need)
+ *   • Limits & Ethics (guardrails and boundaries)
+ *
+ * Schema alignment
+ * ----------------
+ * This component **reuses** the exact shapes validated at build-time by the
+ * registry `PackageSchema`. We import `PackageMetadata` (the type derived from
+ * that Zod schema) and compose our props from it so UI and data remain in lockstep.
+ *
+ *   - `timeline`     → Picked from `PackageMetadata["timeline"]`
+ *   - `ethics`       → Picked from `PackageMetadata["ethics"]`
+ *   - `requirements` → Picked from `PackageMetadata["requirements"]`
+ *
+ * Extra ergonomics
+ * ----------------
+ * - Supports an optional `timelineBlocks` prop for callers that prefer a fully
+ *   authored set of timeline steps (title/note). If not provided, we derive
+ *   steps from the simple `timeline` (setup/launch/ongoing) provided by schema.
+ * - `limits` is supported as a non-schema array for legacy/back-compat; you can
+ *   remove it once all callers migrate to `ethics`.
+ * - Copy overrides are provided for headings/taglines and we keep a pair of
+ *   **deprecated** aliases to avoid breaking older callers.
+ *
+ * Accessibility
+ * -------------
+ * - Each sub-section renders a semantic heading and a <Divider/> for a11y and
+ *   visual consistency with other Phase components.
+ * - Lists include aria-labels and stable keys.
+ */
+
 "use client";
 
 import * as React from "react";
 import Divider from "@/components/ui/atoms/Divider/Divider";
 import styles from "./PackageDetailExtras.module.css";
 
-/* Local parts (re-exported to avoid duplication) */
+import type { PackageMetadata } from "@/types/package";
 import RequirementsBlock from "./RequirementsBlock";
 
+/* ----------------------------------------------------------------------------
+ * Types
+ * -------------------------------------------------------------------------- */
+
 export type TimelineItem = {
+  /** Short step title, e.g., “Setup”, “Launch”, “Ongoing” */
   title: string;
+  /** Optional one-liner shown beneath the title */
   note?: string;
+  /** Optional stable id (used as React key when provided) */
   id?: string;
 };
 
-export type LegacyTimeline = {
-  setup?: string;
-  launch?: string;
-  ongoing?: string;
-};
+/**
+ * Public prop surface for the Extras panel.
+ * We reuse shapes from the validated registry object to prevent drift.
+ */
+export type PackageDetailExtrasProps =
+  Pick<PackageMetadata, "timeline" | "ethics" | "requirements"> & {
+    /** Optional fully-authored steps; overrides `timeline` if present */
+    timelineBlocks?: TimelineItem[];
 
-export type PackageDetailExtrasProps = {
-  /* ---- Timeline (new flexible + legacy fallback) ---- */
-  timelineBlocks?: TimelineItem[];
-  timeline?: LegacyTimeline;
+    /** Legacy/optional list separate from `ethics`. Prefer `ethics`. */
+    limits?: string[];
 
-  /* ---- Limits & Ethics ---- */
-  ethics?: string[];
-  limits?: string[];
+    /* ---- Copy overrides (headers/taglines) ---- */
+    requirementsTitle?: string;   // default: "Requirements"
+    requirementsCaption?: string; // e.g., "What we need to get started"
+    timelineTitle?: string;       // default: "Timeline & Turnaround"
+    timelineTagline?: string;     // default: "How we get you live and iterating."
+    ethicsTitle?: string;         // default: "Limits & Ethics"
+    ethicsTagline?: string;       // default: "Boundaries that keep outcomes fair and compliant."
 
-  /* ---- Requirements (optional 3rd panel) ---- */
-  requirements?: string[];
-  requirementsTitle?: string;   // default: "Requirements"
-  requirementsCaption?: string; // e.g., "What we need to get started"
+    /** @deprecated Use `timelineTitle` */
+    timelineHeading?: string;
+    /** @deprecated Use `ethicsTitle` */
+    ethicsHeading?: string;
 
-  /* ---- Copy overrides (headers/taglines) ---- */
-  timelineTitle?: string;     // default: "Timeline & Turnaround"
-  timelineTagline?: string;   // default: "How we get you live and iterating."
-  ethicsTitle?: string;       // default: "Limits & Ethics"
-  ethicsTagline?: string;     // default: "Boundaries that keep outcomes fair and compliant."
+    /* ---- Utilities ---- */
+    className?: string;
+    style?: React.CSSProperties;
+    id?: string;
+    "data-testid"?: string;
+    ariaLabel?: string;
+  };
 
-  /* Back-compat aliases (kept for older callers) */
-  /** @deprecated Use timelineTitle */
-  timelineHeading?: string;
-  /** @deprecated Use ethicsTitle */
-  ethicsHeading?: string;
-
-  /* ---- Utilities ---- */
-  className?: string;
-  style?: React.CSSProperties;
-  id?: string;
-  "data-testid"?: string;
-  ariaLabel?: string;
-};
+/* ----------------------------------------------------------------------------
+ * Component
+ * -------------------------------------------------------------------------- */
 
 export default function PackageDetailExtras({
-  timelineBlocks,
+  /* Schema-aligned fields */
   timeline,
   ethics,
+  requirements,
+
+  /* Optional authored timeline */
+  timelineBlocks,
+  /* Legacy non-schema field (kept for back-compat) */
   limits,
 
-  requirements,
+  /* Copy overrides */
   requirementsTitle = "Requirements",
   requirementsCaption,
 
@@ -69,27 +115,37 @@ export default function PackageDetailExtras({
   ethicsTitle,
   ethicsTagline,
 
+  /* Deprecated aliases */
   timelineHeading,
   ethicsHeading,
 
+  /* Utilities */
   className,
   style,
   id,
   "data-testid": testId = "package-detail-extras",
   ariaLabel,
 }: PackageDetailExtrasProps) {
-  /* --------------- Final copy (defaults + back-compat) ------------------- */
+  /* -------------------------------- Headings -------------------------------- */
+
   const finalTimelineTitle =
     timelineTitle ?? timelineHeading ?? "Timeline & Turnaround";
   const finalTimelineTagline =
     timelineTagline ?? "How we get you live and iterating.";
 
-  const finalEthicsTitle =
-    ethicsTitle ?? ethicsHeading ?? "Limits & Ethics";
+  const finalEthicsTitle = ethicsTitle ?? ethicsHeading ?? "Limits & Ethics";
   const finalEthicsTagline =
-    ethicsTagline ?? "Boundaries that keep outcomes fair and compliant.";
+    ethicsTagline ??
+    "Boundaries that keep outcomes fair and compliant.";
 
-  /* --------------------------- Normalize timeline ------------------------ */
+  /* ---------------------------- Normalize timeline --------------------------- */
+  /**
+   * Compute the ordered steps to render in the timeline. We accept:
+   *   1) `timelineBlocks` (fully-authored, preferred when provided)
+   *   2) Derived steps from the simple schema `timeline` (setup/launch/ongoing)
+   *
+   * We keep a conservative cap (5 steps) to avoid layout overflow.
+   */
   const steps: TimelineItem[] = React.useMemo(() => {
     const fromBlocks =
       (timelineBlocks ?? [])
@@ -110,14 +166,18 @@ export default function PackageDetailExtras({
     return derived.slice(0, 5);
   }, [timelineBlocks, timeline]);
 
+  /* --------------------------------- Guards --------------------------------- */
+
   const hasTimeline = steps.length > 0;
   const hasEthics = (ethics?.filter(Boolean).length ?? 0) > 0;
   const hasLimits = (limits?.filter(Boolean).length ?? 0) > 0;
   const hasRequirements = (requirements?.filter(Boolean).length ?? 0) > 0;
 
+  // If every panel would be empty, render nothing
   if (!hasTimeline && !hasEthics && !hasLimits && !hasRequirements) return null;
 
-  /* -------------------------------- Render -------------------------------- */
+  /* -------------------------------- Render ---------------------------------- */
+
   return (
     <section
       id={id}

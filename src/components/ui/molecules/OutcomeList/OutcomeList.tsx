@@ -1,13 +1,30 @@
+// src/components/ui/molecules/OutcomeList/OutcomeList.tsx
 "use client";
+
+/**
+ * OutcomeList
+ * =============================================================================
+ * Purpose
+ * -------
+ * Render a short list/grid/inline row of outcomes with optional iconography.
+ *
+ * Robustness
+ * ----------
+ * - `id` is optional; we derive a stable key fallback from index + text label.
+ * - Avoid `useId()` inside `.map()` — Rules of Hooks safe.
+ *
+ * A11y
+ * ----
+ * - <ul> semantics with optional aria-label
+ * - When a `note` is present, we expose combined SR text via aria-label.
+ */
 
 import * as React from "react";
 import styles from "./OutcomeList.module.css";
 
-/**
- * Outcome items (short statements, with optional secondary note).
- */
+/** Outcome items (short statements, with optional secondary note). */
 export type OutcomeItem = {
-  id: string;
+  id?: string;
   label: React.ReactNode;    // short outcome text
   note?: string;             // optional, lighter secondary text
   emphasis?: boolean;        // bold style for key outcomes
@@ -16,31 +33,22 @@ export type OutcomeItem = {
 
 export type OutcomeListProps = {
   items: OutcomeItem[];
-
   /** Visual density */
   size?: "sm" | "md";
-
   /** Layout style */
   layout?: "list" | "inline" | "grid";
-
   /** Grid columns (when layout="grid") */
   columns?: 1 | 2 | 3;
-
   /** Default icon for items (can be overridden per item) */
   variant?: "dot" | "check" | "arrow";
-
-  /** Block alignment inside its container (affects item alignment in grid/list) */
+  /** Block alignment inside its container (affects item alignment) */
   align?: "start" | "center" | "end";
-
   /** Text alignment for the item content (label/note) */
   textAlign?: "left" | "center" | "right";
-
   /** Accessibility label for the <ul> */
   ariaLabel?: string;
-
   /** Testing hook */
   "data-testid"?: string;
-
   className?: string;
   style?: React.CSSProperties;
 };
@@ -138,10 +146,11 @@ const OutcomeList: React.FC<OutcomeListProps> = ({
       data-variant={variant}
       data-layout={layout}
     >
-      {items.map((item) => {
+      {items.map((item, idx) => {
         const labelText = typeof item.label === "string" ? item.label : undefined;
+        const keySafe = item.id ?? (labelText ? `${idx}-${labelText}` : `row-${idx}`);
         return (
-          <li key={item.id} className={styles.item}>
+          <li key={keySafe} className={styles.item}>
             <span className={styles.iconWrap} aria-hidden="true">
               {item.icon ?? defaultIcon(variant)}
             </span>

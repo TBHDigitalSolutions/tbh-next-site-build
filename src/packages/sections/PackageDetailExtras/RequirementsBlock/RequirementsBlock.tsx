@@ -1,4 +1,21 @@
 // src/packages/sections/PackageDetailExtras/RequirementsBlock/RequirementsBlock.tsx
+/**
+ * RequirementsBlock
+ * =============================================================================
+ * Purpose
+ * -------
+ * A small, focused presentational block used inside PackageDetailExtras that
+ * renders the “Requirements” list—access, integrations, credentials, etc.
+ *
+ * Design & a11y
+ * -------------
+ * - Compact header (title + rule + optional caption)
+ * - Semantic section/heading with an explicit role="list" for the bullets
+ * - Stable keys and a visually-hidden-friendly structure
+ */
+
+"use client";
+
 import * as React from "react";
 import styles from "./RequirementsBlock.module.css";
 
@@ -13,13 +30,7 @@ export interface RequirementsBlockProps {
   id?: string;
 }
 
-/**
- * RequirementsBlock
- * - Renders a standardized block header (title + divider + optional caption)
- * - Shows a clean bullet list using your unified tokens
- * - Designed to live inside PackageDetailExtras
- */
-export function RequirementsBlock({
+export default function RequirementsBlock({
   title = "Requirements",
   items,
   caption,
@@ -38,7 +49,9 @@ export function RequirementsBlock({
       aria-labelledby={headingId}
     >
       <header className={styles.blockHeader}>
-        <h3 id={headingId} className={styles.h3}>{title}</h3>
+        <h3 id={headingId} className={styles.h3}>
+          {title}
+        </h3>
         <div className={styles.rule} aria-hidden="true" />
         {caption ? <p className={styles.caption}>{caption}</p> : null}
       </header>
@@ -46,7 +59,9 @@ export function RequirementsBlock({
       <ul className={styles.list} role="list">
         {items.map((req, i) => (
           <li className={styles.item} key={`${i}-${req}`}>
-            <span className={styles.tick} aria-hidden="true">✓</span>
+            <span className={styles.tick} aria-hidden="true">
+              ✓
+            </span>
             <span className={styles.label}>{req}</span>
           </li>
         ))}
@@ -55,4 +70,5 @@ export function RequirementsBlock({
   );
 }
 
-export default RequirementsBlock;
+// Optional named export for convenience (mirrors other molecules’ pattern)
+export { RequirementsBlock as RequirementsBlockComponent };

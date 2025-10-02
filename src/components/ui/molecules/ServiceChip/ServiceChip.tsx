@@ -1,3 +1,26 @@
+// src/components/ui/molecules/ServiceChip/ServiceChip.tsx
+"use client";
+
+/**
+ * ServiceChip
+ * =============================================================================
+ * Purpose
+ * -------
+ * A small pill with an icon + label representing a service taxonomy. Supports:
+ *  - Static rendering (span)
+ *  - Link rendering (a[href])
+ *  - Interactive rendering (button with onClick)
+ *
+ * A11y
+ * ----
+ * - When rendered as <a>, we set role="link" and optionally aria-current="page".
+ * - When rendered as <button>, we set aria-pressed for selected state.
+ *
+ * SSR/CSR
+ * -------
+ * - Marked as a client component because some usages pass `onClick`.
+ */
+
 import * as React from "react";
 import styles from "./ServiceChip.module.css";
 
@@ -43,8 +66,6 @@ export type ServiceChipProps = {
   /** Custom aria-label (if label is visually hidden elsewhere) */
   ariaLabel?: string;
 };
-
-/* ------------------ Inline SVG icons (no external deps) ------------------ */
 
 const IconWeb = (props: React.SVGProps<SVGSVGElement>) => (
   <svg viewBox="0 0 24 24" aria-hidden="true" {...props}>
@@ -101,7 +122,6 @@ const defaultIconMap: Record<CoreService, React.ReactNode> = {
 };
 
 function serviceClass(service: ServiceSlug) {
-  // map core services to themed classes, else fallback
   switch (service) {
     case "webdev": return styles.svcWebdev;
     case "seo": return styles.svcSeo;
@@ -109,7 +129,7 @@ function serviceClass(service: ServiceSlug) {
     case "content": return styles.svcContent;
     case "marketing": return styles.svcMarketing;
     case "leadgen": return styles.svcLeadgen;
-    default: return styles.svcCustom; // allows external CSS vars override
+    default: return styles.svcCustom;
   }
 }
 
@@ -137,22 +157,17 @@ export const ServiceChip: React.FC<ServiceChipProps> = ({
     styles[size],
     serviceClass(service),
     selected ? styles.selected : "",
-    isButton ? styles.interactive : "",
-    isAnchor ? styles.interactive : "",
+    (isButton || isAnchor) ? styles.interactive : "",
     className,
-  ]
-    .filter(Boolean)
-    .join(" ");
+  ].filter(Boolean).join(" ");
 
   const content = (
     <>
       <span className={styles.iconWrap} aria-hidden="true">
-        {icon ??
-          (defaultIconMap as Record<string, React.ReactNode>)[service] ??
-          <span className={styles.fallbackDot} />}
+        {icon ?? (defaultIconMap as Record<string, React.ReactNode>)[service] ?? <span className={styles.fallbackDot} />}
       </span>
       <span className={styles.text}>
-        {label ?? (defaultLabelMap as Record<string, string>)[service] ?? service}
+        {label ?? (defaultLabelMap as Record<string, string>)[service] ?? String(service)}
       </span>
     </>
   );
@@ -166,7 +181,12 @@ export const ServiceChip: React.FC<ServiceChipProps> = ({
 
   if (isAnchor) {
     return (
-      <a {...commonProps} href={href} role="link" aria-current={selected ? "page" : undefined}>
+      <a
+        {...commonProps}
+        href={href}
+        role="link"
+        aria-current={selected ? "page" : undefined}
+      >
         {content}
       </a>
     );
@@ -184,7 +204,7 @@ export const ServiceChip: React.FC<ServiceChipProps> = ({
         {content}
       </button>
     );
-    }
+  }
 
   // Non-interactive
   return <span {...commonProps}>{content}</span>;

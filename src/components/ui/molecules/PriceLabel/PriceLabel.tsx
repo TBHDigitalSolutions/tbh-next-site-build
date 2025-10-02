@@ -1,6 +1,27 @@
 // src/components/ui/molecules/PriceLabel/PriceLabel.tsx
 "use client";
 
+/**
+ * PriceLabel
+ * =============================================================================
+ * Purpose
+ * -------
+ * Declarative price text/chip renderer that accepts the canonical `Money` shape
+ * (`{ monthly?, oneTime?, currency }`), formats amounts, and exposes a clear
+ * screen-reader string for hybrids (monthly + one-time).
+ *
+ * A11y
+ * ----
+ * - `aria-label` presents a full sentence, e.g.:
+ *   “$4,000 per month plus $1,500 setup”
+ * - Visible nodes are `aria-hidden` to avoid redundancy.
+ *
+ * Notes
+ * -----
+ * - Missing/invalid price → shows `contactText` (no “[object Object]” leaks).
+ * - No responsibility for band microcopy (that lives in the band component).
+ */
+
 import * as React from "react";
 import styles from "./PriceLabel.module.css";
 import type { Money } from "@/packages/lib/pricing";
@@ -109,9 +130,10 @@ const PriceLabel: React.FC<PriceLabelProps> = ({
   ) : null;
 
   const needsPlus = hasMonthly(price) && hasOneTime(price);
-  const ordered = order === "oneTime-first"
-    ? [oneTimeNode, needsPlus && <span key="sep" className={styles.separator} aria-hidden="true">{cfg.plusSeparator}</span>, monthlyNode]
-    : [monthlyNode, needsPlus && <span key="sep" className={styles.separator} aria-hidden="true">{cfg.plusSeparator}</span>, oneTimeNode];
+  const ordered =
+    order === "oneTime-first"
+      ? [oneTimeNode, needsPlus && <span key="sep" className={styles.separator} aria-hidden="true">{cfg.plusSeparator}</span>, monthlyNode]
+      : [monthlyNode, needsPlus && <span key="sep" className={styles.separator} aria-hidden="true">{cfg.plusSeparator}</span>, oneTimeNode];
 
   const aria = buildAria(price, currency, cfg.monthlySuffix, cfg.oneTimeSuffix);
 
@@ -130,7 +152,6 @@ const PriceLabel: React.FC<PriceLabelProps> = ({
       data-appearance={appearance}
     >
       {ordered}
-      {/* Intentionally do not render price.notes here when used inside band */}
     </span>
   );
 };

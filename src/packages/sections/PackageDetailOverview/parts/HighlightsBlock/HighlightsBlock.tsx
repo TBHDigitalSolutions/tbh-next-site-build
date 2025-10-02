@@ -1,36 +1,47 @@
 // src/packages/sections/PackageDetailOverview/parts/HighlightsBlock/HighlightsBlock.tsx
 /**
  * HighlightsBlock
- * -----------------------------------------------------------------------------
- * Renders a responsive 2-column grid of highlight bullets using the shared
- * <FeatureList> molecule for consistent visuals and a11y.
+ * =============================================================================
+ * Purpose
+ * - Render a compact, consistent list of "highlights" (aka top features) using
+ *   the shared <FeatureList> molecule for visuals and a11y.
  *
- * ✅ Fix: Each list item now has a stable `id` so FeatureList can use it as the
- * React `key`. Previously we passed only label/icon, which triggered:
- *   "Each child in a list should have a unique 'key' prop."
+ * Key Points
+ * - ✅ Correctly imports FeatureList as a **default** export
+ *   (importing as `{ FeatureList }` will be undefined).
+ * - ✅ Normalizes author-friendly input (string | { label, icon? }) into
+ *   FeatureList's `FeatureItem` shape.
+ * - ✅ Provides **stable `id`s** for each item so React keys are deterministic.
+ * - ✅ Keeps presentation concerns (2-column grid) here; uses FeatureList to
+ *   handle icons, states, spacing, and ARIA semantics.
  *
- * Notes:
- * - We generate `id` by slugifying the text label (when it's a string) and
- *   suffixing with an index for uniqueness. For non-string labels, we fall back
- *   to a deterministic "highlight-<index>" id.
- * - We import FeatureList as a **default export** (matches its implementation).
- * - We do not pass unsupported props (e.g., `variant`) to FeatureList.
+ * When used inside a Phase SubSection:
+ * - Typically the SubSection will show the title/tagline. The optional local
+ *   header here is kept for standalone usages or when SubSection title is
+ *   intentionally omitted. It’s safe to hide this header by not passing `title`.
  */
+
+"use client";
 
 import * as React from "react";
 import styles from "./HighlightsBlock.module.css";
-import FeatureList, {
-  type FeatureItem,
-} from "@/components/ui/molecules/FeatureList/FeatureList";
+
+// IMPORTANT: FeatureList is a DEFAULT export.
+// Also re-use the public `FeatureItem` type from the same module.
+import { FeatureList, type FeatureItem } from "@/components/ui/molecules/FeatureList";
+
+/* ----------------------------------------------------------------------------
+ * Types
+ * ---------------------------------------------------------------------------- */
 
 type HighlightItem = string | { label: string; icon?: React.ReactNode };
 
 export interface HighlightsBlockProps {
-  /** Section title (visually prominent). */
+  /** Section title (visually prominent when used standalone). */
   title?: string; // default: "Highlights"
   /** Optional short subtitle under the title. */
   subtitle?: string;
-  /** List of simple strings or {label, icon} items. 3–8 is ideal. */
+  /** List of simple strings or { label, icon } items. 3–8 is ideal. */
   items: HighlightItem[];
   /** Optional container className hook. */
   className?: string;
@@ -38,7 +49,14 @@ export interface HighlightsBlockProps {
   id?: string;
 }
 
-/** Best-effort slug generator for stable ids (labels may be short phrases). */
+/* ----------------------------------------------------------------------------
+ * Utilities
+ * ---------------------------------------------------------------------------- */
+
+/**
+ * Best-effort slug generator to create stable ids, even when labels contain
+ * spaces or punctuation. This improves React key stability and analytics hooks.
+ */
 function slugify(input: string): string {
   return input
     .toLowerCase()
@@ -47,6 +65,10 @@ function slugify(input: string): string {
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/(^-|-$)/g, "");
 }
+
+/* ----------------------------------------------------------------------------
+ * Component
+ * ---------------------------------------------------------------------------- */
 
 export function HighlightsBlock({
   title = "Highlights",
@@ -59,15 +81,19 @@ export function HighlightsBlock({
 
   /**
    * Normalize incoming items to FeatureList’s expected shape:
-   *   { id: string, label: ReactNode, icon?: ReactNode, included?: FeatureState }
-   * We mark highlights as "included" by default; FeatureList will render the
-   * proper iconography (checkmarks) unless an explicit icon is provided.
+   *   { id?: string, label: ReactNode, icon?: ReactNode, included?: FeatureState }
+   *
+   * Notes:
+   * - We mark all highlights as "included" by default so FeatureList will render
+   *   a checkmark unless an explicit `icon` is provided.
+   * - We generate **stable ids**:
+   *     - If label is a string → `${slug(label)}-${idx}`
+   *     - Otherwise → `highlight-${idx}`
    */
   const normalized: FeatureItem[] = React.useMemo(() => {
     return items.map((it, idx) => {
       const asObj = typeof it === "string" ? { label: it } : it;
 
-      // Derive a stable id from the label when possible, otherwise fall back.
       const labelText =
         typeof asObj.label === "string" ? asObj.label : undefined;
       const fallback = `highlight-${idx}`;
@@ -88,13 +114,16 @@ export function HighlightsBlock({
       id={id}
       data-block="highlights"
     >
-      <header className={styles.header}>
-        <h2 className={styles.h2}>{title}</h2>
-        {subtitle ? <p className={styles.subtitle}>{subtitle}</p> : null}
-      </header>
+      {/* Optional local header for standalone use (safe to omit in SubSection) */}
+      {(title || subtitle) && (
+        <header className={styles.header}>
+          {title ? <h2 className={styles.h2}>{title}</h2> : null}
+          {subtitle ? <p className={styles.subtitle}>{subtitle}</p> : null}
+        </header>
+      )}
 
       {/* FeatureList handles semantics and spacing; this wrapper applies the
-          2-column responsive grid specific to the Highlights section. */}
+          responsive grid specific to the Highlights section. */}
       <div className={styles.grid}>
         <FeatureList
           items={normalized}

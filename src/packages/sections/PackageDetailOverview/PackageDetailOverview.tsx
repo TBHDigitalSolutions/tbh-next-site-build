@@ -1,28 +1,33 @@
 // src/packages/sections/PackageDetailOverview/PackageDetailOverview.tsx
 /**
  * PackageDetailOverview
+ * =============================================================================
+ * The “super card” for a Package Detail page. This component composes the
+ * five top-level phases (Hero → Why → What → Details → Next) and the sticky
+ * right rail card. It is intentionally **presentation-only**: heavy logic
+ * lives in the content pipeline (MDX → JSON → Zod) and in the mappers layer.
+ *
+ * Production goals
  * -----------------------------------------------------------------------------
- * High-level “super card” for a Package Detail page. This composes five
- * first-class phases (Hero, Why, What, Detail, Next) plus a sticky right-rail.
+ * - **Safe pricing band**: Always derive a valid `variant` for <PriceActionsBand>
+ *   via `bandPropsFor("detail", price, copy)` to avoid runtime crashes.
+ * - **Strict inputs**: Accept the canonical Money shape for price (`Money`).
+ * - **Predictable headings**: Provide consistent default titles/taglines for
+ *   each phase and subsection, overridable via props.
+ * - **A11y**: Expose stable ids for aria-labelledby relationships.
+ * - **No hidden policy**: Don’t inject hero summary into band tagline; that
+ *   copy must be explicitly authored (policy).
  *
- * ✅ Fix for runtime error:
- *    You saw:  TypeError: Cannot read properties of undefined (reading 'showBaseNote')
- *    Root cause: <PriceActionsBand> expected a `variant` that matches one of
- *    its internal PRESET keys ("detail-hybrid" | "card-hybrid" | "detail-oneTime" | "card-oneTime").
- *    We were passing "detail", which isn’t a valid key → PRESET[variant] was
- *    undefined → p.showBaseNote crashed.
+ * Lifecycle / Data flow
+ * -----------------------------------------------------------------------------
+ * 1) Validated package data is shaped by registry mappers into this component’s props.
+ * 2) We compute final props for each sub-section and render the phases.
+ * 3) The sticky rail card receives a compact/pinned variant.
  *
- *    Resolution here:
- *    - Compute a valid `variant` from the price shape:
- *        • monthly+oneTime  → "detail-hybrid"
- *        • monthly-only     → "detail-oneTime"  (layout flags are fine)
- *        • oneTime-only     → "detail-oneTime"
- *    - Build `bandProps` with that `variant` and pass it to Phase 1.
- *
- * Other goals:
- * - Keep the public prop surface backward-compatible.
- * - Derive Highlights from Includes when authors don’t pass `features`.
- * - Enforce a single, canonical pricing area in Phase 1.
+ * Notes
+ * -----------------------------------------------------------------------------
+ * - This is a client component because a few child blocks rely on client-only
+ *   effects. Keep side effects minimal; expensive work belongs upstream.
  */
 
 "use client";
@@ -30,56 +35,63 @@
 import * as React from "react";
 import styles from "./PackageDetailOverview.module.css";
 
-/* ------------------------------- Shared types ------------------------------ */
+/* -------------------------------- Pricing helpers ------------------------- */
+/** Canonical Money shape + band helper */
 import type { Money } from "@/packages/lib/pricing";
+import { bandPropsFor } from "@/packages/lib/band";
 
-/* ------------------------------- UI contracts ------------------------------ */
+/* --------------------------------- UI contracts --------------------------- */
 import type { OutcomeItem } from "@/components/ui/molecules/OutcomeList";
 import type { ServiceSlug } from "@/components/ui/molecules/ServiceChip";
 import type { PackageIncludesTableProps } from "@/packages/components/PackageIncludesTable/PackageIncludesTable";
 import type { PackageCardProps } from "@/packages/components/PackageCard";
 import type { IncludesGroup } from "./parts/IncludesFromGroups"; // type-only
 
-/* ------------------------------ Right rail card ---------------------------- */
+/* -------------------------------- Right rail card ------------------------- */
 import StickyRail from "./parts/StickyRail";
 
-/* ---------------------------------- Phases -------------------------------- */
+/* ------------------------------------ Phases ------------------------------ */
 import Phase1HeroSection from "./PackageDetailPhases/Phase1HeroSection";
 import Phase2WhySection from "./PackageDetailPhases/Phase2WhySection";
 import Phase3WhatSection from "./PackageDetailPhases/Phase3WhatSection";
 import Phase4DetailsSection from "./PackageDetailPhases/Phase4DetailsSection";
 import Phase5NextSection from "./PackageDetailPhases/Phase5NextSection";
 
-/* --------------------------- Optional extras bundle ------------------------ */
+/* --------------------------- Optional extras bundle ----------------------- */
 import PackageDetailExtras from "@/packages/sections/PackageDetailExtras";
 
-/* ----------------------------------------------------------------------------
+/* =============================================================================
  * Types
- * -------------------------------------------------------------------------- */
+ * ========================================================================== */
 
+/** Simple CTA contract shared by multiple surfaces. */
 export type CTAItem = { label: string; href: string };
 
+/**
+ * Public prop surface for the overview “super card”.
+ * Data is usually produced by the registry mappers (validated content).
+ */
 export type PackageDetailOverviewProps = {
   id?: string;
 
   /** Phase 1 (Hero) */
   title: string;
-  valueProp: string;
-  description?: string;
-  icp?: string;
+  valueProp: string;            // concise benefit statement (hero subtitle)
+  description?: string;         // longer paragraph under the value prop
+  icp?: string;                 // ideal-customer one-liner
   service?: ServiceSlug;
   tags?: string[];
-  showMeta?: boolean;
+  showMeta?: boolean;           // controls Service/Tags chips in hero meta row
 
   /** Pricing (canonical Money shape – SSOT) */
   packagePrice?: Money;
 
   /**
-   * Explicit price band copy (detail page only).
-   * Do NOT derive from summary; author separately for detail UX.
+   * Explicit price band copy for the **detail page**. This should be authored
+   * and is intentionally not derived from `valueProp` (policy).
    */
   priceBand?: {
-    tagline?: string;                // marketing line (detail-only)
+    tagline?: string;                // marketing line for band
     baseNote?: "proposal" | "final"; // rendering hint
     finePrint?: string;              // e.g., "3-month minimum • + ad spend"
   };
@@ -89,7 +101,7 @@ export type PackageDetailOverviewProps = {
   ctaSecondary?: CTAItem;
 
   /** Phase 2 (Why) */
-  purposeHtml?: string;
+  purposeHtml?: string;              // compiled HTML narrative (short)
   painPoints?: string[];
   outcomes?: Array<string | OutcomeItem>;
 
@@ -120,18 +132,18 @@ export type PackageDetailOverviewProps = {
   notes?: React.ReactNode;
   extras?: React.ComponentProps<typeof PackageDetailExtras>;
 
-  /** Legacy fine print passthrough (kept for back-compat) */
+  /** Legacy fine print passthrough (left for back-compat; prefer priceBand.finePrint) */
   priceFinePrint?: string;
 
   className?: string;
   style?: React.CSSProperties;
 };
 
-/* ----------------------------------------------------------------------------
+/* =============================================================================
  * Component
- * -------------------------------------------------------------------------- */
+ * ========================================================================== */
 
-export default function PackageDetailOverview({
+function PackageDetailOverview({
   id,
   title,
   valueProp,
@@ -157,6 +169,7 @@ export default function PackageDetailOverview({
   includesGroups,
   includesTable,
 
+  /* Copy overrides */
   highlightsTitle = "Highlights",
   highlightsTagline = "This package includes these key features.",
   outcomesTitle = "Outcomes you can expect",
@@ -164,13 +177,14 @@ export default function PackageDetailOverview({
   includesTitle = "What’s included",
   includesCaption,
 
+  /* Includes controls */
   includesVariant = "cards",
   includesMaxCols = 3,
   includesDense = false,
   includesShowIcons = true,
   includesFootnote,
 
-  /* Rail + Detail */
+  /* Rail + Details */
   pinnedPackageCard,
   notes,
   extras,
@@ -183,6 +197,8 @@ export default function PackageDetailOverview({
   /* ------------------------------------------------------------------------ *
    * Derived labels / flags
    * ------------------------------------------------------------------------ */
+
+  // Prefer authored includes caption; otherwise provide a stable default.
   const includesTagline =
     typeof includesCaption === "string" && includesCaption.trim()
       ? includesCaption
@@ -193,43 +209,41 @@ export default function PackageDetailOverview({
     !!includesTable && (Array.isArray(includesTable.rows) ? includesTable.rows.length > 0 : true);
 
   /**
-   * Derive "Highlights" from the first N include items when authors don't pass
-   * a dedicated `features` list. Mirrors prior Overview behavior.
+   * Derive "Highlights" from the first N includes when `features` are absent.
+   * This mirrors prior Overview behavior and ensures a compact, tidy list.
    */
   const derivedHighlights: Array<string | { label: string; icon?: React.ReactNode }> =
     React.useMemo(() => {
       if (features?.length) return features;
       if (!hasGroups) return [];
       const fromGroups = (includesGroups ?? [])
-        .flatMap((g) => (g.items ?? []).map((it: any) => (typeof it === "string" ? it : it?.label ?? "")))
+        .flatMap((g) =>
+          (g.items ?? []).map((it: any) => (typeof it === "string" ? it : it?.label ?? ""))
+        )
         .filter(Boolean);
-      return fromGroups.slice(0, 6); // conservative cap for a tidy UI
+      return fromGroups.slice(0, 6);
     }, [features, hasGroups, includesGroups]);
 
   /* ------------------------------------------------------------------------ *
-   * Band (canonical pricing area)
+   * Price band (canonical pricing area)
    * ------------------------------------------------------------------------ *
-   * NOTE: <PriceActionsBand> requires a valid `variant` key that exists in its
-   * PRESET map. We compute it from the `packagePrice` shape.
+   * ❗️IMPORTANT: <PriceActionsBand> requires a valid `variant` that maps to
+   * its PRESET keys. We **must not** handcraft `variant` here.
+   * Instead, rely on `bandPropsFor("detail", price, copy)` to:
+   *   - Compute a correct variant from the Money shape
+   *   - Normalize baseNote text
+   *   - Pass back a ready-to-spread props object
+   *
+   * Policy: do **not** fall back hero summary into band tagline. Band copy
+   * must be explicitly authored via `priceBand`.
    */
-  const hasMonthly = typeof packagePrice?.monthly === "number";
-  const hasSetup = typeof packagePrice?.oneTime === "number";
-
-  // Valid variants for the detail page:
-  // - monthly + oneTime → "detail-hybrid"
-  // - monthly only      → "detail-oneTime" (flags/layout still appropriate)
-  // - oneTime only      → "detail-oneTime"
-  const bandVariant: "detail-hybrid" | "detail-oneTime" | null =
-    packagePrice ? (hasSetup ? "detail-hybrid" : "detail-oneTime") : null;
-
-  const bandProps = packagePrice && bandVariant
+  const bandProps = packagePrice
     ? {
-        variant: bandVariant,
-        price: packagePrice,
-        // Prefer authored detail tagline; otherwise fall back to hero valueProp.
-        tagline: priceBand?.tagline ?? valueProp,
-        baseNote: priceBand?.baseNote,
-        finePrint: priceBand?.finePrint ?? priceFinePrint,
+        ...bandPropsFor("detail", packagePrice, {
+          tagline: priceBand?.tagline,
+          baseNote: priceBand?.baseNote,
+          finePrint: priceBand?.finePrint ?? priceFinePrint,
+        }),
         ctaPrimary: ctaPrimary ?? { label: "Request proposal", href: "/contact" },
         ctaSecondary: ctaSecondary ?? { label: "Book a call", href: "/book" },
         showDivider: true,
@@ -270,7 +284,8 @@ export default function PackageDetailOverview({
                   }
                 : undefined
             }
-            band={bandProps as any /* computed above; safe cast to phase prop */}
+            // The hero section renders the canonical pricing/CTA band
+            band={bandProps as any /* computed above; type-compatible with Phase1 */}
           />
 
           {/* --------------------------- Phase 2: WHY ------------------------- */}
@@ -347,7 +362,7 @@ export default function PackageDetailOverview({
 
         {/* =============================== RIGHT ============================== */}
         <aside className={styles.right} aria-label="Selected package">
-          {/* Compact/pinned card — mapper builds the base; we enforce compact flags */}
+          {/* Sticky compact card — source props from mappers; enforce compact flags */}
           <StickyRail
             card={{
               ...pinnedPackageCard,
@@ -363,3 +378,11 @@ export default function PackageDetailOverview({
     </section>
   );
 }
+
+/**
+ * memo
+ * -----------------------------------------------------------------------------
+ * The overview composes many pure child components. Memoization prevents
+ * unnecessary re-renders on stable props in client transitions.
+ */
+export default React.memo(PackageDetailOverview);
