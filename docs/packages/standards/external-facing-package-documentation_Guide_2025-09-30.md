@@ -398,7 +398,7 @@ This is the **fill-in-the-blanks**, human-readable template for creating externa
 **Why it's needed:** This template is the starting point for all new public-facing content. It ensures that content creators follow a consistent structure, which makes it easy for developers to convert the final copy into the machine-readable JSON format, maintaining data integrity.
 
 ```markdown
-## 🟢 {{ Package Name }} - Marketing Template
+## 🟢 {{ Package Name }} - Template
 
 **ID:** `{{ service }}-{{ slug }}`
 **Slug:** `{{ slug }}`

@@ -1,3 +1,4 @@
+// src/packages/lib/registry/schemas.ts
 import { z } from "zod";
 
 /** Money SSOT */

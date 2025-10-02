@@ -1,4 +1,4 @@
-// src/packages/sections/PackageDetailOverview/parts/Phase1HeroSection/index.ts
+// src/packages/sections/PackageDetailOverview/PackageDetailPhases/Phase1HeroSection/index.ts
 export { Phase1HeroSection } from "./Phase1HeroSection";
 export type {
   Phase1HeroSectionProps,

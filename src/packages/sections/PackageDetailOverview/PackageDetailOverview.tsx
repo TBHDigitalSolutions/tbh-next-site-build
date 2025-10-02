@@ -1,50 +1,68 @@
 // src/packages/sections/PackageDetailOverview/PackageDetailOverview.tsx
+/**
+ * PackageDetailOverview
+ * -----------------------------------------------------------------------------
+ * High-level “super card” for a Package Detail page. This composes five
+ * first-class phases (Hero, Why, What, Detail, Next) plus a sticky right-rail.
+ *
+ * ✅ Fix for runtime error:
+ *    You saw:  TypeError: Cannot read properties of undefined (reading 'showBaseNote')
+ *    Root cause: <PriceActionsBand> expected a `variant` that matches one of
+ *    its internal PRESET keys ("detail-hybrid" | "card-hybrid" | "detail-oneTime" | "card-oneTime").
+ *    We were passing "detail", which isn’t a valid key → PRESET[variant] was
+ *    undefined → p.showBaseNote crashed.
+ *
+ *    Resolution here:
+ *    - Compute a valid `variant` from the price shape:
+ *        • monthly+oneTime  → "detail-hybrid"
+ *        • monthly-only     → "detail-oneTime"  (layout flags are fine)
+ *        • oneTime-only     → "detail-oneTime"
+ *    - Build `bandProps` with that `variant` and pass it to Phase 1.
+ *
+ * Other goals:
+ * - Keep the public prop surface backward-compatible.
+ * - Derive Highlights from Includes when authors don’t pass `features`.
+ * - Enforce a single, canonical pricing area in Phase 1.
+ */
+
 "use client";
 
 import * as React from "react";
-import dynamic from "next/dynamic";
 import styles from "./PackageDetailOverview.module.css";
 
-/* Shared types */
+/* ------------------------------- Shared types ------------------------------ */
 import type { Money } from "@/packages/lib/pricing";
 
-/* UI types */
+/* ------------------------------- UI contracts ------------------------------ */
 import type { OutcomeItem } from "@/components/ui/molecules/OutcomeList";
 import type { ServiceSlug } from "@/components/ui/molecules/ServiceChip";
 import type { PackageIncludesTableProps } from "@/packages/components/PackageIncludesTable/PackageIncludesTable";
 import type { PackageCardProps } from "@/packages/components/PackageCard";
+import type { IncludesGroup } from "./parts/IncludesFromGroups"; // type-only
 
-/* Focused parts */
-import MetaRow from "./parts/MetaRow";
-import TitleBlock from "./parts/TitleBlock";
-import OutcomesBlock from "./parts/OutcomesBlock";
-import IncludesFromGroups, { type IncludesGroup } from "./parts/IncludesFromGroups";
-import NotesBlock from "./parts/NotesBlock";
-import PriceActionsBand from "./parts/PriceActionsBand";
+/* ------------------------------ Right rail card ---------------------------- */
 import StickyRail from "./parts/StickyRail";
 
-/* New blocks */
-import HighlightsBlock from "./parts/HighlightsBlock";
-import PainPointsBlock from "./parts/PainPointsBlock";
-import PurposeBlock from "./parts/PurposeBlock";
+/* ---------------------------------- Phases -------------------------------- */
+import Phase1HeroSection from "./PackageDetailPhases/Phase1HeroSection";
+import Phase2WhySection from "./PackageDetailPhases/Phase2WhySection";
+import Phase3WhatSection from "./PackageDetailPhases/Phase3WhatSection";
+import Phase4DetailsSection from "./PackageDetailPhases/Phase4DetailsSection";
+import Phase5NextSection from "./PackageDetailPhases/Phase5NextSection";
 
-/* Fallback table renderer (used only when groups aren't provided) */
-import PackageIncludesTable from "@/packages/components/PackageIncludesTable";
-
-/* Underlines for section headers */
-import Divider from "@/components/ui/atoms/Divider/Divider";
-
-/* Optional extras (timeline, ethics, etc.) rendered after CTAs */
+/* --------------------------- Optional extras bundle ------------------------ */
 import PackageDetailExtras from "@/packages/sections/PackageDetailExtras";
 
-/* -------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------
+ * Types
+ * -------------------------------------------------------------------------- */
 
 export type CTAItem = { label: string; href: string };
 
 export type PackageDetailOverviewProps = {
   id?: string;
 
-  /** Headline & hero meta (left column top) */
+  /** Phase 1 (Hero) */
   title: string;
   valueProp: string;
   description?: string;
@@ -53,34 +71,34 @@ export type PackageDetailOverviewProps = {
   tags?: string[];
   showMeta?: boolean;
 
-  /** Canonical pricing (SSOT) */
+  /** Pricing (canonical Money shape – SSOT) */
   packagePrice?: Money;
 
   /**
    * Explicit price band copy (detail page only).
-   * Do NOT derive from summary; this is authored separately.
+   * Do NOT derive from summary; author separately for detail UX.
    */
   priceBand?: {
-    tagline?: string;                  // marketing line (detail only)
-    baseNote?: "proposal" | "final";   // override; default policy is applied if omitted
-    finePrint?: string;                // e.g., "3-month minimum • + ad spend"
+    tagline?: string;                // marketing line (detail-only)
+    baseNote?: "proposal" | "final"; // rendering hint
+    finePrint?: string;              // e.g., "3-month minimum • + ad spend"
   };
 
-  /** Primary/secondary CTAs for the band (labels standardized via copy.ts) */
+  /** CTA policy (labels/links typically provided by mappers) */
   ctaPrimary?: CTAItem;
   ctaSecondary?: CTAItem;
 
-  /** Highlights (features). If omitted, we derive from includesGroups. */
-  features?: string[];
-
-  /** Outcomes (KPI bullets) */
+  /** Phase 2 (Why) */
+  purposeHtml?: string;
+  painPoints?: string[];
   outcomes?: Array<string | OutcomeItem>;
 
-  /** What’s included inputs */
+  /** Phase 3 (What) – Highlights + Includes */
+  features?: string[];
   includesGroups?: IncludesGroup[];
   includesTable?: PackageIncludesTableProps;
 
-  /** Section headings/taglines (optional overrides) */
+  /** Optional headings/taglines overrides */
   highlightsTitle?: string;
   highlightsTagline?: string;
   outcomesTitle?: string;
@@ -95,21 +113,23 @@ export type PackageDetailOverviewProps = {
   includesShowIcons?: boolean;
   includesFootnote?: React.ReactNode;
 
-  /** Sticky right-rail pinned card */
+  /** Right sticky card */
   pinnedPackageCard: PackageCardProps;
 
-  /** Notes under includes; extras below CTAs */
+  /** Phase 4 (Detail) – notes + extras (timeline/ethics/limits/requirements) */
   notes?: React.ReactNode;
   extras?: React.ComponentProps<typeof PackageDetailExtras>;
 
-  /** Optional: pricing fine print line (e.g., "3-month minimum • + ad spend") */
+  /** Legacy fine print passthrough (kept for back-compat) */
   priceFinePrint?: string;
 
   className?: string;
   style?: React.CSSProperties;
 };
 
-/* -------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------
+ * Component
+ * -------------------------------------------------------------------------- */
 
 export default function PackageDetailOverview({
   id,
@@ -127,13 +147,13 @@ export default function PackageDetailOverview({
   ctaPrimary,
   ctaSecondary,
 
-  /* Phase 2 additions */
-  painPoints,
+  /* Why */
   purposeHtml,
-
-  features,
+  painPoints,
   outcomes = [],
 
+  /* What */
+  features,
   includesGroups,
   includesTable,
 
@@ -150,47 +170,76 @@ export default function PackageDetailOverview({
   includesShowIcons = true,
   includesFootnote,
 
+  /* Rail + Detail */
   pinnedPackageCard,
-
   notes,
   extras,
 
+  /* Misc */
+  priceFinePrint,
   className,
   style,
 }: PackageDetailOverviewProps) {
-  /* ----------------------------- Derived strings ------------------------- */
+  /* ------------------------------------------------------------------------ *
+   * Derived labels / flags
+   * ------------------------------------------------------------------------ */
   const includesTagline =
     typeof includesCaption === "string" && includesCaption.trim()
       ? includesCaption
       : "Everything that ships with this package.";
 
-  /* ----------------------------- Includes flags -------------------------- */
   const hasGroups = (includesGroups?.length ?? 0) > 0;
   const hasTable =
     !!includesTable && (Array.isArray(includesTable.rows) ? includesTable.rows.length > 0 : true);
 
-  /* --------------------------- Derived highlights ------------------------ */
+  /**
+   * Derive "Highlights" from the first N include items when authors don't pass
+   * a dedicated `features` list. Mirrors prior Overview behavior.
+   */
   const derivedHighlights: Array<string | { label: string; icon?: React.ReactNode }> =
     React.useMemo(() => {
       if (features?.length) return features;
       if (!hasGroups) return [];
       const fromGroups = (includesGroups ?? [])
-        .flatMap((g) =>
-          (g.items ?? []).map((it: any) =>
-            typeof it === "string" ? it : it?.label ?? ""
-          )
-        )
+        .flatMap((g) => (g.items ?? []).map((it: any) => (typeof it === "string" ? it : it?.label ?? "")))
         .filter(Boolean);
-      return fromGroups.slice(0, 6);
+      return fromGroups.slice(0, 6); // conservative cap for a tidy UI
     }, [features, hasGroups, includesGroups]);
 
-  /* ------------------------------ Band props ----------------------------- */
-  // One and only pricing area on the left. Do not render any other “Starting at …”.
-  const band = packagePrice ? bandPropsFor("detail", packagePrice, priceBand) : null;
+  /* ------------------------------------------------------------------------ *
+   * Band (canonical pricing area)
+   * ------------------------------------------------------------------------ *
+   * NOTE: <PriceActionsBand> requires a valid `variant` key that exists in its
+   * PRESET map. We compute it from the `packagePrice` shape.
+   */
+  const hasMonthly = typeof packagePrice?.monthly === "number";
+  const hasSetup = typeof packagePrice?.oneTime === "number";
 
-  /* -------------------------------- Render -------------------------------- */
-  const headingBase = id ?? title;
+  // Valid variants for the detail page:
+  // - monthly + oneTime → "detail-hybrid"
+  // - monthly only      → "detail-oneTime" (flags/layout still appropriate)
+  // - oneTime only      → "detail-oneTime"
+  const bandVariant: "detail-hybrid" | "detail-oneTime" | null =
+    packagePrice ? (hasSetup ? "detail-hybrid" : "detail-oneTime") : null;
 
+  const bandProps = packagePrice && bandVariant
+    ? {
+        variant: bandVariant,
+        price: packagePrice,
+        // Prefer authored detail tagline; otherwise fall back to hero valueProp.
+        tagline: priceBand?.tagline ?? valueProp,
+        baseNote: priceBand?.baseNote,
+        finePrint: priceBand?.finePrint ?? priceFinePrint,
+        ctaPrimary: ctaPrimary ?? { label: "Request proposal", href: "/contact" },
+        ctaSecondary: ctaSecondary ?? { label: "Book a call", href: "/book" },
+        showDivider: true,
+        align: "center" as const,
+      }
+    : null;
+
+  /* ------------------------------------------------------------------------ *
+   * Render
+   * ------------------------------------------------------------------------ */
   return (
     <section
       id={id}
@@ -202,155 +251,103 @@ export default function PackageDetailOverview({
       <div className={styles.grid}>
         {/* =============================== LEFT =============================== */}
         <div className={styles.left}>
-          {/* Title + value prop + optional long description + ICP */}
-          <TitleBlock
-            id={id ? `${id}__title` : undefined}
-            title={title}
-            valueProp={valueProp}
-            description={description}
-            icp={icp}
+          {/* --------------------------- Phase 1: HERO ------------------------ */}
+          <Phase1HeroSection
+            id={id ? `${id}__phase1` : undefined}
+            titleBlock={{
+              id: id ? `${id}__title` : undefined,
+              title,
+              valueProp,
+              description,
+              icp,
+            }}
+            metaRow={
+              showMeta
+                ? {
+                    service,
+                    tags,
+                    show: showMeta,
+                  }
+                : undefined
+            }
+            band={bandProps as any /* computed above; safe cast to phase prop */}
           />
 
-          {/* Service chip + tags row */}
-          <MetaRow service={service} tags={tags} show={showMeta} />
-
           {/* --------------------------- Phase 2: WHY ------------------------- */}
-          {purposeHtml ? (
-            <section
-              className={styles.block}
-              aria-labelledby={`${headingBase}-purpose`}
-              data-block="purpose"
-            >
-              <div className={styles.blockHeader}>
-                <h2 id={`${headingBase}-purpose`} className={styles.blockTitle}>
-                  Purpose
-                </h2>
-                <Divider className={styles.blockDivider} />
-                <p className={styles.blockTagline}>What good looks like</p>
-              </div>
-              <PurposeBlock html={purposeHtml} />
-            </section>
-          ) : null}
+          <Phase2WhySection
+            id={id ? `${id}__phase2` : undefined}
+            purpose={purposeHtml ? { html: purposeHtml } : undefined}
+            painPoints={painPoints && painPoints.length > 0 ? { items: painPoints } : undefined}
+            outcomes={
+              outcomes && (Array.isArray(outcomes) ? outcomes.length > 0 : true)
+                ? { outcomes, hideHeading: true }
+                : undefined
+            }
+            icpText={icp}
+            headings={{
+              highlights: { title: highlightsTitle, tagline: highlightsTagline },
+              outcomes: { title: outcomesTitle, tagline: outcomesTagline },
+            }}
+          />
 
-          {(painPoints?.length ?? 0) > 0 && (
-            <section
-              className={styles.block}
-              aria-labelledby={`${headingBase}-pain-points`}
-              data-block="pain-points"
-            >
-              <div className={styles.blockHeader}>
-                <h2 id={`${headingBase}-pain-points`} className={styles.blockTitle}>
-                  Why you need this
-                </h2>
-                <Divider className={styles.blockDivider} />
-                <p className={styles.blockTagline}>Common pain points this solves</p>
-              </div>
-              <PainPointsBlock items={painPoints!} />
-            </section>
-          )}
+          {/* --------------------------- Phase 3: WHAT ------------------------ */}
+          <Phase3WhatSection
+            id={id ? `${id}__phase3` : undefined}
+            title={includesTitle}
+            subtitle={includesTagline}
+            highlights={
+              (derivedHighlights?.length ?? 0) > 0
+                ? { items: derivedHighlights, title: highlightsTitle, tagline: highlightsTagline }
+                : undefined
+            }
+            includesFromGroups={
+              hasGroups
+                ? {
+                    packageName: title,
+                    groups: includesGroups!,
+                    hideHeading: true,
+                    variant: includesVariant,
+                    maxCols: includesMaxCols,
+                    dense: includesDense,
+                    showIcons: includesShowIcons,
+                    footnote: includesFootnote,
+                    "ariaLabel": "What's included",
+                    "data-testid": "includes-from-groups",
+                  }
+                : undefined
+            }
+            includesTable={hasTable ? (includesTable as PackageIncludesTableProps) : undefined}
+            preferTable={!hasGroups && hasTable}
+            stackOnDesktop={false}
+          />
 
-          {/* --------------------------- Highlights --------------------------- */}
-          {(derivedHighlights?.length ?? 0) > 0 && (
-            <section
-              className={styles.block}
-              aria-labelledby={`${headingBase}-highlights`}
-              data-block="highlights"
-            >
-              <div className={styles.blockHeader}>
-                <h2 id={`${headingBase}-highlights`} className={styles.blockTitle}>
-                  {highlightsTitle}
-                </h2>
-                <Divider className={styles.blockDivider} />
-                <p className={styles.blockTagline}>{highlightsTagline}</p>
-              </div>
-              <HighlightsBlock items={derivedHighlights} />
-            </section>
-          )}
+          {/* -------------------------- Phase 4: DETAILS ---------------------- */}
+          <Phase4DetailsSection
+            id={id ? `${id}__phase4` : undefined}
+            title="Details & Trust"
+            extras={extras}
+            notes={notes ? { className: styles.notesEmphasis, children: notes } as any : undefined}
+          />
 
-          {/* ---------------------------- Outcomes ---------------------------- */}
-          {(outcomes?.length ?? 0) > 0 && (
-            <section
-              className={styles.block}
-              aria-labelledby={`${headingBase}-outcomes`}
-              data-block="outcomes"
-            >
-              <div className={styles.blockHeader}>
-                <h2 id={`${headingBase}-outcomes`} className={styles.blockTitle}>
-                  {outcomesTitle}
-                </h2>
-                <Divider className={styles.blockDivider} />
-                <p className={styles.blockTagline}>{outcomesTagline}</p>
-              </div>
-              <OutcomesBlock outcomes={outcomes} className={styles.outcomes} hideHeading />
-            </section>
-          )}
-
-          {/* ------------------------- What’s included ------------------------ */}
-          {hasGroups ? (
-            <section
-              className={styles.block}
-              aria-labelledby={`${headingBase}-includes`}
-              data-block="includes"
-            >
-              <div className={styles.blockHeader}>
-                <h2 id={`${headingBase}-includes`} className={styles.blockTitle}>
-                  {includesTitle}
-                </h2>
-                <Divider className={styles.blockDivider} />
-                <p className={styles.blockTagline}>{includesTagline}</p>
-              </div>
-              <IncludesFromGroups
-                packageName={title}
-                groups={includesGroups!}
-                hideHeading
-                variant={includesVariant}
-                maxCols={includesMaxCols}
-                dense={includesDense}
-                showIcons={includesShowIcons}
-                footnote={includesFootnote}
-                ariaLabel="What's included"
-                data-testid="includes-from-groups"
-              />
-              {includesFootnote ? <p className={styles.includesFootnote}>{includesFootnote}</p> : null}
-            </section>
-          ) : hasTable ? (
-            <section className={styles.block} aria-label="What's included" data-block="includes-table">
-              <div className={styles.blockHeader}>
-                <h2 className={styles.blockTitle}>{includesTitle}</h2>
-                <Divider className={styles.blockDivider} />
-                <p className={styles.blockTagline}>{includesTagline}</p>
-              </div>
-              <PackageIncludesTable {...(includesTable as PackageIncludesTableProps)} />
-              {includesFootnote ? (
-                <p className={styles.includesFootnote}>{includesFootnote}</p>
-              ) : null}
-            </section>
-          ) : null}
-
-          {/* ------------------------------- Notes ---------------------------- */}
-          <NotesBlock className={styles.notesEmphasis}>{notes}</NotesBlock>
-
-          {/* ========================= Price + Actions ======================== */}
-          {band ? (
-            <div className={styles.bandArea}>
-              <PriceActionsBand
-                variant={bandVariant}
-                price={packagePrice}
-                tagline={valueProp /* marketing line, optional */}
-                baseNote={baseNote}
-                finePrint={finePrint}
-                ctaPrimary={{ label: "Request proposal", href: "/contact" }}
-                ctaSecondary={{ label: "Book a call", href: "/book" }}
-                showDivider
-                align="center"
-              />
-            </div>
-          ) : null}
+          {/* --------------------------- Phase 5: NEXT ------------------------ */}
+          <Phase5NextSection
+            id={id ? `${id}__phase5` : undefined}
+            title="What’s next"
+            ctaRow={
+              (ctaPrimary || ctaSecondary)
+                ? {
+                    primary: ctaPrimary ?? { label: "Request proposal", href: "/contact" },
+                    secondary: ctaSecondary ?? { label: "Book a call", href: "/book" },
+                    align: "center",
+                  }
+                : undefined
+            }
+          />
         </div>
 
         {/* =============================== RIGHT ============================== */}
         <aside className={styles.right} aria-label="Selected package">
-          {/* Compact/pinned card — the mapper builds this; we enforce compact flags */}
+          {/* Compact/pinned card — mapper builds the base; we enforce compact flags */}
           <StickyRail
             card={{
               ...pinnedPackageCard,
@@ -363,13 +360,6 @@ export default function PackageDetailOverview({
           />
         </aside>
       </div>
-
-      {/* ======================= BELOW GRID (FULL WIDTH) ====================== */}
-      {extras ? (
-        <div className={styles.belowGrid}>
-          <PackageDetailExtras {...extras} />
-        </div>
-      ) : null}
     </section>
   );
 }

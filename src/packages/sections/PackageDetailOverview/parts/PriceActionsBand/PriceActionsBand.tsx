@@ -1,5 +1,4 @@
 // src/packages/sections/PackageDetailOverview/parts/PriceActionsBand/PriceActionsBand.tsx
-// src/packages/sections/PackageDetailOverview/parts/PriceActionsBand/PriceActionsBand.tsx
 "use client";
 
 import * as React from "react";

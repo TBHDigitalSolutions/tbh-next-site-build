@@ -1,4 +1,4 @@
-// src/packages/sections/PackageDetailOverview/parts/Phase3WhatSection/index.ts
+// src/packages/sections/PackageDetailOverview/PackageDetailPhases/Phase3WhatSection/index.ts
 export { Phase3WhatSection } from "./Phase3WhatSection";
 export type {
   Phase3WhatSectionProps,

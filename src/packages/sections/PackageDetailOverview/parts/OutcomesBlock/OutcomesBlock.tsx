@@ -1,3 +1,4 @@
+// src/packages/sections/PackageDetailOverview/parts/OutcomesBlock/OutcomesBlock.tsx
 "use client";
 
 import * as React from "react";
