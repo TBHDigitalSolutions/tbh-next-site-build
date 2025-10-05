@@ -66,9 +66,19 @@
     "data:content:check": "bash scripts/check-content-production.sh",
     "data:catalog": "tsx scripts/packages/build-catalog-json.ts",
     "data:search": "tsx scripts/packages/build-unified-search.ts",
-    "data:build": "pnpm data:catalog && pnpm data:search",
+    "data:build": "npm data:catalog && npm data:search",
     "data:clean": "rimraf src/data/packages/__generated__/*",
-    "prebuild": "npm run data:content:gen && npm run data:content:check && npm run data:build"
+    "prebuild": "npm run data:content:gen && npm run data:content:check && npm run data:build",
+    "mdx:one": "tsx scripts/packages/mdx-to-registry.ts",
+    "packages:build": "tsx scripts/build-packages.ts",
+    "content:all": "npm run mdx:one && npm run packages:build",
+    "registry:gen": "tsx scripts/packages/generate-registry-manifest.ts",
+    "registry:gen:force": "tsx scripts/packages/generate-registry-manifest.ts --force --verbose",
+    "content:all": "npm run mdx:one && npm run registry:gen && npm run packages:build",
+    "mdx:build": "tsx scripts/packages/mdx-to-registry.ts --all",
+    "registry:mirror": "tsx scripts/packages/mirror-docs-to-registry.ts",
+    "registry:manifest": "tsx scripts/packages/generate-registry-manifest.ts",
+    "content:all": "npm run mdx:build && npm run registry:mirror && npm run registry:manifest"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.1",

@@ -41,10 +41,10 @@
  */
 
 import { z } from "zod";
-import {
-  PackageSchema,
-  type PackageSchemaType,
-} from "@/packages/lib/package-schema";
+import { PackageSchema } from "@/packages/lib/package-schema";
+
+/** Runtime type (fully normalized, consumer-facing). */
+export type PackageSchemaType = z.infer<typeof PackageSchema>;
 
 /* =============================================================================
  * Shared primitives (author-facing)
@@ -84,7 +84,7 @@ export const MdxIncludesTableLikeSchema = z.object({
   rows: z
     .array(
       z.union([
-        z.array(z.string()),               // ["Label", "×", "✓", ...]
+        z.array(z.string()),                 // ["Label", "×", "✓", ...]
         z.object({ cells: z.array(z.string()) }), // { cells: [...] }
       ])
     )
@@ -116,15 +116,22 @@ export const MdxIncludesGroupSchema = z.object({
  * MDX Frontmatter Schema (author-facing)
  * ============================================================================= */
 
+/**
+ * Authoring schema for `public.mdx` frontmatter.
+ *
+ * NOTE on `service`: keep this **lenient** (string) to avoid churn if new
+ * services are introduced (e.g., "lead-generation"). Runtime validation for
+ * supported services can happen downstream if desired.
+ */
 export const MdxFrontmatterSchema = z
   .object({
     /* Identity & taxonomy */
     id: z.string().min(1),
     slug: z.string().min(1),
-    /** Display name is required for the runtime PackageSchema. Keep it explicit. */
+    /** Display name (required for runtime PackageSchema). */
     name: z.string().min(1),
-    service: z.enum(["webdev", "seo", "marketing", "leadgen", "content", "video"]),
-    /** Optional taxonomy/labelling that docs may use for navigation. */
+    service: z.string().min(1),
+    /** Optional taxonomy labels docs may use. */
     subservice: z.string().min(1).optional(),
     subsubservice: z.string().optional(),
 
@@ -148,7 +155,7 @@ export const MdxFrontmatterSchema = z
     /* Phase 2 — Why */
     painPoints: z.array(z.string()).optional(),
     /**
-     * Option A: author can supply purposeHtml directly via frontmatter.
+     * Option A: author can supply purposeHtml via frontmatter.
      * Option B: pipeline can pass compiled MDX body to the transformer.
      */
     purposeHtml: z.string().optional(),
@@ -203,8 +210,69 @@ export const MdxFrontmatterSchema = z
     }
   });
 
+/** Alias exported for scripts that expect this exact name. */
+export const PackageMarkdownSchema = MdxFrontmatterSchema;
+
 /** Inferred type for author-facing frontmatter. */
 export type MdxFrontmatter = z.infer<typeof MdxFrontmatterSchema>;
+
+/* =============================================================================
+ * Internal pricing (optional, non-public) — for scripts/ops
+ * =============================================================================
+ * This is intentionally permissive, with defaults, so a missing/empty
+ * internal.json won’t break builds. Extend as your ops needs grow.
+ */
+
+export const InternalPricingSchema = z
+  .object({
+    /** Optional price tiers the team can toggle during quoting. */
+    tiers: z
+      .array(
+        z.object({
+          id: z.string().min(1),
+          label: z.string().optional(),
+          /** Allow partial then refine, so "either monthly or oneTime" still applies. */
+          price: z
+            .object({
+              monthly: z.number().positive().finite().optional(),
+              oneTime: z.number().positive().finite().optional(),
+              currency: z.literal("USD").default("USD"),
+            })
+            .refine((p) => p.monthly != null || p.oneTime != null, {
+              message: "tier.price must include monthly or oneTime",
+            })
+            .optional(),
+          enabled: z.boolean().default(true),
+          note: z.string().optional(),
+        })
+      )
+      .optional(),
+
+    /** Global currency override if tiers omit it. */
+    currency: z.literal("USD").default("USD"),
+
+    /** Feature flags for quoting experiments, etc. */
+    flags: z
+      .object({
+        featured: z.boolean().optional(),
+        internalOnly: z.boolean().optional(),
+      })
+      .default({}),
+
+    /** Optional modifiers (discounts, promos). */
+    modifiers: z
+      .object({
+        discountPercent: z.number().min(0).max(100).optional(),
+        setupWaived: z.boolean().optional(),
+      })
+      .default({}),
+
+    /** Free-form metadata (ops notes). */
+    meta: z.record(z.unknown()).default({}),
+  })
+  .default({});
+
+export type InternalPricing = z.infer<typeof InternalPricingSchema>;
 
 /* =============================================================================
  * Normalization helpers
@@ -391,10 +459,7 @@ export function frontmatterToPackage(
  * Parse helpers (build-time ergonomics)
  * ============================================================================= */
 
-/**
- * Strict frontmatter parser (throws on validation errors).
- * Use this right after extracting frontmatter from MDX.
- */
+/** Strict frontmatter parser (throws on validation errors). */
 export function parseMdxFrontmatter(data: unknown): MdxFrontmatter {
   return MdxFrontmatterSchema.parse(data);
 }
@@ -402,8 +467,7 @@ export function parseMdxFrontmatter(data: unknown): MdxFrontmatter {
 /**
  * Convenience one-liner for build steps:
  *
- *   const fm = parseMdxFrontmatter(rawFrontmatter);
- *   const pkg = buildPackageFromMdx(rawFrontmatter, { bodyHtml });
+ *   const pkg = buildPackageFromMdx(frontmatter, { bodyHtml });
  *
  * Throws on any validation error with a precise Zod error tree.
  */
@@ -420,7 +484,7 @@ export function buildPackageFromMdx(
  * =============================================================================
  * - If your scripts previously imported `PackageMarkdownSchema` from
  *   `src/packages/lib/registry/schemas.ts`, replace that import with
- *   `MdxFrontmatterSchema` from this file.
+ *   `PackageMarkdownSchema` from this file.
  * - If you relied on a looser `includesTable: any`, this module already accepts
  *   a flexible table-like shape and performs a deterministic normalization for
  *   the runtime model (matching the UI table component).

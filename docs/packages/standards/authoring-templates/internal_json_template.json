@@ -1,0 +1,1601 @@
+{
+  "schemaVersion": "1.0",
+  "version": "1.0.0",
+  
+  "meta": {
+    "id": "{{ service }}-{{ subservice }}-{{ slug }}",
+    "slug": "{{ slug }}",
+    "sku": "{{ SKU-CODE }}",
+    "packageName": "{{ Package Display Name }}",
+    "service": "{{ service }}",
+    "serviceLabel": "{{ Service Display Label }}",
+    "servicePath": "{{ service-path }}",
+    "subservice": "{{ subservice }}",
+    "subService": "{{ subservice }}",
+    "subsubservice": "{{ subsubservice (optional) }}",
+    "tier": "{{ Essential|Starter|Professional|Pro|Premium|Enterprise }}",
+    "status": "{{ active|draft|archived }}",
+    "owner": {
+      "product": "{{ Product Owner Name }}",
+      "org": "{{ Organization }}",
+      "group": "{{ Team/Group }}",
+      "delivery": "{{ Delivery Lead }}",
+      "deliveryLead": "{{ Delivery Manager }}",
+      "sales": "{{ Sales Lead }}",
+      "salesEngineer": "{{ Sales Engineer }}",
+      "email": "{{ contact@email.com }}"
+    },
+    "contacts": {
+      "productManager": { "name": "{{ Name }}", "email": "{{ email }}" },
+      "deliveryManager": { "name": "{{ Name }}", "email": "{{ email }}" },
+      "designLead": { "name": "{{ Name }}", "email": "{{ email }}" },
+      "salesLead": "{{ Name/Role }}"
+    },
+    "created": "{{ YYYY-MM-DD }}",
+    "createdAt": "{{ YYYY-MM-DDTHH:MM:SS.000Z }}",
+    "updated": "{{ YYYY-MM-DD }}",
+    "updatedAt": "{{ YYYY-MM-DDTHH:MM:SS.000Z }}",
+    "lastUpdated": "{{ YYYY-MM-DD }}",
+    "internalOnly": true,
+    "visibility": "internal",
+    "internalVersion": "{{ version }}",
+    "author": "{{ Author/Team }}"
+  },
+
+  "routing": {
+    "docsPath": "docs/packages/catalog/{{ service }}/{{ subservice }}/{{ slug }}/",
+    "publicFile": "public.mdx",
+    "publicMdx": "docs/packages/catalog/{{ service }}/{{ subservice }}/{{ slug }}/public.mdx",
+    "internalFile": "internal.json",
+    "internalJson": "docs/packages/catalog/{{ service }}/{{ subservice }}/{{ slug }}/internal.json",
+    "assetsDir": "docs/packages/catalog/{{ service }}/{{ subservice }}/{{ slug }}/assets/"
+  },
+
+  "authoring": {
+    "docsPath": "docs/packages/catalog/{{ service }}/{{ subservice }}/{{ slug }}/",
+    "publicFile": "public.mdx",
+    "internalFile": "internal.json",
+    "assetsDir": "assets"
+  },
+
+  "links": {
+    "runbook": "documents/runbooks/{{ slug }}.md",
+    "briefTemplate": "documents/templates/intake/{{ slug }}-intake.md",
+    "figmaLibrary": "{{ figma-url }}",
+    "slideMaster": "{{ figma-url }}",
+    "sampleDeck": "documents/samples/{{ slug }}-sample.pdf"
+  },
+
+  "flags": {
+    "internalPricingVisible": true,
+    "tieredPricingPlanned": true,
+    "showTieredPricing": true,
+    "showTieredPricingUI": false,
+    "variableScopeAllowed": false,
+    "eligibleForBundles": true,
+    "eligibleForHighlights": true,
+    "eligibleForCaseStudy": true,
+    "requiresPracticeLeadReview": false,
+    "tieredPricingToggleReady": true,
+    "priorityOffering": false
+  },
+
+  "internalFlags": {
+    "showTieredPricing": false,
+    "allowRawDelivery": false,
+    "tieredPricingPlanned": true,
+    "showTieredPricingUI": false,
+    "eligibleForBundles": true
+  },
+
+  "ui": {
+    "showTieredPricingComponent": false,
+    "plannedComponent": "TieredPricingTable",
+    "showPublicly": false,
+    "internalToggleDefault": true,
+    "badges": [],
+    "cardImage": "/packages/{{ service }}/{{ slug }}-card.png"
+  },
+
+  "uiToggles": {
+    "showTieredPricingComponent": false,
+    "experimental": {
+      "internalPricingToggle": true
+    }
+  },
+
+  "internalToggle": {
+    "enableTieredPricing": true,
+    "notes": "{{ Notes about tiered pricing implementation }}"
+  },
+
+  "tiering": {
+    "tier": "{{ Essential|Professional|Premium }}",
+    "unit": "{{ monthly|oneTime }}",
+    "internalToggle": true,
+    "phases": [
+      "Phase1HeroSection",
+      "Phase2WhySection",
+      "Phase3WhatSection",
+      "Phase4DetailsSection",
+      "Phase5NextSection"
+    ]
+  },
+
+  "pricing": {
+    "currency": "USD",
+    "model": "{{ fixed|retainer|oneTime|hybrid }}",
+    "feeModel": "{{ fixed }}",
+    "billingModel": "{{ fixed-fee|retainer }}",
+    "tierDefault": "{{ essential|starter|professional }}",
+    "defaultTier": "{{ essential|starter|professional }}",
+    "list": {
+      "oneTime": 0,
+      "monthly": 0,
+      "setup": 0
+    },
+    "base": {
+      "oneTime": 0,
+      "monthly": 0,
+      "currency": "USD"
+    },
+    "canonical": {
+      "oneTime": 0,
+      "monthly": 0,
+      "currency": "USD"
+    },
+    "listPrice": {
+      "oneTime": 0,
+      "monthly": 0
+    },
+    "oneTime": 0,
+    "monthly": 0,
+    "setup": 0,
+    "setupFee": 0,
+    "minTermMonths": 0,
+    "taxable": true,
+    "taxesIncluded": false,
+    
+    "components": {
+      "preProduction": 0,
+      "production": 0,
+      "postProduction": 0
+    },
+
+    "caps": {
+      "publishActionsPerMonth": 0,
+      "opsHoursPerMonth": 0,
+      "whicheverFirst": true,
+      "urls": 0,
+      "redirects": 0,
+      "domains": 0,
+      "templates": 0,
+      "sourceFilesIncluded": 0,
+      "exportPresetsIncluded": 0,
+      "brandsIncluded": 0,
+      "slidesIncluded": 0,
+      "reviewRoundsIncluded": 0,
+      "dataVisualsIncluded": 0
+    },
+
+    "scopeCaps": {
+      "sourceFilesIncluded": 100,
+      "exportPresetsIncluded": 10,
+      "brandsIncluded": 1
+    },
+
+    "paymentTerms": "{{ terms description }}",
+    "paymentPolicy": {
+      "underThreshold": { "threshold": 3000, "terms": "100% upfront to reserve sprint slot" },
+      "overThreshold": { "depositPct": 50, "balance": "Net 7 from final files delivery" },
+      "lateFee": "1.5% per 30 days",
+      "invoicing": "{{ Net 7|Net 15 }}",
+      "netDays": 7,
+      "lateFeePctMonthly": 0.015,
+      "depositPct": 0.5,
+      "depositPercent": 50,
+      "balanceOn": "final-handoff",
+      "schedule": [
+        { "milestone": "{{ Milestone Name }}", "pct": 50 },
+        { "milestone": "{{ Milestone Name }}", "pct": 50 }
+      ]
+    },
+
+    "billing": {
+      "frequency": "monthly-in-advance",
+      "paymentTermsNet": 15,
+      "overageBilling": "monthly-in-arrears",
+      "timekeeping": "0.25h increments",
+      "holidaysPause": true,
+      "depositPctToBook": 0.5,
+      "terms": "Net 15 on delivery",
+      "lateFeePctMonthly": 0.015,
+      "cancellationPolicy": "{{ policy description }}"
+    },
+
+    "rushFeePct": 0.2,
+    "floorPrice": 0,
+    "floorOneTime": 0,
+
+    "inclusions": "{{ Description of what's included }}",
+    "inclusionsSummary": "{{ Summary of inclusions }}",
+    "setupNotes": "{{ Setup notes }}",
+    "excludes": ["{{ exclusion 1 }}", "{{ exclusion 2 }}"],
+    "exclusions": ["{{ exclusion 1 }}", "{{ exclusion 2 }}"],
+    "finePrint": "{{ Fine print details }}",
+    "notes": ["{{ note 1 }}", "{{ note 2 }}"],
+
+    "discountPolicy": "{{ Discount policy description }}",
+    "discounts": {
+      "maxDiscountPct": 0.10,
+      "floorOneTime": 0,
+      "notes": "{{ Discount notes }}",
+      "nonProfitPct": 0.1,
+      "nonprofitPct": 10,
+      "nonProfitPercent": 10,
+      "startupPct": 0,
+      "educationPct": 10,
+      "volumePct": 10,
+      "prepayPct": 3,
+      "prepayPercent": 3,
+      "bundleWithLandingPagePct": 5,
+      "annualPrepayPercent": 10,
+      "commitment": [
+        { "months": 3, "pct": 0.05 },
+        { "months": 6, "pct": 0.08 }
+      ]
+    },
+
+    "rushOptions": [
+      {
+        "name": "Rush (+2 business days faster)",
+        "fee": 300,
+        "notes": "{{ Rush notes }}"
+      }
+    ],
+
+    "surcharges": [
+      { "id": "rush-2bd", "label": "Rush (< 2 business days per round)", "percent": 30 },
+      { "id": "expedite", "label": "Expedite (compress total timeline by 30%)", "percent": 18 }
+    ],
+
+    "policies": {
+      "rushMultiplier": 1.35,
+      "weekendMultiplier": 1.5,
+      "nonProfitDiscount": 0.9,
+      "paymentTerms": "50% deposit, 50% on delivery",
+      "validForDays": 30
+    },
+
+    "adjustments": [
+      { "id": "rush-20", "label": "Rush (≤3 biz days)", "multiplier": 1.2, "appliesTo": "oneTime" },
+      { "id": "multi-brand", "label": "Additional brand", "add": 600, "appliesTo": "oneTime" }
+    ],
+
+    "overage": {
+      "ratePerHour": 145,
+      "minIncrementHours": 0.25,
+      "requiresPreapproval": true
+    },
+
+    "changeOrders": {
+      "policy": "{{ Change order policy }}",
+      "hourlyRatesUSD": {
+        "producer": 125,
+        "writer": 120,
+        "designer": 115,
+        "motion": 130,
+        "sound": 110,
+        "qa": 90,
+        "captioning": 85
+      },
+      "flatExamples": {
+        "extraRevisionRound": 650,
+        "additionalCutdownEach": 250
+      },
+      "units": [
+        {
+          "id": "{{ unit-id }}",
+          "label": "{{ Unit Label }}",
+          "price": 0,
+          "pricePct": 0
+        }
+      ],
+      "triggers": ["{{ trigger 1 }}", "{{ trigger 2 }}"]
+    },
+
+    "changeRequests": {
+      "extraReviewRound": {
+        "unit": "per round",
+        "price": 250,
+        "notes": "{{ Notes }}"
+      },
+      "additionalTemplateLayout": {
+        "unit": "per layout",
+        "price": 300,
+        "notes": "{{ Notes }}"
+      }
+    },
+
+    "options": [
+      {
+        "sku": "{{ SKU }}",
+        "tier": "{{ Tier Name }}",
+        "oneTime": 0,
+        "caps": { "slidesIncluded": 30, "reviewRoundsIncluded": 3 }
+      },
+      { 
+        "id": "extra-slide", 
+        "label": "Additional designed slide", 
+        "uom": "per slide", 
+        "price": 180 
+      }
+    ],
+
+    "addlRates": {
+      "perExtraSlide": 175,
+      "perExtraReviewRound": 600,
+      "advancedDataVizEach": 250
+    },
+
+    "addons": [
+      {
+        "id": "{{ addon-id }}",
+        "sku": "{{ SKU }}",
+        "label": "{{ Add-on Label }}",
+        "type": "{{ fixed|per-article|per-language|recurring|one-time }}",
+        "unitPrice": 0,
+        "price": {
+          "oneTime": 0,
+          "monthly": 0,
+          "currency": "USD"
+        },
+        "unit": "{{ per language|per item }}",
+        "uom": "{{ per slide|each }}",
+        "estPrice": 0,
+        "estRangeUSD": [0, 0],
+        "estMonthlyUSD": [0, 0],
+        "estOneTime": 0,
+        "hours": {
+          "Writer": 2,
+          "Editor": 0.5
+        },
+        "internalCost": 0,
+        "notes": "{{ Add-on notes }}",
+        "includes": ["{{ inclusion 1 }}"]
+      }
+    ],
+
+    "passThroughs": [
+      { 
+        "id": "studio-rental", 
+        "label": "Studio rental (day)", 
+        "estimateUsd": "300–800", 
+        "billType": "at-cost" 
+      }
+    ],
+
+    "targets": {
+      "minGrossMargin": 0.35,
+      "targetMarginPct": 0.35,
+      "targetMargin": 0.35,
+      "targetGrossMargin": 0.5,
+      "targetGrossMarginPct": 0.55,
+      "minimumMargin": 0.2
+    },
+
+    "marginTargets": {
+      "minGrossMarginPct": 0.45,
+      "targetGrossMarginPct": 0.55
+    },
+
+    "internal": {
+      "targetGrossMargin": 0.55,
+      "expectedCost": 675,
+      "estimatedHours": 11,
+      "blendedRateAssumption": 61.36,
+      "paymentTerms": "50% deposit, 50% at delivery",
+      "invoicing": "Net 7 on final invoice"
+    },
+
+    "costAssumptions": [
+      { "role": "{{ Role }}", "rate": 120, "hours": 20, "subtotal": 2400 }
+    ],
+
+    "contingencyPercent": 10,
+
+    "internalPricingNotes": [
+      "{{ Internal note 1 }}",
+      "{{ Internal note 2 }}"
+    ],
+
+    "isTieredCandidate": true,
+    "tieredPricing": {
+      "enabled": true,
+      "phasesPlanned": [
+        {
+          "id": "pro",
+          "label": "{{ Tier Label }}",
+          "notes": "{{ Notes }}"
+        }
+      ]
+    },
+
+    "tiers": [
+      {
+        "id": "{{ tier-id }}",
+        "label": "{{ Tier Label }}",
+        "name": "{{ Tier Name }}",
+        "isDefault": false,
+        "oneTime": 0,
+        "monthly": 0,
+        "list": { "oneTime": 0, "monthly": 0 },
+        "price": { "oneTime": 0, "monthly": 0, "currency": "USD" },
+        "setup": 0,
+        "minTermMonths": 0,
+        "effortDays": 0,
+        "deliveryWindow": "{{ X business days }}",
+        "summary": "{{ Tier summary }}",
+        "description": "{{ Tier description }}",
+        "positioning": "{{ Positioning statement }}",
+        "includesDelta": ["{{ delta 1 }}", "{{ delta 2 }}"],
+        "deliverablesDelta": ["{{ deliverable 1 }}"],
+        "includes": ["{{ inclusion 1 }}"],
+        "adds": ["{{ addition 1 }}"],
+        "differences": ["{{ difference 1 }}"],
+        "limits": ["{{ limit 1 }}"],
+        "delta": {
+          "shootHours": 4,
+          "retouchedSelects": 10,
+          "notes": "{{ Delta notes }}"
+        },
+        "roundsIncluded": 2,
+        "concepts": 2,
+        "scope": ["{{ scope item 1 }}"],
+        "assumptions": ["{{ assumption 1 }}"],
+        "notes": "{{ Tier notes }}",
+        "recommended": false,
+        "custom": false,
+        "hoursPlan": {
+          "pm": 0.5,
+          "designer": 5.0
+        },
+        "rateCard": {
+          "pm": 95,
+          "designer": 110
+        },
+        "estimatedCost": 0,
+        "targetMarginPct": 42,
+        "breakeven": 0,
+        "caps": {
+          "articlesPerMonth": 4,
+          "publishActions": 18,
+          "opsHours": 20
+        },
+        "limits": {
+          "articlesPerMonth": 4,
+          "wordsPerArticle": "800–1200",
+          "reviewRoundsPerArticle": 2
+        },
+        "targets": {
+          "medianTimeToPublishHours": 48
+        },
+        "staffing": {
+          "contentStrategist": 0.25,
+          "writer": 0.6
+        },
+        "overageRatePerHour": 145,
+        "recommendedFor": "{{ Recommendation }}",
+        "revisionCycles": 2,
+        "interviewsIncluded": 2,
+        "personasCovered": 1
+      }
+    ],
+
+    "calculation": {
+      "notes": "{{ Calculation notes }}"
+    },
+
+    "effortModel": {
+      "units": "hours",
+      "roles": [
+        { "role": "{{ Role }}", "halfDay": 4, "fullDay": 8, "twoDay": 16 }
+      ],
+      "postProdPerSelectHours": 0.25,
+      "cullingAndColorHours": { "halfDay": 1.5, "fullDay": 2 }
+    }
+  },
+
+  "tieredPricing": {
+    "enabled": true,
+    "tiers": [
+      {
+        "id": "essential",
+        "label": "Essential",
+        "monthly": 2400,
+        "caps": { "publishActions": 18 },
+        "recommendedFor": "{{ Recommendation }}"
+      }
+    ],
+    "ui": {
+      "plannedComponent": "TieredPricingTable",
+      "showPublicly": false,
+      "internalToggleDefault": true
+    }
+  },
+
+  "effort": {
+    "assumptions": "{{ Effort assumptions }}",
+    "roles": [
+      { "role": "{{ Role }}", "hours": 6, "blendedRate": 120, "hoursPlanned": 10, "hourCap": 12, "hourlyRate": 110, "costPlanned": 1100, "estHours": 22, "allocation": "Primary", "allocationFTE": 0.35, "responsibilities": ["{{ responsibility }}"], "backups": ["{{ backup role }}"], "notes": "{{ Notes }}" }
+    ],
+    "totalHoursPlanned": 0,
+    "estTotalHours": 0,
+    "laborCostPlanned": 0,
+    "softwareCogs": [
+      { "item": "{{ Item }}", "cost": 0 }
+    ],
+    "externalCogs": [],
+    "cogsTotal": 0,
+    "totalCostPlanned": 0,
+    "grossMargin": {
+      "amount": 0,
+      "pct": 0
+    },
+    "overagePolicy": "{{ Overage policy }}",
+    "calc": {
+      "cogsTotal": 0,
+      "targetMarginPct": 0.35,
+      "listPriceCheck": 0,
+      "note": "{{ Calculation note }}"
+    },
+    "nonLaborOverhead": [
+      { "id": "{{ id }}", "label": "{{ Label }}", "cost": 100 }
+    ],
+    "summaryAtList": {
+      "listOneTimeUsd": 0,
+      "estInternalCostUsd": 0,
+      "estGrossMarginPct": 0,
+      "notes": "{{ Summary notes }}"
+    },
+    "units": "hours",
+    "timelineDays": {
+      "setup": 2,
+      "delivery": 5,
+      "buffer": 2
+    },
+    "phases": [
+      {
+        "id": "{{ phase-id }}",
+        "label": "{{ Phase Label }}",
+        "days": 2,
+        "exit": "{{ Exit criteria }}",
+        "window": "{{ Days X–Y }}",
+        "notes": "{{ Phase notes }}",
+        "outputs": ["{{ output 1 }}"],
+        "tasks": ["{{ task 1 }}"],
+        "artifacts": ["{{ artifact 1 }}"]
+      }
+    ]
+  },
+
+  "resourcing": {
+    "targetMarginPct": 0.45,
+    "hoursCap": [
+      { "role": "{{ Role }}", "capHours": 4 }
+    ],
+    "externalCosts": {
+      "voiceoverIncluded": true,
+      "voIncludedPickups": 1,
+      "voExpectedCostUSD": 250
+    }
+  },
+
+  "labor": {
+    "roleRates": {
+      "designDirector": 80,
+      "seniorDesigner": 65
+    },
+    "roles": [
+      {
+        "role": "{{ Role }}",
+        "hours": 0.5,
+        "rate": 80,
+        "cost": 40
+      }
+    ],
+    "totals": {
+      "hours": 11,
+      "cost": 675,
+      "contingencyPct": 10,
+      "hoursWithContingency": 12.1,
+      "costWithContingency": 742.5
+    },
+    "phaseBreakdown": [
+      {
+        "phase": "{{ Phase Name }}",
+        "hours": 1.5,
+        "roles": {
+          "Design Director": 0.5
+        },
+        "deliverables": ["{{ deliverable 1 }}"]
+      }
+    ]
+  },
+
+  "rateCard": {
+    "currency": "USD",
+    "roles": {
+      "photographer": { "costRate": 75, "billRate": 175 },
+      "producer": { "costRate": 60, "billRate": 145 }
+    }
+  },
+
+  "team": {
+    "roles": [
+      { "role": "{{ Role }}", "allocationFTE": 0.2, "notes": "{{ Notes }}" }
+    ],
+    "timezoneCoverage": ["Americas"],
+    "holidayBlackouts": ["US-Federal"]
+  },
+
+  "marginsCosts": {
+    "estimatedDeliveryHours": 48,
+    "blendedRate": 135,
+    "hardCosts": 0,
+    "targetGrossMarginPercent": 55
+  },
+
+  "throughput": {
+    "baselineSkusPerDay": { "min": 12, "max": 20, "assumptions": "{{ Assumptions }}" },
+    "retouchedSelectsIncluded": 20,
+    "additionalSelectPriceUsd": 35,
+    "returnsPolicy": "{{ Returns policy }}"
+  },
+
+  "scope": {
+    "summary": "{{ Scope summary }}",
+    "deliverables": ["{{ deliverable 1 }}"],
+    "requirements": ["{{ requirement 1 }}"],
+    "outOfScope": ["{{ out of scope item 1 }}"],
+    "assumptions": ["{{ assumption 1 }}"],
+    "in": ["{{ in scope item 1 }}"],
+    "inScope": ["{{ in scope item 1 }}"],
+    "included": ["{{ inclusion 1 }}"],
+    "inclusions": ["{{ inclusion 1 }}"],
+    "out": ["{{ out of scope item 1 }}"],
+    "exclusions": ["{{ exclusion 1 }}"],
+    "limits": ["{{ limit 1 }}"],
+    "outOfScopeNotes": "{{ Out of scope notes }}",
+    "acceptanceCriteria": ["{{ criteria 1 }}"],
+    "caps": {
+      "urls": 100,
+      "redirects": 150
+    },
+    "cmsPairsExamples": ["{{ CMS pair 1 }}"],
+    "dependencies": ["{{ dependency 1 }}"],
+    "scopeRules": {
+      "included": ["{{ inclusion 1 }}"],
+      "excluded": ["{{ exclusion 1 }}"],
+      "acceptanceCriteria": ["{{ criteria 1 }}"]
+    },
+    "handoff": {
+      "sourceFiles": ["Figma", "Adobe"],
+      "exports": ["JPG", "PNG"],
+      "documentation": ["Usage guide"],
+      "package": ["{{ artifact 1 }}"],
+      "folderStructure": ["01_brief/", "02_story_map/"],
+      "sources": ["Figma link or Adobe package"],
+      "deliverables": ["{{ deliverable 1 }}"],
+      "method": "{{ Handoff method }}",
+      "structure": ["{{ folder 1 }}/"]
+    },
+    "variants": {
+      "regions": 1,
+      "languages": 1,
+      "socialHeaders": ["LinkedIn", "X", "YouTube"]
+    }
+  },
+
+  "scopeRules": {
+    "included": ["{{ inclusion 1 }}"],
+    "excluded": ["{{ exclusion 1 }}"],
+    "acceptanceCriteria": ["{{ criteria 1 }}"]
+  },
+
+  "ops": {
+    "inputs": ["{{ input 1 }}"],
+    "outputs": ["{{ output 1 }}"],
+    "staffing": [
+      { "role": "{{ Role }}", "responsibility": "{{ Responsibility }}" }
+    ],
+    "equipment": ["{{ equipment 1 }}"],
+    "scheduleTemplate": ["{{ schedule item 1 }}"],
+    "sla": {
+      "responseTime": "1 business day",
+      "proofsDelivery": "Within 2 business days",
+      "finalsDelivery": "Within 3–5 business days",
+      "reschedulePolicy": "{{ Policy }}",
+      "cancellation": "{{ Policy }}"
+    },
+    "risks": [
+      { "risk": "{{ Risk }}", "mitigation": "{{ Mitigation }}" }
+    ],
+    "assumptions": ["{{ assumption 1 }}"],
+    "qa": ["{{ QA item 1 }}"],
+    "scope": ["{{ scope item 1 }}"],
+    "requirements": ["{{ requirement 1 }}"],
+    "access": ["{{ access requirement 1 }}"],
+    "tooling": {
+      "design": ["{{ tool 1 }}"],
+      "handoff": ["{{ tool 1 }}"],
+      "collab": ["{{ tool 1 }}"]
+    },
+    "approvals": {
+      "roundsIncluded": 2,
+      "reviewWindow": "2 business days per round",
+      "signoff": "{{ Signoff requirements }}"
+    },
+    "deliveryModel": "{{ Model }}",
+    "sops": ["{{ SOP 1 }}"],
+    "skillTags": ["{{ tag 1 }}"],
+    "environments": ["staging", "production"],
+    "tools": ["{{ tool 1 }}"],
+    "reviewCadence": {
+      "reviewRoundsIncluded": 2,
+      "clientFeedbackSLA": "2–3 business days",
+      "internalQAWindow": "≤24 hours"
+    },
+    "workCalendar": {
+      "timezone": "America/Los_Angeles",
+      "businessHours": "09:00–17:00",
+      "blackouts": ["US Federal Holidays"]
+    },
+    "milestones": [
+      {
+        "id": "{{ milestone-id }}",
+        "label": "{{ Milestone Label }}",
+        "exitCriteria": ["{{ criteria 1 }}"],
+        "eta": "{{ Day X–Y }}"
+      }
+    ],
+    "dependencies": ["{{ dependency 1 }}"],
+    "templates": ["{{ template 1 }}"],
+    "folders": {
+      "clientDrive": "{{ path }}",
+      "shoot": "{{ path }}"
+    },
+    "fileNaming": {
+      "pattern": "{{ pattern }}",
+      "examples": ["{{ example 1 }}"]
+    },
+    "notes": "{{ Ops notes }}",
+    "opsNotes": "{{ Ops notes }}"
+  },
+
+  "operations": {
+    "deliveryModel": "{{ Model }}",
+    "sla": {
+      "kickoffScheduling": "Within 1–2 business days",
+      "firstDraftFromBriefApproval": "5–7 business days",
+      "reviewTurnarounds": "1–2 business days/round"
+    },
+    "timelineTemplate": [
+      { "step": "{{ Step }}", "target": "{{ Day X–Y }}" }
+    ],
+    "roles": [
+      { 
+        "role": "{{ Role }}", 
+        "responsibilities": ["{{ responsibility 1 }}"], 
+        "backups": ["{{ backup 1 }}"] 
+      }
+    ],
+    "tooling": {
+      "design": ["{{ tool 1 }}"],
+      "fileDelivery": ["{{ tool 1 }}"],
+      "communication": ["{{ tool 1 }}"],
+      "tracking": ["{{ tool 1 }}"],
+      "preflight": ["{{ tool 1 }}"]
+    },
+    "staffing": [
+      { "role": "{{ Role }}", "allocation": "{{ allocation }}", "hours": 0, "notes": "{{ notes }}" }
+    ],
+    "meetings": [
+      { 
+        "type": "{{ Kickoff|Review|Handoff }}", 
+        "duration": "{{ 45 min }}", 
+        "attendees": ["{{ attendee 1 }}"] 
+      }
+    ],
+    "delivery": {
+      "workspace": "{{ Google Drive|Notion }}",
+      "artifacts": ["{{ artifact 1 }}"]
+    }
+  },
+
+  "sdlc": {
+    "intake": ["{{ intake step 1 }}"],
+    "workflow": ["{{ workflow step 1 }}"],
+    "cadence": {
+      "weeklyAsyncStatus": "{{ Day }}",
+      "monthlyOpsReview": "{{ Timing }}"
+    },
+    "definitions": {
+      "ready": ["{{ ready criteria 1 }}"],
+      "done": ["{{ done criteria 1 }}"]
+    }
+  },
+
+  "slo": {
+    "totalTargetDays": 21,
+    "firstResponseSLA": "1 business day",
+    "reviewTurnaroundSLA": "2 business days per round",
+    "revisionsIncluded": 2,
+    "inputsCutoffPolicy": "{{ Policy }}",
+    "intakeValidation": { "targetHours": 24, "businessHours": true },
+    "publishTurnaround": {
+      "standard": { "targetHours": 48, "businessHours": true },
+      "fastLane": { "targetHours": 24, "businessHours": true }
+    },
+    "reviewCycles": { 
+      "clientReviewTargetHours": 24, 
+      "internalFixTargetHours": 24 
+    },
+    "bugFixes": { "p0": "same-day", "p1": "next business day" }
+  },
+
+  "sla": {
+    "kickoffLeadTime": "3–5 business days",
+    "draftTurnaround": "{{ Description }}",
+    "revisionSLA": "24–48h per round",
+    "responseTime": "Same-day acknowledgment",
+    "businessHours": "Mon–Fri 9a–6p",
+    "kickoffScheduling": "Within 1–2 business days",
+    "firstConcepts": "2–3 business days",
+    "reviewTurnarounds": "1–2 business days per round",
+    "finalHandoff": "Within 1 business day",
+    "firstResponseHrs": 24,
+    "asynchronousComms": "{{ Description }}",
+    "reviewTurnaroundHrs": 48
+  },
+
+  "delivery": {
+    "estimates": {
+      "setupDays": 3,
+      "totalWeeks": "2–3",
+      "revisionRoundsIncluded": 1,
+      "extraRevisionTurnaroundDays": 3
+    },
+    "staffing": [
+      { "role": "{{ Role }}", "allocation": "{{ Primary|Secondary }}", "hours": 20 }
+    ],
+    "tools": ["{{ tool 1 }}"],
+    "environments": ["{{ environment 1 }}"],
+    "assumptions": ["{{ assumption 1 }}"],
+    "timelineSummary": "{{ Timeline description }}",
+    "timelineDays": "{{ X business days }}",
+    "milestones": [
+      {
+        "id": "{{ milestone-id }}",
+        "name": "{{ Milestone Name }}",
+        "title": "{{ Milestone Title }}",
+        "eta": "{{ Day X–Y }}",
+        "exitCriteria": ["{{ criteria 1 }}"],
+        "gates": ["{{ gate 1 }}"],
+        "outputs": ["{{ output 1 }}"],
+        "artifacts": ["{{ artifact 1 }}"]
+      }
+    ],
+    "phases": [
+      {
+        "id": "{{ phase-id }}",
+        "name": "{{ Phase Name }}",
+        "label": "{{ Phase Label }}",
+        "durationDays": 5,
+        "duration": "{{ Days X–Y }}",
+        "days": "{{ Day range }}",
+        "gates": ["{{ gate 1 }}"],
+        "tasks": ["{{ task 1 }}"],
+        "artifacts": ["{{ artifact 1 }}"],
+        "deliverables": ["{{ deliverable 1 }}"],
+        "window": "{{ Days X–Y }}",
+        "notes": "{{ Phase notes }}"
+      }
+    ],
+    "artifacts": ["{{ artifact 1 }}"],
+    "deliverables": ["{{ deliverable 1 }}"],
+    "handoff": {
+      "method": "{{ Method }}",
+      "structure": ["{{ folder 1 }}/"],
+      "walkthrough": "{{ Description }}",
+      "ownerTraining": "{{ Description }}",
+      "deliverables": ["{{ deliverable 1 }}"],
+      "package": ["{{ artifact 1 }}"],
+      "folderStructure": ["{{ folder 1 }}/"],
+      "artifactNames": {
+        "screenPdf": "{{ filename }}",
+        "webPdf": "{{ filename }}"
+      }
+    },
+    "acceptanceCriteria": ["{{ criteria 1 }}"],
+    "warranty": {
+      "windowDays": 14,
+      "coverage": ["{{ coverage item 1 }}"],
+      "exclusions": ["{{ exclusion 1 }}"]
+    },
+    "roles": [
+      { "role": "{{ Role }}", "hours": 8 }
+    ],
+    "estTotalHours": 42,
+    "workspace": "{{ Google Drive|Notion }}",
+    "slo": {
+      "firstPreview": "{{ timeframe }}",
+      "revisionTurnaround": "{{ timeframe }}",
+      "handoff": "{{ timeframe }}"
+    },
+    "reviewRoundsIncluded": 2,
+    "cadence": "{{ Weekly|Monthly }}"
+  },
+
+  "deliveryPlan": {
+    "phases": [
+      {
+        "id": "{{ phase-id }}",
+        "label": "{{ Phase Label }}",
+        "window": "{{ Days X–Y }}",
+        "notes": "{{ Phase notes }}",
+        "tasks": ["{{ task 1 }}"],
+        "artifacts": ["{{ artifact 1 }}"]
+      }
+    ]
+  },
+
+  "executionPlan": {
+    "timeline": [
+      {
+        "id": "{{ phase-id }}",
+        "title": "{{ Phase Title }}",
+        "window": "{{ Days X–Y }}",
+        "notes": "{{ Phase notes }}"
+      }
+    ],
+    "milestones": [
+      {
+        "id": "{{ milestone-id }}",
+        "title": "{{ Milestone Title }}",
+        "exitCriteria": ["{{ criteria 1 }}"]
+      }
+    ]
+  },
+
+  "timeline": {
+    "setup": "{{ X business days }}",
+    "launch": "{{ X weeks }}",
+    "ongoing": "{{ duration }}",
+    "milestones": ["{{ milestone 1 }}"],
+    "phases": [
+      {
+        "id": "{{ phase-id }}",
+        "label": "{{ Phase Label }}",
+        "duration": "{{ Days X–Y }}",
+        "deliverables": ["{{ deliverable 1 }}"]
+      }
+    ],
+    "timelineDays": 10,
+    "targetTimeline": {
+      "kickoffToStoryMap": "{{ timeframe }}",
+      "firstDesignPass": "{{ timeframe }}",
+      "revisions": "{{ timeframe }}",
+      "finalization": "{{ timeframe }}"
+    },
+    "sprints": [
+      { 
+        "name": "{{ Sprint Name }}", 
+        "deliverable": "{{ Deliverable }}", 
+        "durationDays": 2 
+      }
+    ]
+  },
+
+  "technicalDelivery": {
+    "video": {
+      "codec": "{{ H.264 High }}",
+      "resolution": ["1920x1080"],
+      "frameRate": "{{ 30fps }}",
+      "targetBitrate": "{{ 10–16 Mbps }}",
+      "color": "{{ sRGB }}",
+      "container": "{{ MP4 }}"
+    },
+    "audio": {
+      "format": "{{ AAC }}",
+      "channels": "{{ Stereo }}",
+      "loudnessTarget": "{{ -14 to -16 LUFS }}",
+      "peak": "{{ -1.0 dBTP }}"
+    },
+    "accessibility": {
+      "captions": "{{ EN SRT + burned-in }}",
+      "subtitleStyle": "{{ Style specs }}"
+    }
+  },
+
+  "tech": {
+    "environments": ["staging", "production"],
+    "gitFlowForHeadless": {
+      "enabled": true,
+      "branches": ["main", "content-release/*"],
+      "notes": "{{ Git flow notes }}"
+    }
+  },
+
+  "requirements": {
+    "inputs": ["{{ input 1 }}"],
+    "access": ["{{ access requirement 1 }}"],
+    "deadlines": {
+      "scriptApproval": "{{ timeframe }}"
+    },
+    "requiredFromClient": ["{{ requirement 1 }}"],
+    "optional": ["{{ optional item 1 }}"],
+    "blockedIfMissing": ["{{ blocker 1 }}"]
+  },
+
+  "dependencies": {
+    "requiredFromClient": ["{{ requirement 1 }}"],
+    "optional": ["{{ optional item 1 }}"],
+    "blockedIfMissing": ["{{ blocker 1 }}"],
+    "integrations": ["{{ integration 1 }}"],
+    "tools": ["{{ tool 1 }}"],
+    "required": [],
+    "access": ["{{ access requirement 1 }}"]
+  },
+
+  "integrations": {
+    "required": [],
+    "optional": ["{{ integration 1 }}"]
+  },
+
+  "tooling": {
+    "design": ["{{ tool 1 }}"],
+    "accessibility": ["{{ tool 1 }}"],
+    "export": ["{{ tool 1 }}"],
+    "storage": ["{{ tool 1 }}"],
+    "templates": ["{{ template 1 }}"],
+    "handoff": "{{ tool }}",
+    "versioning": "{{ tool }}",
+    "stockPolicy": "{{ policy }}",
+    "fonts": "{{ policy }}"
+  },
+
+  "tools": {
+    "design": "{{ tool }}",
+    "color": "{{ tool }}",
+    "retouch": "{{ tool }}",
+    "proofing": "{{ tool }}"
+  },
+
+  "communications": {
+    "cadence": "{{ Cadence }}",
+    "channel": "{{ Channel }}",
+    "handoff": "{{ Handoff details }}",
+    "channels": ["{{ channel 1 }}"],
+    "statusCadence": "{{ Cadence }}",
+    "reviewWorkshops": ["{{ workshop 1 }}"],
+    "escalation": "{{ Escalation path }}",
+    "channelNaming": "{{ pattern }}",
+    "statusUpdates": "{{ Description }}"
+  },
+
+  "comms": {
+    "channels": ["{{ channel 1 }}"],
+    "statusCadence": "{{ Cadence }}",
+    "reviewWorkshops": ["{{ workshop 1 }}"],
+    "escalation": "{{ Escalation path }}"
+  },
+
+  "reviewPolicy": {
+    "consolidatedFeedbackRequired": true,
+    "roundsIncluded": 2,
+    "turnaroundPerRoundDays": 2,
+    "whatCountsAsRevision": ["{{ item 1 }}"],
+    "outOfScopeExamples": ["{{ item 1 }}"],
+    "includedRevisions": "{{ number }}",
+    "outOfScopeTriggers": ["{{ trigger 1 }}"],
+    "process": "{{ Process description }}"
+  },
+
+  "revisionPolicy": {
+    "includedRounds": 2,
+    "turnaroundHoursPerRound": 48,
+    "extraRoundFee": 600,
+    "notes": "{{ Policy notes }}"
+  },
+
+  "changePolicy": {
+    "minorChangesDefinition": "{{ Definition }}",
+    "majorChangesTriggers": ["{{ trigger 1 }}"],
+    "outOfScopeExamples": ["{{ example 1 }}"],
+    "billableRateForExtras": 125,
+    "authorization": "{{ Authorization requirement }}"
+  },
+
+  "changeManagement": {
+    "policy": "{{ Policy }}",
+    "triggers": ["{{ trigger 1 }}"],
+    "approvals": ["{{ approver 1 }}"],
+    "whatCountsAsRevisionRound": "{{ Definition }}",
+    "outOfScopeTriggers": ["{{ trigger 1 }}"],
+    "process": ["{{ step 1 }}"]
+  },
+
+  "changeRequests": {
+    "policy": "{{ Policy }}",
+    "units": [
+      {
+        "id": "{{ unit-id }}",
+        "label": "{{ Label }}",
+        "price": 0
+      }
+    ],
+    "triggers": ["{{ trigger 1 }}"],
+    "includedRevisions": 2,
+    "sla": "{{ timeframe }}",
+    "outOfScopeExamples": ["{{ example 1 }}"],
+    "process": "{{ Process description }}",
+    "estimateDefaults": {
+      "minorCopy": { "hours": 0.25, "role": "Copy Editor" }
+    },
+    "approval": "{{ Approval requirement }}"
+  },
+
+  "approvals": {
+    "requiredAt": ["{{ approval point 1 }}"],
+    "approverRoles": ["{{ role 1 }}"],
+    "turnaroundExpectation": "{{ timeframe }}",
+    "required": ["{{ approval 1 }}"],
+    "requiredFromClient": ["{{ requirement 1 }}"],
+    "internal": ["{{ internal approval 1 }}"],
+    "internalReview": ["{{ review item 1 }}"],
+    "signers": [],
+    "legal": {
+      "ndaRequired": false,
+      "usageRights": "{{ Rights description }}",
+      "thirdParty": "{{ Policy }}"
+    },
+    "signOffMethod": "{{ Method }}",
+    "roundsIncluded": 2,
+    "reviewWindow": "{{ timeframe }}",
+    "signoff": "{{ Signoff requirements }}",
+    "acceptanceCriteria": ["{{ criteria 1 }}"]
+  },
+
+  "qa": {
+    "checklist": ["{{ check 1 }}"],
+    "signoffRoles": ["{{ role 1 }}"],
+    "acceptanceCriteria": ["{{ criteria 1 }}"],
+    "design": ["{{ check 1 }}"],
+    "content": ["{{ check 1 }}"],
+    "export": ["{{ check 1 }}"],
+    "accessibility": ["{{ check 1 }}"],
+    "a11y": ["{{ check 1 }}"],
+    "seo": ["{{ check 1 }}"],
+    "links": ["{{ check 1 }}"],
+    "tech": ["{{ check 1 }}"],
+    "brand": ["{{ check 1 }}"],
+    "preflightPresets": {
+      "press": "{{ preset }}",
+      "web": "{{ preset }}"
+    },
+    "preLaunchChecks": ["{{ check 1 }}"],
+    "postLaunchChecks": ["{{ check 1 }}"],
+    "thresholds": {
+      "redirectPassRate": 0.98
+    }
+  },
+
+  "qaChecklist": ["{{ check 1 }}"],
+
+  "quality": {
+    "checklist": ["{{ check 1 }}"],
+    "definitionOfDone": "{{ Definition }}"
+  },
+
+  "qualityChecks": {
+    "tech": ["{{ check 1 }}"],
+    "accessibility": ["{{ check 1 }}"],
+    "brand": ["{{ check 1 }}"]
+  },
+
+  "licensing": {
+    "voiceover": {
+      "included": true,
+      "talentCount": 1,
+      "language": "{{ EN }}",
+      "pickupsIncluded": 1,
+      "extraPickupFeeUSD": 250,
+      "usage": "{{ Usage terms }}"
+    },
+    "music": {
+      "licenseBudgetUSD": 100,
+      "notes": "{{ Licensing notes }}"
+    },
+    "sfx": { "budgetUSD": 30 },
+    "stock": {
+      "footageIncluded": 0,
+      "unitCostUSD": 79,
+      "notes": "{{ Stock notes }}"
+    },
+    "ownership": {
+      "clientOwnsFinals": true,
+      "sourceFilesProvided": true,
+      "thirdPartyLicenses": "{{ License terms }}"
+    }
+  },
+
+  "legalEthics": {
+    "assetsAndLicensing": ["{{ policy 1 }}"],
+    "dataRetention": "{{ Retention policy }}"
+  },
+
+  "legal": {
+    "scopeExclusions": ["{{ exclusion 1 }}"],
+    "ip": ["{{ IP policy 1 }}"],
+    "privacySecurity": ["{{ privacy item 1 }}"],
+    "confidentiality": "{{ Policy }}",
+    "ipOwnership": "{{ Ownership terms }}",
+    "warranties": ["{{ warranty 1 }}"],
+    "dataHandling": ["{{ policy 1 }}"],
+    "sow": "{{ SOW description }}",
+    "acceptanceCriteria": ["{{ criteria 1 }}"],
+    "changeRequests": "{{ Policy }}",
+    "confidentiality": "{{ Policy }}",
+    "dataHandling": {
+      "pii": "{{ PII policy }}",
+      "retentionDays": 30,
+      "storage": "{{ Storage policy }}"
+    },
+    "cancellation": {
+      "policy": "{{ Cancellation policy }}",
+      "reschedule": "{{ Reschedule policy }}"
+    },
+    "assetLicensing": "{{ Licensing policy }}",
+    "piiHandling": "{{ PII policy }}",
+    "brandApprovals": "{{ Approval policy }}"
+  },
+
+  "legalCompliance": {
+    "data": "{{ Data policy }}",
+    "ip": "{{ IP policy }}",
+    "confidentiality": "{{ Confidentiality policy }}"
+  },
+
+  "compliance": {
+    "releases": "{{ Release policy }}",
+    "safety": "{{ Safety policy }}",
+    "pii": "{{ PII policy }}",
+    "security": "{{ Security policy }}",
+    "accessibility": ["{{ accessibility item 1 }}"],
+    "licensing": ["{{ licensing item 1 }}"],
+    "claims": ["{{ claims item 1 }}"]
+  },
+
+  "securityCompliance": {
+    "assetLicensing": "{{ Licensing policy }}",
+    "pii": "{{ PII policy }}",
+    "dataResidency": "{{ Data residency policy }}",
+    "retention": "{{ Retention policy }}"
+  },
+
+  "dataMeasurement": {
+    "baselineInputs": ["{{ input 1 }}"],
+    "successSignals": ["{{ signal 1 }}"]
+  },
+
+  "governance": {
+    "reviewModel": "{{ Model }}",
+    "storage": "{{ Storage location }}",
+    "handoff": "{{ Handoff description }}"
+  },
+
+  "discounting": {
+    "rules": [
+      { "name": "{{ Rule Name }}", "description": "{{ Description }}", "maxPercent": 5 }
+    ],
+    "floorMarginPercent": 35
+  },
+
+  "risks": [
+    {
+      "id": "{{ risk-id }}",
+      "risk": "{{ Risk description }}",
+      "desc": "{{ Risk description }}",
+      "name": "{{ Risk name }}",
+      "mitigation": "{{ Mitigation strategy }}",
+      "impact": "{{ Impact description }}"
+    }
+  ],
+
+  "analytics": {
+    "kpis": ["{{ KPI 1 }}"],
+    "tracking": "{{ Tracking description }}",
+    "targets": {
+      "cycleTimeDays": 14,
+      "onTimeDeliveryRate": 0.9,
+      "csat": 4.7,
+      "iterationCount": "<= 2 passes",
+      "assetReuseRate": ">= 75%"
+    },
+    "successKPIs": ["{{ KPI 1 }}"],
+    "measurementPlan": ["{{ measurement 1 }}"],
+    "kpis": [
+      { "id": "{{ kpi-id }}", "label": "{{ KPI Label }}", "target": "{{ target }}" }
+    ],
+    "reporting": ["{{ report 1 }}"],
+    "events": ["{{ event 1 }}"],
+    "dashboards": ["{{ dashboard 1 }}"],
+    "successMetrics": ["{{ metric 1 }}"],
+    "eventsToLog": ["{{ event 1 }}"],
+    "instrumentation": "{{ Description }}"
+  },
+
+  "metrics": {
+    "kpis": [
+      { "id": "{{ kpi-id }}", "label": "{{ KPI Label }}", "target": 18 }
+    ],
+    "reporting": ["{{ report 1 }}"],
+    "leading": ["{{ metric 1 }}"],
+    "lagging": ["{{ metric 1 }}"],
+    "reporting": {
+      "cadence": "{{ Monthly|Weekly }}",
+      "artifacts": ["{{ artifact 1 }}"]
+    }
+  },
+
+  "tracking": {
+    "successMetrics": ["{{ metric 1 }}"],
+    "eventsToLog": ["{{ event 1 }}"],
+    "dashboards": ["{{ dashboard 1 }}"]
+  },
+
+  "kpis": ["{{ KPI 1 }}"],
+
+  "packaging": {
+    "artifactNames": {
+      "screenPdf": "{{ filename }}",
+      "webPdf": "{{ filename }}"
+    },
+    "versioning": {
+      "scheme": "{{ Semver }}",
+      "changelog": "{{ location }}"
+    }
+  },
+
+  "versioning": {
+    "scheme": "{{ Semver }}",
+    "changelog": "{{ location }}"
+  },
+
+  "crossSell": {
+    "recommendations": ["{{ package-slug }}"],
+    "triggers": ["{{ trigger 1 }}"],
+    "recommended": [
+      { "slug": "{{ package-slug }}", "why": "{{ Reason }}" }
+    ]
+  },
+
+  "addOnsCatalog": {
+    "{{ addon-id }}": {
+      "sku": "{{ SKU }}",
+      "label": "{{ Add-on Label }}",
+      "price": { "oneTime": 0, "currency": "USD" },
+      "includes": ["{{ inclusion 1 }}"]
+    }
+  },
+
+  "extensionsAddOns": [
+    { "id": "{{ addon-id }}", "label": "{{ Label }}", "type": "{{ recurring|one-time }}" }
+  ],
+
+  "upsell": {
+    "recommended": [
+      { "slug": "{{ package-slug }}", "why": "{{ Reason }}" }
+    ],
+    "crossSell": [
+      { "slug": "{{ package-slug }}" }
+    ]
+  },
+
+  "opportunities": ["{{ opportunity 1 }}"],
+
+  "related": ["{{ package-slug }}"],
+
+  "relationships": {
+    "relatedSlugs": ["{{ package-slug }}"],
+    "crossSell": ["{{ package-slug }}"]
+  },
+
+  "sales": {
+    "icp": ["{{ ICP description 1 }}"],
+    "idealCustomers": ["{{ customer description 1 }}"],
+    "idealCustomerProfile": ["{{ ICP description 1 }}"],
+    "triggers": ["{{ trigger 1 }}"],
+    "discovery": ["{{ question 1 }}"],
+    "discoveryQuestions": ["{{ question 1 }}"],
+    "discoveryChecklist": ["{{ item 1 }}"],
+    "objections": [
+      { "q": "{{ Question }}", "a": "{{ Answer }}", "concern": "{{ Concern }}", "response": "{{ Response }}" }
+    ],
+    "commonObjections": ["{{ objection 1 }}"],
+    "counters": ["{{ counter 1 }}"],
+    "talkTracks": ["{{ talk track 1 }}"],
+    "talkingPoints": ["{{ talking point 1 }}"],
+    "proof": ["{{ proof point 1 }}"],
+    "proofPoints": ["{{ proof point 1 }}"],
+    "caseStudies": [],
+    "competitors": ["{{ competitor 1 }}"],
+    "competitiveAngles": ["{{ angle 1 }}"],
+    "positioning": "{{ Positioning statement }}",
+    "successMetrics": ["{{ metric 1 }}"],
+    "landAndExpand": ["{{ expansion path 1 }}"],
+    "bundlesCrossSell": ["{{ package-slug }}"],
+    "upsellPaths": ["{{ path 1 }}"],
+    "objectionHandling": [
+      { "objection": "{{ Objection }}", "response": "{{ Response }}" }
+    ],
+    "qualification": ["{{ criteria 1 }}"]
+  },
+
+  "salesNotes": {
+    "idealCustomer": ["{{ ICP 1 }}"],
+    "discoveryQuestions": ["{{ question 1 }}"],
+    "commonObjections": ["{{ objection 1 }}"],
+    "counters": ["{{ counter 1 }}"],
+    "landAndExpand": ["{{ path 1 }}"],
+    "competitors": ["{{ competitor 1 }}"]
+  },
+
+  "notesForSales": ["{{ sales note 1 }}"],
+
+  "salesEnablement": {
+    "talkTracks": ["{{ talk track 1 }}"],
+    "qualification": ["{{ criteria 1 }}"],
+    "competitiveAngles": ["{{ angle 1 }}"],
+    "objectionHandling": [
+      { "objection": "{{ Objection }}", "response": "{{ Response }}" }
+    ]
+  },
+
+  "qualification": {
+    "ideal": ["{{ criteria 1 }}"],
+    "disqualifiers": ["{{ disqualifier 1 }}"]
+  },
+
+  "playbooks": {
+    "workshops": ["{{ workshop 1 }}"],
+    "slides": ["{{ slide topic 1 }}"],
+    "board": {
+      "columns": ["{{ column 1 }}"],
+      "labels": ["{{ label 1 }}"]
+    },
+    "calendar": { "tool": "{{ tool }}", "visibility": "{{ visibility }}" },
+    "checklists": {
+      "prePublish": ["{{ check 1 }}"],
+      "postPublish": ["{{ check 1 }}"]
+    }
+  },
+
+  "playbook": {
+    "board": {
+      "columns": ["{{ column 1 }}"],
+      "labels": ["{{ label 1 }}"]
+    },
+    "calendar": { "tool": "{{ tool }}", "visibility": "{{ visibility }}" },
+    "checklists": {
+      "prePublish": ["{{ check 1 }}"]
+    }
+  },
+
+  "workflow": {
+    "timeline": [
+      { "title": "{{ Phase }}", "window": "{{ Day X }}", "notes": "{{ Notes }}" }
+    ],
+    "milestones": ["{{ milestone 1 }}"],
+    "communication": ["{{ communication item 1 }}"]
+  },
+
+  "escalation": {
+    "timelineRisk": "{{ Escalation procedure }}",
+    "qualityRisk": "{{ Escalation procedure }}"
+  },
+
+  "handoff": {
+    "deliverables": ["{{ deliverable 1 }}"],
+    "storage": "{{ Storage location }}",
+    "retentionDays": 365
+  },
+
+  "attachments": [
+    {
+      "label": "{{ Attachment Label }}",
+      "path": "{{ file path }}"
+    }
+  },
+
+  "sowTemplate": {
+    "summary": "{{ SOW summary }}",
+    "deliverables": ["{{ deliverable 1 }}"],
+    "timeline": "{{ Timeline }}",
+    "clientResponsibilities": ["{{ responsibility 1 }}"],
+    "paymentSchedule": "{{ Schedule }}",
+    "acceptanceCriteria": "{{ Criteria }}"
+  },
+
+  "rolloutPlan": ["{{ step 1 }}"],
+
+  "repository": {
+    "templates": ["{{ template 1 }}"],
+    "location": "{{ Location }}"
+  },
+
+  "knowledgeBase": ["{{ KB article 1 }}"],
+
+  "serviceMapping": {
+    "taxonomyService": "{{ service }}",
+    "taxonomySubservice": "{{ subservice }}",
+    "filters": {
+      "contentType": ["{{ type 1 }}"],
+      "objective": ["{{ objective 1 }}"],
+      "funnelStage": ["{{ stage 1 }}"],
+      "industry": ["{{ industry 1 }}"]
+    }
+  },
+
+  "mapping": {
+    "detail": {
+      "components": ["{{ component 1 }}"],
+      "sections": {
+        "highlights": "{{ mapping }}",
+        "outcomes": "{{ mapping }}"
+      },
+      "priceBand": {
+        "internalToggle": true,
+        "variant": "{{ detail|summary }}",
+        "baseNotePolicy": "{{ policy }}"
+      }
+    }
+  },
+
+  "finance": {
+    "revRec": "{{ Revenue recognition }}",
+    "invoiceSchedule": ["{{ schedule item 1 }}"],
+    "sku": "{{ SKU }}"
+  },
+
+  "experimentFlags": {
+    "useScriptedRedirectTesting": true,
+    "enableParityDiffReport": true
+  },
+
+  "internalToggles": {
+    "tieredPricingPlanned": true,
+    "showTieredPricingUI": false,
+    "eligibleForBundles": true
+  },
+
+  "roadmap": ["{{ roadmap item 1 }}"],
+
+  "notesInternal": ["{{ internal note 1 }}"],
+
+  "notes": ["{{ note 1 }}"],
+
+  "auditLog": [],
+
+  "changeLog": [
+    {
+      "date": "{{ YYYY-MM-DD }}",
+      "by": "{{ author }}",
+      "author": "{{ author }}",
+      "notes": "{{ change description }}",
+      "change": "{{ change description }}"
+    }
+  ]
+}
+      
