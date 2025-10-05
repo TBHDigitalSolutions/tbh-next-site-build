@@ -24,8 +24,8 @@
 
 import * as React from "react";
 import styles from "./PriceLabel.module.css";
-import type { Money } from "@/packages/lib/pricing";
-import { formatMoney } from "@/packages/lib/pricing";
+import type { Money } from "@/packages/lib/types/pricing";
+import { formatMoney } from "@/packages/lib/types/pricing";
 
 export type PriceLabelProps = {
   price?: Money;

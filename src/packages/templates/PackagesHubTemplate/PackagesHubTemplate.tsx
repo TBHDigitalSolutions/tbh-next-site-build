@@ -7,7 +7,7 @@ import dynamic from "next/dynamic";
 import clsx from "clsx";
 import styles from "./PackagesHubTemplate.module.css";
 
-import type { PackageBundle } from "@/packages/lib/types";
+import type { PackageBundle } from "@/packages/lib/types/types";
 import { toPackageCard } from "@/packages/lib/adapters";
 import { emitItemListJsonLd } from "@/packages/lib/jsonld";
 

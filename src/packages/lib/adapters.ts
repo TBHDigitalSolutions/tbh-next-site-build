@@ -3,7 +3,7 @@
 // Layering rule: no *runtime* imports from /components. Importing component
 // *types* is OK (erased at compile time).
 
-import type { PackageBundle, PackageInclude, Price } from "./types";
+import type { PackageBundle, PackageInclude, Price } from "./types/types";
 import type { AddOnCardProps } from "@/packages/components/AddOnCard"; // type-only; safe
 import {
   toStartingPrice,

@@ -2,7 +2,7 @@
 "use client";
 
 import * as React from "react";
-import type { PackageBundle } from "@/packages/lib/types";
+import type { PackageBundle } from "@/packages/lib/types/types";
 
 /**
  * Safely stringify JSON for embedding inside a <script> tag.

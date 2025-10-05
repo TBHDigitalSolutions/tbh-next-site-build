@@ -37,8 +37,8 @@ import styles from "./PackageDetailOverview.module.css";
 
 /* -------------------------------- Pricing helpers ------------------------- */
 /** Canonical Money shape + band helper */
-import type { Money } from "@/packages/lib/pricing";
-import { bandPropsFor } from "@/packages/lib/band";
+import type { Money } from "@/packages/lib/types/pricing";
+import { bandPropsFor } from "@/packages/lib/types/band";
 
 /* --------------------------------- UI contracts --------------------------- */
 import type { OutcomeItem } from "@/components/ui/molecules/OutcomeList";

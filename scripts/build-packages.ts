@@ -38,7 +38,7 @@ import rehypeStringify from "rehype-stringify";
 import {
   PackageMarkdownSchema,
   InternalPricingSchema,
-} from "@/packages/lib/mdx-frontmatter-schema";
+} from "@/packages/lib/schemas/mdx-frontmatter-schema";
 
 const DOCS_ROOT = path.resolve("docs/packages/catalog");
 const OUT_ROOT  = path.resolve("src/data/packages/__generated__");

@@ -32,7 +32,7 @@ import {
   ariaBookCallAbout,
   ariaRequestProposalFor,
   ariaViewDetailsFor,
-} from "@/packages/lib/copy";
+} from "@/packages/lib/types/copy";
 
 /* =============================================================================
  * Small pure helpers (no side-effects)

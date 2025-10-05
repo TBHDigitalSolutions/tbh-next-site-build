@@ -2,7 +2,7 @@
 // Bridges SSOT PackageBundle → props shape expected by GrowthPackagesSection.
 // Pure utilities: no React imports, no component coupling.
 
-import type { PackageBundle, Price } from "./types";
+import type { PackageBundle, Price } from "./types/types";
 
 /** Shape consumed by GrowthPackagesSection */
 export type GrowthPackage = {

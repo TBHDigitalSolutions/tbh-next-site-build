@@ -2,7 +2,7 @@
 // Central registry for canonical service slugs, routes, featured selections,
 // and small utilities used by adapters/templates. Pure TypeScript (no React).
 
-import type { PackageBundle } from "./types";
+import type { PackageBundle } from "./types/types";
 
 /* ----------------------------------------------------------------------------
  * Canonical Services

@@ -3,7 +3,7 @@
 // Framework-agnostic (no React). Safe to run in node/edge/SSR.
 
 import { z } from "zod";
-import type { AddOn as TAddOn, PackageBundle as TBundle, PackageInclude as TInclude, Price as TPrice } from "./types";
+import type { AddOn as TAddOn, PackageBundle as TBundle, PackageInclude as TInclude, Price as TPrice } from "./types/types";
 import { constraints, isKnownServiceSlug, normalizeServiceSlug } from "./registry";
 
 /* ----------------------------------------------------------------------------

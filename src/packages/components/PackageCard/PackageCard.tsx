@@ -17,11 +17,11 @@ import { ServiceChip } from "@/components/ui/molecules/ServiceChip";
 import TagChips from "@/components/ui/molecules/TagChips";
 
 // Pricing (shared SSOT)
-import type { Money as PriceMoney } from "@/packages/lib/pricing";
-import { startingAtLabel } from "@/packages/lib/pricing";
+import type { Money as PriceMoney } from "@/packages/lib/types/pricing";
+import { startingAtLabel } from "@/packages/lib/types/pricing";
 
 // Copy constants (labels only; routes are hard-coded here)
-import { CTA } from "@/packages/lib/copy";
+import { CTA } from "@/packages/lib/types/copy";
 
 // Price band (card variants)
 import PriceActionsBand from "@/packages/sections/PackageDetailOverview/parts/PriceActionsBand";

@@ -1,6 +1,6 @@
 // src/packages/lib/registry/types.ts
 // src/packages/lib/registry/types.ts
-import type { Money } from "@/packages/lib/pricing";
+import type { Money } from "@/packages/lib/types/pricing";
 
 /* -------------------------------- Services ------------------------------- */
 

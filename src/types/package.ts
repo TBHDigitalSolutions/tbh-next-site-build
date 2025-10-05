@@ -43,7 +43,7 @@ import {
   IncludeItemSchema,
   FaqSchema,
   PhaseCopySchema,
-} from "@/packages/lib/package-schema";
+} from "@/packages/lib/schemas/package-schema";
 
 /* =============================================================================
  * Primary Runtime Model

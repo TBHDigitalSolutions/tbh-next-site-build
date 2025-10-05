@@ -74,8 +74,8 @@ import remarkRehype from "remark-rehype";
 import rehypeStringify from "rehype-stringify";
 import type { Root, Content, Heading } from "mdast";
 
-import { PackageMarkdownSchema } from "@/packages/lib/mdx-frontmatter-schema";
-import { PackageSchema } from "@/packages/lib/package-schema";
+import { PackageMarkdownSchema } from "@/packages/lib/schemas/mdx-frontmatter-schema";
+import { PackageSchema } from "@/packages/lib/schemas/package-schema";
 
 /* =============================================================================
  * CLI

@@ -18,7 +18,7 @@ import TagChips from "@/components/ui/molecules/TagChips";
 
 // Centralized CTAs and pricing helpers
 import { ROUTES, CTA_LABEL } from "@/packages/lib/cta";
-import { startingAtLabel } from "@/packages/lib/pricing";
+import { startingAtLabel } from "@/packages/lib/types/pricing";
 
 /* ---------------------------------- Types --------------------------------- */
 

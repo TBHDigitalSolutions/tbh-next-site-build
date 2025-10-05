@@ -1,47 +1,34 @@
 // src/packages/lib/mdx-frontmatter-schema.ts
 /**
- * MDX Frontmatter Schema (author-facing) → PackageSchema (runtime-facing)
+ * MDX Frontmatter Schema (author-facing) → PackageSchema (runtime)
+ * src/packages/lib/mdx-frontmatter-schema.ts
  * =============================================================================
  * PURPOSE
  * -----------------------------------------------------------------------------
- * Authors edit `public.mdx` files with simple frontmatter. This module:
- *   1) Validates that frontmatter using Zod (tolerant, writer-friendly).
- *   2) Converts frontmatter (+ optional MDX body HTML) into the canonical
- *      runtime object validated by `PackageSchema` (the consumer-facing shape
- *      used by your TSX components via mappers).
+ * 1) Validate author-facing `public.mdx` frontmatter (lenient, ergonomic).
+ * 2) Normalize → convert to the strict runtime `PackageSchema` shape.
+ * 3) Export `InternalPricingSchema` for optional, non-public build data.
  *
- * DESIGN
+ * WHY TWO SCHEMAS?
  * -----------------------------------------------------------------------------
- * - This schema is intentionally *more lenient* than the runtime `PackageSchema`
- *   to keep MDX authoring ergonomic (e.g., flexible includes table syntax).
- * - A robust transform then normalizes frontmatter → runtime shape and finally
- *   validates again with `PackageSchema.parse(...)` to guarantee safety.
+ * - MDX frontmatter is writer-friendly (accepts aliases & flexible tables).
+ * - Runtime schema is consumer-friendly (strict, aligned with components).
  *
- * WHAT THIS FILE DOES NOT DO
+ * CRITICAL EXPORTS (for scripts you already have)
  * -----------------------------------------------------------------------------
- * - It does not decide price display/labels (handled by `pricing.ts`).
- * - It does not decide CTA copy (handled by `copy.ts`).
- * - It does not choose band variants (handled at the detail surface / `band.ts`).
- *
- * TYPICAL BUILD FLOW
- * -----------------------------------------------------------------------------
- *   MDX (public.mdx)
- *     └─► loader extracts frontmatter + converts the body to HTML
- *           └─► parseMdxFrontmatter(frontmatter)
- *                 └─► frontmatterToPackage(frontmatter, { bodyHtml })
- *                        └─► PackageSchema.parse(...)  ✅ safe runtime object
+ * - `PackageMarkdownSchema`  — the MDX frontmatter validator (alias below)
+ * - `InternalPricingSchema`  — optional internal.json validator (defaults to {})
  *
  * AUTHORING RULE
  * -----------------------------------------------------------------------------
  * Frontmatter must provide at least one inclusion source:
- *   - `includesGroups`  (grouped bullets), OR
+ *   - `includes`        (preferred, grouped bullets), OR
+ *   - `includesGroups`  (legacy alias), OR
  *   - `includesTable`   (table-like fallback)
- *
- * See `superRefine` below for a friendly error if neither is present.
  */
 
 import { z } from "zod";
-import { PackageSchema } from "@/packages/lib/package-schema";
+import { PackageSchema } from "@/packages/lib/schemas/package-schema";
 
 /** Runtime type (fully normalized, consumer-facing). */
 export type PackageSchemaType = z.infer<typeof PackageSchema>;
@@ -50,7 +37,7 @@ export type PackageSchemaType = z.infer<typeof PackageSchema>;
  * Shared primitives (author-facing)
  * ============================================================================= */
 
-/** Money (writer-friendly). Requires at least one of { oneTime, monthly }. */
+/** Money (writer-friendly). Requires at least one of { monthly, oneTime }. */
 export const MdxMoneySchema = z
   .object({
     monthly: z.number().positive().finite().optional(),
@@ -71,11 +58,10 @@ export const MdxPriceBandSchema = z.object({
 /**
  * Writer-friendly fallback “table-like” includes shape.
  * Example:
- *  columns: ["Feature", "Included"]
- *  rows: [
- *    ["Territory-based distribution", "yes"],
- *    ["Round-robin assignment", true],
- *  ]
+ *   columns: ["Feature", "Included"]
+ *   rows:
+ *     - ["Territory-based distribution", "yes"]
+ *     - ["Round-robin assignment", true]
  */
 export const MdxIncludesTableLikeSchema = z.object({
   title: z.string().optional(),   // ignored in transform; use `caption`
@@ -84,8 +70,8 @@ export const MdxIncludesTableLikeSchema = z.object({
   rows: z
     .array(
       z.union([
-        z.array(z.string()),                 // ["Label", "×", "✓", ...]
-        z.object({ cells: z.array(z.string()) }), // { cells: [...] }
+        z.array(z.string()),                     // ["Label", "✓", ...]
+        z.object({ cells: z.array(z.string()) }),// { cells: [...] }
       ])
     )
     .min(1),
@@ -106,10 +92,16 @@ export const MdxFaqSchema = z.object({
   answer: z.string().optional(),
 });
 
-/** A group of included bullets (writer-facing). */
+/** Included bullets (author-facing). Accept strings or {label,note}. */
+const MdxIncludeItemSchema = z.union([
+  z.string().min(1),
+  z.object({ label: z.string().min(1), note: z.string().optional() }),
+]);
+
+/** Grouped includes. */
 export const MdxIncludesGroupSchema = z.object({
   title: z.string().min(1),
-  items: z.array(z.string().min(1)).min(1),
+  items: z.array(MdxIncludeItemSchema).min(1),
 });
 
 /* =============================================================================
@@ -117,54 +109,45 @@ export const MdxIncludesGroupSchema = z.object({
  * ============================================================================= */
 
 /**
- * Authoring schema for `public.mdx` frontmatter.
- *
- * NOTE on `service`: keep this **lenient** (string) to avoid churn if new
- * services are introduced (e.g., "lead-generation"). Runtime validation for
- * supported services can happen downstream if desired.
+ * `service` is lenient here (string) to avoid churn when adding services.
+ * The runtime transform will coerce known aliases, and `PackageSchema.parse`
+ * enforces the final enum.
  */
 export const MdxFrontmatterSchema = z
   .object({
     /* Identity & taxonomy */
     id: z.string().min(1),
     slug: z.string().min(1),
-    /** Display name (required for runtime PackageSchema). */
     name: z.string().min(1),
-    service: z.string().min(1),
-    /** Optional taxonomy labels docs may use. */
+    service: z.string().min(1), // lenient here
     subservice: z.string().min(1).optional(),
     subsubservice: z.string().optional(),
+    category: z.string().optional(),
 
     tags: z.array(z.string()).default([]),
     badges: z.array(z.string()).default([]),
     tier: z.string().optional(),
 
-    image: z
-      .object({
-        src: z.string().min(1),
-        alt: z.string().min(1),
-      })
-      .optional(),
-
+    image: z.object({ src: z.string().min(1), alt: z.string().min(1) }).optional(),
     seo: MdxSeoSchema.default({}),
 
     /* Hero copy */
     summary: z.string().min(1),
-    description: z.string().optional(), // long-form hero, optional
+    description: z.string().optional(),
 
     /* Phase 2 — Why */
     painPoints: z.array(z.string()).optional(),
-    /**
-     * Option A: author can supply purposeHtml via frontmatter.
-     * Option B: pipeline can pass compiled MDX body to the transformer.
-     */
-    purposeHtml: z.string().optional(),
+    purposeHtml: z.string().optional(), // may be provided or derived from MDX body
     icp: z.string().optional(),
     outcomes: z.array(z.string()).min(1),
 
     /* Phase 3 — What */
     features: z.array(z.string()).default([]),
+
+    // Accept BOTH names and normalize in transform (includes preferred)
+    includes: z.array(MdxIncludesGroupSchema).optional(),
     includesGroups: z.array(MdxIncludesGroupSchema).optional(),
+
     includesTable: MdxIncludesTableLikeSchema.optional(),
     deliverables: z.array(z.string()).optional(),
 
@@ -172,16 +155,10 @@ export const MdxFrontmatterSchema = z
     price: MdxMoneySchema,
     priceBand: MdxPriceBandSchema.optional(),
 
-    /* Phase 4 — Details & Trust */
+    /* Phase 4 — Details & Trust (writer-facing “extras”) */
     extras: z
       .object({
-        timeline: z
-          .object({
-            setup: z.string().optional(),
-            launch: z.string().optional(),
-            ongoing: z.string().optional(),
-          })
-          .optional(),
+        timeline: z.object({ setup: z.string().optional(), launch: z.string().optional(), ongoing: z.string().optional() }).optional(),
         requirements: z.array(z.string()).optional(),
         ethics: z.array(z.string()).optional(),
       })
@@ -190,8 +167,8 @@ export const MdxFrontmatterSchema = z
 
     /* Phase 5 — Next */
     faqs: z.array(MdxFaqSchema).optional(),
-    crossSell: z.array(z.string()).optional(), // maps → relatedSlugs
-    addOns: z.array(z.string()).optional(),    // maps → addOnRecommendations
+    crossSell: z.array(z.string()).optional(), // → relatedSlugs
+    addOns: z.array(z.string()).optional(),    // → addOnRecommendations
 
     /* Optional metadata for docs/build tracking */
     authoredAt: z.string().optional(),
@@ -199,30 +176,33 @@ export const MdxFrontmatterSchema = z
   })
   .superRefine((fm, ctx) => {
     // Author must provide at least one inclusions source.
+    const hasIncludes = Array.isArray(fm.includes) && fm.includes.length > 0;
     const hasGroups = Array.isArray(fm.includesGroups) && fm.includesGroups.length > 0;
     const hasTable = !!fm.includesTable && Array.isArray(fm.includesTable.rows) && fm.includesTable.rows.length > 0;
-    if (!hasGroups && !hasTable) {
+
+    if (!hasIncludes && !hasGroups && !hasTable) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        path: ["includesGroups"],
-        message: "Provide either `includesGroups` (bulleted groups) or `includesTable` (tabular fallback).",
+        path: ["includes"],
+        message:
+          "Provide either `includes` (preferred), `includesGroups` (legacy), or `includesTable` (fallback).",
       });
     }
   });
 
-/** Alias exported for scripts that expect this exact name. */
+/** Back-compat alias for existing scripts: */
 export const PackageMarkdownSchema = MdxFrontmatterSchema;
 
 /** Inferred type for author-facing frontmatter. */
 export type MdxFrontmatter = z.infer<typeof MdxFrontmatterSchema>;
 
 /* =============================================================================
- * Internal pricing (optional, non-public) — for scripts/ops
+ * Internal pricing (optional, non-public) — shipped for ops/scripts
  * =============================================================================
- * This is intentionally permissive, with defaults, so a missing/empty
- * internal.json won’t break builds. Extend as your ops needs grow.
+ * NOTE:
+ *  - Tolerant and defaulted so a missing/empty internal.json won’t break builds.
+ *  - Extend as your ops needs grow.
  */
-
 export const InternalPricingSchema = z
   .object({
     /** Optional price tiers the team can toggle during quoting. */
@@ -231,7 +211,6 @@ export const InternalPricingSchema = z
         z.object({
           id: z.string().min(1),
           label: z.string().optional(),
-          /** Allow partial then refine, so "either monthly or oneTime" still applies. */
           price: z
             .object({
               monthly: z.number().positive().finite().optional(),
@@ -248,26 +227,16 @@ export const InternalPricingSchema = z
       )
       .optional(),
 
-    /** Global currency override if tiers omit it. */
+    /** Global currency default for ops */
     currency: z.literal("USD").default("USD"),
 
-    /** Feature flags for quoting experiments, etc. */
-    flags: z
-      .object({
-        featured: z.boolean().optional(),
-        internalOnly: z.boolean().optional(),
-      })
-      .default({}),
+    /** Feature flags / ops toggles */
+    flags: z.object({ featured: z.boolean().optional(), internalOnly: z.boolean().optional() }).default({}),
 
-    /** Optional modifiers (discounts, promos). */
-    modifiers: z
-      .object({
-        discountPercent: z.number().min(0).max(100).optional(),
-        setupWaived: z.boolean().optional(),
-      })
-      .default({}),
+    /** Optional modifiers (discounts, promos) */
+    modifiers: z.object({ discountPercent: z.number().min(0).max(100).optional(), setupWaived: z.boolean().optional() }).default({}),
 
-    /** Free-form metadata (ops notes). */
+    /** Free-form metadata (SOW notes, internal references, etc.) */
     meta: z.record(z.unknown()).default({}),
   })
   .default({});
@@ -289,11 +258,9 @@ function idify(s: string, fallback = "id"): string {
 }
 
 /**
- * Convert an author-facing `includesTable` (flexible) into the strict runtime
- * table shape expected by `PackageSchema` consumers.
- *
- * - If no columns are provided, we build a 1-column table labeled with the package name.
- * - We consider any non-empty / non-"false" / non-"0" cell beyond the first as "true".
+ * Convert author-facing `includesTable` (flexible) → strict runtime `includesTable`.
+ * - If no columns are provided, we create a single column labeled with the package name.
+ * - Any non-empty / non-"false" / non-"0" cell beyond the first is treated as `true`.
  */
 function normalizeIncludesTableLike(
   pkgName: string,
@@ -301,14 +268,9 @@ function normalizeIncludesTableLike(
 ): PackageSchemaType["includesTable"] | undefined {
   if (!like || !Array.isArray(like.rows) || like.rows.length === 0) return undefined;
 
-  // Determine columns (writer may omit them)
   const columnLabels = Array.isArray(like.columns) && like.columns.length > 0 ? like.columns : [pkgName];
-  const columns = columnLabels.map((label, i) => ({
-    id: `c${i}-${idify(label, `c${i}`)}`,
-    label,
-  }));
+  const columns = columnLabels.map((label, i) => ({ id: `c${i}-${idify(label, `c${i}`)}`, label }));
 
-  // Map rows
   const rows = like.rows
     .map((r, i) => {
       const cells = Array.isArray(r) ? r : r?.cells;
@@ -318,7 +280,6 @@ function normalizeIncludesTableLike(
       if (!rawLabel) return null;
 
       const values: Record<string, boolean | string> = {};
-      // For each subsequent cell, map presence/truthiness to the corresponding column id
       for (let j = 1; j < cells.length && j <= columns.length; j++) {
         const raw = cells[j];
         const truthy =
@@ -326,16 +287,23 @@ function normalizeIncludesTableLike(
           (typeof raw === "string" && raw.trim() !== "" && raw.toLowerCase() !== "false" && raw !== "0");
         if (truthy) values[columns[j - 1].id] = true;
       }
-
-      return {
-        id: `row-${i}-${idify(rawLabel, "row")}`,
-        label: rawLabel,
-        values,
-      };
+      return { id: `row-${i}-${idify(rawLabel, "row")}`, label: rawLabel, values };
     })
     .filter(Boolean) as NonNullable<PackageSchemaType["includesTable"]>["rows"];
 
   return { caption: like.caption ?? "What’s included", columns, rows };
+}
+
+/** Map common service aliases to canonical runtime service codes. */
+function normalizeServiceCode(input: string): PackageSchemaType["service"] | string {
+  const s = input.trim().toLowerCase();
+  const map: Record<string, PackageSchemaType["service"]> = {
+    "lead-generation": "leadgen",
+    "content-production": "content",
+    "video-production": "video",
+    "web-development": "webdev",
+  };
+  return map[s] ?? s;
 }
 
 /* =============================================================================
@@ -344,12 +312,10 @@ function normalizeIncludesTableLike(
 
 /**
  * Transform author-facing MDX frontmatter into the canonical runtime object.
- * The returned object is validated by `PackageSchema.parse(...)`.
+ * The return value is validated strictly by `PackageSchema.parse(...)`.
  *
- * @param frontmatter  Parsed, validated MDX frontmatter (author-facing).
- * @param options
- *  - bodyHtml: compiled MDX HTML (used as purposeHtml if frontmatter.purposeHtml is absent)
- *  - category: optional category label to copy into runtime shape
+ * @param frontmatter Parsed MDX frontmatter
+ * @param options     { bodyHtml?: string, category?: string }
  */
 export function frontmatterToPackage(
   frontmatter: MdxFrontmatter,
@@ -374,6 +340,7 @@ export function frontmatterToPackage(
     outcomes,
 
     features,
+    includes,
     includesGroups,
     includesTable,
     deliverables,
@@ -389,34 +356,39 @@ export function frontmatterToPackage(
     addOns,
   } = frontmatter;
 
-  // Prefer author-provided purposeHtml; otherwise use compiled MDX body when provided.
   const resolvedPurposeHtml = purposeHtml ?? options?.bodyHtml;
 
-  // Prefer grouped includes (primary renderer); convert table-like only when groups are absent.
-  const hasGroups = Array.isArray(includesGroups) && includesGroups.length > 0;
+  // Prefer `includes` if present; else `includesGroups`; else table-like fallback.
+  const sourceGroups = (includes && includes.length > 0 ? includes : includesGroups) ?? [];
   const runtimeIncludes =
-    hasGroups
-      ? includesGroups.map((g) => ({ title: g.title, items: g.items }))
+    Array.isArray(sourceGroups) && sourceGroups.length > 0
+      ? sourceGroups.map((g) => ({
+          title: g.title,
+          items: g.items, // strings or {label,note} are both allowed by runtime schema
+        }))
       : [];
 
   const runtimeIncludesTable =
-    !hasGroups ? normalizeIncludesTableLike(name, includesTable) : undefined;
+    runtimeIncludes.length === 0 ? normalizeIncludesTableLike(name, includesTable) : undefined;
 
-  // Map extras (writer-facing) → runtime fields
+  // Map writer-facing extras to runtime fields
   const requirements = extras?.requirements;
   const timeline = extras?.timeline;
   const ethics = extras?.ethics;
 
-  // Cross-sell & add-ons naming parity with runtime schema
+  // Alias normalization (cross-sell → relatedSlugs; addOns → addOnRecommendations)
   const relatedSlugs = crossSell ?? [];
   const addOnRecommendations = addOns ?? [];
 
-  // Build the runtime object (exactly the shape expected by PackageSchema)
+  // Normalize service alias → canonical code (runtime enum enforces final)
+  const serviceCanonical = normalizeServiceCode(service);
+
+  // Build the runtime candidate object (exact schema shape)
   const runtimeCandidate = {
     id,
     slug,
-    service,
-    category: options?.category, // optional: allow pipeline to attach a category label
+    service: serviceCanonical as any, // final validation below ensures enum
+    category: options?.category, // optional category attachment by pipeline
     name,
     tier,
     tags,
@@ -436,7 +408,7 @@ export function frontmatterToPackage(
     icp,
     outcomes,
 
-    features,          // string[] is allowed; runtime schema also accepts richer objects
+    features,
     includes: runtimeIncludes,
     includesTable: runtimeIncludesTable,
     deliverables,
@@ -451,7 +423,7 @@ export function frontmatterToPackage(
     addOnRecommendations,
   };
 
-  // Final guard: ensure we complied with the consumer-facing schema strictly.
+  // Final strict guard: throws if anything is out-of-shape.
   return PackageSchema.parse(runtimeCandidate);
 }
 
@@ -464,13 +436,7 @@ export function parseMdxFrontmatter(data: unknown): MdxFrontmatter {
   return MdxFrontmatterSchema.parse(data);
 }
 
-/**
- * Convenience one-liner for build steps:
- *
- *   const pkg = buildPackageFromMdx(frontmatter, { bodyHtml });
- *
- * Throws on any validation error with a precise Zod error tree.
- */
+/** One-liner helper: validate frontmatter + normalize to strict runtime model. */
 export function buildPackageFromMdx(
   rawFrontmatter: unknown,
   opts?: { bodyHtml?: string; category?: string }
@@ -478,14 +444,3 @@ export function buildPackageFromMdx(
   const frontmatter = parseMdxFrontmatter(rawFrontmatter);
   return frontmatterToPackage(frontmatter, opts);
 }
-
-/* =============================================================================
- * Notes on Migration from legacy registry/schemas.ts
- * =============================================================================
- * - If your scripts previously imported `PackageMarkdownSchema` from
- *   `src/packages/lib/registry/schemas.ts`, replace that import with
- *   `PackageMarkdownSchema` from this file.
- * - If you relied on a looser `includesTable: any`, this module already accepts
- *   a flexible table-like shape and performs a deterministic normalization for
- *   the runtime model (matching the UI table component).
- */

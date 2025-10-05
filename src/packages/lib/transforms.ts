@@ -2,7 +2,7 @@
 // Production-ready, framework-agnostic utilities to search, filter, sort,
 // page, and summarize PackageBundle data. Keep this file free of React.
 
-import type { PackageBundle, Price } from "./types";
+import type { PackageBundle, Price } from "./types/types";
 import { normalizeServiceSlug } from "./registry";
 
 /* ----------------------------------------------------------------------------

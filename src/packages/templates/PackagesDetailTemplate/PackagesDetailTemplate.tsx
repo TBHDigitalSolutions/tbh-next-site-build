@@ -46,13 +46,13 @@ import * as React from "react";
 import styles from "./PackagesDetailTemplate.module.css";
 
 /* --------------------------------- Types ---------------------------------- */
-import type { PackageBundle } from "@/packages/lib/types";
+import type { PackageBundle } from "@/packages/lib/types/types";
 import type { PackageIncludesTableProps } from "@/packages/components/PackageIncludesTable/PackageIncludesTable";
 
 /* ------------------------------- Data & utils ------------------------------ */
 import { emitServiceJsonLd } from "@/packages/lib/jsonld";
 import { toPackageCard } from "@/packages/lib/adapters";
-import { startingAtLabel } from "@/packages/lib/pricing";
+import { startingAtLabel } from "@/packages/lib/types/pricing";
 import {
   buildCardCtas,
   buildDetailCtas,
