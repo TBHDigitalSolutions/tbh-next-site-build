@@ -1,3 +1,4 @@
+// scripts/packages/mirror-docs-to-registry.ts
 /**
  * mirror-docs-to-registry.ts
  * =============================================================================

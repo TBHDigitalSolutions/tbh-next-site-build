@@ -1,23 +1,43 @@
-// src/packages/lib/adapters.ts
-// Production-ready adapters that map SSOT domain types → UI-friendly props.
-// Layering rule: no *runtime* imports from /components. Importing component
-// *types* is OK (erased at compile time).
+/**
+ * Adapters (master) — SSOT → UI-friendly view models
+ * =============================================================================
+ * Purpose
+ * -----------------------------------------------------------------------------
+ * Convert canonical domain types (your SSOT) into light, *component-agnostic*
+ * props that UIs can consume. These adapters:
+ *   • never import React/runtime code
+ *   • define local prop types (mirroring component shapes) to avoid coupling
+ *   • keep formatting minimal and deterministic
+ *
+ * What belongs here?
+ * -----------------------------------------------------------------------------
+ * - Card/grid adapters
+ * - Price block adapter
+ * - Includes table adapter
+ * - Add-on adapters
+ * - JSON-LD helpers for pages
+ *
+ * What does NOT belong here?
+ * -----------------------------------------------------------------------------
+ * - Schema validation (handled by package-schema.ts)
+ * - Registry I/O (handled by registry/loader.ts)
+ * - Growth-specific selection (in adapters/growth.ts)
+ */
 
-import type { PackageBundle, PackageInclude, Price } from "./types/types";
-import type { AddOnCardProps } from "@/packages/components/AddOnCard"; // type-only; safe
-import {
-  toStartingPrice,
-  toOneTimePrice,
-  toMonthlyPrice,
-} from "@/data/packages/_types/currency";
+import type { PackageBundle, PackageInclude, Price } from "../types/types";
 
-/* ----------------------------------------------------------------------------
- * Local adapter output types (mirror component prop shapes without coupling)
- * ---------------------------------------------------------------------------- */
+/* =============================================================================
+ * Local view-model types (mirror component props without runtime coupling)
+ * ============================================================================= */
 
-export type CardCTA = { label: string; href?: string; onClick?: (slug: string) => void };
+/** Thin CTA shape safe for server and client */
+export type CardCTA = {
+  label: string;
+  href?: string;
+  onClick?: (slug: string) => void; // optional client hook (not used server-side)
+};
 
-/** Mirrors PackageCardProps (without depending on component runtime) */
+/** Mirrors typical PackageCard props (no runtime import) */
 export type PackageCardAdapter = {
   slug: string;
   name: string;
@@ -32,12 +52,12 @@ export type PackageCardAdapter = {
   footnote?: string;
 };
 
-/** Mirrors PackageGridItem */
+/** Grid item = card + optional weighting */
 export type PackageGridItemAdapter = PackageCardAdapter & { weight?: number };
 
-/** Mirrors PriceBlockProps (no handlers) */
+/** Mirrors a typical PriceBlock props shape (no event handlers) */
 export type PriceBlockAdapter = {
-  price: Partial<Price> & { yearly?: number };
+  price: Partial<Price> & { yearly?: number | null };
   enableBillingToggle?: boolean;
   annualDiscountPercent?: number;
   showSetup?: boolean;
@@ -52,7 +72,18 @@ export type PriceBlockAdapter = {
   jsonLd?: boolean;
 };
 
-/** Thin add-on domain view (used by grid filters) */
+/** Minimal add-on card props (mirrors common UI needs) */
+export type AddOnCardProps = {
+  id: string;
+  title: string;
+  description?: string;
+  bullets?: string[];
+  priceLabel?: string;
+  badge?: string;
+  href?: string;
+};
+
+/** Lightweight add-on view for grids/filters */
 export type AddOnAdapter = {
   slug: string;
   name: string;
@@ -62,7 +93,7 @@ export type AddOnAdapter = {
   popular?: boolean;
 };
 
-/** Canonical Add-on domain model (from facade normalization) */
+/** Canonical add-on domain model (from your SSOT/facade) */
 export type AddOnDomain = {
   id: string;
   slug?: string;
@@ -75,16 +106,17 @@ export type AddOnDomain = {
   category?: string;
 };
 
-/* ----------------------------------------------------------------------------
- * Helpers
- * ---------------------------------------------------------------------------- */
+/* =============================================================================
+ * Tiny helpers (formatting + coercion)
+ * ============================================================================= */
 
 const currencyOf = (p?: Price) => p?.currency ?? "USD";
 
-function fmt(n?: number, currency = "USD") {
+/** Tolerant money formatter (no localization hard-coding) */
+function fmtCurrency(n?: number, currency = "USD", locale?: string) {
   if (n == null) return undefined;
   try {
-    return new Intl.NumberFormat(undefined, {
+    return new Intl.NumberFormat(locale, {
       style: "currency",
       currency,
       maximumFractionDigits: 0,
@@ -94,14 +126,14 @@ function fmt(n?: number, currency = "USD") {
   }
 }
 
-/** Extracts a human name/description from mixed bundle shapes. */
+/** Extract friendly name/description from mixed bundle shapes */
 function coerceMeta(b: any): { name: string; description: string } {
   const name = b?.name ?? b?.title ?? "Package";
   const description = b?.description ?? b?.summary ?? b?.subtitle ?? "";
   return { name, description };
 }
 
-/** Parse a currency string like "$7,500" → 7500 (tolerant). */
+/** Parse "$7,500" → 7500 (tolerant); number passthrough */
 function parseMoney(input?: unknown): number | undefined {
   if (typeof input === "number") return input;
   if (typeof input !== "string") return undefined;
@@ -111,7 +143,7 @@ function parseMoney(input?: unknown): number | undefined {
   return Number.isFinite(n) ? n : undefined;
 }
 
-/** Derive a simple price object from tiered `pricing` if `price` is absent. */
+/** Derive Price from tiered pricing when `bundle.price` is missing */
 function derivePriceFromPricing(b: any): Price | undefined {
   const pricing = b?.pricing;
   if (!pricing || !Array.isArray(pricing.tiers)) return undefined;
@@ -133,20 +165,21 @@ function derivePriceFromPricing(b: any): Price | undefined {
   return { monthly, oneTime, currency: "USD" };
 }
 
-/** Prefer explicit bundle.price; otherwise derive from pricing. */
+/** Prefer explicit bundle.price; otherwise derive from pricing tiers */
 function resolvePrice(b: any): Price | undefined {
   if (b?.price) return b.price as Price;
   return derivePriceFromPricing(b);
 }
 
+/** Flatten the includes sections into a features array (optionally limited) */
 function flattenFeatures(b: PackageBundle, limit?: number) {
   const all = (b.includes ?? []).flatMap((s) => s.items);
   return typeof limit === "number" ? all.slice(0, Math.max(0, limit)) : all;
 }
 
-/* ----------------------------------------------------------------------------
- * Package → Card / Grid options
- * ---------------------------------------------------------------------------- */
+/* =============================================================================
+ * Options
+ * ============================================================================= */
 
 export type ToCardOptions = {
   featureLimit?: number;
@@ -179,10 +212,31 @@ export type ToPriceBlockOptions = {
   secondary?: { label: string; href?: string };
 };
 
-/* ----------------------------------------------------------------------------
- * Adapters → PackageCard / Grid
- * ---------------------------------------------------------------------------- */
+export type ToIncludesOptions = {
+  title?: string;
+  enableSearch?: boolean;
+  collapsible?: boolean;
+  initiallyOpenCount?: number;
+  dense?: boolean;
+  printExpandAll?: boolean;
+};
 
+export type ToAddOnsOptions = {
+  categories?: string[];
+  query?: string;
+};
+
+/* =============================================================================
+ * Package → Card / Grid
+ * ============================================================================= */
+
+/**
+ * Map a PackageBundle to a small card view-model.
+ * - Features: flattens includes (limit optional)
+ * - Price: resolves from bundle.price or pricing tiers
+ * - CTA: default "View details" + optional "Book a call"
+ * - Footnote: can derive from bundle.timeline (opt-in)
+ */
 export function toPackageCard(b: PackageBundle, opts: ToCardOptions = {}): PackageCardAdapter {
   const {
     featureLimit,
@@ -211,12 +265,12 @@ export function toPackageCard(b: PackageBundle, opts: ToCardOptions = {}): Packa
 
   if (highlightMostPopular && (b as any).isMostPopular) card.highlight = true;
   if (badgeFromMostPopular && (b as any).isMostPopular) card.badge = card.badge ?? "Most Popular";
-
   if (footnoteFromTimeline && (b as any).timeline) card.footnote = `Typical onboarding ${(b as any).timeline}`;
 
   // Primary CTA → Details
   card.primaryCta = { label: primaryLabel ?? "View details", href: details };
 
+  // Secondary CTA → Book a call (optional)
   if (withBookCall) {
     card.secondaryCta = { label: secondaryLabel ?? "Book a call", href: "/book" };
   }
@@ -224,7 +278,11 @@ export function toPackageCard(b: PackageBundle, opts: ToCardOptions = {}): Packa
   return card;
 }
 
-export function toPackageGridItems(bundles: PackageBundle[], opts: ToGridOptions = {}): PackageGridItemAdapter[] {
+/** Bulk mapping for card → grid items with optional featured weighting */
+export function toPackageGridItems(
+  bundles: PackageBundle[],
+  opts: ToGridOptions = {},
+): PackageGridItemAdapter[] {
   const { featuredSlugs = [], weightFeatured = true } = opts;
   const featuredIndex = new Map<string, number>();
   featuredSlugs.forEach((s, i) => featuredIndex.set(s, i));
@@ -240,10 +298,15 @@ export function toPackageGridItems(bundles: PackageBundle[], opts: ToGridOptions
   });
 }
 
-/* ----------------------------------------------------------------------------
- * Adapter → PriceBlock
- * ---------------------------------------------------------------------------- */
+/* =============================================================================
+ * Package → PriceBlock
+ * ============================================================================= */
 
+/**
+ * Map a PackageBundle to a PriceBlock-like view-model.
+ * Leaves currency formatting to the consumer where possible; includes a minimal
+ * Intl-based fallback for labels in add-ons mapping below.
+ */
 export function toPriceBlock(b: PackageBundle, opts: ToPriceBlockOptions = {}): PriceBlockAdapter {
   const {
     title,
@@ -283,18 +346,9 @@ export function toPriceBlock(b: PackageBundle, opts: ToPriceBlockOptions = {}): 
   return pb;
 }
 
-/* ----------------------------------------------------------------------------
- * Adapter → PackageIncludesTable
- * ---------------------------------------------------------------------------- */
-
-export type ToIncludesOptions = {
-  title?: string;
-  enableSearch?: boolean;
-  collapsible?: boolean;
-  initiallyOpenCount?: number;
-  dense?: boolean;
-  printExpandAll?: boolean;
-};
+/* =============================================================================
+ * Package → Includes (table/accordion)
+ * ============================================================================= */
 
 export function toIncludesTable(b: PackageBundle, opts: ToIncludesOptions = {}) {
   const {
@@ -317,20 +371,21 @@ export function toIncludesTable(b: PackageBundle, opts: ToIncludesOptions = {}) 
   };
 }
 
-/* ----------------------------------------------------------------------------
- * Adapter → Add-ons (cards, grids, filters)
- * ---------------------------------------------------------------------------- */
+/* =============================================================================
+ * Add-ons (cards / grids / filters)
+ * ============================================================================= */
 
-/**
- * Map canonical add-on domain → AddOnCardProps (component props).
- * Uses tolerant currency helpers; chooses Monthly > One-time > Contact for pricing.
- */
+/** Map canonical add-on domain → AddOnCardProps (component-agnostic) */
 export function toAddOnCardProps(a: AddOnDomain, locale?: string): AddOnCardProps {
+  const currency = (a.price?.currency as any) ?? "USD";
+  const monthly = a.price?.monthly;
+  const oneTime = a.price?.oneTime;
+
   const priceLabel =
-    a.price?.monthly != null
-      ? toMonthlyPrice(a.price.monthly, a.price.currency, locale)
-      : a.price?.oneTime != null
-      ? toOneTimePrice(a.price.oneTime, a.price.currency, locale)
+    monthly != null
+      ? `${fmtCurrency(monthly, currency, locale)} / mo`
+      : oneTime != null
+      ? `${fmtCurrency(oneTime, currency, locale)} one-time`
       : "Contact for pricing";
 
   return {
@@ -344,18 +399,12 @@ export function toAddOnCardProps(a: AddOnDomain, locale?: string): AddOnCardProp
   };
 }
 
-/** Bulk mapping for convenience */
+/** Bulk adapter for add-on cards */
 export function toAddOnCardList(addOns: AddOnDomain[], locale?: string): AddOnCardProps[] {
   return addOns.map((a) => toAddOnCardProps(a, locale));
 }
 
-/** Thin pass-through with optional filters for grid usage */
-export type ToAddOnsOptions = {
-  categories?: string[];
-  query?: string;
-};
-
-/** Keep for grids that still work with a minimal add-on view. */
+/** Simple add-on grid filter/search */
 export function toAddOnsGrid(addOns: AddOnAdapter[], opts: ToAddOnsOptions = {}) {
   const { categories, query } = opts;
   const q = query?.trim().toLowerCase();
@@ -371,9 +420,9 @@ export function toAddOnsGrid(addOns: AddOnAdapter[], opts: ToAddOnsOptions = {})
   });
 }
 
-/* ----------------------------------------------------------------------------
- * JSON-LD helpers (optional convenience for templates/pages)
- * ---------------------------------------------------------------------------- */
+/* =============================================================================
+ * JSON-LD helpers (optional convenience for pages)
+ * ============================================================================= */
 
 export function toItemListJsonLd(items: Array<{ slug: string; name: string; detailsHref?: string }>) {
   const listItems = items.map((it, i) => ({
@@ -390,7 +439,7 @@ export function toItemListJsonLd(items: Array<{ slug: string; name: string; deta
 }
 
 export function toServiceOfferJsonLd(bundle: PackageBundle) {
-  const price = resolvePrice(bundle); // may be undefined
+  const price = resolvePrice(bundle);
   const currency = currencyOf(price);
   const offers: any[] = [];
 
@@ -422,9 +471,9 @@ export function toServiceOfferJsonLd(bundle: PackageBundle) {
   } as const;
 }
 
-/* ----------------------------------------------------------------------------
- * Convenience: bundles → hub/detail view models
- * ---------------------------------------------------------------------------- */
+/* =============================================================================
+ * Convenience: hub/detail composite view models
+ * ============================================================================= */
 
 export type ToHubModel = {
   grid: PackageGridItemAdapter[];

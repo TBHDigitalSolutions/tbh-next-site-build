@@ -1,153 +1,95 @@
-// src/packages/lib/types.ts
-// Domain type system for the Packages module. Framework-agnostic and import-safe.
-// Keep this file free of runtime code and React-specific types.
+/**
+ * UI Types — Core (thin, SSOT-aware)
+ * =============================================================================
+ * Purpose
+ * -----------------------------------------------------------------------------
+ * Provide *UI-only* type aliases and helpers that reference (but do not copy)
+ * the canonical runtime package schema. These types are safe for components,
+ * pages, and adapters without dragging in business logic or values.
+ *
+ * Design rules
+ * -----------------------------------------------------------------------------
+ * - **No value exports** (constants, functions) — types only.
+ * - **No schema duplication** — import runtime types from package-schema.ts.
+ * - **Framework-agnostic** — no React types here.
+ */
 
-/* ----------------------------------------------------------------------------
- * Primitives & Utility Aliases
- * ---------------------------------------------------------------------------- */
+import type { z } from "zod";
+import type {
+  PackageSchema as _RuntimePackageSchema,
+  PackageSchemaType as RuntimePackage,
+  MoneySchemaType as RuntimeMoney,
+} from "@/packages/lib/package-schema";
 
-/** ISO 4217 currency code. Default usage is "USD". */
-export type CurrencyCode = "USD" | (string & {});
+/* =============================================================================
+ * Opaque/string brands & small aliases (UI sugar)
+ * ============================================================================= */
 
-/** Slug string (opaque branded for editor hints; still a plain string at runtime). */
+/** Opaque-ish slug brand for editor signal (still a string at runtime). */
 export type Slug = string & { __brand?: "Slug" };
 
-/* ----------------------------------------------------------------------------
- * Core Domain Types (SSOT-aligned)
- * ---------------------------------------------------------------------------- */
+/** Href brand (documentation only). */
+export type Href = string & { __brand?: "Href" };
+
+/** Currency code derived from the runtime Money schema. */
+export type CurrencyCode = RuntimeMoney["currency"];
+
+/** Canonical service slug union (directly from the runtime SSOT). */
+export type ServiceSlug = RuntimePackage["service"];
+
+/** Alias for the full runtime package type (for convenience). */
+export type PackageRuntime = RuntimePackage;
+
+/* =============================================================================
+ * UI-facing picks from the runtime schema (no duplication)
+ * ============================================================================= */
 
 /**
- * Price representation for a package or add-on.
- * - `oneTime`: setup or implementation fee
- * - `monthly`: recurring monthly fee
- * - `currency`: ISO code (default "USD")
+ * Identity/metadata commonly used by UI surfaces (cards, headers, breadcrumbs).
+ * Reference-only: kept in sync with the SSOT by using `Pick<RuntimePackage, …>`.
  */
-export type Price = {
-  oneTime?: number;
-  monthly?: number;
-  currency?: CurrencyCode;
-};
-
-/** A named section of included deliverables for a package. */
-export type PackageInclude = {
-  section: string;        // e.g., "Setup", "Ongoing"
-  items: string[];        // bullet list items
-};
+export type PackageIdentity = Pick<
+  RuntimePackage,
+  "id" | "slug" | "service" | "name" | "summary" | "tags" | "tier"
+>;
 
 /**
- * A sellable package/bundle. This is the primary SSOT entity.
+ * A single "What’s included" group (section title + bullet items) as authored.
+ * Pulled from the runtime schema to avoid re-defining the structure.
+ */
+export type IncludeGroup = NonNullable<RuntimePackage["includes"]>[number];
+
+/** Convenience alias for authored includes array. */
+export type IncludeGroups = RuntimePackage["includes"];
+
+/** Runtime pricing payload (money) used by bands/cards; SSOT-derived. */
+export type Money = RuntimeMoney;
+
+/** Optional band microcopy (runtime-provided); see `types/band.ts` for UI band types. */
+export type PriceBand = RuntimePackage["priceBand"];
+
+/* =============================================================================
+ * View-model placeholders (UI-local, not part of SSOT)
+ * ============================================================================= */
+
+/**
+ * A minimal bundle used in list/grid contexts or scripts *when you are NOT*
+ * passing the full runtime package around. This is NOT the SSOT; it’s a
+ * lightweight projection safe for UI consumption.
+ *
+ * When possible, prefer using `PackageRuntime` directly.
  */
 export type PackageBundle = {
-  slug: Slug;             // e.g., "local-lead-capture"
-  name: string;           // marketing display name
-  description: string;    // concise value prop
-  price: Price;           // pricing structure
-
-  /** One or more canonical service slugs this bundle belongs to. */
-  services?: string[];    // e.g., ["seo-services", "lead-generation"]
-
-  /** Structured inclusions grouped by section. */
-  includes: PackageInclude[];
-
-  /** Optional related add-on slugs that pair well with this bundle. */
-  addOnSlugs?: Slug[];
-
-  /** Audience hints for merchandising or recommendations. */
-  idealFor?: string[];    // e.g., ["single-location", "professional services"]
-
-  /** Typical onboarding range (display copy, not a machine-enforced SLA). */
-  timeline?: string;      // e.g., "3–6 weeks"
-
-  /** Whether to emphasize in UI as a top pick. */
-  isMostPopular?: boolean;
-};
-
-/* ----------------------------------------------------------------------------
- * Add-ons (optional SSOT entity when authoring separately)
- * ---------------------------------------------------------------------------- */
-
-export type AddOn = {
   slug: Slug;
   name: string;
-  description: string;
-  price?: Price;          // some add-ons may be custom-quoted
-  category?: string;      // optional grouping for filters (e.g., "Analytics")
-};
-
-/* ----------------------------------------------------------------------------
- * Collections & Indexes
- * ---------------------------------------------------------------------------- */
-
-export type BundleMap = Record<string, PackageBundle>;
-export type AddOnMap = Record<string, AddOn>;
-
-/* ----------------------------------------------------------------------------
- * Filters & View-Model Helpers (types only; keep logic elsewhere)
- * ---------------------------------------------------------------------------- */
-
-export type PriceRange = {
-  minMonthly?: number;
-  maxMonthly?: number;
-};
-
-export type BundleQuery = {
-  text?: string;                  // free-text search terms
-  services?: string[];            // service slugs to match
-  price?: PriceRange;             // monthly band
-  minFeatureCount?: number;       // includes length threshold
-  featuredSlugs?: string[];       // curated priority list
-  sort?: "name" | "monthlyAsc" | "monthlyDesc" | "setupAsc" | "setupDesc" | "mostPopularFirst" | "featuredThenName";
-};
-
-/* ----------------------------------------------------------------------------
- * Authoring/Generated Metadata (optional)
- * ---------------------------------------------------------------------------- */
-
-/** Optional metadata commonly attached during build generation. */
-export type BundleMeta = {
-  sourceFile?: string;            // path of the authoring JSON/TS
-  generatedAt?: string;           // ISO timestamp
-  warnings?: string[];            // non-fatal validation notes
-};
-
-/** Bundle with attached metadata (for scripts/build output). */
-export type BundleWithMeta = PackageBundle & { __meta?: BundleMeta };
-
-/* ----------------------------------------------------------------------------
- * Define shared, documented types (used by base/card/details mappers and components)
- * **Acceptance**
- *   - All downstream imports compile.
- *   - No circular deps.
- * ---------------------------------------------------------------------------- */
-export type Money = { monthly?: number; oneTime?: number; currency: "USD" | string };
-
-export type BandVariant =
-  | "detail-hybrid"
-  | "card-hybrid"
-  | "detail-oneTime"
-  | "card-oneTime";
-
-export type PriceBandCopy = {
-  /** Optional marketing line shown ONLY on details. Never falls back to summary. */
-  tagline?: string;
-  /** Base note selector: "proposal" → “Base price — request proposal”, "final" → “… final after scope” */
-  baseNote?: "proposal" | "final";
-  /** Additional microcopy for details: e.g., “3-month minimum • + ad spend” */
-  finePrint?: string;
-  /** Derived from price shape if not supplied */
-  variantOverride?: BandVariant;
-};
-
-export type PackageIdentity = {
-  id: string;
-  slug: string;
-  service: "webdev" | "seo" | "marketing" | "leadgen" | "content" | "video";
-  name: string;
-  summary?: string;
-  // … other core metadata
-};
-
-export type PackagePricing = {
-  price: Money;
-  priceBand?: PriceBandCopy; // NEW: explicit band copy container
+  description?: string;
+  price?: Money;
+  /** Optional service tags for filtering UIs. */
+  services?: ServiceSlug[] | string[];
+  /** Structured inclusions grouped by section (UI-local shape). */
+  includes?: Array<{ section: string; items: string[] }>;
+  /** Grid decorators */
+  isMostPopular?: boolean;
+  /** Optional related add-on slugs. */
+  addOnSlugs?: Slug[];
 };

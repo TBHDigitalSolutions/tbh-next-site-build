@@ -1,3 +1,4 @@
+// scripts/packages/mdx-to-registry.ts
 // scripts/build-packages.ts
 /**
  * Build a catalog of author packages from MDX (frontmatter + body) into a

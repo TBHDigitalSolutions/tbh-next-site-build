@@ -1,541 +1,345 @@
 // scripts/packages/build.ts
 // scripts/packages/build.ts
 /**
- * Packages Data Build
- * -------------------
- * Generates/refreshes typed data entrypoints for the packages domain:
- *  - Ensures service folders exist (content/leadgen/marketing/seo/webdev/video)
- *  - Scaffolds missing service data files: *-packages.ts|md, *-addons.ts|md, *-featured.ts|md
- *  - Writes/refreshes `src/data/packages/index.ts` (central barrel + helpers)
- *  - Writes/refreshes `src/data/packages/recommendations.ts` (curated/top-N feed)
+ * Packages Build Orchestrator (single entry point)
+ * =============================================================================
+ * Purpose
+ * -----------------------------------------------------------------------------
+ * Run the entire packages pipeline *in order* with clean logs and fail-fast
+ * behavior (optionally configurable). This script is intentionally small and
+ * framework-agnostic; it only shells out to the real workers.
  *
- * Design:
- *  - Non-destructive: existing files are kept; missing files are scaffolded.
- *  - Idempotent: files are only written when content actually changes.
- *  - Formatting: uses Prettier when available; otherwise writes raw TS.
+ * Default pipeline (all steps enabled):
+ *   1) mdx-to-registry               (optional if you author JSON directly)
+ *   2) validate.ts --schema --featured --growth
+ *   3) generate-registry-manifest.ts
+ *   4) build-catalog-json.ts
+ *   5) build-unified-search.ts
+ *   6) packages-stats.ts
  *
- * Usage:
+ * Why a runner orchestrator?
+ * -----------------------------------------------------------------------------
+ * - Keeps business logic in the individual scripts (small, testable units)
+ * - Provides a single, documented entry point for CI and local dev
+ * - Adds consistent logging, timing, and error/exit behavior
+ *
+ * Usage
+ * -----------------------------------------------------------------------------
+ *   # Run full pipeline (recommended):
  *   pnpm tsx scripts/packages/build.ts
- *   node --loader tsx scripts/packages/build.ts
+ *
+ *   # Skip the MDX stage (when registry JSON is already generated):
+ *   pnpm tsx scripts/packages/build.ts --skip=mdx
+ *
+ *   # Run only a subset (comma-separated step names):
+ *   pnpm tsx scripts/packages/build.ts --only=validate,manifest
+ *
+ *   # Continue after failures (aggregate and report at the end):
+ *   pnpm tsx scripts/packages/build.ts --continue-on-error
+ *
+ *   # Dry-run (print what would run, without executing):
+ *   pnpm tsx scripts/packages/build.ts --dry-run
+ *
+ *   # Force runner: tsx (default) or node
+ *   pnpm tsx scripts/packages/build.ts --runner=tsx
+ *   pnpm tsx scripts/packages/build.ts --runner=node
+ *
+ * Environment knobs
+ * -----------------------------------------------------------------------------
+ *   PACKAGES_RUNNER=tsx|node     # same as --runner
+ *   PACKAGES_SKIP=mdx,stats      # same as repeated --skip=...
+ *   PACKAGES_ONLY=validate,...   # same as --only
+ *   PACKAGES_CONTINUE=1          # same as --continue-on-error
+ *   PACKAGES_DRY_RUN=1           # same as --dry-run
+ *   OUT_JSON=path/to/stats.json  # forwarded to packages-stats.ts (optional)
+ *
+ * Notes
+ * -----------------------------------------------------------------------------
+ * - This orchestrator expects each worker script to return a proper exit code:
+ *     0 = success, non-zero = failure
+ * - We favor the `tsx` runner for TypeScript sources. If you compile to JS,
+ *   switch the runner to `node` via flag or env.
  */
 
-import { promises as fs } from "node:fs";
+import { execa } from "execa";
 import path from "node:path";
-import crypto from "node:crypto";
+import process from "node:process";
 
-type WriteMode = "create-or-update" | "check";
-const MODE: WriteMode = (process.env.MODE as WriteMode) || "create-or-update";
-const ROOT = process.cwd();
-const DATA_ROOT = path.join(ROOT, "src", "data", "packages");
-const BUNDLES_DIR = path.join(DATA_ROOT, "bundles");
+/* =============================================================================
+ * Little ANSI color helpers (no dependency on chalk)
+ * ============================================================================= */
+const color = {
+  dim: (s: string) => `\x1b[2m${s}\x1b[0m`,
+  gray: (s: string) => `\x1b[90m${s}\x1b[0m`,
+  cyan: (s: string) => `\x1b[36m${s}\x1b[0m`,
+  green: (s: string) => `\x1b[32m${s}\x1b[0m`,
+  yellow: (s: string) => `\x1b[33m${s}\x1b[0m`,
+  red: (s: string) => `\x1b[31m${s}\x1b[0m`,
+  bold: (s: string) => `\x1b[1m${s}\x1b[0m`,
+};
 
-// Canonical service folders used in this repo
-const SERVICES = [
-  { key: "content", dir: "content-production", prefix: "content-production" },
-  { key: "leadgen", dir: "lead-generation", prefix: "lead-generation" },
-  { key: "marketing", dir: "marketing-services", prefix: "marketing-services" },
-  { key: "seo", dir: "seo-services", prefix: "seo-services" },
-  { key: "webdev", dir: "web-development", prefix: "web-development" },
-  { key: "video", dir: "video-production", prefix: "video-production" },
-] as const;
+/* =============================================================================
+ * CLI args & env parsing
+ * ============================================================================= */
 
-async function fileExists(p: string) {
-  try {
-    await fs.access(p);
-    return true;
-  } catch {
-    return false;
-  }
+type BuildArgs = {
+  only?: string[];                // explicit subset of steps
+  skip?: string[];                // steps to skip
+  continueOnError: boolean;       // do not stop the pipeline on first failure
+  dryRun: boolean;                // skip executing; log planned commands
+  runner: "tsx" | "node";         // command used to execute scripts
+};
+
+function parseArgs(): BuildArgs {
+  const argv = process.argv.slice(2);
+  const get = (k: string) => {
+    const prefix = `--${k}=`;
+    const found = argv.find((a) => a.startsWith(prefix));
+    return found ? found.slice(prefix.length) : undefined;
+  };
+  const has = (k: string) => argv.includes(`--${k}`);
+
+  const envOnly = (process.env.PACKAGES_ONLY ?? "").split(",").map((s) => s.trim()).filter(Boolean);
+  const envSkip = (process.env.PACKAGES_SKIP ?? "").split(",").map((s) => s.trim()).filter(Boolean);
+
+  const only = (get("only") ?? "").split(",").map((s) => s.trim()).filter(Boolean);
+  const skip = (get("skip") ?? "").split(",").map((s) => s.trim()).filter(Boolean);
+
+  const runnerEnv = (process.env.PACKAGES_RUNNER as "tsx" | "node" | undefined);
+  const runnerArg = (get("runner") as "tsx" | "node" | undefined);
+
+  return {
+    only: (only.length ? only : envOnly.length ? envOnly : undefined),
+    skip: skip.length ? skip : envSkip.length ? envSkip : undefined,
+    continueOnError: has("continue-on-error") || process.env.PACKAGES_CONTINUE === "1",
+    dryRun: has("dry-run") || process.env.PACKAGES_DRY_RUN === "1",
+    runner: runnerArg ?? runnerEnv ?? "tsx",
+  };
 }
 
-async function ensureDir(dir: string) {
-  await fs.mkdir(dir, { recursive: true });
+/* =============================================================================
+ * Pipeline definition
+ * ============================================================================= */
+
+type StepName = "mdx" | "validate" | "manifest" | "catalog" | "search" | "stats";
+
+type Step = {
+  name: StepName;
+  title: string;
+  script: string;     // relative to repo root
+  args?: string[];    // script args
+  env?: Record<string, string | undefined>;
+  required?: boolean; // if true, failure forces non-zero exit even with --continue-on-error
+};
+
+// Maintain deterministic order here.
+const PIPELINE: Step[] = [
+  {
+    name: "mdx",
+    title: "Convert MDX → registry JSON",
+    script: "scripts/packages/mdx-to-registry.ts",
+    required: false, // optional stage; often skipped when authoring JSON directly
+  },
+  {
+    name: "validate",
+    title: "Validate schema + featured + growth",
+    script: "scripts/packages/validate.ts",
+    args: ["--schema", "--featured", "--growth"],
+    required: true,
+  },
+  {
+    name: "manifest",
+    title: "Generate registry manifest",
+    script: "scripts/packages/generate-registry-manifest.ts",
+    required: true,
+  },
+  {
+    name: "catalog",
+    title: "Build catalog JSON",
+    script: "scripts/packages/build-catalog-json.ts",
+    required: true,
+  },
+  {
+    name: "search",
+    title: "Build unified search index",
+    script: "scripts/packages/build-unified-search.ts",
+    required: true,
+  },
+  {
+    name: "stats",
+    title: "Compute package stats",
+    script: "scripts/packages/packages-stats.ts",
+    // OUT_JSON can be provided by env—pass through transparently:
+    env: { OUT_JSON: process.env.OUT_JSON },
+    required: false,
+  },
+];
+
+/* =============================================================================
+ * Execution helpers
+ * ============================================================================= */
+
+type StepResult = {
+  name: StepName;
+  title: string;
+  skipped: boolean;
+  success: boolean;
+  code: number;
+  ms: number;
+  error?: unknown;
+};
+
+function now() {
+  return Number(process.hrtime.bigint() / 1000000n); // ms
 }
 
-function sha256(content: string) {
-  return crypto.createHash("sha256").update(content).digest("hex");
-}
-
-async function maybeFormatTS(content: string): Promise<string> {
-  try {
-    // Prettier is optional — do not hard-depend
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    const prettier = await import("prettier");
-    return await prettier.format(content, { parser: "typescript" });
-  } catch {
-    return content;
+function shouldRunStep(step: Step, args: BuildArgs): boolean {
+  if (args.only && args.only.length > 0) {
+    return args.only.includes(step.name);
   }
-}
-
-async function writeIfChanged(filePath: string, next: string) {
-  const formatted = await maybeFormatTS(next);
-  const nextHash = sha256(formatted);
-
-  if (await fileExists(filePath)) {
-    const current = await fs.readFile(filePath, "utf8");
-    if (sha256(current) === nextHash) {
-      log(`UNCHANGED ${rel(filePath)}`);
-      return false;
-    }
+  if (args.skip && args.skip.length > 0) {
+    return !args.skip.includes(step.name);
   }
-
-  if (MODE === "check") {
-    log(`CHANGED (check only) ${rel(filePath)}`);
-    return true;
-  }
-
-  await ensureDir(path.dirname(filePath));
-  await fs.writeFile(filePath, formatted, "utf8");
-  success(`WROTE ${rel(filePath)}`);
   return true;
 }
 
-function rel(p: string) {
-  return path.relative(ROOT, p).replaceAll(path.sep, "/");
+function formatMs(ms: number): string {
+  if (ms < 1000) return `${ms}ms`;
+  const s = ms / 1000;
+  return `${s.toFixed(s >= 10 ? 0 : 1)}s`;
 }
 
-function log(msg: string) {
-  console.log(`• ${msg}`);
-}
+/* =============================================================================
+ * Main
+ * ============================================================================= */
 
-function success(msg: string) {
-  console.log(`✅ ${msg}`);
-}
+(async () => {
+  const args = parseArgs();
 
-function warn(msg: string) {
-  console.warn(`⚠️  ${msg}`);
-}
+  const summary: StepResult[] = [];
+  const root = process.cwd();
 
-function header(comment: string[]) {
-  return `/*\n${comment.map((l) => ` * ${l}`).join("\n")}\n */\n/* eslint-disable */\n`;
-}
+  const header = `${color.bold("Packages build pipeline")} ${color.dim(
+    `(runner: ${args.runner}${args.dryRun ? ", dry-run" : ""}${
+      args.continueOnError ? ", continue-on-error" : ""
+    })`
+  )}`;
+  console.log(header);
 
-// -------------------------------------------
-// Scaffolds
-// -------------------------------------------
-
-function scaffoldServiceMd(title: string, description: string) {
-  return `# ${title}
-
-${description}
-
-> This file is optional helper content for editors/PMs. Keep pricing numeric in TS; format in UI.
-`;
-}
-
-function scaffoldPackagesTs(prefix: string) {
-  return `import type { Package, FeatureItem, Price } from "@/data/packages/_types/packages.types";
-
-/**
- * ${prefix}-packages.ts
- * Define three tiered packages for this service (Essential/Professional/Enterprise).
- * Keep pricing numeric; UI will format currency.
- */
-
-const features = (items: string[]): FeatureItem[] => items.map((label) => ({ label }));
-
-export const ${toVar(prefix)}Packages: Package[] = [
-  {
-    id: "${prefix}-essential",
-    service: "${serviceKeyFromPrefix(prefix)}",
-    name: "Essential",
-    tier: "Essential",
-    summary: "Foundational scope to start delivering outcomes quickly.",
-    outcomes: [
-      "Baseline performance and tracking in place",
-      "Clear next-step roadmap",
-      "Early quick wins identified",
-    ],
-    features: features([
-      "Core implementation",
-      "Monthly reporting",
-      "Priority support SLAs",
-    ]),
-    price: { setup: 2500, monthly: 1000 },
-    badges: ["Starter"],
-    popular: false,
-  },
-  {
-    id: "${prefix}-professional",
-    service: "${serviceKeyFromPrefix(prefix)}",
-    name: "Professional",
-    tier: "Professional",
-    summary: "Expanded scope with deeper strategy and experimentation.",
-    outcomes: [
-      "Consistent month-over-month improvements",
-      "Experiments feeding roadmap",
-      "Better attribution and insights",
-    ],
-    features: features([
-      "Everything in Essential",
-      "Increased velocity",
-      "Quarterly strategy workshops",
-    ]),
-    price: { setup: 5000, monthly: 2500 },
-    badges: ["Most Popular"],
-    popular: true,
-  },
-  {
-    id: "${prefix}-enterprise",
-    service: "${serviceKeyFromPrefix(prefix)}",
-    name: "Enterprise",
-    tier: "Enterprise",
-    summary: "Maximum scope, cross-functional alignment, and premium SLAs.",
-    outcomes: [
-      "Aggressive velocity across workstreams",
-      "Executive-level reporting",
-      "Roadmaps across teams",
-    ],
-    features: features([
-      "Everything in Professional",
-      "Cross-team coordination",
-      "Premium SLAs",
-    ]),
-    price: { setup: 12000, monthly: 6000 },
-    badges: ["Best Value"],
-    popular: false,
-  },
-];
-
-export default ${toVar(prefix)}Packages;
-`;
-}
-
-function scaffoldAddonsTs(prefix: string) {
-  return `import type { AddOn, FeatureItem, Price } from "@/data/packages/_types/packages.types";
-
-/**
- * ${prefix}-addons.ts
- * Define optional scope add-ons attachable to packages. Pricing can be partial; leave undefined for custom.
- */
-
-const features = (items: string[]): FeatureItem[] => items.map((label) => ({ label }));
-
-export const ${toVar(prefix)}AddOns: AddOn[] = [
-  {
-    id: "${prefix}-audit",
-    service: "${serviceKeyFromPrefix(prefix)}",
-    name: "Deep-Dive Audit",
-    description: "Comprehensive audit with prioritized recommendations.",
-    deliverables: features([
-      "Technical review",
-      "Scorecard + roadmap",
-      "Executive summary",
-    ]),
-    billing: "one-time",
-    price: { setup: 1500 },
-    popular: true,
-  },
-  {
-    id: "${prefix}-training",
-    service: "${serviceKeyFromPrefix(prefix)}",
-    name: "Team Training",
-    description: "Hands-on training session for your team.",
-    deliverables: features([
-      "Customized curriculum",
-      "Live workshop",
-      "Follow-up Q&A",
-    ]),
-    billing: "hourly",
-    price: { notes: "Quoted per session" },
-    popular: false,
-  },
-];
-
-export default ${toVar(prefix)}AddOns;
-`;
-}
-
-function scaffoldFeaturedTs(prefix: string) {
-  return `import type { FeaturedCard } from "@/data/packages/_types/packages.types";
-
-/**
- * ${prefix}-featured.ts
- * Three featured cards for this service (used on service pages).
- */
-
-export const ${toVar(prefix)}Featured: FeaturedCard[] = [
-  {
-    id: "${prefix}-featured-starter",
-    service: "${serviceKeyFromPrefix(prefix)}",
-    packageId: "${prefix}-essential",
-    headline: "Kickstart Growth",
-    highlights: ["Rapid setup", "Early wins", "Clear roadmap"],
-    startingAt: 2500,
-    badge: "Great Value",
-    ctaLabel: "See Package",
-  },
-  {
-    id: "${prefix}-featured-pro",
-    service: "${serviceKeyFromPrefix(prefix)}",
-    packageId: "${prefix}-professional",
-    headline: "Scale with Confidence",
-    highlights: ["More velocity", "Quarterly strategy", "Data insights"],
-    startingAt: 5000,
-    badge: "Most Popular",
-    ctaLabel: "See Package",
-  },
-  {
-    id: "${prefix}-featured-enterprise",
-    service: "${serviceKeyFromPrefix(prefix)}",
-    packageId: "${prefix}-enterprise",
-    headline: "Enterprise Execution",
-    highlights: ["Premium SLAs", "Cross-team", "Aggressive roadmap"],
-    startingAt: 12000,
-    badge: "Best Value",
-    ctaLabel: "See Package",
-  },
-];
-
-export default ${toVar(prefix)}Featured;
-`;
-}
-
-function toVar(prefix: string) {
-  // e.g., "seo-services" -> "seoServices"
-  return prefix.replace(/-([a-z])/g, (_, c) => c.toUpperCase()).replace(/[^a-zA-Z0-9]/g, "");
-}
-
-function serviceKeyFromPrefix(prefix: string) {
-  // Map folder prefixes back to ServiceSlug for data (_types) layer
-  if (prefix.startsWith("content")) return "content";
-  if (prefix.startsWith("lead-generation")) return "leadgen";
-  if (prefix.startsWith("marketing")) return "marketing";
-  if (prefix.startsWith("seo")) return "seo";
-  if (prefix.startsWith("web-development")) return "webdev";
-  if (prefix.startsWith("video")) return "video";
-  return "marketing";
-}
-
-// -------------------------------------------
-// Generators: index.ts & recommendations.ts
-// -------------------------------------------
-
-function indexTsContent() {
-  return header([
-    "AUTO-GENERATED by scripts/packages/build.ts",
-    "Do not edit by hand — your changes may be overwritten.",
-  ]) + `
-// src/data/packages/index.ts
-import type { PackageBundle } from "@/src/packages/lib/types";
-import { bundleToGrowthPackage, type GrowthPackage } from "@/src/packages/lib/bridge-growth";
-
-// JSON data (ensure tsconfig: \"resolveJsonModule\": true)
-import addOnsJson from "./addOns.json";
-import bundlesJson from "./bundles.json";
-import featuredJson from "./featured.json";
-
-// --- Local types -------------------------------------------------------------
-
-export type RawAddOn = {
-  slug: string;
-  name: string;
-  description: string;
-  price?: { oneTime?: number; monthly?: number; currency?: "USD" };
-  category?: string;
-};
-
-// --- Canonical data exports --------------------------------------------------
-
-export const ADD_ONS: RawAddOn[] = addOnsJson as RawAddOn[];
-export const BUNDLES: PackageBundle[] = bundlesJson as PackageBundle[];
-export const FEATURED_BUNDLE_SLUGS: string[] = Array.from(
-  new Set((featuredJson as { slugs: string[] }).slugs ?? []),
-);
-
-// --- Lookups & search --------------------------------------------------------
-
-export function getBundleBySlug(slug: string): PackageBundle | undefined {
-  return BUNDLES.find((b) => b.slug === slug);
-}
-
-export function getAddOnBySlug(slug: string) {
-  return ADD_ONS.find((a) => a.slug === slug);
-}
-
-export function getBundlesByService(serviceSlug: string): PackageBundle[] {
-  return BUNDLES.filter((b) => (b.services ?? []).includes(serviceSlug));
-}
-
-export function searchBundles(query: string): PackageBundle[] {
-  const q = query.trim().toLowerCase();
-  if (!q) return BUNDLES;
-  return BUNDLES.filter((b) =>
-    [b.name, b.description, ...(b.includes ?? []).flatMap((s) => s.items)]
-      .filter(Boolean)
-      .join(" ")
-      .toLowerCase()
-      .includes(q),
-  );
-}
-
-// --- Growth adapters ---------------------------------------------------------
-
-export function toGrowthPackages(bundles: PackageBundle[]): GrowthPackage[] {
-  return bundles.map(bundleToGrowthPackage);
-}
-
-export function topNForService(serviceSlug: string, n = 3): GrowthPackage[] {
-  const subset = getBundlesByService(serviceSlug).slice(0, n);
-  return toGrowthPackages(subset);
-}
-
-export function isAddOnUsed(slug: string): boolean {
-  return BUNDLES.some((b) => (b.addOnSlugs ?? []).includes(slug));
-}
-
-export type { GrowthPackage } from "@/src/packages/lib/bridge-growth";
-`;
-}
-
-function recommendationsTsContent() {
-  return header([
-    "AUTO-GENERATED by scripts/packages/build.ts",
-    "Do not edit by hand — your changes may be overwritten.",
-  ]) + `
-// src/data/packages/recommendations.ts
-import {
-  BUNDLES,
-  FEATURED_BUNDLE_SLUGS,
-  getBundleBySlug,
-} from "./index";
-import { bundleToGrowthPackage, type GrowthPackage } from "@/src/packages/lib/bridge-growth";
-
-/** Back-compat alias for components that import \`type Package\` from here. */
-export type Package = GrowthPackage;
-
-/** Strategy: prefer curated FEATURED_BUNDLE_SLUGS; fallback to first N bundles. */
-export function getRecommendedPackages(n = 3): GrowthPackage[] {
-  const curated = FEATURED_BUNDLE_SLUGS
-    .map(getBundleBySlug)
-    .filter(Boolean) as NonNullable<ReturnType<typeof getBundleBySlug>>[];
-
-  const deduped = new Map<string, GrowthPackage>();
-  for (const b of curated) {
-    if (deduped.size >= n) break;
-    deduped.set(b.slug, bundleToGrowthPackage(b));
-  }
-  if (deduped.size < n) {
-    for (const b of BUNDLES) {
-      if (deduped.size >= n) break;
-      if (!deduped.has(b.slug)) deduped.set(b.slug, bundleToGrowthPackage(b));
+  for (const step of PIPELINE) {
+    const run = shouldRunStep(step, args);
+    if (!run) {
+      summary.push({
+        name: step.name,
+        title: step.title,
+        skipped: true,
+        success: true,
+        code: 0,
+        ms: 0,
+      });
+      continue;
     }
-  }
-  return Array.from(deduped.values()).slice(0, n);
-}
 
-/** Recommendations filtered to a given service page slug (e.g., "seo-services"). */
-export function getRecommendedForService(serviceSlug: string, n = 3): GrowthPackage[] {
-  const curated = FEATURED_BUNDLE_SLUGS
-    .map(getBundleBySlug)
-    .filter((b): b is NonNullable<ReturnType<typeof getBundleBySlug>> => !!b && (b.services ?? []).includes(serviceSlug));
+    const cmd = args.runner; // "tsx" for TS source, or "node" for compiled JS
+    const stepArgs = [path.resolve(root, step.script), ...(step.args ?? [])];
 
-  const deduped = new Map<string, GrowthPackage>();
-  for (const b of curated) {
-    if (deduped.size >= n) break;
-    deduped.set(b.slug, bundleToGrowthPackage(b));
-  }
+    const pretty = `${cmd} ${path.relative(root, step.script)}${step.args?.length ? " " + step.args.join(" ") : ""}`;
+    console.log(`\n${color.cyan("→")} ${step.title} ${color.gray(`(${pretty})`)}`);
 
-  if (deduped.size < n) {
-    for (const b of BUNDLES) {
-      if (deduped.size >= n) break;
-      if ((b.services ?? []).includes(serviceSlug) && !deduped.has(b.slug)) {
-        deduped.set(b.slug, bundleToGrowthPackage(b));
+    const t0 = now();
+
+    if (args.dryRun) {
+      summary.push({
+        name: step.name,
+        title: step.title,
+        skipped: true,
+        success: true,
+        code: 0,
+        ms: 0,
+      });
+      continue;
+    }
+
+    try {
+      await execa(cmd, stepArgs, {
+        stdio: "inherit",
+        env: step.env,
+      });
+      const dt = now() - t0;
+      console.log(`${color.green("✔")} ${step.title} ${color.dim(`in ${formatMs(dt)}`)}`);
+      summary.push({
+        name: step.name,
+        title: step.title,
+        skipped: false,
+        success: true,
+        code: 0,
+        ms: dt,
+      });
+    } catch (err: any) {
+      const dt = now() - t0;
+      const exitCode = typeof err?.exitCode === "number" ? err.exitCode : 1;
+      console.error(`${color.red("✖")} ${step.title} ${color.dim(`failed in ${formatMs(dt)}`)}`);
+      if (!args.continueOnError || step.required) {
+        // Fail fast OR required step failed — exit immediately with the failing code.
+        printSummary(summary.concat([{
+          name: step.name,
+          title: step.title,
+          skipped: false,
+          success: false,
+          code: exitCode,
+          ms: dt,
+          error: err,
+        }]));
+        process.exit(exitCode || 1);
       }
+      // Record the failure and continue to next steps.
+      summary.push({
+        name: step.name,
+        title: step.title,
+        skipped: false,
+        success: false,
+        code: exitCode,
+        ms: dt,
+        error: err,
+      });
     }
   }
 
-  return Array.from(deduped.values()).slice(0, n);
-}
-
-/** Map a list of bundle slugs to GrowthPackage cards. */
-export function mapBundlesToGrowthPackages(slugs: string[]): GrowthPackage[] {
-  return slugs
-    .map(getBundleBySlug)
-    .filter(Boolean)
-    .map((b) => bundleToGrowthPackage(b as NonNullable<ReturnType<typeof getBundleBySlug>>));
-}
-`;
-}
-
-// -------------------------------------------
-// Build workflow
-// -------------------------------------------
-
-async function scaffoldServices() {
-  for (const svc of SERVICES) {
-    const dir = path.join(DATA_ROOT, svc.dir);
-    await ensureDir(dir);
-
-    const mdPackages = path.join(dir, `${svc.prefix}-packages.md`);
-    const tsPackages = path.join(dir, `${svc.prefix}-packages.ts`);
-    const mdAddons = path.join(dir, `${svc.prefix}-addons.md`);
-    const tsAddons = path.join(dir, `${svc.prefix}-addons.ts`);
-    const mdFeatured = path.join(dir, `${svc.prefix}-featured.md`);
-    const tsFeatured = path.join(dir, `${svc.prefix}-featured.ts`);
-
-    // MD helper files
-    if (!(await fileExists(mdPackages))) {
-      await writeIfChanged(mdPackages, scaffoldServiceMd("Packages", `Author notes for ${svc.dir} packages.`));
-    } else {
-      log(`EXISTS ${rel(mdPackages)}`);
-    }
-    if (!(await fileExists(mdAddons))) {
-      await writeIfChanged(mdAddons, scaffoldServiceMd("Add-ons", `Author notes for ${svc.dir} add-ons.`));
-    } else {
-      log(`EXISTS ${rel(mdAddons)}`);
-    }
-    if (!(await fileExists(mdFeatured))) {
-      await writeIfChanged(mdFeatured, scaffoldServiceMd("Featured", `Author notes for ${svc.dir} featured cards.`));
-    } else {
-      log(`EXISTS ${rel(mdFeatured)}`);
-    }
-
-    // TS data files
-    if (!(await fileExists(tsPackages))) {
-      await writeIfChanged(tsPackages, scaffoldPackagesTs(svc.prefix));
-    } else {
-      log(`EXISTS ${rel(tsPackages)}`);
-    }
-    if (!(await fileExists(tsAddons))) {
-      await writeIfChanged(tsAddons, scaffoldAddonsTs(svc.prefix));
-    } else {
-      log(`EXISTS ${rel(tsAddons)}`);
-    }
-    if (!(await fileExists(tsFeatured))) {
-      await writeIfChanged(tsFeatured, scaffoldFeaturedTs(svc.prefix));
-    } else {
-      log(`EXISTS ${rel(tsFeatured)}`);
-    }
-  }
-}
-
-async function ensureBundlesDir() {
-  await ensureDir(BUNDLES_DIR);
-  log(`OK ${rel(BUNDLES_DIR)}`);
-}
-
-async function writeIndexFiles() {
-  const indexTs = indexTsContent();
-  const recsTs = recommendationsTsContent();
-
-  await writeIfChanged(path.join(DATA_ROOT, "index.ts"), indexTs);
-  await writeIfChanged(path.join(DATA_ROOT, "recommendations.ts"), recsTs);
-}
-
-async function main() {
-  console.log("\n📦 Building packages data…\n");
-
-  await ensureDir(DATA_ROOT);
-  await ensureBundlesDir();
-  await scaffoldServices();
-  await writeIndexFiles();
-
-  console.log("\n✨ Done.\n");
-}
-
-main().catch((err) => {
-  console.error("Build failed:", err);
-  process.exitCode = 1;
+  // All steps attempted (or skipped) — print summary and exit with aggregate code.
+  printSummary(summary);
+  const failed = summary.some((s) => !s.skipped && !s.success);
+  process.exit(failed ? 1 : 0);
+})().catch((err) => {
+  // Catch-all for unexpected orchestrator errors.
+  console.error(color.red("✖ Orchestrator crashed"), err);
+  process.exit(1);
 });
+
+/* =============================================================================
+ * Summary printer
+ * ============================================================================= */
+
+function printSummary(results: StepResult[]) {
+  console.log(`\n${color.bold("Summary")}`);
+  const rows = results.map((r) => {
+    const status = r.skipped
+      ? color.gray("skipped")
+      : r.success
+      ? color.green("ok")
+      : color.red("fail");
+    const name = r.name.padEnd(9);
+    const time = r.ms ? color.dim(formatMs(r.ms).padStart(6)) : color.dim("   —  ");
+    return `  ${status}  ${name}  ${r.title}  ${time}`;
+  });
+  console.log(rows.join("\n"));
+
+  const ok = results.filter((r) => !r.skipped && r.success).length;
+  const skipped = results.filter((r) => r.skipped).length;
+  const fail = results.filter((r) => !r.skipped && !r.success).length;
+
+  const footer =
+    (fail ? `${color.red(`${fail} failed`)}, ` : "") +
+    `${color.green(`${ok} ok`)}` +
+    (skipped ? `, ${color.gray(`${skipped} skipped`)}` : "");
+  console.log(`\n${footer}\n`);
+}

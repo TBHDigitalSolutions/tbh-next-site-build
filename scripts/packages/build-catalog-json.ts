@@ -1,3 +1,4 @@
+// scripts/packages/build-catalog-json.ts
 /**
  * scripts/packages/build-catalog-json.ts
  * Build JSON snapshots from the TS SSOT facade for:

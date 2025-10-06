@@ -1,3 +1,4 @@
+// scripts/packages/generate-registry-manifest.ts
 /**
  * generate-registry-manifest.ts
  * =============================================================================

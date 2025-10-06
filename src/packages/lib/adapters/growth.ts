@@ -1,10 +1,24 @@
-// src/packages/lib/bridge-growth.ts
-// Bridges SSOT PackageBundle → props shape expected by GrowthPackagesSection.
-// Pure utilities: no React imports, no component coupling.
+/**
+ * Growth adapters — SSOT → GrowthPackagesSection view model
+ * =============================================================================
+ * Purpose
+ * -----------------------------------------------------------------------------
+ * Provide *pure*, typed mappers optimized for a “Growth Packages” surface
+ * (e.g., a marketing section that needs concise bullets + simple pricing).
+ *
+ * What this file provides
+ * -----------------------------------------------------------------------------
+ * - `bundleToGrowthPackage` — single-item mapper
+ * - `mapBundlesToGrowthPackages` — list mapping + sorting
+ * - `selectBySlugs` — ordered selection by explicit slugs
+ * - `topNForService` — choose top N for a service with simple matching
+ * - `featuredOrTopN` — prefer featured set; fallback to topN
+ * - `sortGrowthPackages` — utility sorter
+ */
 
-import type { PackageBundle, Price } from "./types/types";
+import type { PackageBundle, Price } from "../types/types";
 
-/** Shape consumed by GrowthPackagesSection */
+/** Shape consumed by a Growth section/card set */
 export type GrowthPackage = {
   id: string;
   slug: string;
@@ -16,15 +30,16 @@ export type GrowthPackage = {
   badge?: string;        // e.g., "Most Popular"
 };
 
-/* ----------------------------------------------------------------------------
- * Options
- * ---------------------------------------------------------------------------- */
+/* =============================================================================
+ * Options + defaults
+ * ============================================================================= */
+
 export type GrowthBridgeOptions = {
   /** Limit number of features per card (default 6). */
   featuresLimit?: number;
   /** De-duplicate identical features after trimming (default true). */
   dedupeFeatures?: boolean;
-  /** If set, these slugs are preferred (sorted first) and highlighted. */
+  /** Prefer these slugs (sorted first) and highlight them by weight (optional). */
   featuredSlugs?: string[];
   /** When true, set `badge` to "Most Popular" if bundle.isMostPopular (default true). */
   badgeFromMostPopular?: boolean;
@@ -36,7 +51,12 @@ export type GrowthBridgeOptions = {
   sort?: "featuredThenName" | "name" | "priceAsc" | "priceDesc" | "none";
 };
 
-const DEFAULTS: Required<Pick<GrowthBridgeOptions, "featuresLimit" | "dedupeFeatures" | "badgeFromMostPopular" | "serviceMatch" | "sort">> = {
+const DEFAULTS: Required<
+  Pick<
+    GrowthBridgeOptions,
+    "featuresLimit" | "dedupeFeatures" | "badgeFromMostPopular" | "serviceMatch" | "sort"
+  >
+> = {
   featuresLimit: 6,
   dedupeFeatures: true,
   badgeFromMostPopular: true,
@@ -44,9 +64,9 @@ const DEFAULTS: Required<Pick<GrowthBridgeOptions, "featuresLimit" | "dedupeFeat
   sort: "featuredThenName",
 };
 
-/* ----------------------------------------------------------------------------
- * Internal helpers
- * ---------------------------------------------------------------------------- */
+/* =============================================================================
+ * Small helpers
+ * ============================================================================= */
 
 function clampPrice(p?: number): number | undefined {
   if (p == null) return undefined;
@@ -75,10 +95,29 @@ function byName(a: GrowthPackage, b: GrowthPackage) {
   return a.title.localeCompare(b.title);
 }
 
-/* ----------------------------------------------------------------------------
- * Core mapping
- * ---------------------------------------------------------------------------- */
+function matchService(
+  bundle: PackageBundle,
+  serviceSlug: string,
+  normalize?: (s: string) => string,
+  mode: "any" | "all" = "any",
+) {
+  const services = (bundle.services ?? []).map((s) => (normalize ? normalize(s) : s));
+  const target = normalize ? normalize(serviceSlug) : serviceSlug;
+  if (services.length === 0) return false;
+  if (mode === "all") return services.every((s) => s === target);
+  return services.includes(target);
+}
 
+/* =============================================================================
+ * Core mapping
+ * ============================================================================= */
+
+/**
+ * Map a PackageBundle → GrowthPackage
+ * - Features: flatten & sanitize includes
+ * - Prices: clamp to non-negative numbers or undefined
+ * - Badge: optional "Most Popular" if bundle.isMostPopular
+ */
 export function bundleToGrowthPackage(bundle: PackageBundle, opts: GrowthBridgeOptions = {}): GrowthPackage {
   const { featuresLimit, dedupeFeatures, badgeFromMostPopular } = { ...DEFAULTS, ...opts };
 
@@ -90,18 +129,21 @@ export function bundleToGrowthPackage(bundle: PackageBundle, opts: GrowthBridgeO
     slug: bundle.slug,
     title: bundle.name,
     tagline: bundle.description,
-    setupPrice: clampPrice(bundle.price?.oneTime),
-    monthlyPrice: clampPrice(bundle.price?.monthly),
+    setupPrice: clampPrice(bundle.price?.oneTime ?? undefined),
+    monthlyPrice: clampPrice(bundle.price?.monthly ?? undefined),
     features,
     badge: badgeFromMostPopular && bundle.isMostPopular ? "Most Popular" : undefined,
   };
 }
 
-/* ----------------------------------------------------------------------------
+/* =============================================================================
  * Collections & selection
- * ---------------------------------------------------------------------------- */
+ * ============================================================================= */
 
-export function mapBundlesToGrowthPackages(bundles: PackageBundle[], opts: GrowthBridgeOptions = {}): GrowthPackage[] {
+export function mapBundlesToGrowthPackages(
+  bundles: PackageBundle[],
+  opts: GrowthBridgeOptions = {},
+): GrowthPackage[] {
   const { featuredSlugs = [], sort } = { ...DEFAULTS, ...opts };
   const featuredIndex = new Map<string, number>();
   featuredSlugs.forEach((s, i) => featuredIndex.set(s, i));
@@ -128,7 +170,11 @@ export function mapBundlesToGrowthPackages(bundles: PackageBundle[], opts: Growt
   }
 }
 
-export function selectBySlugs(bundles: PackageBundle[], slugs: string[], opts: GrowthBridgeOptions = {}): GrowthPackage[] {
+export function selectBySlugs(
+  bundles: PackageBundle[],
+  slugs: string[],
+  opts: GrowthBridgeOptions = {},
+): GrowthPackage[] {
   const order = new Map<string, number>();
   slugs.forEach((s, i) => order.set(s, i));
   const selected = bundles.filter((b) => order.has(b.slug));
@@ -136,31 +182,31 @@ export function selectBySlugs(bundles: PackageBundle[], slugs: string[], opts: G
   return mapped.sort((a, b) => (order.get(a.slug)! - order.get(b.slug)!));
 }
 
-function matchService(bundle: PackageBundle, serviceSlug: string, normalize?: (s: string) => string, mode: "any" | "all" = "any") {
-  const services = (bundle.services ?? []).map((s) => (normalize ? normalize(s) : s));
-  const target = normalize ? normalize(serviceSlug) : serviceSlug;
-  if (services.length === 0) return false;
-  if (mode === "all") return services.every((s) => s === target);
-  return services.includes(target);
-}
-
-export function topNForService(bundles: PackageBundle[], serviceSlug: string, n = 3, opts: GrowthBridgeOptions = {}): GrowthPackage[] {
+export function topNForService(
+  bundles: PackageBundle[],
+  serviceSlug: string,
+  n = 3,
+  opts: GrowthBridgeOptions = {},
+): GrowthPackage[] {
   const { serviceMatch, normalizeServiceSlug, featuredSlugs = [], sort } = { ...DEFAULTS, ...opts };
   const filtered = bundles.filter((b) => matchService(b, serviceSlug, normalizeServiceSlug, serviceMatch));
-  const mapped = mapBundlesToGrowthPackages(filtered, { ...opts, featuredSlugs, sort: sort ?? "featuredThenName" });
+  const mapped = mapBundlesToGrowthPackages(filtered, {
+    ...opts,
+    featuredSlugs,
+    sort: sort ?? "featuredThenName",
+  });
   return mapped.slice(0, Math.max(0, n));
 }
 
-/* ----------------------------------------------------------------------------
- * Convenience: choose featured set with service fallback
- * ---------------------------------------------------------------------------- */
-
+/**
+ * Prefer an explicit featured set; otherwise fall back to topN for the service.
+ */
 export function featuredOrTopN(
   bundles: PackageBundle[],
   featuredSlugs: string[] | undefined,
   serviceSlug: string,
   n = 3,
-  opts: GrowthBridgeOptions = {}
+  opts: GrowthBridgeOptions = {},
 ): GrowthPackage[] {
   if (featuredSlugs && featuredSlugs.length) {
     const picks = selectBySlugs(bundles, featuredSlugs, opts).slice(0, n);
@@ -169,11 +215,15 @@ export function featuredOrTopN(
   return topNForService(bundles, serviceSlug, n, { ...opts, featuredSlugs });
 }
 
-/* ----------------------------------------------------------------------------
- * Sorting helpers exposed (optional)
- * ---------------------------------------------------------------------------- */
+/* =============================================================================
+ * Sorting helper (re-usable)
+ * ============================================================================= */
 
-export function sortGrowthPackages(items: GrowthPackage[], mode: NonNullable<GrowthBridgeOptions["sort"]> = "featuredThenName", featuredSlugs?: string[]) {
+export function sortGrowthPackages(
+  items: GrowthPackage[],
+  mode: NonNullable<GrowthBridgeOptions["sort"]> = "featuredThenName",
+  featuredSlugs?: string[],
+) {
   const featuredIndex = new Map<string, number>();
   (featuredSlugs ?? []).forEach((s, i) => featuredIndex.set(s, i));
   switch (mode) {
