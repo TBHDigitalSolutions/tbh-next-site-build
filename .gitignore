@@ -37,3 +37,6 @@ EOF
 # generated at build
 src/data/packages/__generated__/
 src/data/packages/packages.json
+
+#Documents
+documents

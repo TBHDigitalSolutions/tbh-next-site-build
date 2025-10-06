@@ -1,48 +1,62 @@
 ---
-version: "1.0"
-id: "content-sales-deck-pro"
+# ──────────────────────────────────────────────────────────────────────────────
+# IDENTITY & TAXONOMY (Required)
+# ──────────────────────────────────────────────────────────────────────────────
+id: "content-production-sales-deck-pro"
 slug: "sales-deck-pro"
-service: "content"
-subservice: "sales-marketing-materials"
-
 name: "Sales Deck Pro"
+service: "content-production"
+subservice: "sales-marketing-materials"
+category: "Sales & Marketing Materials"
 tier: "Pro"
 badges: ["Popular"]
+
 tags:
-  - sales
-  - presentations
-  - collateral
-  - enablement
-  - b2b
+  - "sales"
+  - "presentations"
+  - "collateral"
+  - "enablement"
+  - "b2b"
 
-image:
-  src: "/packages/content-production/sales-deck-pro-card.png"
-  alt: "Example slides from a polished Sales Deck Pro presentation"
-
+# ──────────────────────────────────────────────────────────────────────────────
+# HERO SECTION (Phase 1)
+# ──────────────────────────────────────────────────────────────────────────────
 summary: "A complete, modular sales deck system that aligns story, visuals, and proof—built to accelerate deals and scale your enablement."
 description: >
-  We architect a crisp narrative for your sales motion, design a reusable slide system that
-  fits your brand, and produce a polished deck with data visuals, diagrams, and presenter
-  notes. The result is a high-confidence story reps can tailor quickly—without sacrificing
-  clarity or design quality.
+  We architect a crisp narrative for your sales motion, design a reusable slide system that fits your brand,
+  and produce a polished deck with data visuals, diagrams, and presenter notes. The result is a high-confidence
+  story reps can tailor quickly—without sacrificing clarity or design quality.
+
+image:
+  src: "/packages/content-production/sales-marketing-materials/sales-deck-pro.png"
+  alt: "Example slides from a polished Sales Deck Pro presentation"
+
+# ──────────────────────────────────────────────────────────────────────────────
+# ICP & PURPOSE (Phase 2)
+# ──────────────────────────────────────────────────────────────────────────────
 icp: "B2B teams (seed → enterprise) who need a high-impact, on-brand deck that supports discovery, demo, ROI, and proof."
 
-price:
-  currency: "USD"
-  oneTime: 7500
-
-priceBand:
-  tagline: "A modular, on-brand deck that helps reps sell with confidence."
-  baseNote: "final"
-  finePrint: "Scope assumes up to 30 designed slides • 2 review rounds • Up to 8 data visuals"
+painPoints:
+  - "Inconsistent stories across reps lead to confused buyers"
+  - "Legacy decks are off-brand, bloated, or hard to tailor"
+  - "Charts are hard to parse; proof points don’t land quickly"
+  - "No reusable master; every edit breaks styles/layouts"
+  - "Exports fail in screen share or forwardable PDF contexts"
 
 outcomes:
-  - "Clear, consistent sales narrative across the team"
-  - "Higher win rates and faster deal velocity"
-  - "Faster ramp for new reps with a ready-to-tailor base"
-  - "On-brand visual system with reusable layouts"
-  - "Optional engagement analytics via document tracking"
+  - "↑ Clear, consistent sales narrative across the team"
+  - "↑ Higher win rates and faster deal velocity"
+  - "↓ Ramp time with a ready-to-tailor base and presenter notes"
+  - "↑ On-brand visual system with reusable layouts"
+  - "↑ Optional engagement analytics via document tracking"
 
+purpose: >
+  Deliver a modular, on-brand deck system—story architecture, slide master, and production slides—so reps can run
+  confident conversations from discovery to ROI proof, and send forwardable PDFs that still tell the story.
+
+# ──────────────────────────────────────────────────────────────────────────────
+# WHAT YOU GET (Phase 3)
+# ──────────────────────────────────────────────────────────────────────────────
 features:
   - "Story architecture mapped to ICP, use cases, and proof"
   - "Slide master & presentation design system (type, grid, color)"
@@ -51,7 +65,7 @@ features:
   - "Presenter notes and objection-handling hooks"
   - "Source handoff in Figma and/or PowerPoint/Keynote"
 
-includes:
+includesGroups:
   - title: "Strategy & Story"
     items:
       - "Discovery & goals intake"
@@ -65,7 +79,7 @@ includes:
   - title: "Deck Production"
     items:
       - "Up to 30 designed slides (content + layout + polish)"
-      - "Up to 8 data visuals (charts, tables, comps)"
+      - "Up to 8 data visuals (charts, tables, comparisons)"
       - "Light image sourcing & treatments"
   - title: "Review & Handoff"
     items:
@@ -74,6 +88,33 @@ includes:
       - "Source files (Figma or PowerPoint/Keynote)"
       - "Usage guide & do’s/don’ts for team edits"
 
+deliverables:
+  - "Narrative architecture & section map"
+  - "Slide master with brand-safe styles and grids"
+  - "Modular section library (discovery, demo, ROI, proof, team)"
+  - "Up to 30 designed slides with polish"
+  - "Up to 8 data visuals with editable sources"
+  - "Presenter notes scaffolding for key slides"
+  - "Screen-share deck + forwardable web PDF"
+  - "Source files (Figma and/or PowerPoint/Keynote)"
+  - "Usage guide with do’s/don’ts and export presets"
+
+# ──────────────────────────────────────────────────────────────────────────────
+# PRICING (SSOT)
+# ──────────────────────────────────────────────────────────────────────────────
+price:
+  currency: "USD"
+  oneTime: 7500
+  monthly: null
+
+priceBand:
+  tagline: "A modular, on-brand deck that helps reps sell with confidence."
+  baseNote: "final"
+  finePrint: "Scope assumes up to 30 designed slides • 2 review rounds • Up to 8 data visuals"
+
+# ──────────────────────────────────────────────────────────────────────────────
+# DETAILS & TRUST (Phase 4)
+# ──────────────────────────────────────────────────────────────────────────────
 requirements:
   - "Brand assets (logo, colors, typography) and usage guidance"
   - "ICP/persona notes and top use cases"
@@ -96,35 +137,84 @@ limits:
   - "New custom illustration/3D not included (available as add-on)"
   - "Translation and multi-language variants not included"
 
+notes: >
+  Scope assumes 30 slides, 2 review rounds, and up to 8 data visuals. Larger decks, advanced visualization, and multi-language
+  variants are available via add-ons.
+
+# ──────────────────────────────────────────────────────────────────────────────
+# NEXT STEPS (Phase 5)
+# ──────────────────────────────────────────────────────────────────────────────
 faqs:
-  - question: "Can you deliver in PowerPoint/Keynote instead of Figma?"
+  - id: "tools"
+    question: "Can you deliver in PowerPoint/Keynote instead of Figma?"
     answer: "Yes. Figma is preferred for velocity, but we export/convert to PowerPoint or Keynote and validate master styles."
-  - question: "How many slides are included?"
+  - id: "slides"
+    question: "How many slides are included?"
     answer: "Scope includes up to 30 designed slides. Additional slides can be added at a per-slide rate."
-  - question: "Do you write copy or only design?"
+  - id: "copy"
+    question: "Do you write copy or only design?"
     answer: "Both. We refine existing content and provide light copywriting/editing. Ground-up copy for every slide is available as an add-on."
-  - question: "Can you add document analytics for engagement?"
+  - id: "analytics"
+    question: "Can you add document analytics for engagement?"
     answer: "We can set up a doc-tracking workflow (e.g., through your chosen tool) so you can see opens, time on slide, and drop-offs."
-  - question: "What if we need more review rounds?"
+  - id: "reviews"
+    question: "What if we need more review rounds?"
     answer: "Two rounds are included. Additional rounds are billed at a fixed per-round fee with a 48-hour turnaround target."
 
-notes: "Scope assumes 30 slides, 2 review rounds, and up to 8 data visuals. Larger decks and advanced visualization available via add-ons."
+crossSell:
+  - "pitch-deck-design-sprint"
+  - "one-pager-starter"
+  - "brand-collateral-kit"
 
-addOnRecommendations:
+addOns:
   - "motion-graphics-pack"
   - "one-pager-starter"
   - "brand-collateral-kit"
   - "explainer-video-starter"
   - "speaker-notes-coaching"
 
-relatedSlugs:
-  - "pitch-deck-design-sprint"
-  - "one-pager-starter"
-  - "brand-collateral-kit"
-
 seo:
   title: "Sales Deck Pro"
   description: "A modular, on-brand sales deck system designed to accelerate deals and scale enablement."
+
+# ──────────────────────────────────────────────────────────────────────────────
+# COPY OVERRIDES (Optional)
+# ──────────────────────────────────────────────────────────────────────────────
+copy:
+  phase1:
+    title: "Sales Deck Pro"
+    tagline: "A repeatable story system your reps will actually use"
+  phase2:
+    title: "Why this package"
+    tagline: "Consistency, confidence, and velocity"
+  phase3:
+    title: "What you get"
+    tagline: "Story architecture, design system, production slides, and exports"
+    includesTitle: "What's included"
+    includesSubtitle: "Strategy & Story • Design System • Deck Production • Review & Handoff"
+    highlightsTitle: "Highlights"
+    highlightsTagline: "Built for tailoring without breaking the brand"
+  phase4:
+    title: "Details & trust"
+    tagline: "Timeline, requirements, ethics, and limits"
+  phase5:
+    title: "What’s next"
+    tagline: "FAQs and recommended add-ons"
+
+# ──────────────────────────────────────────────────────────────────────────────
+# EXTRAS (Optional)
+# ──────────────────────────────────────────────────────────────────────────────
+extras:
+  timelineBlocks:
+    - title: "Kickoff & Story Map"
+      note: "2–3 business days — discovery, goals, narrative architecture"
+    - title: "Design Pass 1"
+      note: "5–7 business days — master styles + representative slides"
+    - title: "Review Rounds ×2"
+      note: "48h turnaround per round — tracked comments, consolidation"
+    - title: "Polish & Handoff"
+      note: "Exports (screen + PDF), source files, usage guide"
+
 ---
 
 ## Why this package

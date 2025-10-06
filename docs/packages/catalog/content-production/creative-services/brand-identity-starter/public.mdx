@@ -1,126 +1,210 @@
 ---
-id: content-creative-brand-identity-starter
-slug: brand-identity-starter
-name: Brand Identity Starter
-service: content-production
-subservice: creative-services
-tier: Starter
+# ──────────────────────────────────────────────────────────────────────────────
+# IDENTITY & TAXONOMY (Required)
+# ──────────────────────────────────────────────────────────────────────────────
+id: "content-production-brand-identity-starter"   # {service}-{slug}
+slug: "brand-identity-starter"
+service: "content-production"                     # folder taxonomy respected
+subservice: "creative-services"
+category: "Brand Identity"
+name: "Brand Identity Starter"
+tier: "Starter"
+
 tags:
-  - brand
-  - identity
-  - design
-  - visual-design
-  - starter
+  - "brand"
+  - "identity"
+  - "design"
+  - "visual-design"
+  - "starter"
 badges: []
 
+# ──────────────────────────────────────────────────────────────────────────────
+# HERO SECTION (Phase 1)
+# ──────────────────────────────────────────────────────────────────────────────
 summary: "A fast, high-quality identity kit—logo system, colors, type, and a one-pager guide—so you can ship consistent, professional visuals across every channel."
-description: "This sprint packages the essential parts of a modern identity into a pragmatic, shippable kit. You’ll get a versatile logo system, an accessible color palette, type pairing, and a concise usage guide—plus ready-to-use social avatars and templates—so your team can design and publish with confidence."
-icp: "Startups and small teams that need a crisp, cohesive identity without a months-long rebrand."
+description: >
+  This sprint packages the essential parts of a modern identity into a pragmatic, shippable kit.
+  You’ll get a versatile logo system, an accessible color palette, type pairing, and a concise usage guide—plus
+  ready-to-use social avatars and templates—so your team can design and publish with confidence.
 
 image:
-  src: /packages/content-production/creative-services/brand-identity-starter.png
-  alt: Brand identity kit previews (logo, color, typography)
+  src: "/packages/content-production/creative-services/brand-identity-starter-card.png"
+  alt: "Brand identity kit previews (logo, color, typography)"
 
-# Phase 3 — Highlights (explicit; UI can derive from includes if omitted)
-features:
-  - Versatile logo system (primary, horizontal, mark)
-  - Accessible color palette with contrast checks
-  - Production-ready typography pairing
-  - Social avatar + header templates
-  - Basic iconography starter set
-  - One-pager brand usage guide (PDF + Figma)
+# ──────────────────────────────────────────────────────────────────────────────
+# ICP & PURPOSE (Phase 2 - Why You Need This)
+# ──────────────────────────────────────────────────────────────────────────────
+icp: "Startups and small teams that need a crisp, cohesive identity without a months-long rebrand."
 
-# Phase 2 — Outcomes (KPI-style)
+painPoints:
+  - "Inconsistent visuals across web, decks, and product cause credibility loss."
+  - "No clear rules: ad-hoc decisions lead to rework and slowdowns."
+  - "Colors and type that don’t meet accessibility hurt legibility and reach."
+
 outcomes:
-  - Consistent visuals across web, deck, and social
-  - Faster content production with ready-to-use assets
-  - Professional first impression that scales with you
-  - Clear rules that reduce design rework
-  - Accessible color choices that improve legibility
+  - "↑ Consistent visuals across web, deck, and social"
+  - "↑ Faster production with ready-to-use assets & templates"
+  - "↑ Professional first impression that scales with you"
+  - "↓ Design rework with clear rules & usage guidance"
+  - "↑ Legibility via accessible color choices"
 
-# What’s included (grouped; drives IncludesFromGroups and fallback table)
-includes:
-  - title: Identity System
-    items:
-      - Primary, horizontal, and mark logo variants (vector)
-      - Color palette (core + neutrals) with AA/AAA guidance
-      - Typography pairing (display + body) with usage rules
-      - Spacing grid and safe-area recommendations
-  - title: Guidelines & Assets
-    items:
-      - One-pager brand usage guide (PDF + Figma)
-      - Social avatar + banner templates (Figma exports)
-      - Basic iconography starter (up to 8 glyphs)
-      - Export presets (SVG, PNG), and usage cheatsheet
-  - title: Delivery & Handoff
-    items:
-      - Organized Figma file + packaged exports
-      - Source files for all logos and icons
-      - Handoff call (30–45 min) + recording
+# ──────────────────────────────────────────────────────────────────────────────
+# WHAT YOU GET (Phase 3)
+# ──────────────────────────────────────────────────────────────────────────────
+features:
+  - "Versatile logo system (primary, horizontal, mark)"
+  - "Accessible color palette with contrast checks"
+  - "Production-ready typography pairing"
+  - "Social avatar + header templates"
+  - "Basic iconography starter set"
+  - "One-pager brand usage guide (PDF + Figma)"
 
-# Price (SSOT). UI derives all “starting at …” text.
+# PREFERRED: Grouped inclusions
+includesGroups:
+  - title: "Identity System"
+    items:
+      - "Primary, horizontal, and mark logo variants (vector)"
+      - "Color palette (core + neutrals) with AA/AAA guidance"
+      - "Typography pairing (display + body) with usage rules"
+      - "Spacing grid and safe-area recommendations"
+  - title: "Guidelines & Assets"
+    items:
+      - "One-pager brand usage guide (PDF + Figma)"
+      - "Social avatar + banner templates (Figma exports)"
+      - "Basic iconography starter (up to 8 glyphs)"
+      - "Export presets (SVG, PNG) and usage cheatsheet"
+  - title: "Delivery & Handoff"
+    items:
+      - "Organized Figma file + packaged exports"
+      - "Source files for all logos and icons"
+      - "Handoff call (30–45 min) + recording"
+
+# ALTERNATIVE: Table format (not used—groups above are primary)
+# includesTable:
+#   caption: "What's included"
+#   columns: ["Starter"]
+#   rows:
+#     - ["Logo variants", "✓"]
+
+deliverables:
+  - "Figma source file with organized pages/components"
+  - "Vector logo pack (SVG) + export presets (PNG)"
+  - "Brand usage one-pager (PDF + Figma)"
+  - "Social avatar & header templates"
+
+# ──────────────────────────────────────────────────────────────────────────────
+# PRICING (SSOT - at least one > 0)
+# ──────────────────────────────────────────────────────────────────────────────
 price:
-  currency: USD
   oneTime: 3500
+  monthly: null
+  currency: "USD"
 
-# Detail-only pricing band copy (never derived from summary)
 priceBand:
   tagline: "Your essentials, professionally designed—ready to ship in two weeks."
+  baseNote: "final"   # "proposal" | "final"
   finePrint: "Two-week sprint • Up to 2 revision rounds • Source files included"
 
-# Extras (Phase 4)
-deliverables:
-  - Figma source file with organized pages/components
-  - Vector logo pack (SVG) + export presets (PNG)
-  - Brand usage one-pager (PDF + Figma)
-  - Social avatar & header templates
+# ──────────────────────────────────────────────────────────────────────────────
+# DETAILS & TRUST (Phase 4)
+# ──────────────────────────────────────────────────────────────────────────────
 requirements:
-  - Brand questionnaire + 3–5 visual references
-  - Existing name and any legacy assets (if applicable)
-  - Primary use-cases (website, deck, social, product)
-  - Stakeholder list and availability for reviews
+  - "Brand questionnaire + 3–5 visual references"
+  - "Existing name and any legacy assets (if applicable)"
+  - "Primary use-cases (website, deck, social, product)"
+  - "Stakeholder list and availability for reviews"
+
 timeline:
   setup: "Discovery & direction: 2–3 business days"
   launch: "Design sprint & concepts: 3–4 business days"
   ongoing: "Revisions, polish, and handoff: 2–3 business days"
+
 ethics:
-  - No plagiarism or derivative logo reuse
-  - Accessibility and legibility considered by default
+  - "No plagiarism or derivative logo reuse"
+  - "Accessibility and legibility considered by default"
+
 limits:
-  - Naming and trademark clearance are out-of-scope
-  - Up to 2 revision rounds; additional rounds billed hourly
-  - One primary logo family; complex mascot/illustration not included
+  - "Naming and trademark clearance are out of scope"
+  - "Up to 2 revision rounds; additional rounds billed hourly"
+  - "One primary logo family; complex mascot/illustration not included"
 
-# FAQs (Phase 5)
+notes: >
+  Includes Figma sources and export presets. Trademark search/registration and paid font licenses excluded.
+
+# ──────────────────────────────────────────────────────────────────────────────
+# NEXT STEPS (Phase 5)
+# ──────────────────────────────────────────────────────────────────────────────
 faqs:
-  - id: ownership
-    question: Do we own the source files?
-    answer: Yes. You receive full ownership of delivered assets and source files.
-  - id: fonts
-    question: Are font licenses included?
-    answer: We recommend free or common system options by default. If you choose paid typefaces, licenses are purchased separately by the client.
-  - id: timeline
-    question: Can we accelerate the 2-week timeline?
-    answer: Often yes with prompt feedback and availability—flag deadlines in the kickoff and we’ll plan accordingly.
-  - id: changes
-    question: What counts as a revision round?
-    answer: A consolidated list of change requests across stakeholders. We guide you to collect and prioritize feedback between rounds.
+  - id: "ownership"
+    question: "Do we own the source files?"
+    answer: "Yes. You receive full ownership of delivered assets and source files."
+  - id: "fonts"
+    question: "Are font licenses included?"
+    answer: "We recommend free or common system options by default. If you choose paid typefaces, licenses are purchased separately by the client."
+  - id: "timeline"
+    question: "Can we accelerate the 2-week timeline?"
+    answer: "Often yes with prompt feedback and availability—flag deadlines in the kickoff and we’ll plan accordingly."
+  - id: "changes"
+    question: "What counts as a revision round?"
+    answer: "A consolidated list of change requests across stakeholders. We guide you to collect and prioritize feedback between rounds."
 
-# Cross-sell / related
-addOnRecommendations:
-  - brand-guidelines-pro
-  - logo-animation-sting
-  - messaging-playbook
-  - social-graphics-kit
-relatedSlugs:
-  - social-graphics-kit
-  - pitch-deck-design-sprint
-  - website-copy-refresh
+crossSell:
+  - "social-graphics-kit"
+  - "pitch-deck-design-sprint"
+  - "website-copy-refresh"
 
+addOns:
+  - "brand-guidelines-pro"
+  - "logo-animation-sting"
+  - "messaging-playbook"
+  - "social-graphics-kit"
+
+# Alternative aliases also supported by the build:
+# relatedSlugs: ["social-graphics-kit","pitch-deck-design-sprint","website-copy-refresh"]
+# addOnRecommendations: ["brand-guidelines-pro","logo-animation-sting","messaging-playbook","social-graphics-kit"]
+
+# ──────────────────────────────────────────────────────────────────────────────
+# SEO (Optional)
+# ──────────────────────────────────────────────────────────────────────────────
 seo:
   title: "Brand Identity Starter — Logo, Colors, Type, and Guide"
   description: "A pragmatic two-week identity sprint: logo system, accessible colors, typography, and a one-pager guide—plus templates so you can ship fast."
-notes: "Includes Figma sources and export presets. Trademark search/registration and paid font licenses excluded."
+
+# ──────────────────────────────────────────────────────────────────────────────
+# COPY OVERRIDES (Optional)
+# ──────────────────────────────────────────────────────────────────────────────
+copy:
+  phase1:
+    title: "Brand Identity Starter"
+    tagline: "Your identity, ready to ship"
+  phase2:
+    title: "Why you need this"
+    tagline: "Consistency, clarity, and speed"
+  phase3:
+    title: "What you get"
+    tagline: "Highlights, inclusions, deliverables"
+    includesTitle: "What's included"
+    includesSubtitle: "Everything in this starter"
+    highlightsTitle: "Key highlights"
+    highlightsTagline: "Top features at a glance"
+  phase4:
+    title: "Details & trust"
+    tagline: "Timeline, requirements, and guardrails"
+  phase5:
+    title: "What’s next"
+    tagline: "FAQs and related packages"
+
+# ──────────────────────────────────────────────────────────────────────────────
+# EXTRAS (Optional)
+# ──────────────────────────────────────────────────────────────────────────────
+extras:
+  timelineBlocks:
+    - title: "Discovery"
+      note: "2–3 days: intake, goals, references"
+    - title: "Design Sprint"
+      note: "3–4 days: concepts, rationale, selects"
+    - title: "Polish & Handoff"
+      note: "2–3 days: revisions, exports, walkthrough"
 ---
 
 ## Overview
