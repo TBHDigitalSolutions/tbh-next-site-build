@@ -1,0 +1,555 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "External Package Schema",
+  "description": "Complete schema for external-facing package documentation",
+  "type": "object",
+  "required": ["meta", "hero", "price", "outcomes", "includes"],
+  "properties": {
+    "meta": {
+      "type": "object",
+      "required": ["id", "slug", "service", "name"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier: {service}-{slug}",
+          "pattern": "^[a-z]+-[a-z-]+$"
+        },
+        "slug": {
+          "type": "string",
+          "description": "URL-safe slug matching folder name",
+          "pattern": "^[a-z][a-z0-9-]*$"
+        },
+        "service": {
+          "type": "string",
+          "enum": ["webdev", "seo", "marketing", "leadgen", "content", "video"],
+          "description": "Primary service category"
+        },
+        "subservice": {
+          "type": "string",
+          "description": "Optional sub-category for organization"
+        },
+        "category": {
+          "type": "string",
+          "description": "Display category (free text)"
+        },
+        "name": {
+          "type": "string",
+          "description": "Public display name"
+        },
+        "tier": {
+          "type": "string",
+          "enum": ["Essential", "Starter", "Standard", "Professional", "Pro", "Enterprise"],
+          "description": "Package tier level"
+        },
+        "badges": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Visual badges like 'Popular', 'New'"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Searchable tags (lowercase, kebab-case)"
+        }
+      }
+    },
+    "hero": {
+      "type": "object",
+      "required": ["summary"],
+      "properties": {
+        "seo": {
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string",
+              "description": "SEO title tag"
+            },
+            "description": {
+              "type": "string",
+              "description": "Meta description"
+            }
+          }
+        },
+        "summary": {
+          "type": "string",
+          "description": "1-2 sentence value proposition (appears on cards and hero)"
+        },
+        "description": {
+          "type": "string",
+          "description": "1-3 paragraph elaboration (optional)"
+        },
+        "image": {
+          "type": "object",
+          "properties": {
+            "src": {
+              "type": "string",
+              "description": "Image path"
+            },
+            "alt": {
+              "type": "string",
+              "description": "Descriptive alt text (quote if contains colons)"
+            }
+          }
+        },
+        "ctas": {
+          "type": "object",
+          "properties": {
+            "details": {
+              "type": "string",
+              "description": "Link to package detail page"
+            },
+            "book_a_call": {
+              "type": "string",
+              "description": "Booking page link"
+            },
+            "request_proposal": {
+              "type": "string",
+              "description": "Contact/proposal request link"
+            }
+          }
+        }
+      }
+    },
+    "why_you_need_this": {
+      "type": "object",
+      "properties": {
+        "pain_points": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Customer pain points (3-5 bullets)"
+        },
+        "purpose": {
+          "type": "string",
+          "description": "What success looks like (one paragraph)"
+        },
+        "purposeHtml": {
+          "type": "string",
+          "description": "HTML-rendered version from MDX ## Purpose section"
+        },
+        "icp": {
+          "type": "string",
+          "description": "Ideal customer profile (one sentence)"
+        },
+        "outcomes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 3,
+          "description": "Expected outcomes/KPIs (3-6 bullets, use ↑ ↓ symbols)"
+        }
+      }
+    },
+    "what_you_get": {
+      "type": "object",
+      "required": ["includes"],
+      "properties": {
+        "features": {
+          "type": "array",
+          "items": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "label": {
+                    "type": "string"
+                  },
+                  "icon": {
+                    "type": "string"
+                  }
+                }
+              }
+            ]
+          },
+          "description": "Top highlights/features (5-8 items)"
+        },
+        "includes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["title", "items"],
+            "properties": {
+              "title": {
+                "type": "string",
+                "description": "Group name"
+              },
+              "items": {
+                "type": "array",
+                "items": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "label": {
+                          "type": "string"
+                        },
+                        "note": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "description": "Grouped inclusions (PREFERRED over includesTable)"
+        },
+        "includesTable": {
+          "type": "object",
+          "properties": {
+            "caption": {
+              "type": "string"
+            },
+            "columns": {
+              "type": "array",
+              "items": {
+                "oneOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "label": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            "rows": {
+              "type": "array",
+              "items": {
+                "oneOf": [
+                  {
+                    "type": "array",
+                    "items": {
+                      "type": ["string", "boolean"]
+                    }
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "label": {
+                        "type": "string"
+                      },
+                      "values": {
+                        "type": "object",
+                        "additionalProperties": {
+                          "type": ["boolean", "string"]
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "description": "Alternative table format (FALLBACK if includes not used)"
+        },
+        "deliverables": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Concrete deliverables list"
+        }
+      }
+    },
+    "details_and_trust": {
+      "type": "object",
+      "required": ["pricing"],
+      "properties": {
+        "pricing": {
+          "type": "object",
+          "required": ["currency"],
+          "properties": {
+            "oneTime": {
+              "type": ["number", "null"],
+              "minimum": 0,
+              "description": "One-time fee (must be > 0 if present)"
+            },
+            "monthly": {
+              "type": ["number", "null"],
+              "minimum": 0,
+              "description": "Monthly recurring fee (must be > 0 if present)"
+            },
+            "currency": {
+              "type": "string",
+              "enum": ["USD"],
+              "default": "USD"
+            }
+          },
+          "description": "At least one of oneTime or monthly must be > 0"
+        },
+        "price_band": {
+          "type": "object",
+          "properties": {
+            "tagline": {
+              "type": "string",
+              "description": "Short marketing line (NOT auto-derived from summary)"
+            },
+            "base_note": {
+              "type": "string",
+              "enum": ["proposal", "final"],
+              "description": "Pricing status indicator"
+            },
+            "fine_print": {
+              "type": "string",
+              "description": "Constraints, minimums, exclusions"
+            }
+          }
+        },
+        "timeline": {
+          "type": "object",
+          "properties": {
+            "setup": {
+              "type": "string",
+              "description": "Setup/discovery phase duration"
+            },
+            "launch": {
+              "type": "string",
+              "description": "Launch/delivery phase"
+            },
+            "ongoing": {
+              "type": "string",
+              "description": "Ongoing cadence or support"
+            }
+          }
+        },
+        "requirements": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "What client must provide (access, assets, etc.)"
+        },
+        "ethics": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Ethical guardrails and standards"
+        },
+        "limits": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Scope boundaries and exclusions"
+        },
+        "caveats": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Important limitations (alias for limits)"
+        },
+        "notes": {
+          "type": "string",
+          "description": "Additional context or fine print"
+        }
+      }
+    },
+    "next_step": {
+      "type": "object",
+      "properties": {
+        "faqs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": ["string", "number"]
+              },
+              "q": {
+                "type": "string"
+              },
+              "a": {
+                "type": "string"
+              },
+              "question": {
+                "type": "string",
+                "description": "Alternative to 'q'"
+              },
+              "answer": {
+                "type": "string",
+                "description": "Alternative to 'a'"
+              }
+            }
+          },
+          "description": "Frequently asked questions (supports both q/a and question/answer)"
+        },
+        "cross_sell": {
+          "type": "object",
+          "properties": {
+            "related": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Related package slugs"
+            },
+            "add_ons": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Add-on package slugs"
+            }
+          }
+        },
+        "relatedSlugs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Alternative field name for related packages"
+        },
+        "addOnRecommendations": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Alternative field name for add-ons"
+        }
+      }
+    },
+    "narrative": {
+      "type": "object",
+      "description": "HTML-compiled content from MDX body",
+      "properties": {
+        "overviewHtml": {
+          "type": "string",
+          "description": "Compiled from ## Overview section"
+        },
+        "purposeHtml": {
+          "type": "string",
+          "description": "Compiled from ## Purpose section"
+        },
+        "notesHtml": {
+          "type": "string",
+          "description": "Compiled from ## Notes section"
+        },
+        "faqHtml": {
+          "type": "string",
+          "description": "Compiled from ## FAQ section"
+        }
+      }
+    },
+    "copy": {
+      "type": "object",
+      "description": "Per-phase UI copy overrides",
+      "properties": {
+        "phase1": {
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string"
+            },
+            "tagline": {
+              "type": "string"
+            }
+          }
+        },
+        "phase2": {
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string"
+            },
+            "tagline": {
+              "type": "string"
+            }
+          }
+        },
+        "phase3": {
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string"
+            },
+            "tagline": {
+              "type": "string"
+            },
+            "includesTitle": {
+              "type": "string"
+            },
+            "includesSubtitle": {
+              "type": "string"
+            },
+            "highlightsTitle": {
+              "type": "string"
+            },
+            "highlightsTagline": {
+              "type": "string"
+            }
+          }
+        },
+        "phase4": {
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string"
+            },
+            "tagline": {
+              "type": "string"
+            }
+          }
+        },
+        "phase5": {
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string"
+            },
+            "tagline": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "extras": {
+      "type": "object",
+      "description": "Additional structured data (timelineBlocks, etc.)",
+      "properties": {
+        "timelineBlocks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "title": {
+                "type": "string"
+              },
+              "note": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "additionalProperties": true
+    }
+  }
+}
