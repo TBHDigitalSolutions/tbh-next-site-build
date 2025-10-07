@@ -1,1 +1,0 @@
-# Docs Contributing Guide\n
