@@ -1,26 +1,52 @@
+// src/packages/components/AddOnCarousel/AddOnCarousel.tsx
 "use client";
+
+/**
+ * AddOnCarousel — horizontally scrollable row of add-on cards.
+ * Accepts either pre-adapted `items` (preferred) or raw `addOns` which are
+ * adapted via AddOnsGrid.adaptAddOnToCardItem. If neither is provided,
+ * this component will fall back to mock data from `src/mock`.
+ *
+ * Pricing:
+ *  - Passes canonical `price?: Money` and/or `priceLabel` to AddOnCard.
+ *  - No formatting performed here.
+ */
 
 import * as React from "react";
 import styles from "./AddOnCarousel.module.css";
 import Carousel from "@/components/ui/molecules/Carousel";
 import AddOnCard from "@/packages/components/AddOnCard";
-import type { AddOnCardItem, AddOn, adaptAddOnToCardItem } from "@/packages/components/AddOnsGrid/AddOnsGrid";
 
-// Because `adaptAddOnToCardItem` is exported from AddOnsGrid, we can import it directly if desired.
-// If not, consumers can pre-adapt and pass `items`.
+// Reuse types + adapter from AddOnsGrid to avoid drift
+import type {
+  AddOnCardItem,
+  AddOn,
+} from "@/packages/components/AddOnsGrid/AddOnsGrid";
+import { adaptAddOnToCardItem } from "@/packages/components/AddOnsGrid/AddOnsGrid";
+
+// Mock data fallbacks
+import { asAddOnCardItems, asAddOns } from "@/mock";
+
+function cx(...parts: Array<string | false | null | undefined>) {
+  return parts.filter(Boolean).join(" ");
+}
 
 export type AddOnCarouselProps = {
   title?: string;
   subtitle?: string;
+
   /** Prefer passing `items` already adapted; or pass `addOns` and we’ll adapt. */
   items?: AddOnCardItem[];
   addOns?: AddOn[];
+
   /** Carousel sizing */
   itemMinWidth?: string; // default "18rem"
-  gap?: string;          // default "0.875rem"
+  gap?: string; // default "0.875rem"
+
   /** Controls & a11y */
-  ariaLabel?: string;    // default "Add-on services"
+  ariaLabel?: string; // default "Add-on services"
   showCounter?: boolean; // default true
+
   className?: string;
   id?: string;
 };
@@ -38,34 +64,27 @@ export default function AddOnCarousel({
   id,
 }: AddOnCarouselProps) {
   const data: AddOnCardItem[] = React.useMemo(() => {
+    // 1) Caller-provided, already adapted
     if (items?.length) return items;
-    if (addOns?.length) {
-      // Dynamic import avoids circular if your bundler flags it; inline map if not importing helper:
-      const adapt = (a: AddOn): AddOnCardItem => ({
-        id: a.slug,
-        title: a.name,
-        description: a.description,
-        priceLabel: a.price
-          ? (a.price.monthly
-              ? `$${a.price.monthly.toLocaleString()}/mo`
-              : a.price.oneTime
-                ? `$${a.price.oneTime.toLocaleString()} one-time`
-                : "Contact for pricing")
-          : "Contact for pricing",
-        badge: a.popular ? "Popular" : undefined,
-        href: undefined,
-        category: a.category,
-        popular: a.popular,
-      });
-      return addOns.map(adapt);
-    }
+
+    // 2) Caller-provided domain objects; adapt to card items
+    if (addOns?.length) return addOns.map(adaptAddOnToCardItem);
+
+    // 3) Mock data fallbacks (first try fully-adapted, then raw addOns)
+    const mockItems = typeof asAddOnCardItems === "function" ? asAddOnCardItems() : [];
+    if (mockItems.length) return mockItems;
+
+    const mockAddOns = typeof asAddOns === "function" ? asAddOns() : [];
+    if (mockAddOns.length) return mockAddOns.map(adaptAddOnToCardItem);
+
+    // 4) Nothing to render
     return [];
   }, [items, addOns]);
 
   if (!data.length) return null;
 
   return (
-    <section className={[styles.section, className].filter(Boolean).join(" ")} id={id}>
+    <section className={cx(styles.section, className)} id={id}>
       {(title || subtitle) && (
         <header className={styles.header}>
           {title && <h3 className={styles.title}>{title}</h3>}
@@ -87,11 +106,12 @@ export default function AddOnCarousel({
             <AddOnCard
               key={it.id}
               id={it.id}
-              title={it.title}
+              name={it.title}
               description={it.description}
               bullets={it.bullets}
+              price={it.price}
               priceLabel={it.priceLabel}
-              badge={it.badge}
+              badge={it.badge ?? (it.popular ? "Popular" : undefined)}
               href={it.href}
             />
           ))}

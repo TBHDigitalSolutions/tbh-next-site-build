@@ -46,12 +46,12 @@ import * as React from "react";
 import styles from "./PackagesDetailTemplate.module.css";
 
 /* --------------------------------- Types ---------------------------------- */
-import type { PackageBundle } from "@/packages/lib/types/types";
+import type { Package as PackageBundle } from "@/packages/lib/package-types";
 import type { PackageIncludesTableProps } from "@/packages/components/PackageIncludesTable/PackageIncludesTable";
 
 /* ------------------------------- Data & utils ------------------------------ */
-import { emitServiceJsonLd } from "@/packages/lib/jsonld";
-import { toPackageCard } from "@/packages/lib/adapters";
+import { emitServiceJsonLd } from "@/packages/lib/seo/jsonld";
+import { startingAtLabel, ROUTES, CTA_LABEL, toPackageCard } from "@/packages/lib";
 import { startingAtLabel } from "@/packages/lib/types/pricing";
 import {
   buildCardCtas,

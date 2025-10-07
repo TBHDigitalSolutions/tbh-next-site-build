@@ -1,36 +1,256 @@
+// src/packages/lib/types/pricing.ts
 /**
- * UI Types — Pricing
+ * UI Types — Pricing (compatibility shim)
  * =============================================================================
  * Purpose
  * -----------------------------------------------------------------------------
- * Declare *types only* for pricing payloads used by UI bands/cards and adapters.
- * Source of truth for the shape is the runtime schema (MoneySchema).
+ * Keep existing imports working while migrating callers to:
+ *   import { startingAtLabel, Money } from "@/packages/lib/pricing";
  *
- * Notes
- * -----------------------------------------------------------------------------
- * - No helpers/formatters here — keep logic in your utilities (e.g., utils/pricing).
- * - Importing from `package-schema.ts` keeps these aligned with content SSOT.
+ * This file re-exports the canonical helpers and types from "../pricing".
+ * You may also add tiny UI-only types (e.g., PriceRange) here.
+ *
+ * NOTE: Do not add business logic. Keep helpers in "../pricing".
  */
 
-import type { MoneySchemaType as RuntimeMoney } from "@/packages/lib/package-schema";
+export type { Money, LegacyPrice, CurrencyCode } from "../pricing";
 
-/** Canonical money payload (SSOT-derived). */
-export type Money = RuntimeMoney;
+export {
+  formatMoney,
+  normalizeMoney,
+  startingAtLabel,
+  srPriceSentence,
+  hasPrice,
+  hasMonthly,
+  hasOneTime,
+  isHybrid,
+  isMonthlyOnly,
+  isOneTimeOnly,
+} from "../pricing";
 
-/** ISO 4217 currency code union (from runtime schema). */
-export type CurrencyCode = Money["currency"];
-
-/**
- * Optional, author-provided notes attached to pricing (rarely rendered by UI).
- * Kept as a separate type alias for clarity in props.
- */
+/** Optional, author-provided note attached to pricing (rarely rendered). */
 export type PriceNote = string | undefined;
 
-/**
- * Minimal “price range” for client-side filters (UI-only).
- * Use only for searching/sorting; do not persist as content.
- */
+/** Minimal “price range” for client-side filters (UI-only; not persisted). */
 export type PriceRange = {
   minMonthly?: number;
   maxMonthly?: number;
 };
+// src/packages/lib/pricing.ts
+/**
+ * Canonical pricing utilities used by cards, detail bands, and labels.
+ * - Pure TypeScript: no UI imports (prevents circular deps)
+ * - Token-agnostic; just formatting + shape helpers
+ * - Exposes both named exports and a default object (for legacy imports)
+ */
+
+/* --------------------------------- Types --------------------------------- */
+
+export type CurrencyCode = "USD" | (string & {}); // allow other ISO codes without narrowing
+
+/** Canonical money shape used across packages */
+export type Money = {
+  /** Upfront / implementation fee */
+  oneTime?: number | null;
+  /** Recurring fee */
+  monthly?: number | null;
+  /** ISO 4217 currency code (defaults to "USD" when omitted) */
+  currency?: CurrencyCode;
+  /** Optional author note; UI decides whether to show */
+  notes?: string;
+};
+
+/** Legacy authoring shape that maps to Money */
+export type LegacyPrice = {
+  setup?: number | null;      // maps to Money.oneTime
+  monthly?: number | null;
+  currency?: CurrencyCode;
+};
+
+/* ------------------------------- Internals -------------------------------- */
+
+function isFiniteNumber(n: unknown): n is number {
+  return typeof n === "number" && Number.isFinite(n);
+}
+
+function coerceNumber(n: unknown): number | undefined {
+  if (isFiniteNumber(n)) return n;
+  if (typeof n === "string" && n.trim() !== "" && !Number.isNaN(Number(n))) {
+    return Number(n);
+  }
+  return undefined;
+}
+
+/* ----------------------------- Normalization ------------------------------ */
+
+/**
+ * Normalize any supported price shape to Money (or undefined if empty).
+ */
+export function normalizeMoney(
+  price?: Money | LegacyPrice | null
+): Money | undefined {
+  if (!price || typeof price !== "object") return undefined;
+
+  // New-shape Money
+  if ("oneTime" in price || "monthly" in price) {
+    const p = price as Money;
+    const oneTime = coerceNumber(p.oneTime);
+    const monthly = coerceNumber(p.monthly);
+    if (!isFiniteNumber(oneTime) && !isFiniteNumber(monthly)) return undefined;
+    return {
+      oneTime,
+      monthly,
+      currency: p.currency ?? "USD",
+      notes: p.notes,
+    };
+  }
+
+  // Legacy: { setup, monthly }
+  const lp = price as LegacyPrice;
+  const setup = coerceNumber(lp.setup);
+  const monthly = coerceNumber(lp.monthly);
+  if (!isFiniteNumber(setup) && !isFiniteNumber(monthly)) return undefined;
+  return {
+    oneTime: setup,
+    monthly,
+    currency: lp.currency ?? "USD",
+  };
+}
+
+/* -------------------------------- Predicates ------------------------------ */
+
+export function hasPrice(p?: Money | null): p is Money {
+  return !!p && (isFiniteNumber(p.oneTime) || isFiniteNumber(p.monthly));
+}
+
+export function hasMonthly(p?: Money | null): p is Money & Required<Pick<Money, "monthly">> {
+  return !!p && isFiniteNumber(p.monthly);
+}
+
+export function hasOneTime(p?: Money | null): p is Money & Required<Pick<Money, "oneTime">> {
+  return !!p && isFiniteNumber(p.oneTime);
+}
+
+export function isHybrid(p?: Money | null): p is Money {
+  return !!p && isFiniteNumber(p.monthly) && isFiniteNumber(p.oneTime);
+}
+
+export function isOneTimeOnly(p?: Money | null): p is Money {
+  return !!p && isFiniteNumber(p.oneTime) && !isFiniteNumber(p.monthly);
+}
+
+export function isMonthlyOnly(p?: Money | null): p is Money {
+  return !!p && isFiniteNumber(p.monthly) && !isFiniteNumber(p.oneTime);
+}
+
+/* ------------------------------ Formatting ------------------------------- */
+
+/**
+ * Format an amount with Intl.NumberFormat.
+ * Defaults: USD / en-US / no cents (0 fraction digits).
+ */
+export function formatMoney(
+  amount: number,
+  currency: CurrencyCode = "USD",
+  locale: string = "en-US",
+  options: Intl.NumberFormatOptions = { minimumFractionDigits: 0, maximumFractionDigits: 0 }
+): string {
+  try {
+    return new Intl.NumberFormat(locale, { style: "currency", currency, ...options }).format(
+      amount
+    );
+  } catch {
+    // Ultra-safe fallback if currency code is unrecognized on this runtime.
+    const rounded = Math.round((amount + Number.EPSILON) * 100) / 100;
+    return `${currency} ${rounded.toLocaleString(locale, { maximumFractionDigits: 0 })}`;
+  }
+}
+
+/**
+ * Build the canonical "Starting at …" sentence for screen readers.
+ * Example:
+ *  - monthly + oneTime → "Starting at $X per month plus $Y setup."
+ *  - monthly only      → "Starting at $X per month."
+ *  - oneTime only      → "Starting at $Y."
+ */
+export function srPriceSentence(
+  priceInput?: Money | LegacyPrice | null,
+  {
+    prefix = "Starting at",
+    locale = "en-US",
+  }: { prefix?: string; locale?: string } = {}
+): string {
+  const price = normalizeMoney(priceInput);
+  if (!price) return "";
+
+  const c = price.currency ?? "USD";
+  if (isHybrid(price)) {
+    return `${prefix} ${formatMoney(price.monthly!, c, locale)} per month plus ${formatMoney(
+      price.oneTime!,
+      c,
+      locale
+    )} setup.`;
+  }
+  if (isMonthlyOnly(price)) {
+    return `${prefix} ${formatMoney(price.monthly!, c, locale)} per month.`;
+  }
+  if (isOneTimeOnly(price)) {
+    return `${prefix} ${formatMoney(price.oneTime!, c, locale)}.`;
+  }
+  return "";
+}
+
+/**
+ * Human-facing teaser string (useful for legacy one-line price rows).
+ * Policy:
+ *  - monthly + oneTime → "Starting at $X/mo + $Y setup"
+ *  - monthly only      → "Starting at $X/mo"
+ *  - oneTime only      → "Starting at $Y one-time"
+ *  - neither           → ""
+ */
+export function startingAtLabel(
+  priceInput?: Money | LegacyPrice | null,
+  locale: string = "en-US"
+): string {
+  const price = normalizeMoney(priceInput);
+  if (!price) return "";
+
+  const c = price.currency ?? "USD";
+
+  if (isHybrid(price)) {
+    return `Starting at ${formatMoney(price.monthly!, c, locale)}/mo + ${formatMoney(
+      price.oneTime!,
+      c,
+      locale
+    )} setup`;
+  }
+  if (isMonthlyOnly(price)) {
+    return `Starting at ${formatMoney(price.monthly!, c, locale)}/mo`;
+  }
+  if (isOneTimeOnly(price)) {
+    return `Starting at ${formatMoney(price.oneTime!, c, locale)} one-time`;
+  }
+  return "";
+}
+
+/* ---------------------------- Default export ----------------------------- */
+/**
+ * Some parts of the app may still do:
+ *   import pricing from "@/packages/lib/pricing";
+ *   pricing.formatMoney(...)
+ * Keep this default object to avoid runtime errors while everything migrates
+ * to named imports.
+ */
+const _default = {
+  formatMoney,
+  normalizeMoney,
+  startingAtLabel,
+  srPriceSentence,
+  hasPrice,
+  hasMonthly,
+  hasOneTime,
+  isHybrid,
+  isMonthlyOnly,
+  isOneTimeOnly,
+};
+export default _default;

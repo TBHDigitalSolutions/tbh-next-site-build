@@ -5,7 +5,7 @@
  * SubSection
  * =============================================================================
  * A reusable, accessibility-first wrapper for **blocks inside a Phase** (e.g.,
- * "Purpose", "Pain points", "Outcomes", "Highlights"). Each SubSection renders:
+ - "Purpose", "Pain points", "Outcomes", "Highlights"). Each SubSection renders:
  *
  *   1) A semantic heading (h3 by default) with a visual underline
  *   2) A shared Divider atom directly below the heading

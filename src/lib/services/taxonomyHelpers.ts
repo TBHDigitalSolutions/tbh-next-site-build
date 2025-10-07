@@ -57,7 +57,7 @@ export function getAllCanonicalHubBullets(): Record<string, string[]> {
   }, {} as Record<string, string[]>);
 }
 
-/** "ai-search-optimization" -> "Ai Search Optimization" */
+/*- "ai-search-optimization" -> "Ai Search Optimization" */
 export function slugToTitle(slug: string): string {
   return slug
     .replace(/-/g, ' ')

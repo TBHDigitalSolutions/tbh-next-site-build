@@ -1,23 +1,34 @@
 // src/packages/components/AddOnsGrid/AddOnsGrid.tsx
 "use client";
 
+/**
+ * AddOnsGrid
+ * ----------
+ * Responsive grid for add-on packages with optional search, category filters,
+ * and selection toggles. Presentation-only; price formatting is delegated to
+ * the AddOnCard → PriceLabel atom which uses helpers from @/packages/lib/pricing.
+ *
+ * Alignments:
+ *  - Canonical Money type imported from @/packages/lib/types
+ *  - Falls back to mock data from `src/mock` if no data is provided
+ *  - No imports from "@/data/packages/_types/currency"
+ *  - Passes `price?: Money` or `priceLabel` through to AddOnCard (no formatting here)
+ */
+
 import * as React from "react";
 import cls from "./AddOnsGrid.module.css";
 import AddOnCard from "@/packages/components/AddOnCard/AddOnCard";
-import {
-  toCombinedPrice,
-  toStartingPrice,
-  formatCurrency,
-} from "@/data/packages/_types/currency";
+import type { Money } from "@/packages/lib/types";
+
+// Mock data fallbacks
+import { asAddOnCardItems, asAddOns } from "@/mock";
 
 /* -------------------------------------------------------------------------- */
 /* Types                                                                      */
 /* -------------------------------------------------------------------------- */
 
-// Canonical Money (SSOT)
-export type Price = { oneTime?: number; monthly?: number; currency?: string };
+export type Price = Money;
 
-// Domain add-on (SSOT-ish)
 export type AddOn = {
   slug: string;
   name: string;
@@ -27,20 +38,19 @@ export type AddOn = {
   popular?: boolean;
 };
 
-// Card item expected by AddOnCard
 export type AddOnCardItem = {
   id: string;
   title: string;
   description?: string;
   bullets?: string[];
-  priceLabel: string; // "from $X,XXX" | "$X,XXX one-time" | "$X,XXX/mo" | "Contact for pricing"
+  price?: Price;          // canonical
+  priceLabel?: string;    // fallback when price is absent
   badge?: string;
   href?: string;
   category?: string;
   popular?: boolean;
 };
 
-// Legacy carousel item support (back-compat)
 export type LegacyCarouselItem = {
   id: string;
   name: string;
@@ -52,18 +62,18 @@ export type LegacyCarouselItem = {
 };
 
 export type AddOnsGridProps = {
-  /* Data inputs (prefer passing `items` after adapting externally) */
+  // Prefer passing `items` already adapted; otherwise pass `addOns` or `legacyItems`
   items?: AddOnCardItem[];
-  addOns?: AddOn[];                // raw domain add-ons (adapter runs internally)
-  legacyItems?: LegacyCarouselItem[]; // deprecated; mapped internally for compatibility
+  addOns?: AddOn[];
+  legacyItems?: LegacyCarouselItem[];
 
   /* Optional header */
   title?: string;
   subtitle?: string;
 
   /* Selection (controlled or uncontrolled) */
-  selectedSlugs?: string[];             // controlled
-  defaultSelectedSlugs?: string[];      // uncontrolled initial
+  selectedSlugs?: string[];
+  defaultSelectedSlugs?: string[];
   onChangeSelected?: (slugs: string[]) => void;
   onAdd?: (addOnId: string) => void;
   onRemove?: (addOnId: string) => void;
@@ -84,41 +94,50 @@ export type AddOnsGridProps = {
   emptyMessage?: string;
 
   /* CTA labels for the selection buttons */
-  ctaAddLabel?: string;       // default "Add"
-  ctaRemoveLabel?: string;    // default "Remove"
+  ctaAddLabel?: string;    // default "Add"
+  ctaRemoveLabel?: string; // default "Remove"
 };
 
 /* -------------------------------------------------------------------------- */
 /* Adapters                                                                   */
 /* -------------------------------------------------------------------------- */
 
-// Convert SSOT add-on → card item (used when `addOns` prop is provided)
+const FALLBACK_LABEL = "Contact for pricing";
+
+// SSOT AddOn → card item
 export function adaptAddOnToCardItem(a: AddOn): AddOnCardItem {
   return {
     id: a.slug,
     title: a.name,
     description: a.description,
-    priceLabel: toCombinedPrice(a.price), // tolerant: "Contact for pricing" when empty
+    price: a.price,
+    priceLabel: a.price ? undefined : FALLBACK_LABEL,
     badge: a.popular ? "Popular" : undefined,
-    href: undefined, // provide if you have deep links for add-ons
+    href: undefined,
     category: a.category,
     popular: a.popular,
   };
 }
 
-// Convert legacy carousel items → card items (for back-compat)
+// Legacy carousel → card item (best-effort)
 function adaptLegacyToCardItem(x: LegacyCarouselItem): AddOnCardItem {
-  let priceLabel = "Contact for pricing";
+  let price: Price | undefined;
+  let priceLabel: string | undefined = FALLBACK_LABEL;
+
   if (typeof x.startingAt === "number") {
-    priceLabel = toStartingPrice(x.startingAt);
+    price = undefined;
+    priceLabel = `From $${x.startingAt.toLocaleString("en-US", { maximumFractionDigits: 0 })}`;
   } else if (typeof x.startingAt === "string" && x.startingAt.trim()) {
-    // Keep existing label if it already contains currency text
-    priceLabel = x.startingAt.startsWith("$") ? `from ${x.startingAt}` : `from ${x.startingAt}`;
+    const s = x.startingAt.trim();
+    price = undefined;
+    priceLabel = s.startsWith("$") ? `From ${s}` : `From $${s}`;
   }
+
   return {
     id: x.id,
     title: x.name,
     description: x.description,
+    price,
     priceLabel,
     href: x.href,
     category: x.category,
@@ -144,7 +163,6 @@ function useControlledSet(
     () => new Set(controlled ?? defaultValue ?? []),
   );
 
-  // Keep internal in sync if consumer controls it
   React.useEffect(() => {
     if (controlledMode) setInternal(new Set(controlled));
   }, [controlledMode, controlled]);
@@ -170,7 +188,7 @@ function useControlledSet(
 }
 
 /* -------------------------------------------------------------------------- */
-/* Component                                                                   */
+/* Component                                                                  */
 /* -------------------------------------------------------------------------- */
 
 export default function AddOnsGrid({
@@ -202,11 +220,24 @@ export default function AddOnsGrid({
   ctaAddLabel = "Add",
   ctaRemoveLabel = "Remove",
 }: AddOnsGridProps) {
-  // 1) Normalize source → card items
+  // 1) Normalize source → card items (with mock fallbacks)
   const cardItems = React.useMemo<AddOnCardItem[]>(() => {
-    if (items && items.length) return items;
-    if (addOns && addOns.length) return addOns.map(adaptAddOnToCardItem);
-    if (legacyItems && legacyItems.length) return legacyItems.map(adaptLegacyToCardItem);
+    // already-adapted items (preferred)
+    if (items?.length) return items;
+
+    // domain addOns
+    if (addOns?.length) return addOns.map(adaptAddOnToCardItem);
+
+    // legacy items
+    if (legacyItems?.length) return legacyItems.map(adaptLegacyToCardItem);
+
+    // mock fallbacks: adapted first, then raw addOns adapted
+    const mockItems = typeof asAddOnCardItems === "function" ? asAddOnCardItems() : [];
+    if (mockItems.length) return mockItems;
+
+    const mockAddOns = typeof asAddOns === "function" ? asAddOns() : [];
+    if (mockAddOns.length) return mockAddOns.map(adaptAddOnToCardItem);
+
     return [];
   }, [items, addOns, legacyItems]);
 
@@ -263,13 +294,16 @@ export default function AddOnsGrid({
           id: `loading-${i}`,
           title: "Loading…",
           description: "Loading add-on information…",
-          priceLabel: "Contact for pricing",
+          priceLabel: FALLBACK_LABEL,
         }))
       : filtered;
 
   // 5) Grid style
   const gridStyle = React.useMemo(
-    () => ({ gridTemplateColumns: `repeat(auto-fill, minmax(${minCardWidthPx}px, 1fr))` }) as React.CSSProperties,
+    () =>
+      ({
+        gridTemplateColumns: `repeat(auto-fill, minmax(${minCardWidthPx}px, 1fr))`,
+      }) as React.CSSProperties,
     [minCardWidthPx],
   );
 
@@ -285,7 +319,6 @@ export default function AddOnsGrid({
       data-testid={testId}
       aria-busy={isLoading || undefined}
     >
-      {/* Header / toolbar */}
       {(title || subtitle || showSearch || showCategoryFilter) && (
         <header className={cls.toolbar}>
           {(title || subtitle) && (
@@ -351,15 +384,16 @@ export default function AddOnsGrid({
               <div key={it.id} className={cx(cls.cell)} data-selected={selectedFlag}>
                 <AddOnCard
                   id={it.id}
-                  title={it.title}
+                  name={it.title}
                   description={it.description}
                   bullets={it.bullets}
+                  price={it.price}
                   priceLabel={it.priceLabel}
                   badge={it.badge ?? (it.popular ? "Popular" : undefined)}
                   href={it.href}
+                  variant="default"
                 />
 
-                {/* Optional selection controls */}
                 {(onAdd || onRemove || selectedSlugs || defaultSelectedSlugs) && (
                   <div className={cls.actions}>
                     <button
@@ -379,7 +413,6 @@ export default function AddOnsGrid({
         )}
       </div>
 
-      {/* SR-only live region for loading */}
       {isLoading && (
         <div className={cls.visuallyHidden} aria-live="polite" aria-atomic="true">
           Loading add-on services…

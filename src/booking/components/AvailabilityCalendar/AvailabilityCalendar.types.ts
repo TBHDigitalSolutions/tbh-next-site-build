@@ -104,9 +104,9 @@ export interface RangeSelectionPolicy {
  * ------------------------------------------------------------------ */
 
 export interface BusinessHours {
-  /** "09:00" */
+  /*- "09:00" */
   start: string;
-  /** "17:00" */
+  /*- "17:00" */
   end: string;
   /** IANA timezone, e.g., "America/New_York" */
   timezone: string;

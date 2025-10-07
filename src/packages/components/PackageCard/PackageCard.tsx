@@ -21,7 +21,7 @@ import type { Money as PriceMoney } from "@/packages/lib/types/pricing";
 import { startingAtLabel } from "@/packages/lib/types/pricing";
 
 // Copy constants (labels only; routes are hard-coded here)
-import { CTA } from "@/packages/lib/types/copy";
+import { CTA } from "@/packages/lib/copy";
 
 // Price band (card variants)
 import PriceActionsBand from "@/packages/sections/PackageDetailOverview/parts/PriceActionsBand";

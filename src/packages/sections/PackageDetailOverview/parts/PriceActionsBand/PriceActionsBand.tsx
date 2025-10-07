@@ -7,7 +7,7 @@ import cls from "./PriceActionsBand.module.css";
 // NOTE: adjust these imports only if your repo uses different default/named exports.
 import PriceTeaser from "../PriceTeaser/PriceTeaser";
 import CTARow from "../CTARow/CTARow";
-import Divider from "@/components/ui/atoms/Divider/Divider";
+import Divider from "@/components/ui/atoms/Divider/Divider"; 
 
 /** Canonical money shape used across cards/details */
 export type Money = { monthly?: number; oneTime?: number; currency?: string };

@@ -1,0 +1,340 @@
+---
+# ──────────────────────────────────────────────────────────────────────────────
+# IDENTITY & TAXONOMY (Required)
+# ──────────────────────────────────────────────────────────────────────────────
+id: "content-production-cms-migration-lite"
+slug: "cms-migration-lite"
+service: "content-production"
+subservice: "production-publishing"
+category: "Production & Publishing"
+name: "CMS Migration Lite"
+tier: "Essential"
+
+tags:
+  - "cms"
+  - "migration"
+  - "redirects"
+  - "seo"
+  - "content-ops"
+badges: []
+
+# ──────────────────────────────────────────────────────────────────────────────
+# HERO SECTION (Phase 1)
+# ──────────────────────────────────────────────────────────────────────────────
+summary: "Low-risk migration for small–mid content sites with URL parity, SEO hygiene, and clear rollback."
+description: |
+  A focused, low-risk approach to move a small–mid content site between CMSs (e.g., WordPress ⇄ Webflow, Contentful ⇄ Sanity, HubSpot CMS → Next.js/Headless).
+  We preserve URLs and metadata, implement redirects, port key templates, and validate analytics so traffic and rankings stay intact.
+  You get a repeatable playbook and a safe rollback point.
+
+image:
+  src: "/packages/content-production/production-publishing/cms-migration-lite.png"
+  alt: "CMS migration flow showing content, redirects, and SEO checks"
+
+# ──────────────────────────────────────────────────────────────────────────────
+# ICP & PURPOSE (Phase 2)
+# ──────────────────────────────────────────────────────────────────────────────
+icp: "Teams with ≤100 live URLs that need a safe, well-governed CMS migration without a full redesign."
+
+painPoints:
+  - "Risk of traffic/ranking loss during CMS change"
+  - "Messy redirect maps and legacy URL sprawl"
+  - "Inconsistent metadata/canonicals and schema gaps"
+  - "Broken images, links, or forms after cut-over"
+  - "Unclear rollback or monitoring plan post-launch"
+
+outcomes:
+  - "↑ URL and metadata parity to protect rankings"
+  - "↑ Clean 301 map to consolidate legacy paths"
+  - "↑ Validated GA4/Search Console & sitemap health"
+  - "↑ Faster editorial workflow with the new CMS"
+  - "↓ Risk via clear rollback point and migration playbook"
+
+purpose: >
+  Execute a parity-first migration that protects organic traffic and site integrity:
+  inventory content, map fields, preserve metadata/schema, ship a tested redirect plan, and launch with validation and rollback.
+
+# ──────────────────────────────────────────────────────────────────────────────
+# WHAT YOU GET (Phase 3)
+# ──────────────────────────────────────────────────────────────────────────────
+features:
+  - "Content inventory & mapping (≤100 URLs)"
+  - "Redirect plan (≤150 rules) with test harness"
+  - "Metadata/schema parity (titles, meta, canonicals)"
+  - "XML sitemap & robots.txt updates"
+  - "GA4 & Search Console handoff + validation"
+  - "Launch checklist + rollback plan"
+
+includesGroups:
+  - title: "Discovery & Planning"
+    items:
+      - "Crawl-based inventory (live URLs, depth, status)"
+      - "Content type & field mapping (old → new)"
+      - "Parity matrix (URLs, meta, schema, media)"
+      - "Cut-over & rollback plan (maintenance window)"
+  - title: "Content & Assets Migration"
+    items:
+      - "Up to 100 URLs migrated (editorial pages/posts)"
+      - "Portable media export/import and relinking"
+      - "Two base templates (e.g., page + post) configured"
+      - "Author/date/tags/categories parity (where supported)"
+  - title: "Technical & SEO"
+    items:
+      - "301 redirect map (≤150 rules) with test proofs"
+      - "Title, meta, canonical, and Open Graph parity"
+      - "XML sitemap regeneration & robots.txt update"
+      - "Basic schema parity (Article/WebPage) where applicable"
+  - title: "QA & Launch"
+    items:
+      - "Staging QA (links, images, forms, 404s)"
+      - "GA4 + Search Console validation"
+      - "Launch window support (1–2 hours)"
+      - "Post-launch crawl & error sweep (24–48h)"
+
+deliverables:
+  - "Content inventory and parity matrix"
+  - "Configured base templates (2) and migrated pages/posts (≤100)"
+  - "Redirect map (≤150 rules) with human-readable proofs"
+  - "Updated sitemaps/robots and metadata/schema parity"
+  - "Validation reports (GA4, Search Console)"
+  - "Launch checklist and rollback plan"
+
+# ──────────────────────────────────────────────────────────────────────────────
+# PRICING (SSOT)
+# ──────────────────────────────────────────────────────────────────────────────
+price:
+  oneTime: 6800
+  monthly: null
+  currency: "USD"
+
+priceBand:
+  tagline: "Low-risk content migration with SEO hygiene built-in."
+  baseNote: "final"
+  finePrint: "Covers up to 100 URLs • 1 domain • up to 150 redirects"
+
+# ──────────────────────────────────────────────────────────────────────────────
+# DETAILS & TRUST (Phase 4)
+# ──────────────────────────────────────────────────────────────────────────────
+requirements:
+  - "Admin access to current CMS and new CMS/staging"
+  - "Hosting/DNS access (for go-live and records)"
+  - "GA4 & Search Console access"
+  - "List of required content types/templates"
+  - "Plugin/app list from source CMS"
+  - "Single primary domain in scope"
+
+timeline:
+  setup: "3–5 business days (inventory, mapping, plan)"
+  launch: "2–3 weeks end-to-end (size/complexity dependent)"
+  ongoing: "14-day warranty for migration defects"
+
+ethics:
+  - "No scraping from third-party sites without rights"
+  - "Respect robots directives and privacy preferences"
+  - "Do not carry over insecure/infected plugins"
+
+limits:
+  - "Up to 100 migrated URLs, 150 redirects, one domain"
+  - "Two base templates; design/UX re-themes excluded"
+  - "No e-commerce or custom app migrations"
+  - "No multi-language/i18n (available as add-on)"
+
+notes: >
+  For larger sites, multi-brand, i18n, or e-commerce, we’ll scope a Pro migration with expanded inventory, templates, and automation.
+
+# ──────────────────────────────────────────────────────────────────────────────
+# NEXT STEPS (Phase 5)
+# ──────────────────────────────────────────────────────────────────────────────
+faqs:
+  - id: "rankings"
+    question: "Will rankings drop?"
+    answer: "Our parity-first approach, redirect proofs, and post-launch sweep minimize risk. Short-term fluctuations can occur; the plan is built to protect and recover."
+  - id: "custom-fields"
+    question: "Can you migrate custom fields/blocks?"
+    answer: "Yes, when both CMSs support compatible structures. We map fields and document any unavoidable gaps."
+  - id: "redirects-scale"
+    question: "What about complex redirects or many legacy paths?"
+    answer: "Add Redirects Pro to automate large maps, test at scale, and monitor post-launch."
+  - id: "i18n"
+    question: "Do you support multi-language?"
+    answer: "Yes—add i18n Starter for language strategy, URL patterns, and hreflang."
+  - id: "rollback"
+    question: "Is there a rollback plan?"
+    answer: "Yes. We prepare and document a safe rollback path and checkpoints before cut-over."
+
+crossSell:
+  - "asset-packaging-kit"
+  - "content-upload-retainer"
+  - "editorial-calendar-sprint"
+
+addOns:
+  - "redirects-pro"
+  - "schema-upgrade"
+  - "site-performance-hardening"
+  - "cms-admin-training"
+  - "i18n-starter"
+
+seo:
+  title: "CMS Migration Lite"
+  description: "Safe, SEO-friendly migration for small–mid content sites with URL, metadata, and analytics parity."
+
+# ──────────────────────────────────────────────────────────────────────────────
+# COPY OVERRIDES (Optional)
+# ──────────────────────────────────────────────────────────────────────────────
+copy:
+  phase1:
+    title: "CMS Migration Lite"
+    tagline: "Parity-first, low-risk migration"
+  phase2:
+    title: "Why you need this"
+    tagline: "Protect rankings, links, and analytics"
+  phase3:
+    title: "What you get"
+    tagline: "Inventory, parity, redirects, QA, and launch"
+    includesTitle: "What's included"
+    includesSubtitle: "Discovery & Planning • Content & Assets • Technical & SEO • QA & Launch"
+    highlightsTitle: "Key highlights"
+    highlightsTagline: "What makes this safe and effective"
+  phase4:
+    title: "Details & trust"
+    tagline: "Timeline, requirements, and guardrails"
+  phase5:
+    title: "What’s next"
+    tagline: "FAQs and related packages"
+
+# ──────────────────────────────────────────────────────────────────────────────
+# EXTRAS (Optional)
+# ──────────────────────────────────────────────────────────────────────────────
+extras:
+  timelineBlocks:
+    - title: "Inventory & Plan"
+      note: "3–5 business days — crawl, mapping, parity matrix, redirect draft, risk/rollback plan"
+    - title: "Migrate & Configure"
+      note: "1–1.5 weeks — content/media migration, templates, metadata/schema parity, staging QA"
+    - title: "Cut-over"
+      note: "Launch window — DNS/hosting switch, sitemaps/robots, GA4/SC validation, redirect proofs"
+    - title: "Stabilize"
+      note: "24–48h + 14-day warranty — post-launch crawl, fix regressions, final handoff & playbook"
+---
+
+# CMS Migration Lite
+
+Move your content to a modern CMS **without losing rankings or breaking links**. We inventory and map your content, build a clean redirect plan, preserve metadata & schema, validate analytics, and ship with a **clear rollback** for peace of mind.
+
+## Purpose
+
+Protect organic traffic and site integrity during a CMS change by prioritizing **parity** and **governance**: maintain URLs and metadata, implement verifiable redirects, validate analytics and sitemaps, and launch with a documented rollback path and post-launch sweep.
+
+---
+
+## Highlights
+
+- Content inventory and mapping (≤100 URLs)  
+- 301 redirect plan (≤150 rules) with test proofs  
+- Meta/canonical/OG parity & basic schema  
+- XML sitemaps, robots.txt, GA4 + Search Console validation  
+- Staging QA, timed launch window, and 14-day warranty  
+- Playbook + rollback plan for safe cut-over
+
+---
+
+## What’s included
+
+### Discovery & Planning
+- Crawl-based inventory (status, depth, duplicates)  
+- Content type & field mapping (old → new)  
+- Parity matrix for URLs, metadata, schema, media  
+- Risk register, cut-over plan, and rollback checkpoints
+
+### Content & Assets Migration
+- Up to **100 URLs** migrated (editorial pages/posts)  
+- Media export/import and relinking  
+- **Two base templates** configured (e.g., Page + Post)  
+- Author/date/tags/categories parity where supported
+
+### Technical & SEO
+- **301 redirect map** (≤150 rules) with human-readable proofs  
+- Title, meta description, canonical, and OG parity  
+- XML sitemap regeneration & robots.txt updates  
+- Basic **schema parity** (Article/WebPage) where applicable
+
+### QA & Launch
+- Staging QA (links, images, forms, 404s, noindex checks)  
+- GA4 and Search Console handoff & validation  
+- Timed launch window (1–2 hours on-call)  
+- Post-launch crawl & error sweep (24–48h)
+
+---
+
+## Why this works
+
+- **Parity first:** preserve URLs, metadata, and crawlability to protect traffic.  
+- **Measured cut-over:** testable plan, controlled window, and a rollback.  
+- **Proof-driven redirects:** every rule has a test and expected result.  
+- **Post-launch sweep:** catch regressions early and fix fast.
+
+---
+
+## Implementation timeline
+
+1. **Inventory & Plan** (3–5 biz days)  
+   Crawl, content map, parity matrix, redirect draft, risk/rollback plan.
+
+2. **Migrate & Configure** (1–1.5 weeks)  
+   Content + media, templates, metadata/schema parity, staging QA.
+
+3. **Cut-over** (Launch window)  
+   DNS/hosting switch, sitemaps & robots, GA4/SC validation, redirect proofs.
+
+4. **Stabilize** (24–48h + 14-day warranty)  
+   Post-launch crawl, fix regressions, final handoff & playbook.
+
+---
+
+## Requirements
+
+- Admin access to **current and target CMS** (incl. staging)  
+- Hosting/DNS access for cut-over  
+- **GA4 & Search Console** permissions  
+- Required **content types/templates** list  
+- Source CMS **plugin/app list**  
+- One **primary domain** in scope
+
+---
+
+## Limits & Ethics
+
+**Scope caps (Lite):** 100 URLs, 150 redirects, 1 domain, 2 templates.  
+No e-commerce/app migrations, no full redesign, no i18n (add-on available).
+
+**Ethics:** No scraping without rights; respect site directives and privacy; do not migrate insecure/infected plugins.
+
+---
+
+## FAQ
+
+**Will rankings drop?**  
+Our parity-first approach, redirect proofs, and post-launch sweep minimize risk. Short-term fluctuations can occur; the plan is built to protect and recover.
+
+**Can you migrate custom fields/blocks?**  
+Yes, when both CMSs support compatible structures. We map fields and document any unavoidable gaps.
+
+**What about complex redirects or many legacy paths?**  
+Add **Redirects Pro** to automate large maps, test at scale, and monitor post-launch.
+
+**Do you support multi-language?**  
+Yes—add **i18n Starter** for language strategy, URL patterns, and hreflang.
+
+---
+
+### Add-ons to consider
+
+- **Redirects Pro** — large-scale rules, automation, and monitoring  
+- **Schema Upgrade** — enhanced structured data beyond parity  
+- **Site Performance Hardening** — Core Web Vitals tuning post-migration  
+- **CMS Admin Training** — role-based workflows and governance  
+- **i18n Starter** — multi-language URL strategy and hreflang
+
+---
+
+> **Price & Terms:** one-time fixed fee for Lite scope (see caps above). Larger libraries, multi-brand, or e-commerce require a Pro migration plan.

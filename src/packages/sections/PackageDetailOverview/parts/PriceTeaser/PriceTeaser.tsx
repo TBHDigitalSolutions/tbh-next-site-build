@@ -6,7 +6,7 @@ import styles from "./PriceTeaser.module.css";
 import type { Money } from "@/packages/lib/types/pricing";
 import { formatMoney } from "@/packages/lib/types/pricing";
 
-export type PriceTeaserProps = {
+export type PriceTeaserProps = { 
   price?: Money;
   /** Stacked ‘band’ (detail) vs single-line ‘inline’ (cards/rails). */
   mode?: "band" | "inline";

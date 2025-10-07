@@ -1,14 +1,18 @@
+// src/packages/lib/types/band.ts
 /**
  * UI Types — Price Band (presentation-only)
  * =============================================================================
  * Purpose
  * -----------------------------------------------------------------------------
- * Define the *presentation* types for a price actions band component. Keep
- * decision logic (variant picking, base-note rules) in a utility module
- * (e.g., `utils/band.ts`) to avoid circular dependencies with React components.
+ * Define presentation types for a price actions band component. Keep
+ * decision logic (variant picking, base-note rules) in `@/packages/lib/band`
+ * to avoid circular deps with React components.
  *
- * NOTE: The *content* (authoring) schema already defines the canonical
- * `priceBand` object; here we add UI-centric types such as the variant enum.
+ * Notes
+ * -----------------------------------------------------------------------------
+ * - The canonical price shape is `Money` (see `types/pricing.ts`).
+ * - Authoring provides `priceBand` (tagline/baseNote/finePrint) on packages.
+ * - Cards do NOT render base note or fine print; detail pages do.
  */
 
 import type { Money } from "./pricing";
@@ -16,33 +20,42 @@ import type { Money } from "./pricing";
 /** Surfaces that may host a band. */
 export type BandContext = "detail" | "card";
 
-/** Variants the UI component supports (layout-level concern). */
+/** Variants the UI component supports (layout concern, not content). */
 export type BandVariant =
   | "detail-hybrid"   // detail page; monthly + setup
   | "detail-oneTime"  // detail page; monthly-only OR one-time-only
   | "card-hybrid"     // card; monthly + setup
   | "card-oneTime";   // card; monthly-only OR one-time-only
 
+/** Base-note kind as authored (used only on details). */
+export type BaseNoteKind = "proposal" | "final";
+
 /**
- * Microcopy shown alongside the price on the detail surface.
- * (The canonical authoring fields exist in the runtime package. This mirrors
- * that shape so UI props remain explicit and decoupled.)
+ * Author-provided band copy (detail surface only).
+ * Never fall back to summary/description for tagline.
  */
-export type PriceBandCopy = {
-  /** Optional marketing line shown ONLY on details. Never falls back to summary. */
+export type PriceBandCopyInput = {
   tagline?: string;
-  /** Base note selector used on details: "proposal" | "final" */
-  baseNote?: "proposal" | "final";
-  /** Additional microcopy for details: e.g., “3-month minimum • + ad spend” */
+  baseNote?: BaseNoteKind; // the "kind" (to be resolved to display text)
   finePrint?: string;
 };
 
 /**
- * Minimal prop payload a band component might accept, independent of any
- * particular framework. Variants and copy are optional to keep props ergonomic.
+ * Resolved band copy passed to the UI component on the detail page.
+ * `baseNote` is already transformed to a display string.
+ */
+export type PriceBandCopyResolved = {
+  tagline?: string;
+  baseNote?: string;
+  finePrint?: string;
+};
+
+/**
+ * Minimal prop payload a band component might accept, independent of framework.
+ * When used on cards, `copy` MUST be omitted (cards never show it).
  */
 export type PriceBandProps = {
   variant?: BandVariant;
   price: Money;
-  copy?: PriceBandCopy;
+  copy?: PriceBandCopyResolved; // only for detail pages
 };

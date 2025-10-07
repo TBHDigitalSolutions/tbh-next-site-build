@@ -2,56 +2,88 @@
  * Packages Library — Public Barrel
  * =============================================================================
  * A single import surface for the packages module. This file re-exports
- * the **stable public API**: schemas (SSOT), registry loader (I/O + validation),
- * mappers (runtime → UI props), adapters (view-models), utilities (copy/CTA/pricing/jsonld),
- * and UI-only type aliases.
+ * the stable public API: schemas (SSOT), types, mappers, adapters,
+ * utilities (pricing / cta / jsonld), and optional helpers.
  *
  * Example usage:
  *   import {
- *     parsePackage,
- *     loadAllPackages,
- *     buildPackageCardProps,
- *     cardCtas,
+ *     // SSOT types/schemas
+ *     PackageSchema,
+ *     type Package,
+ *     type Money,
+ *
+ *     // Pricing utilities
+ *     startingAtLabel,
  *     formatMoney,
- *     type PackageSchemaType,
+ *
+ *     // CTA + routes
+ *     CTA_LABEL,
+ *     ROUTES,
+ *
+ *     // Adapters / mappers
+ *     toPackageCard,
+ *     toCard,
+ *     toOverview,
+ *     toExtras,
+ *
+ *     // JSON-LD
+ *     buildServiceJsonLd,
+ *     emitServiceJsonLd,
  *   } from "@/packages/lib";
  */
 
-// ---------------------------
-// SSOT Schemas (runtime)
-// ---------------------------
+// ---------------------------------------------------------------------------
+// SSOT: runtime schemas & runtime types
+// ---------------------------------------------------------------------------
 export * from "./package-schema";
-export * from "./mdx-frontmatter-schema";
+export * from "./package-types";
 
-// ---------------------------
-// Registry loader (I/O + validation)
-// ---------------------------
-export * from "./registry/loader";
+// ---------------------------------------------------------------------------
+// Authoring / narrative (optional public)
+// ---------------------------------------------------------------------------
+export * from "./authoring-rules";
+export * from "./narrative";
 
-// ---------------------------
-// Mappers (runtime → UI props)
-// ---------------------------
-export * from "./mappers/package-mappers";
+// ---------------------------------------------------------------------------
+// Pricing utilities (single source of truth for price formatting/predicates)
+// ---------------------------------------------------------------------------
+export * from "./pricing";
 
-// ---------------------------
-// Adapters (component-agnostic view-models)
-// ---------------------------
-export * from "./adapters/index";
-export * from "./adapters/growth";
+// ---------------------------------------------------------------------------
+// Data loading (I/O + validation) — if your project exposes this publicly
+// ---------------------------------------------------------------------------
+export * from "./loader";
 
-// ---------------------------
-// Utilities (pure helpers)
-// ---------------------------
-// copy (labels + aria helpers)
-export * from "./utils/copy";
-// CTA policy + routes
-export * from "./utils/cta";
-// Pricing normalization, predicates & formatting
-export * from "./utils/pricing";
-// JSON-LD builders (POJOs)
-export * from "./utils/jsonld";
+// ---------------------------------------------------------------------------
+// Copy/CTA policy & routes (centralized labels/links used by UI)
+// If your code uses `ROUTES`, `CTA_LABEL`, etc., they should be exported here.
+// ---------------------------------------------------------------------------
+export * from "./copy";
+export * from "./cta";
 
-// ---------------------------
-// UI-only type aliases (barrel)
-// ---------------------------
-export * from "./types";
+// ---------------------------------------------------------------------------
+// Band (variant resolver for price bands) — optional
+// ---------------------------------------------------------------------------
+export * from "./band";
+
+// ---------------------------------------------------------------------------
+// View-model adapters (domain → UI props) — thin, UI-agnostic
+// ---------------------------------------------------------------------------
+export * from "./adapters";
+
+// ---------------------------------------------------------------------------
+// UI mappers (structured outputs consumed by components/sections)
+// ---------------------------------------------------------------------------
+export * from "./mappers/to-card";
+export * from "./mappers/to-overview";
+export * from "./mappers/to-extras";
+
+// ---------------------------------------------------------------------------
+// Registry mappers (CTA builders, includes-table fallback, etc.)
+// ---------------------------------------------------------------------------
+export * from "./registry/mappers";
+
+// ---------------------------------------------------------------------------
+// SEO: JSON-LD builders + emit helper for React templates
+// ---------------------------------------------------------------------------
+export * from "./seo/jsonld";

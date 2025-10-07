@@ -35,7 +35,7 @@ export type Money = { oneTime?: number; monthly?: number; currency: "USD" };
 export type PriceBand = {
   /** Short marketing line. If omitted, the band shows **no** tagline. */
   tagline?: string;
-  /** "proposal" → “Base price — request proposal”, "final" → “… final after scope” */
+  /*- "proposal" → “Base price — request proposal”, "final" → “… final after scope” */
   baseNote?: "proposal" | "final";
   /** E.g., "3-month minimum • + ad spend" */
   finePrint?: string;

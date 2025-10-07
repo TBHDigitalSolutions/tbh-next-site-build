@@ -160,3 +160,62 @@ git push
 
 ✅ With this workflow, you’ll keep your commits tidy, your main branch clean, and your pushes consistent.
 
+---
+
+Here are the exact git commands you can copy-paste. I’ve given two quick recipes—pick the one that matches your situation.
+
+---
+
+## A) Create a new `packages-domain` branch off `main` (recommended)
+
+```bash
+# 1) make sure main is up to date
+git fetch origin
+git switch main
+git pull --ff-only
+
+# 2) create & switch to the new branch (carries any uncommitted changes)
+git switch -c packages-domain  # (older git: git checkout -b packages-domain)
+
+# 3) stage + commit your work
+git add -A
+git commit -m "feat: package domain — centralized JSON pipeline (Mode A)"
+
+# 4) push and set upstream (first push only)
+git push -u origin packages-domain
+```
+
+After the first push, future pushes are just:
+
+```bash
+git push
+```
+
+---
+
+## B) The branch already exists on the remote
+
+```bash
+# 1) fetch and switch to the existing branch
+git fetch origin
+git switch -t origin/packages-domain  # (or: git switch packages-domain)
+
+# 2) stage + commit
+git add -A
+git commit -m "feat: updates to package domain"
+
+# 3) push (upstream is already set by -t; if not, use -u once)
+git push
+# if it complains about no upstream, do:
+# git push -u origin packages-domain
+```
+
+---
+
+### Quick checks (optional)
+
+```bash
+git branch --show-current   # confirm which branch you’re on
+git status -sb              # see short status
+git branch -vv              # see tracking (upstream) info
+```
